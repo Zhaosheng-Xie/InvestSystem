@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A股从十万到千万：交易系统研究与重构</title>
+  <style>
+    :root{
+      --ink:#17212b;--muted:#64717d;--paper:#f5f3ee;--card:#fffefa;
+      --line:#d8d4ca;--navy:#18324a;--blue:#275f86;--teal:#28756f;
+      --amber:#a56a16;--red:#a8443b;--green:#3f7657;--soft:#e9eef2;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:"Segoe UI","Microsoft YaHei",Arial,sans-serif;line-height:1.72;overflow-x:hidden}
+    a{color:var(--blue);text-decoration:none;border-bottom:1px solid #9ab3c5}
+    a:hover{color:#153f5e}
+    .shell{max-width:1180px;margin:0 auto;padding:32px 24px 72px}
+    .hero{background:linear-gradient(135deg,#142c41,#244d68);color:#fff;border-radius:22px;padding:42px 46px;box-shadow:0 16px 40px rgba(21,44,63,.18)}
+    .eyebrow{font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:#b9d6e5}
+    h1{font-size:38px;line-height:1.22;margin:10px 0 14px;overflow-wrap:anywhere}
+    .hero p{max-width:880px;color:#e3edf2;font-size:17px;margin:0}
+    .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;color:#c8dae4;font-size:13px}
+    .verdict{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0 32px}
+    .tile{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px 19px;box-shadow:0 4px 14px rgba(24,50,74,.05)}
+    .tile .k{font-size:12px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+    .tile .v{font-size:20px;font-weight:750;color:var(--navy);margin-top:4px}
+    .tile .s{font-size:13px;color:var(--muted);margin-top:4px}
+    .toc{background:#e8ecee;border-radius:15px;padding:18px 22px;margin:0 0 28px}
+    .toc strong{color:var(--navy)}
+    .toc a{display:inline-block;margin:6px 16px 0 0;border:0;font-size:14px}
+    section{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:30px 34px;margin:20px 0}
+    h2{font-size:27px;line-height:1.3;margin:0 0 17px;color:var(--navy)}
+    h3{font-size:20px;margin:25px 0 10px;color:#234860}
+    h4{font-size:16px;margin:20px 0 7px;color:var(--navy)}
+    p{margin:9px 0}
+    .lead{font-size:18px;color:#283b49}
+    .callout{border-left:5px solid var(--teal);background:#eef6f3;padding:15px 18px;border-radius:4px 12px 12px 4px;margin:16px 0}
+    .warning{border-left-color:var(--amber);background:#faf3e7}
+    .danger{border-left-color:var(--red);background:#f9ece9}
+    .note{color:var(--muted);font-size:13px}
+    .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;margin-right:5px;background:#e5edf2;color:#315875}
+    .tag.green{background:#e5f0e9;color:#2f6b49}
+    .tag.amber{background:#f5ead7;color:#8b5b13}
+    .tag.red{background:#f4dfdb;color:#943d35}
+    table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:14px}
+    th{background:#edf1f3;color:#203d52;text-align:left;font-weight:700}
+    th,td{border:1px solid #d8dde0;padding:10px 11px;vertical-align:top}
+    tr:nth-child(even) td{background:#fbfbf8}
+    ul,ol{padding-left:22px}
+    li{margin:5px 0}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .mini{border:1px solid #d8dde0;border-radius:12px;padding:15px 16px;background:#fcfcf9}
+    .mini h4{margin-top:0}
+    .flow{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:stretch;margin:18px 0}
+    .flow div{background:#edf2f5;border:1px solid #d3dde3;border-radius:10px;padding:13px 9px;text-align:center;font-size:13px;color:#27475c;position:relative}
+    .flow div:not(:last-child)::after{content:"→";position:absolute;right:-9px;top:37%;color:#748995;font-weight:800;z-index:2}
+    pre{white-space:pre-wrap;word-break:break-word;background:#142b3c;color:#e6f0f4;border-radius:12px;padding:18px;font-size:13px;line-height:1.55;overflow:auto}
+    .formula{font-family:Consolas,monospace;background:#eef2f4;border-radius:10px;padding:12px 15px;margin:11px 0;color:#1f455c}
+    .rule{font-weight:750;color:#213f53}
+    .source-list{counter-reset:src}
+    .source-list li{margin:10px 0}
+    .small{font-size:13px}
+    .footer{color:var(--muted);font-size:12px;text-align:center;margin-top:28px}
+    @media(max-width:900px){
+      .verdict,.grid3{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}
+      .flow{grid-template-columns:1fr}.flow div:not(:last-child)::after{content:"↓";right:50%;top:auto;bottom:-17px}
+      .hero{padding:32px 26px}h1{font-size:31px}section{padding:25px 22px}
+    }
+    @media(max-width:560px){.verdict,.grid3{grid-template-columns:1fr}.shell{padding:16px 10px 48px}section{overflow:hidden}table{display:block;overflow-x:auto;font-size:12px}th,td{padding:7px}.hero p{overflow-wrap:anywhere}}
+    @media print{body{background:#fff}.shell{max-width:none;padding:0}.hero,section{box-shadow:none;break-inside:avoid}.toc{display:none}a{color:inherit;border:0}}
+  </style>
+</head>
+<body>
+<main class="shell">
+  <header class="hero">
+    <div class="eyebrow">Investment system audit · 2026-07-14</div>
+    <h1>A股从十万到千万：交易系统研究与重构</h1>
+    <p>基于《明准投资研究体系 v2.0》与既有深度研究报告，结合 2024—2026 年制度、学术研究和开源量化框架，对“优势来源、交易规则、上下文/harness、迭代机制”作一次资金系统级重构。</p>
+    <div class="meta"><span>市场：中国A股</span><span>建议持有期：20—63个交易日</span><span>风格：基本面事件 + 产业链传播 + 低换手</span><span>证据冻结日：2026-07-14</span></div>
+  </header>
+
+  <div class="verdict">
+    <div class="tile"><div class="k">核心判断</div><div class="v">研究系统已成型</div><div class="s">资金决策层尚未完成</div></div>
+    <div class="tile"><div class="k">真正优势</div><div class="v">证据时差 × 产业链传播</div><div class="s">不是“高GPM”本身</div></div>
+    <div class="tile"><div class="k">首要改造</div><div class="v">评分 → 条件概率</div><div class="s">分数不能直接决定仓位</div></div>
+    <div class="tile"><div class="k">实盘原则</div><div class="v">AI研究，人类授权</div><div class="s">确定性风控隔离订单端</div></div>
+  </div>
+
+  <nav class="toc">
+    <strong>目录</strong><br>
+    <a href="#summary">结论</a><a href="#goal">目标数学</a><a href="#audit">框架审计</a><a href="#alpha">问题一：超额收益</a>
+    <a href="#rules">问题二：规则</a><a href="#cadence">日/周/月信号</a><a href="#harness">问题三：Harness</a>
+    <a href="#opensource">开源框架</a><a href="#iterate">问题四：迭代</a><a href="#roadmap">路线图</a><a href="#sources">来源</a>
+  </nav>
+
+  <section id="summary">
+    <h2>一、结论先行</h2>
+    <p class="lead"><strong>你的框架最有希望形成的 Alpha，不是“发现好公司”，而是比市场更快、更一致地完成：下游变化 → 上游受益归因 → 财务兑现验证 → 预期差判断 → 风险受限的仓位表达。</strong></p>
+    <div class="callout">
+      建议把系统缩窄成一个明确赛场：<strong>“业绩/订单硬证据驱动的产业链传播策略”</strong>。题材热度、涨停、调研和研报只负责判断定价状态与确认，不再作为单独开仓理由。
+    </div>
+    <p>当前 v2.0 的强项是产业链结构、反例意识、证据分级和固定复盘；缺口是把“研究上可信”误写成“资金上可押”。第二份报告正确指出了这个方向，但其中的 0.62 入池、0.25 Kelly、FCF 0.6、8%/12%/15% 回撤闸门等数字并未经过你的样本训练，不能称为概率或最优参数，只能作为待验证的起始草案。</p>
+    <p>最终系统应由三层组成：</p>
+    <div class="grid3">
+      <div class="mini"><h4>Alpha 层</h4><p>硬证据、产业链传播、盈利预期差、兑现质量。</p></div>
+      <div class="mini"><h4>状态层</h4><p>业绩、题材、机构定价、流动性收缩四种状态及其概率。</p></div>
+      <div class="mini"><h4>资金层</h4><p>基于预期损失、跳空、相关簇、流动性和回撤预算分配仓位。</p></div>
+    </div>
+    <p class="note">本报告是系统研究与规则草案，不是个股推荐，也不承诺收益。所有标为“草案阈值”的数字必须经过点时点回放、影子运行和小资金阶段验证。</p>
+  </section>
+
+  <section id="goal">
+    <h2>二、“十万到千万”的目标数学</h2>
+    <p>10万元到1000万元是 <strong>100倍</strong>。不考虑新增资金、税费和中途取现，所需复合年化收益如下：</p>
+    <table>
+      <thead><tr><th>完成时间</th><th>所需年化复合收益</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td>5年</td><td>151.2%</td><td>几乎只能由极端集中、杠杆或巨大运气实现，破产风险极高。</td></tr>
+        <tr><td>7年</td><td>93.1%</td><td>远超可持续专业资金的常见区间。</td></tr>
+        <tr><td>10年</td><td>58.5%</td><td>需要长期顶尖 Alpha、极强顺风和极少重大回撤同时发生。</td></tr>
+        <tr><td>15年</td><td>35.9%</td><td>仍然非常困难，但比10年路径更具工程意义。</td></tr>
+        <tr><td>20年</td><td>25.9%</td><td>需要稳定超额收益与严格复利纪律。</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warning">
+      <strong>100倍不能作为模型优化目标。</strong>它会诱导回测选择高波动、高集中、高尾部风险参数。系统真正的目标函数应是“最大化长期几何增长，同时约束破产概率、最大回撤和不可交易风险”。截至2025年6月，SPIVA 对中国大盘主动基金的统计显示，1年、3年和5年跑输基准的比例分别为60.5%、69.6%和50.8%，这说明持续超额并非默认结果。<a href="https://www.spglobal.com/spdji/en/documents/spiva/spiva-asia-ex-japan-mid-year-2025.pdf">[S1]</a>
+    </div>
+  </section>
+
+  <section id="audit">
+    <h2>三、对现有两份材料的系统审计</h2>
+    <table>
+      <thead><tr><th>模块</th><th>保留</th><th>必须修改</th><th>原因</th></tr></thead>
+      <tbody>
+        <tr><td>产业链卡位</td><td>作为候选发现主轴</td><td>必须量化上市公司经济暴露，而非只证明行业瓶颈</td><td>行业稀缺不等于利润归上市公司。</td></tr>
+        <tr><td>GPM</td><td>货币化质量的核心子指标</td><td>取消“唯一判官”地位</td><td>原料、汇率、产品结构、爬坡、会计节奏均会扭曲毛利率。</td></tr>
+        <tr><td>Serenity 8维</td><td>作为研究检查清单</td><td>不再把主观1—5分直接相加</td><td>等距、等权和跨行业可比性均未成立。</td></tr>
+        <tr><td>锚池</td><td>保留池化工作流</td><td>拆为研究池、交易合格池、持仓池</td><td>“满足任一条件”会混合结构信号和宣传噪音。</td></tr>
+        <tr><td>业绩预告</td><td>核心事件源</td><td>由“同比&gt;100%”改为“相对预期的标准化意外”</td><td>同比受低基数、一次性项目和板块披露规则影响。</td></tr>
+        <tr><td>调研/研报</td><td>确认和预期代理</td><td>不得单独入交易池</td><td>关注可能是价格上涨的结果；报告也可能顺价格修正。</td></tr>
+        <tr><td>涨停×锚池</td><td>判断注意力和执行时点</td><td>不得把“命中锚池”当成基本面确认</td><td>价格行为不能证明商业逻辑。</td></tr>
+        <tr><td>仓位</td><td>集中于少数高质量机会</td><td>由类别上限改为损失预算公式</td><td>“真卡点20%”没有考虑跳空、相关性和流动性。</td></tr>
+        <tr><td>第二份报告的概率模型</td><td>保留概率化方向</td><td>删除手填系数和“0.62概率”表述</td><td>未经训练和校准的 logit 输出不是概率。</td></tr>
+      </tbody>
+    </table>
+    <h3>最重要的五个反例机制</h3>
+    <ol>
+      <li><strong>好行业、坏股票：</strong>行业空间真实，但预期已透支或价值留在非上市主体。</li>
+      <li><strong>毛利率假改善：</strong>原材料降价、汇兑、产品结构切换或业务并表造成改善。</li>
+      <li><strong>硬证据假增量：</strong>订单金额大，但确认周期长、净利润贡献低、可取消或重复公告。</li>
+      <li><strong>研究正确、交易错误：</strong>催化迟到、持有期不匹配、题材退潮或流动性收缩。</li>
+      <li><strong>单股正确、组合失败：</strong>持仓表面分散，实际都属于AI算力/半导体设备等同一叙事簇。</li>
+    </ol>
+  </section>
+
+  <section id="alpha">
+    <h2>四、问题一：我们如何获取超额收益？优势在哪里？</h2>
+    <p class="lead">答案不是“信息更多”，而是<strong>公开信息被更快结构化、更好做因果归因，并且只在合适市场状态中用风险预算表达。</strong></p>
+
+    <h3>Alpha Engine A：业绩与订单的“证据时差”</h3>
+    <p>2025年的中国市场研究发现，盈余公告前后存在漂移；机构和大额个人投资者在公告前更倾向于沿盈余意外方向交易，小额个人投资者则更常逆向并承受损失。公司业绩指引、分析师覆盖和机构调研会增加公告前漂移。<a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5493686">[S2]</a></p>
+    <p><strong>可交易优势：</strong>不要等“净利润同比100%”标题出现，而是提前维护订单、合同负债、客户资本开支、认证、价格/产量和卖方预测的点时点序列，计算市场尚未完全修正的盈利路径。</p>
+    <div class="formula">Earnings Wedge = 公司最新可见盈利路径 − 公告前冻结的一致预期/市场隐含路径</div>
+
+    <h3>Alpha Engine B：产业链信息传播</h3>
+    <p>清华2024年A股研究显示，基于客户关系的动量因子对未来收益具有预测力，但年度更新的供应链数据会削弱时效。该证据属于单篇硕士论文，强度有限，适合支持“需要验证的假设”，不适合作为直接实盘定律。<a href="https://newetds.lib.tsinghua.edu.cn/qh/paper/summary?dbCode=ETDQH&amp;sysId=293812">[S3]</a></p>
+    <p><strong>可交易优势：</strong>把“产业链卡位”改写成事件传播图：客户扩产/订单 → 具体产品 → 上市公司收入占比 → 认证与交付周期 → 毛利/现金流 → 估值预期。只有能量化经济暴露的边才进入交易决策。</p>
+
+    <h3>Alpha Engine C：兑现质量而非毛利率崇拜</h3>
+    <p>核心不再是单独的 GPM，而是四项联动：</p>
+    <div class="grid2">
+      <div class="mini"><h4>增量毛利率</h4><p>Δ毛利 / Δ收入，判断新增收入是否真正高质量。</p></div>
+      <div class="mini"><h4>现金转化</h4><p>(经营现金流−资本开支) / 调整后净利润，识别利润表繁荣。</p></div>
+      <div class="mini"><h4>营运资本</h4><p>应收、存货、合同资产的增速是否吞噬增长。</p></div>
+      <div class="mini"><h4>资本效率</h4><p>新增毛利/新增投入资本，判断扩产是否创造价值。</p></div>
+    </div>
+
+    <h3>Alpha Engine D：预期差，而不是“好公司”</h3>
+    <p>每个标的都必须回答：“当前价格已经隐含了多少增长？”建议用反向估值建立三条路径：市场隐含、研究基准、证伪情景。没有预期差，就算公司质量很高，也只进观察池。</p>
+
+    <h3>Alpha Engine E：把注意力当作状态变量</h3>
+    <p>2025年研究显示，多指标合成的投资者注意力与A股异常收益有关；另一项跨中美研究发现，中国市场中零售驱动的信息扩散对股票间超额共动影响更强。<a href="https://www.sciencedirect.com/science/article/abs/pii/S1057521924007075">[S4]</a> <a href="https://www.sciencedirect.com/science/article/abs/pii/S1042443125001489">[S5]</a></p>
+    <p><strong>结论：</strong>热度不是买入信号；它负责两个动作：判断题材是否正在扩散，以及提高同叙事簇的风险惩罚。</p>
+
+    <h3>竞争优势的可防御性</h3>
+    <table>
+      <thead><tr><th>优势候选</th><th>可持续性</th><th>如何形成壁垒</th></tr></thead>
+      <tbody>
+        <tr><td>公开数据访问</td><td><span class="tag red">弱</span></td><td>人人可得，不能形成优势。</td></tr>
+        <tr><td>LLM读公告</td><td><span class="tag amber">中低</span></td><td>只有点时点存档、结构化字段和人工纠错库才能积累。</td></tr>
+        <tr><td>产业链知识图谱</td><td><span class="tag green">中高</span></td><td>边的经济暴露、时延、历史兑现率和反例会随时间形成私有资产。</td></tr>
+        <tr><td>预期冻结与修正路径</td><td><span class="tag green">高</span></td><td>保存每个时点“市场原来认为多少”，避免事后诸葛亮。</td></tr>
+        <tr><td>规则执行与不交易纪律</td><td><span class="tag green">高</span></td><td>多数竞争者在题材、回撤和亏损后会改变规则。</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="rules">
+    <h2>五、问题二：交易系统的规则是什么？</h2>
+    <div class="callout danger"><strong>先决条件：</strong>以下数值均为“v0.1草案阈值”，不是经验证的最优值。任何阈值进入实盘前，都必须通过点时点回放、走样本外验证和影子运行。</div>
+
+    <h3>5.1 状态机，而不是一个总分</h3>
+    <div class="flow">
+      <div>事件收件箱</div><div>研究池</div><div>交易合格池</div><div>建仓候选</div><div>持仓</div><div>降级/退出</div><div>复盘归档</div>
+    </div>
+    <table>
+      <thead><tr><th>状态</th><th>进入条件</th><th>允许动作</th></tr></thead>
+      <tbody>
+        <tr><td>事件收件箱</td><td>任意公告、调研、研报、异动</td><td>只解析，不交易。</td></tr>
+        <tr><td>研究池</td><td>至少一条原始证据；经济暴露路径可描述；无硬否决</td><td>建立假设、证伪条件和下一证据。</td></tr>
+        <tr><td>交易合格池</td><td>一条原始证据 + 一条独立确认；暴露可量化；预期差和催化窗明确</td><td>进入情景分析与仓位计算。</td></tr>
+        <tr><td>持仓</td><td>风险预算、组合簇、流动性和市场状态均通过</td><td>按分段规则建仓或加仓。</td></tr>
+        <tr><td>降级/退出</td><td>证据恶化、赔率不足、时间到期或状态不兼容</td><td>减仓、清仓或回研究池。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>5.2 六道开仓闸门</h3>
+    <ol>
+      <li><span class="rule">原始证据闸门：</span>公告、定期报告、交易所问询回复、客户/供应商正式披露至少一项。只有研报/调研/热度不得开仓。</li>
+      <li><span class="rule">经济暴露闸门：</span>必须估算对未来12个月收入、毛利或净利润的影响范围；无法归因则停留研究池。</li>
+      <li><span class="rule">预期差闸门：</span>冻结事件前一致预期或反向估值路径；“公司很好”不等于有预期差。</li>
+      <li><span class="rule">时间闸门：</span>关键证据预计在20—63个交易日内验证；更长周期另建“战略观察池”，不得占用交易仓位。</li>
+      <li><span class="rule">赔率闸门：</span>草案要求上行情景/下行情景 ≥ 1.8，概率加权预期收益扣成本后为正。</li>
+      <li><span class="rule">组合闸门：</span>单票、叙事簇、流动性、隔夜跳空预算和市场状态均不超限。</li>
+    </ol>
+
+    <h3>5.3 市场状态开关</h3>
+    <p>不要用固定绝对值横跨所有年份。四个指数先按过去252个交易日做分位数或稳健Z分数，再产生状态概率。</p>
+    <table>
+      <thead><tr><th>状态</th><th>核心观测</th><th>草案判定</th><th>总风险仓位上限</th></tr></thead>
+      <tbody>
+        <tr><td>业绩驱动</td><td>正向业绩意外后5日行业中性超额、盈利上调广度、质量股相对收益</td><td>ERI高于60分位，样本≥20，连续3日</td><td>75%</td></tr>
+        <tr><td>机构定价</td><td>沪深300相对中证1000、高ROIC相对亏损微盘、题材热度下降</td><td>QPI高于70分位，连续3日</td><td>80%</td></tr>
+        <tr><td>题材驱动</td><td>前三主题涨停占比、连板延续率、小盘相对大盘</td><td>THI高于80分位且小盘20日相对收益为正</td><td>50%</td></tr>
+        <tr><td>流动性收缩</td><td>成交额、跌停/涨停、波动率、涨跌家数</td><td>LSI高于80分位，或两项压力指标极端</td><td>25%—30%</td></tr>
+      </tbody>
+    </table>
+    <h4>四个状态指标的最小可执行定义</h4>
+    <table>
+      <thead><tr><th>指标</th><th>定义</th><th>注意事项</th></tr></thead>
+      <tbody>
+        <tr><td>ERI</td><td>最近20个正向业绩意外样本，在公告后5日的行业中性超额收益中位数</td><td>样本不足20时不切换状态；必须按最早可交易价计算。</td></tr>
+        <tr><td>THI</td><td>0.5×前三主题涨停数/全部涨停数 + 0.5×连板延续率</td><td>概念分类口径要冻结；再按252日历史标准化。</td></tr>
+        <tr><td>LSI</td><td>z(−全市场成交额/MA60) + z(跌停数/涨停数) + z(20日实现波动率)</td><td>三个分量先截尾，再等权；缺一项则不输出。</td></tr>
+        <tr><td>QPI</td><td>z(沪深300/中证1000的20日相对收益) + z(高ROIC/亏损微盘相对收益) − z(THI)</td><td>用于判断质量/大盘是否主导，不是单独买入信号。</td></tr>
+      </tbody>
+    </table>
+    <p class="note">状态切换要求连续3日只是减少抖动的草案；后续应比较1/3/5日确认对回撤和错失收益的影响。</p>
+
+    <h3>5.4 仓位：先算可承受损失，再谈置信度</h3>
+    <div class="formula">目标权重 = min〔单票风险预算 ÷ max(基本面证伪损失, 公告日Gap95), 单票上限, 流动性上限, 叙事簇剩余额度〕</div>
+    <table>
+      <thead><tr><th>项目</th><th>v0.1 草案</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>初始单票风险预算</td><td>净值0.35%</td><td>若预期不利跳空10%，对应权重约3.5%。</td></tr>
+        <tr><td>完全确认后的风险预算</td><td>净值0.60%</td><td>只在证据增强时提升，价格下跌本身不是理由。</td></tr>
+        <tr><td>单票硬上限</td><td>12%</td><td>20%上限对公告跳空和连续跌停过于脆弱。</td></tr>
+        <tr><td>单一叙事簇</td><td>20%</td><td>高相关或同一催化时降到15%。</td></tr>
+        <tr><td>流动性</td><td>头寸不超过ADV20的2%</td><td>同时模拟跌停锁死和两日退出，不只看平均成交额。</td></tr>
+        <tr><td>建仓节奏</td><td>30% / 40% / 30%</td><td>初始证据、第一次兑现、第二次兑现；禁止仅因价格更低加仓。</td></tr>
+      </tbody>
+    </table>
+    <p>不建议直接使用逐股 Kelly。你的胜率和赔率估计误差远大于成熟高频系统，Kelly 会放大错误。若未来样本足够，只把分数 Kelly 作为仓位上限的一个参考，并与跳空、簇风险和流动性取最小值。</p>
+
+    <h3>5.5 退出规则</h3>
+    <table>
+      <thead><tr><th>类别</th><th>触发</th><th>动作</th></tr></thead>
+      <tbody>
+        <tr><td>硬否决</td><td>立案/造假、审计非标、资金占用、实控人流动性危机、重大退市风险</td><td>在首个可执行窗口退出；禁止补仓。</td></tr>
+        <tr><td>基本面证伪</td><td>订单取消、认证失败、客户资本开支反转、核心产品被替代、现金化显著恶化</td><td>至少降50%，重新评估剩余风险；核心假设破裂则退出。</td></tr>
+        <tr><td>赔率消失</td><td>价格上涨后，基准上行/下行比低于1.2或预期超额收益≤0</td><td>减仓或退出，即使公司逻辑仍对。</td></tr>
+        <tr><td>时间止损</td><td>63个交易日内没有预定证据，且没有新证据延长时钟</td><td>回研究池，不让“短期交易”悄悄变成长线套牢。</td></tr>
+        <tr><td>市场状态</td><td>进入流动性收缩或簇风险升至极端</td><td>按组合风险乘数降仓，不等单股逐一证伪。</td></tr>
+        <tr><td>操作纪律</td><td>亏损后想改规则、临时扩大持有期、删掉反例</td><td>冻结人工加仓，强制写决策偏差记录。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>5.6 回撤闸门</h3>
+    <p>先沿用第二份报告的 8%/12%/15% 作为<strong>待验证草案</strong>，但动作必须确定化：</p>
+    <ul>
+      <li>距高点回撤8%：新仓风险预算×0.7，暂停低证据等级候选。</li>
+      <li>回撤12%：总风险仓位降至当时目标的一半，冻结所有参数优化。</li>
+      <li>回撤15%：进入防守状态，仅保留证据A级、低簇相关头寸；完成归因前不得恢复。</li>
+    </ul>
+    <p class="note">阈值是否合理要用2018年以来的多状态历史回放检验。2024—2026可作为研究证据窗口，但仅两年多无法覆盖完整A股周期。</p>
+  </section>
+
+  <section id="cadence">
+    <h2>六、每日 / 每周 / 每月需要关注什么？</h2>
+    <table>
+      <thead><tr><th>频率</th><th>必须看</th><th>产出</th><th>禁止事项</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>每日 07:30—08:45</strong></td>
+          <td>数据管道健康；昨收后至今的公告/业绩预告/更正/问询；订单、认证、客户扩产；盈利预测修正；持仓治理风险</td>
+          <td>事件收件箱、证据等级、最早可交易时点、持仓例外清单</td>
+          <td>只读摘要不读原文；把研报标题当事实</td>
+        </tr>
+        <tr>
+          <td><strong>每日盘前</strong></td>
+          <td>四状态概率；组合簇暴露；Gap预算；价格限制/停牌/除权；今日催化</td>
+          <td>当日允许新增风险额度、禁止交易清单</td>
+          <td>临盘改变状态定义</td>
+        </tr>
+        <tr>
+          <td><strong>盘中</strong></td>
+          <td>只看例外：硬否决公告、跌停锁死、成交量异常、板块共振反转</td>
+          <td>异常告警和人工确认</td>
+          <td>把盘口噪音升级成新基本面</td>
+        </tr>
+        <tr>
+          <td><strong>每日收盘后</strong></td>
+          <td>事件后1/5日超额、涨跌家数、主题集中度、连板延续、成交额与波动、持仓归因</td>
+          <td>状态更新、交易日志、次日关注</td>
+          <td>根据单日盈亏改模型</td>
+        </tr>
+        <tr>
+          <td><strong>每周</strong></td>
+          <td>研究池晋级/降级；供应链图新增边；盈利上调广度；订单可见性；预期差；簇相关；数据冲突</td>
+          <td>候选漏斗、组合压力测试、证伪清单、下周事件表</td>
+          <td>用一周胜率评价低频策略</td>
+        </tr>
+        <tr>
+          <td><strong>每月</strong></td>
+          <td>按信号/状态/行业的超额收益；概率校准；交易成本；最大有利/不利变动；漏报、错报、人工覆盖</td>
+          <td>归因报告、冠军/挑战者比较、唯一允许的规则变更提案</td>
+          <td>同时修改多个参数；删除失败策略记录</td>
+        </tr>
+        <tr>
+          <td><strong>每季度</strong></td>
+          <td>GPM、增量毛利、FCF、应收/存货、ROIC、客户集中、资本开支效率、估值隐含路径</td>
+          <td>完整 thesis reset，重新定义“什么必须为真”</td>
+          <td>只因为财报好看而忽略价格已定价</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>五类日度信号的优先级</h3>
+    <ol>
+      <li><strong>P0 生存信号：</strong>监管、审计、治理、退市、流动性、数据故障。</li>
+      <li><strong>P1 原始基本面信号：</strong>业绩预告/更正、订单、认证、客户资本开支、价格/产量。</li>
+      <li><strong>P2 预期修正信号：</strong>一致预期变化、首次覆盖、目标盈利路径变化。</li>
+      <li><strong>P3 市场状态信号：</strong>业绩反应、题材热度、质量/小盘相对收益、流动性压力。</li>
+      <li><strong>P4 执行信号：</strong>价格、成交、涨跌停、滑点；只优化成交，不创造投资逻辑。</li>
+    </ol>
+  </section>
+
+  <section id="harness">
+    <h2>七、问题三：系统上下文需要什么？Harness 如何构建？</h2>
+    <p class="lead">Harness 的目的不是让LLM“更会推荐股票”，而是确保每个结论都在正确时点、使用正确证据、经过确定性规则，并留下可复现记录。</p>
+
+    <h3>7.1 每次决策的最小上下文包</h3>
+    <table>
+      <thead><tr><th>上下文</th><th>必需字段</th><th>为什么重要</th></tr></thead>
+      <tbody>
+        <tr><td>时点</td><td>as_of、publish_time、known_at、earliest_trade_time</td><td>阻止未来数据污染。</td></tr>
+        <tr><td>证券/制度</td><td>代码、市场板块、交易状态、涨跌幅规则、T+1、停牌、除权</td><td>回测收益必须可成交。现货A股当日买入不能当日卖出。<a href="https://www.investor.org.cn/learning_center/investors_classroom/investment_guide/securities/online/tzjjtzrqyxz_661/201606/t20160618_67471.shtml">[S6]</a></td></tr>
+        <tr><td>证据账本</td><td>原文URL、文档哈希、页码/段落、事实、来源等级、冲突状态</td><td>LLM摘要不可替代原文。</td></tr>
+        <tr><td>产业链图</td><td>客户—产品—供应商边、经济暴露、认证、传导时延、置信度</td><td>把“卡位故事”变成可检验路径。</td></tr>
+        <tr><td>财务兑现</td><td>收入/量价、GPM、增量毛利、FCF、营运资本、资本效率</td><td>验证稀缺性是否变成现金。</td></tr>
+        <tr><td>预期</td><td>事件前冻结的一致预期、历史修正、市场隐含增长、估值情景</td><td>判断是否真正有预期差。</td></tr>
+        <tr><td>市场状态</td><td>四状态概率、因子相对收益、注意力、流动性</td><td>同一信号在不同状态的胜率不同。</td></tr>
+        <tr><td>组合</td><td>现有权重、成本、风险预算、叙事簇、相关、Gap95、ADV</td><td>好标的不一定适合当前组合。</td></tr>
+        <tr><td>历史基准率</td><td>相同信号×状态×行业的胜率、赔率、样本量、置信区间</td><td>给“置信度”一个数据含义。</td></tr>
+        <tr><td>决策纪律</td><td>原始假设、证伪条件、下一证据、审批人、人工覆盖理由</td><td>防止事后改写。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>7.2 推荐架构</h3>
+    <div class="flow">
+      <div>交易所/巨潮/公司原文</div><div>不可变原始库</div><div>点时点事件与特征库</div><div>产业链图谱</div><div>研究与状态引擎</div><div>组合/风控引擎</div><div>审批与执行</div>
+    </div>
+    <p>原始披露应优先来自交易所、巨潮和公司公告。巨潮由深交所全资子公司运营，是法定信息披露平台。<a href="https://www.cninfo.com.cn/?lang=zh">[S7]</a> 当前信息披露制度要求年度报告在会计年度结束后4个月内、中期报告在上半年结束后2个月内披露；业绩预告义务则需按主板、科创板、创业板分别编码，不能把“未预告”统一解释为负面。<a href="https://www.csrc.gov.cn/shanghai/c105565/c7549909/content.shtml">[S8]</a> <a href="https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/mainipo/c/c_20260424_10816589.shtml">[S9]</a></p>
+
+    <h3>7.3 决策对象示例</h3>
+    <pre>{
+  "decision_id": "20260714_300xxx_event_01",
+  "as_of": "2026-07-14T08:45:00+08:00",
+  "horizon_days": 63,
+  "security": {"code": "300xxx", "board": "ChiNext", "tradable": true},
+  "regime_prob": {"earnings": 0.48, "institutional": 0.24, "theme": 0.18, "stress": 0.10},
+  "evidence": [
+    {"type": "company_filing", "known_at": "...", "source_url": "...", "grade": "primary"},
+    {"type": "customer_capex", "known_at": "...", "source_url": "...", "grade": "independent"}
+  ],
+  "exposure": {"revenue_range": [0.05, 0.10], "timing": "2-4Q", "confidence": "medium"},
+  "expectations": {"frozen_consensus": "...", "implied_case": "..."},
+  "thesis": {"must_be_true": [], "kill_criteria": [], "next_proof": "..."},
+  "portfolio": {"current_weight": 0, "cluster": "AI_supply_chain", "cluster_weight": 0.13},
+  "risk": {"gap95": 0.11, "adv20": 380000000, "risk_budget": 0.0035},
+  "action": {"status": "research_pool", "human_approval_required": true}
+}</pre>
+
+    <h3>7.4 AI 与确定性代码的边界</h3>
+    <div class="grid2">
+      <div class="mini">
+        <h4>AI可以做</h4>
+        <ul><li>公告抽取、分类与对比</li><li>产业链关系候选和反例搜索</li><li>事实/管理层说法/判断分离</li><li>生成证伪问题和下一证据</li><li>研究报告初稿与历史案例检索</li></ul>
+      </div>
+      <div class="mini">
+        <h4>AI不得直接做</h4>
+        <ul><li>改写原始数据或发布时间</li><li>凭主观分数产生“概率”</li><li>绕过风险闸门</li><li>直接向订单网关写入指令</li><li>在缺少原始证据时自动开仓</li></ul>
+      </div>
+    </div>
+    <p class="callout"><strong>核心控制：</strong>LLM 只能产生“建议对象”；仓位、成交限制、回撤、簇上限和订单白名单必须由确定性代码计算；最终下单要求人工批准。若未来自动生成或下达交易指令，需遵守“先报告、后交易”等程序化交易要求。证监会规则自2024年10月8日实施，沪深交易所实施细则自2025年7月7日实施。<a href="https://www.csrc.gov.cn/csrc/c100028/c7480577/content.shtml">[S10]</a> <a href="https://www.sse.com.cn/lawandrules/sselawsrules2025/trade/universal/c/c_20250612_10781696.shtml">[S11]</a></p>
+
+    <h3>7.5 数据质量的“失败关闭”规则</h3>
+    <ul>
+      <li>原始公告下载失败：不得用二手摘要提升至交易合格池。</li>
+      <li>发布时间或版本冲突：进入人工校验队列，保留两个版本，不覆盖。</li>
+      <li>一致预期缺失：允许研究公司逻辑，但证券结论标记为“不可定价”。</li>
+      <li>板块/证券制度未知：不得回测成交或生成订单。</li>
+      <li>特征无 known_at：只可用于当前研究，禁止进入历史回测。</li>
+    </ul>
+  </section>
+
+  <section id="opensource">
+    <h2>八、GitHub 实盘/研究 Agent 应该怎样用？</h2>
+    <table>
+      <thead><tr><th>项目</th><th>适合承担</th><th>不应承担</th><th>本系统建议</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://github.com/microsoft/qlib">Microsoft Qlib</a></td><td>点时点数据、特征、模型、回测与研究工作流；项目公开列有Point-in-Time数据库能力。<a href="https://github.com/microsoft/qlib/blob/main/README.md">[S12]</a></td><td>公司公告事实核验、人工投研判断、券商订单合规</td><td><span class="tag green">研究主框架候选</span></td></tr>
+        <tr><td><a href="https://github.com/microsoft/RD-Agent">Microsoft RD-Agent(Q)</a></td><td>自动提出因子假设、写代码、运行实验、反馈迭代；论文在CSI300上展示了因子/模型协同。<a href="https://arxiv.org/abs/2505.15155">[S13]</a></td><td>把论文收益直接外推到你的周/月基本面策略；生产订单</td><td><span class="tag amber">挑战者沙箱</span>，每次实验必须计入多重检验账本</td></tr>
+        <tr><td><a href="https://github.com/vnpy/vnpy">VeighNa / vn.py</a></td><td>事件驱动、行情记录、风险管理、交易接口与执行监控。<a href="https://github.com/vnpy/vnpy">[S14]</a></td><td>产生投资逻辑或证明策略有效</td><td><span class="tag green">执行层候选</span>，先确认券商和股票网关</td></tr>
+        <tr><td><a href="https://github.com/wondertrader/wondertrader">WonderTrader</a></td><td>多标的选股调度、目标仓位执行、股票接口、实时监控。<a href="https://github.com/wondertrader/wondertrader">[S15]</a></td><td>替代点时点基本面库或证据验证</td><td><span class="tag green">执行层备选</span>，与VeighNa二选一</td></tr>
+        <tr><td>AKShare / Tushare</td><td>标准字段和扫描提速</td><td>唯一真值源、关键公告原文、历史点时点保证</td><td><span class="tag amber">供应商层</span>，关键字段双源校验</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warning"><strong>开源仓库不等于实盘业绩证明。</strong>正确做法是借它们的工程结构，而不是借它们的收益截图。研究、决策、风险、执行必须解耦；任何“Agent自动赚钱”项目都要先问：数据是否点时点、是否计成本、是否可成交、是否有真正样本外、是否记录全部失败实验。</div>
+  </section>
+
+  <section id="iterate">
+    <h2>九、问题四：后续如何迭代优化？</h2>
+    <h3>9.1 用“假设注册”替代“加指标”</h3>
+    <p>每次迭代必须先登记：机制、数据、方向、适用状态、持有期、预期失败条件、唯一主指标。没有预注册，不允许在看完回测后修改故事。</p>
+    <table>
+      <thead><tr><th>实验字段</th><th>示例</th></tr></thead>
+      <tbody>
+        <tr><td>机制</td><td>客户资本开支上调后，供应商盈利预期修正存在时滞。</td></tr>
+        <tr><td>观测</td><td>客户公告/指引、供应商收入暴露、事件前冻结一致预期。</td></tr>
+        <tr><td>标签</td><td>20日和63日行业中性超额；最大不利变动；公告日Gap。</td></tr>
+        <tr><td>分组</td><td>按业绩/题材/机构/压力状态，行业和市值分层。</td></tr>
+        <tr><td>证伪</td><td>样本外超额≤0；仅在单一行业或单一年份有效；成本后消失。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>9.2 验证设计</h3>
+    <ol>
+      <li><strong>历史范围：</strong>外部证据以2024—2026为主，但策略验证至少回到2018年；否则没有疫情、2022下行、微盘风格切换等多状态样本。</li>
+      <li><strong>点时点：</strong>所有财务、公告、预测、成分股、ST状态和交易制度用当时已知版本。</li>
+      <li><strong>可交易：</strong>模拟T+1、涨跌幅限制、停牌、涨跌停无法成交、实际费率、滑点、除权和退市。</li>
+      <li><strong>走样本外：</strong>滚动训练/验证/测试；最终保留一段完全不查看的锁箱期。</li>
+      <li><strong>多重检验：</strong>记录所有因子、阈值和模型尝试；使用Deflated Sharpe、PBO或FDR控制，不只汇报最优版本。</li>
+      <li><strong>基准：</strong>同时比较沪深300/中证500/中证1000、行业中性组合、简单盈利修正因子和等权锚池。</li>
+      <li><strong>反事实：</strong>比较“有AI/无AI”“有状态开关/无状态开关”“风险仓位/等权仓位”，证明收益来自哪里。</li>
+    </ol>
+
+    <h3>9.3 晋级门槛</h3>
+    <table>
+      <thead><tr><th>阶段</th><th>最低门槛</th><th>失败后</th></tr></thead>
+      <tbody>
+        <tr><td>研究 → 回测候选</td><td>机制明确；数据可点时点；事件样本≥100；主要状态每类≥20</td><td>补数据或放弃，不调整故事迎合结果。</td></tr>
+        <tr><td>回测 → 影子运行</td><td>成本后样本外超额为正；多数滚动窗口同向；参数邻域稳定；无单一年份贡献&gt;50%</td><td>降为研究模块。</td></tr>
+        <tr><td>影子 → 小资金</td><td>至少3个月或30个独立信号；数据SLA达标；实时报价/模拟滑点差异可解释</td><td>修数据/执行，不优先修Alpha。</td></tr>
+        <tr><td>小资金 → 扩仓</td><td>至少50个实盘决策；概率校准优于基准；实际回撤和滑点在预算内；无重大人工绕规则</td><td>回到影子运行。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>9.4 系统KPI</h3>
+    <div class="grid3">
+      <div class="mini"><h4>Alpha</h4><p>20/63日超额、分组单调性、命中率、盈亏比、状态条件收益。</p></div>
+      <div class="mini"><h4>风险</h4><p>最大回撤、Gap损失、簇损失、流动性折价、尾部集中度。</p></div>
+      <div class="mini"><h4>校准</h4><p>Brier score、预测分桶与实际胜率、置信区间覆盖。</p></div>
+      <div class="mini"><h4>执行</h4><p>滑点、成交率、涨跌停失败、ADV占比、信号到订单延迟。</p></div>
+      <div class="mini"><h4>数据</h4><p>公告完整率、延迟、双源冲突、解析错误、未来数据事故。</p></div>
+      <div class="mini"><h4>纪律</h4><p>人工覆盖率、未记录改参、违规加仓、时间止损执行率。</p></div>
+    </div>
+
+    <h3>9.5 冠军—挑战者机制</h3>
+    <p>生产系统一次只运行一个“冠军”版本；新模型、LLM提示词、因子和阈值只在挑战者环境中运行。月度委员会最多批准一个实质变更，并保留旧版本可回滚。RD-Agent(Q)展示了自动研究—实现—反馈循环，但它的CSI300实验和1日预测目标不能直接外推到你的63日基本面系统；可借鉴流程，不能借用收益结论。<a href="https://arxiv.org/abs/2505.15155">[S13]</a></p>
+  </section>
+
+  <section id="roadmap">
+    <h2>十、建议的 360 天落地路线</h2>
+    <table>
+      <thead><tr><th>时间</th><th>重点</th><th>交付物</th><th>成功标准</th></tr></thead>
+      <tbody>
+        <tr><td>0—30天</td><td>规则冻结、数据字典、证据等级、原始公告归档</td><td>v0.1规则手册；事件schema；决策日志；禁止交易清单</td><td>任意历史决策可复现当时证据</td></tr>
+        <tr><td>31—90天</td><td>点时点回放、基准策略、状态指数</td><td>2018—2026事件库；无AI基准；四状态回测</td><td>识别真正贡献Alpha的2—3个信号</td></tr>
+        <tr><td>91—180天</td><td>影子组合、数据SLA、执行模拟</td><td>每日信号卡；周度风险表；月度归因</td><td>连续3个月无未来数据和重大漏报</td></tr>
+        <tr><td>181—270天</td><td>极小资金试运行</td><td>实盘/模拟差异账本；人工覆盖日志</td><td>滑点、成交和规则执行符合预算</td></tr>
+        <tr><td>271—360天</td><td>冠军—挑战者与第一次正式复审</td><td>版本1.0；退役/保留信号清单；扩仓建议</td><td>基于数据扩仓，而非基于短期盈利</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <strong>优先级只做三件事：</strong>①把所有公告和财务特征做成点时点；②把锚池拆成研究池与交易合格池；③用风险预算公式替代“真卡点15—20%”。在这三件事完成前，不建议继续增加新数据源、Level-2或更多LLM评分维度。
+    </div>
+  </section>
+
+  <section>
+    <h2>十一、最终版“十条军规”</h2>
+    <ol>
+      <li>没有原始证据，不进交易合格池。</li>
+      <li>不能量化经济暴露，不把产业链故事变成仓位。</li>
+      <li>没有冻结的市场预期，就不能声称“超预期”。</li>
+      <li>GPM只是一项兑现指标，不是定价权的充分条件。</li>
+      <li>调研、研报、热度、涨停只能确认或调节风险，不能单独开仓。</li>
+      <li>仓位由可承受损失决定，不由研究兴奋程度决定。</li>
+      <li>只因证据增强加仓，绝不只因价格下跌加仓。</li>
+      <li>同一叙事簇按一个风险源管理。</li>
+      <li>亏损期冻结参数；规则只在月度复审中变更。</li>
+      <li>AI不能直连订单；所有决策可追溯、可回放、可证伪。</li>
+    </ol>
+  </section>
+
+  <section id="sources">
+    <h2>十二、来源与证据强度</h2>
+    <p class="note">优先使用监管/交易所原文、论文原文和官方GitHub。论文结论只支持研究假设，不等于可直接交易；开源仓库功能不等于实盘收益证明。</p>
+    <ol class="source-list small">
+      <li><strong>[S1]</strong> S&amp;P Dow Jones Indices, <a href="https://www.spglobal.com/spdji/en/documents/spiva/spiva-asia-ex-japan-mid-year-2025.pdf">SPIVA Asia Ex-Japan Mid-Year 2025</a>。证券研究，较高可信。</li>
+      <li><strong>[S2]</strong> Liu et al. (2025), <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5493686">Earnings Announcement Drift in China</a>。工作论文，机制相关，需独立复现。</li>
+      <li><strong>[S3]</strong> 清华大学学位论文 (2024), <a href="https://newetds.lib.tsinghua.edu.cn/qh/paper/summary?dbCode=ETDQH&amp;sysId=293812">Supply Chain Connections and Future Stock Returns</a>。单篇硕士论文，中低证据强度。</li>
+      <li><strong>[S4]</strong> <a href="https://www.sciencedirect.com/science/article/abs/pii/S1057521924007075">Investor attention and anomalies: Evidence from the Chinese stock market</a>。同行评议期刊。</li>
+      <li><strong>[S5]</strong> <a href="https://www.sciencedirect.com/science/article/abs/pii/S1042443125001489">Investor-driven information diffusion and excess comovement</a>。同行评议期刊。</li>
+      <li><strong>[S6]</strong> 中国投资者网，<a href="https://www.investor.org.cn/learning_center/investors_classroom/investment_guide/securities/online/tzjjtzrqyxz_661/201606/t20160618_67471.shtml">A股T+1交易说明</a>。</li>
+      <li><strong>[S7]</strong> <a href="https://www.cninfo.com.cn/?lang=zh">巨潮资讯网</a>，深交所法定信息披露平台。</li>
+      <li><strong>[S8]</strong> 中国证监会令第226号，<a href="https://www.csrc.gov.cn/shanghai/c105565/c7549909/content.shtml">上市公司信息披露管理办法</a>，2025-07-01施行。</li>
+      <li><strong>[S9]</strong> 上交所，<a href="https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/mainipo/c/c_20260424_10816589.shtml">股票上市规则（2026年4月修订）</a>。</li>
+      <li><strong>[S10]</strong> 中国证监会，<a href="https://www.csrc.gov.cn/csrc/c100028/c7480577/content.shtml">证券市场程序化交易管理规定（试行）</a>。</li>
+      <li><strong>[S11]</strong> 上交所，<a href="https://www.sse.com.cn/lawandrules/sselawsrules2025/trade/universal/c/c_20250612_10781696.shtml">程序化交易管理实施细则</a>。</li>
+      <li><strong>[S12]</strong> Microsoft, <a href="https://github.com/microsoft/qlib">Qlib</a>。官方GitHub。</li>
+      <li><strong>[S13]</strong> Li et al. (2025), <a href="https://arxiv.org/abs/2505.15155">R&amp;D-Agent-Quant</a> 与 <a href="https://github.com/microsoft/RD-Agent">官方代码</a>。</li>
+      <li><strong>[S14]</strong> <a href="https://github.com/vnpy/vnpy">VeighNa / vn.py</a>。官方GitHub。</li>
+      <li><strong>[S15]</strong> <a href="https://github.com/wondertrader/wondertrader">WonderTrader</a>。官方GitHub。</li>
+      <li>上交所，<a href="https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml">交易规则（2026年修订）</a>；深交所，<a href="https://docs.static.szse.cn/www/lawrules/rule/trade/W020260424690713155663.pdf">交易规则（2026年修订）</a>。制度实现应以交易日当时有效版本为准。</li>
+    </ol>
+  </section>
+
+  <div class="footer">基于用户提供的《交易框架.md》与《deep-research-report.md》重构。研究冻结日：2026-07-14。所有阈值须经样本外和影子运行验证。</div>
+</main>
+</body>
+</html>
