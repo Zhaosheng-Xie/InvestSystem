@@ -38,3 +38,13 @@ Git history is unavailable, so no existing convention can be inferred. Use short
 ## Security & Operational Boundaries
 
 Never commit credentials, broker tokens, or account data. Research agents must not access trading credentials or submit orders. Live outputs require a data snapshot, rule version, test report, and human approval record.
+
+## Cross-Repository Isolation
+
+`InvestmentResearchKB` is an independent provider. This repository may consume only pinned, versioned public contracts and exact Published Release artifacts. Implementation, tests, and CI must not read the sibling repository's SQLite, `raw/`, `staging/`, `published/`, source package, worktree, or temporary directories; do not add sibling-path imports, the KB editable install as a dependency, submodules, symlinks, junctions, shared writable caches, databases, migrations, project runtimes, or CI checkouts.
+
+The approved local-development exception is the workstation Conda environment `E:\Conda\envs\Data_Analysis` with Python 3.12. Treat it only as a shared interpreter, not as the dependency contract: InvestSystem owns its `pyproject.toml`, hash-locked runtime/dev requirements, TOML configuration, cache, database, and runtime directory. Register this project with editable `--no-deps`; never import the KB package from the shared environment. Before and after adding an InvestSystem package, record the environment baseline and run `pip check`; install only exact locked missing packages without changing existing shared packages unless the user separately approves that impact. CI and reproducible validation must build an isolated environment from the InvestSystem lock.
+
+KB credentials must be read-only and limited to the published delivery surface. Preserve `origin` as the writable fork remote, never push to `upstream`, and establish and verify a technical no-push guard on `upstream` during Stage 0 before that stage can complete.
+
+Industrial-event and theme-rotation strategies default to zero signal interchange. They may separately pin the same KB Release, read the same provider-neutral immutable content-addressed Release cache, and reuse provider-neutral execution or market-rule libraries, but each must own its input references, consumption receipt/observations, Manifest, states, rules, ledger, attribution, and P&L. Any future cross-strategy feature requires an approved ADR, a versioned contract, and revalidation of every affected strategy.
