@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0.0",
+  "canonicalization_profile": "irkb-jsonl-v1",
+  "encoding": "UTF-8",
+  "hash_algorithm": "sha256",
+  "rules": {
+    "unicode_normalization": "NFC for every object key and string value before serialization",
+    "object_key_order": "ascending Unicode code point order after NFC normalization",
+    "json_separators": "comma and colon with no surrounding whitespace",
+    "json_literals": "UTF-8 JSON literals with ensure_ascii=false and non-finite numbers rejected",
+    "canonical_json_newline": "none",
+    "jsonl_record_order": "ascending tuple of string values for the declared sort_keys",
+    "jsonl_line_ending": "one LF after every canonical JSON record, including the final record",
+    "artifact_hash_input": "exact artifact bytes",
+    "manifest_hash_input": "canonical JSON bytes of the complete manifest with manifest_hash omitted and no trailing LF",
+    "manifest_file_bytes": "sealed canonical JSON followed by exactly one LF"
+  },
+  "canonical_json_vectors": [
+    {
+      "vector_id": "unicode-key-order-and-escaping-v1",
+      "value": {
+        "z": "Cafe\u0301",
+        "a": [
+          true,
+          null,
+          0,
+          1.25
+        ],
+        "nested": {
+          "\u03b2": "\u4e8c",
+          "a": "\u4e00"
+        },
+        "escaped": "line\n\"quote\""
+      },
+      "expected_utf8_hex": "7b2261223a5b747275652c6e756c6c2c302c312e32355d2c2265736361706564223a226c696e655c6e5c2271756f74655c22222c226e6573746564223a7b2261223a22e4b880222c22ceb2223a22e4ba8c227d2c227a223a22436166c3a9227d",
+      "expected_hash": {
+        "algorithm": "sha256",
+        "value": "9763ab31967118a7379bb3352eb10e6ed1737bf70fd0a339b41c83078ce4953d"
+      }
+    }
+  ],
+  "artifact_vectors": [
+    {
+      "vector_id": "two-record-jsonl-v1",
+      "sort_keys": [
+        "id"
+      ],
+      "records": [
+        {
+          "id": "b",
+          "value": 2,
+          "label": "Beta"
+        },
+        {
+          "label": "Cafe\u0301",
+          "value": 1.25,
+          "id": "a"
+        }
+      ],
+      "expected_record_ids": [
+        "a",
+        "b"
+      ],
+      "expected_utf8_hex": "7b226964223a2261222c226c6162656c223a22436166c3a9222c2276616c7565223a312e32357d0a7b226964223a2262222c226c6162656c223a2242657461222c2276616c7565223a327d0a",
+      "expected_size_bytes": 76,
+      "expected_artifact_hash": {
+        "algorithm": "sha256",
+        "value": "0d65324ee2de2d6f3230d20b0a998f6b77c4fcb19221a08073c09cba37681f3b"
+      }
+    }
+  ],
+  "manifest_vectors": [
+    {
+      "vector_id": "dataset-release-manifest-v1",
+      "unsigned_manifest": {
+        "schema_version": "1.0.0",
+        "release_id": "rel_golden_v1",
+        "created_at": "2030-01-01T00:00:00.000000Z",
+        "knowledge_cutoff": "2029-01-01T00:00:00.000000Z",
+        "supersedes_release_id": null,
+        "time_semantics_version": "1.0.0",
+        "canonicalization_profile": "irkb-jsonl-v1",
+        "code": {
+          "repository": "investment-research-kb",
+          "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "dirty": false
+        },
+        "inputs": {
+          "source_snapshots": [
+            {
+              "snapshot_id": "snapshot_golden_v1",
+              "provider": "fixture",
+              "dataset": "golden",
+              "schema_hash": {
+                "algorithm": "sha256",
+                "value": "1111111111111111111111111111111111111111111111111111111111111111"
+              },
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "2222222222222222222222222222222222222222222222222222222222222222"
+              }
+            }
+          ],
+          "document_versions": [],
+          "configs": [
+            {
+              "config_id": "golden",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "3333333333333333333333333333333333333333333333333333333333333333"
+              }
+            }
+          ],
+          "normalizers": [
+            {
+              "normalizer_id": "golden",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "4444444444444444444444444444444444444444444444444444444444444444"
+              }
+            }
+          ],
+          "parsers": [],
+          "availability_policies": [
+            {
+              "policy_id": "golden",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "5555555555555555555555555555555555555555555555555555555555555555"
+              }
+            }
+          ],
+          "review_policy": null,
+          "authorization_policy": {
+            "policy_id": "internal-research-release",
+            "version": "1",
+            "content_hash": {
+              "algorithm": "sha256",
+              "value": "6666666666666666666666666666666666666666666666666666666666666666"
+            }
+          }
+        },
+        "release_items": [
+          {
+            "artifact_id": "golden-jsonl-v1",
+            "item_type": "dataset",
+            "logical_path": "artifacts/golden.v1.jsonl",
+            "media_type": "application/x-ndjson",
+            "format": "jsonl",
+            "record_schema_id": "urn:investment-research-kb:record:golden:v1",
+            "record_schema_version": "1.0.0",
+            "record_schema_hash": {
+              "algorithm": "sha256",
+              "value": "7777777777777777777777777777777777777777777777777777777777777777"
+            },
+            "sort_keys": [
+              "id"
+            ],
+            "record_count": 2,
+            "size_bytes": 76,
+            "artifact_hash": {
+              "algorithm": "sha256",
+              "value": "0d65324ee2de2d6f3230d20b0a998f6b77c4fcb19221a08073c09cba37681f3b"
+            },
+            "logical_content_hash": {
+              "algorithm": "sha256",
+              "value": "0d65324ee2de2d6f3230d20b0a998f6b77c4fcb19221a08073c09cba37681f3b"
+            }
+          }
+        ]
+      },
+      "expected_manifest_hash": {
+        "algorithm": "sha256",
+        "value": "a05e9ac3bd3359f46cbb97f981baf7088078fc1385ae0f0320d1c1b8adbbae9b"
+      },
+      "expected_sealed_file_size_bytes": 2244,
+      "expected_sealed_file_hash": {
+        "algorithm": "sha256",
+        "value": "aa2434f47af4fd0aa7aef20c7f7373e9ee77a12b1a52769b09e951979cf3fd3a"
+      }
+    }
+  ]
+}

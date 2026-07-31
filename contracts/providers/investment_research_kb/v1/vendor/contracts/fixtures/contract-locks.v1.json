@@ -1,0 +1,175 @@
+{
+  "schema_version": "1.0.0",
+  "purpose": "Immutable v1 contract checksums for cross-repository compatibility.",
+  "contracts": [
+    {
+      "path": "context-pack.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:context-pack:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "a6432ef884861eae5652faa59b0593841e1f1e68d67b7b615510271820d16e68"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "c5888c5f1c06488f45f499a6899db996a70c1232b9e48df44e7b90c2094b143b"
+      }
+    },
+    {
+      "path": "dataset-release.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:dataset-release:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "b05de2c05a05228197dc999b29b06f0603d0fb47fcd2a72f2944dc146150e4ba"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "10f86e9bab957478f2ab50547ce0206afb8af555f5a03c147232675778f03a01"
+      }
+    },
+    {
+      "path": "disclosure-schedule-record.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:record:disclosure-schedule:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "2be050cd2dab7606408f7797c94ef103b299cd754e8a237d84666bba1986481d"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "9dc62f197d209ac67d50bf4e425314b705705ca21a3a43d5fc957ffaaf3018e5"
+      }
+    },
+    {
+      "path": "evidence-bundle.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:evidence-bundle:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "660a2c3ce25a3bb4d541c8a532c9ff062a702f40d495753031ce87feae9b0658"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "c1dd633ff0966cfee40c8168b0219473e9e2c1a3bc128a8b4962d4c5375d8f0c"
+      }
+    },
+    {
+      "path": "evidence.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:evidence:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "76187fca7d72264f517f1dd9c617f656d3da63ed6d00553bf9aae1bb0fdc686e"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "16676eb33549048a685d4c43a1e63bf1dfa97d4b2a2d529326a8793778b20c75"
+      }
+    },
+    {
+      "path": "financial-segment-record.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:record:financial-segment:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "89fc05994fc19aef73fb6e6709aff294b39783e2b372b17e43ed7835ab4d88aa"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "f10d2f6f3141937dd70ff81b16adc14e34f9b865e5ae83d9f8c848342118bd33"
+      }
+    },
+    {
+      "path": "financial-statement-record.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:record:financial-statement:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "9efd817b0bff068320c1bef1751fa6e26144ba956ac1e16be2d0c0238d7dfb4b"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "64b1fe05f538ae8034dcfdda3a6cc0087ad4299b793a87dc5b3e8281cbe1408c"
+      }
+    },
+    {
+      "path": "market-daily-record.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:record:market-daily:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "7a37f10184cc14496b7a1a7c784bc939211c2e3c6dadb09fef015074efc07196"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "4de0da22e52518a953022b8ad1cef040dde78c35ed69c86a6f05ac78dc98a7a7"
+      }
+    },
+    {
+      "path": "release-manifest.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:release-manifest:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "ab7ac59b49c04351d1c3c7f968a57e5a70e594bb6303841bf29270c35929dc50"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "e8fecabaa835125905c2c262e3eecda507ebf8cb4651e5acfad8622d58afbd95"
+      }
+    },
+    {
+      "path": "release-status-event.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:release-status-event:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "7285d07c5e7810301a21b28709a7f45cec635eb83eb9b7dfb7d29a6cf14c9c97"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "c907bd92e24d54944b6eb2a2d35d1852b11b08be4b5d8d847c74ea211a519e02"
+      }
+    },
+    {
+      "path": "source-document-manifest.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:source-document-manifest:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "5da0a92e18833b4d6f2e9e7f570079b7ad7bc1efeaeab4733a2e937cf40f3999"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "8be36ff84c71c77d00031027f6c043b9dca9e34601699f44a1df7cc1cec17812"
+      }
+    },
+    {
+      "path": "strategy-input-ref.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:strategy-input-ref:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "7499dac35ce3b5a994643c3f8c1ad75af175557386d9d3e548c4d41eb7851998"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "55b381df48a80a046388c19c53bb27e924c25bd10294d7dba0d55097280f86b6"
+      }
+    },
+    {
+      "path": "tushare-financial-precision-manifest.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:tushare-financial-precision-manifest:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "fd058cb69c4941a601eebe79269c68d78f62f885c82714be4b65555e0e5ba6e7"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "3e4a6f737b3cd8c532d050f93638efbb8e723f57698d9ff6f7e5d930a9a33f24"
+      }
+    }
+  ]
+}

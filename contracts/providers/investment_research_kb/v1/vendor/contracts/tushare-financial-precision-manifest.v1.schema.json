@@ -1,0 +1,464 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:tushare-financial-precision-manifest:v1",
+  "title": "Tushare Financial Precision Manifest v1",
+  "description": "Credential-sanitized evidence that one fixed income response was compared through strict Decimal and Tushare SDK-compatible DataFrame decoding paths.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "created_at",
+    "assurance_scope",
+    "provider",
+    "dataset",
+    "comparison_contract_version",
+    "canary_contract_version",
+    "request_contract",
+    "runtime",
+    "input_hashes",
+    "scope",
+    "result",
+    "limitations",
+    "manifest_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^tpm_[0-9a-f]{64}$"
+    },
+    "created_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "assurance_scope": {
+      "const": "numeric_decode_only"
+    },
+    "provider": {
+      "const": "tushare"
+    },
+    "dataset": {
+      "const": "income"
+    },
+    "comparison_contract_version": {
+      "const": "tushare-financial-decimal.v1"
+    },
+    "canary_contract_version": {
+      "type": "string",
+      "pattern": "^tushare-positive-canary\\.v[1-9][0-9]*$"
+    },
+    "request_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested_fields",
+        "numeric_fields",
+        "sanitized_parameters_hash",
+        "response_schema_hash"
+      ],
+      "properties": {
+        "requested_fields": {
+          "$ref": "#/$defs/incomeFields"
+        },
+        "numeric_fields": {
+          "$ref": "#/$defs/numericFields"
+        },
+        "sanitized_parameters_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "response_schema_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "python_version",
+        "tushare_version",
+        "pandas_version",
+        "numpy_version",
+        "requests_version",
+        "decoder_contract_hash",
+        "normalizer_id",
+        "normalizer_version"
+      ],
+      "properties": {
+        "python_version": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "tushare_version": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "pandas_version": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "numpy_version": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "requests_version": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "decoder_contract_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "normalizer_id": {
+          "const": "tushare.income"
+        },
+        "normalizer_version": {
+          "const": "1"
+        }
+      }
+    },
+    "input_hashes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "response_body_hash",
+        "response_text_hash",
+        "sdk_projection_hash",
+        "private_comparison_transcript_hash"
+      ],
+      "properties": {
+        "response_body_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "response_text_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sdk_projection_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "private_comparison_transcript_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "row_count",
+        "numeric_fields",
+        "required_non_null_fields",
+        "candidate_cell_count"
+      ],
+      "properties": {
+        "row_count": {
+          "$ref": "#/$defs/count"
+        },
+        "numeric_fields": {
+          "$ref": "#/$defs/numericFields"
+        },
+        "required_non_null_fields": {
+          "$ref": "#/$defs/numericFields"
+        },
+        "candidate_cell_count": {
+          "$ref": "#/$defs/count"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "compared_cell_count",
+        "missing_cell_count",
+        "invalid_wire_cell_count",
+        "invalid_sdk_cell_count",
+        "decimal_mismatch_count",
+        "field_counts",
+        "failure_codes"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "compared_cell_count": {
+          "$ref": "#/$defs/count"
+        },
+        "missing_cell_count": {
+          "$ref": "#/$defs/count"
+        },
+        "invalid_wire_cell_count": {
+          "$ref": "#/$defs/count"
+        },
+        "invalid_sdk_cell_count": {
+          "$ref": "#/$defs/count"
+        },
+        "decimal_mismatch_count": {
+          "$ref": "#/$defs/count"
+        },
+        "field_counts": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": {
+            "$ref": "#/$defs/fieldCount"
+          }
+        },
+        "failure_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "canary_identity_mismatch",
+              "decimal_mismatch",
+              "incomplete_comparison",
+              "invalid_sdk_value",
+              "invalid_wire_value",
+              "missing_numeric_value",
+              "no_rows",
+              "row_alignment_changed",
+              "schema_changed"
+            ]
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "fixed_income_canary_only",
+          "numeric_decode_only",
+          "not_source_authentication",
+          "not_future_batch_assurance"
+        ]
+      }
+    },
+    "manifest_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "status": {
+                "const": "passed"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "scope": {
+            "properties": {
+              "row_count": {
+                "minimum": 1
+              },
+              "candidate_cell_count": {
+                "minimum": 7
+              }
+            }
+          },
+          "result": {
+            "properties": {
+              "missing_cell_count": {
+                "const": 0
+              },
+              "invalid_wire_cell_count": {
+                "const": 0
+              },
+              "invalid_sdk_cell_count": {
+                "const": 0
+              },
+              "decimal_mismatch_count": {
+                "const": 0
+              },
+              "failure_codes": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "result": {
+            "properties": {
+              "failure_codes": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "nonemptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "incomeFields": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "ts_code"
+        },
+        {
+          "const": "ann_date"
+        },
+        {
+          "const": "f_ann_date"
+        },
+        {
+          "const": "end_date"
+        },
+        {
+          "const": "report_type"
+        },
+        {
+          "const": "comp_type"
+        },
+        {
+          "const": "end_type"
+        },
+        {
+          "const": "revenue"
+        },
+        {
+          "const": "oper_cost"
+        },
+        {
+          "const": "operate_profit"
+        },
+        {
+          "const": "total_profit"
+        },
+        {
+          "const": "n_income"
+        },
+        {
+          "const": "n_income_attr_p"
+        },
+        {
+          "const": "basic_eps"
+        },
+        {
+          "const": "update_flag"
+        }
+      ],
+      "items": false,
+      "minItems": 15,
+      "maxItems": 15
+    },
+    "numericFields": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "revenue"
+        },
+        {
+          "const": "oper_cost"
+        },
+        {
+          "const": "operate_profit"
+        },
+        {
+          "const": "total_profit"
+        },
+        {
+          "const": "n_income"
+        },
+        {
+          "const": "n_income_attr_p"
+        },
+        {
+          "const": "basic_eps"
+        }
+      ],
+      "items": false,
+      "minItems": 7,
+      "maxItems": 7
+    },
+    "fieldCount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "compared",
+        "missing",
+        "invalid",
+        "mismatched"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": [
+            "revenue",
+            "oper_cost",
+            "operate_profit",
+            "total_profit",
+            "n_income",
+            "n_income_attr_p",
+            "basic_eps"
+          ]
+        },
+        "compared": {
+          "$ref": "#/$defs/count"
+        },
+        "missing": {
+          "$ref": "#/$defs/count"
+        },
+        "invalid": {
+          "$ref": "#/$defs/count"
+        },
+        "mismatched": {
+          "$ref": "#/$defs/count"
+        }
+      }
+    }
+  }
+}

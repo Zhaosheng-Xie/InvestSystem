@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.investsystem.local/strategy-run-manifest/0.1.0-draft/strategy-run-manifest.schema.json",
   "title": "StrategyRunManifest (InvestSystem Draft)",
-  "description": "InvestSystem-owned minimum run manifest from PRD v0.3. Fetch and status observation identities are audit references and are not a replay-hash policy.",
+  "description": "InvestSystem-owned minimum run manifest from PRD v0.3. Fetch, provider-status, and local-admission observation identities are audit references and are not a replay-hash policy.",
   "x-owner": "InvestSystem",
   "x-contract-status": "draft",
   "x-contract-version": "0.1.0-draft",

@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:market-daily:v1",
+  "title": "Market Daily Release Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "security_id",
+    "currency",
+    "trade_date",
+    "open",
+    "high",
+    "low",
+    "close",
+    "pre_close",
+    "change",
+    "pct_chg",
+    "vol",
+    "amount",
+    "event_at",
+    "source_published_at",
+    "first_seen_at",
+    "ingested_at",
+    "verified_at",
+    "available_at",
+    "time_precision",
+    "time_quality",
+    "availability_policy_version",
+    "availability_evidence",
+    "source_record_id",
+    "source_snapshot_id",
+    "source_provider",
+    "source_dataset",
+    "content_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "security_id": {
+      "$ref": "#/$defs/id"
+    },
+    "currency": {
+      "const": "CNY",
+      "description": "ISO 4217 currency for all price and amount fields in this v1 record."
+    },
+    "trade_date": {
+      "type": "string",
+      "pattern": "^\\d{8}$",
+      "description": "Exchange-local trading date in YYYYMMDD form."
+    },
+    "open": {
+      "$ref": "#/$defs/numberOrNull",
+      "description": "Unadjusted opening price.",
+      "x-unit": "CNY/share"
+    },
+    "high": {
+      "$ref": "#/$defs/numberOrNull",
+      "description": "Unadjusted highest price.",
+      "x-unit": "CNY/share"
+    },
+    "low": {
+      "$ref": "#/$defs/numberOrNull",
+      "description": "Unadjusted lowest price.",
+      "x-unit": "CNY/share"
+    },
+    "close": {
+      "$ref": "#/$defs/numberOrNull",
+      "description": "Unadjusted closing price.",
+      "x-unit": "CNY/share"
+    },
+    "pre_close": {
+      "$ref": "#/$defs/numberOrNull",
+      "description": "Previous unadjusted closing price.",
+      "x-unit": "CNY/share"
+    },
+    "change": {
+      "$ref": "#/$defs/numberOrNull",
+      "description": "Closing-price change from pre_close.",
+      "x-unit": "CNY/share"
+    },
+    "pct_chg": {
+      "$ref": "#/$defs/numberOrNull",
+      "description": "Percentage price change, where 1 means one percent.",
+      "x-unit": "percent"
+    },
+    "vol": {
+      "$ref": "#/$defs/numberOrNull",
+      "description": "Trading volume reported by Tushare in lots of 100 shares.",
+      "x-unit": "lot_100_shares"
+    },
+    "amount": {
+      "$ref": "#/$defs/numberOrNull",
+      "description": "Trading amount reported by Tushare in thousand CNY.",
+      "x-unit": "thousand_CNY"
+    },
+    "event_at": {
+      "$ref": "#/$defs/nullableEventTime"
+    },
+    "source_published_at": {
+      "$ref": "#/$defs/nullableUtcTimestamp"
+    },
+    "first_seen_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "ingested_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "verified_at": {
+      "$ref": "#/$defs/nullableUtcTimestamp"
+    },
+    "available_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "time_precision": {
+      "type": "string",
+      "enum": [
+        "second",
+        "minute",
+        "date_only",
+        "unknown"
+      ]
+    },
+    "time_quality": {
+      "type": "string",
+      "enum": [
+        "official_timestamp",
+        "provider_timestamp",
+        "first_seen_fallback",
+        "ingest_time_proxy"
+      ]
+    },
+    "availability_policy_version": {
+      "$ref": "#/$defs/version"
+    },
+    "availability_evidence": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "source_record_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_snapshot_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_provider": {
+      "$ref": "#/$defs/id"
+    },
+    "source_dataset": {
+      "$ref": "#/$defs/id"
+    },
+    "content_hash": {
+      "$ref": "#/$defs/sha256Value"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "sha256Value": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "nullableUtcTimestamp": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableEventTime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "numberOrNull": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

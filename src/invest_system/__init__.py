@@ -11,6 +11,20 @@ from .canonical import (
     to_json_value,
 )
 from .clock import Clock, FixedClock, SystemClock, read_clock
+from .consumption import (
+    ARTIFACT_CONSUMPTION_RECEIPT_SCHEMA_VERSION,
+    CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
+    ArtifactConsumptionReceipt,
+    ArtifactFetchObservation,
+    ArtifactReceiptItem,
+    ConsumptionObservationType,
+    DeliveryTransport,
+    ProviderReleaseStatus,
+    ReleaseAdmissionObservation,
+    ReleaseAdmissionStatus,
+    ReleaseStatusObservation,
+    SchemaValidationResult,
+)
 from .governance import RuleGovernanceError, validate_rule_maturity
 from .models import (
     DECISION_RECORD_SCHEMA_VERSION,
@@ -57,9 +71,14 @@ from .storage import (
 )
 
 __all__ = [
+    "ARTIFACT_CONSUMPTION_RECEIPT_SCHEMA_VERSION",
+    "CONSUMPTION_OBSERVATION_SCHEMA_VERSION",
     "CanonicalJsonError",
     "AdmissionStatus",
+    "ArtifactConsumptionReceipt",
+    "ArtifactFetchObservation",
     "ArtifactRead",
+    "ArtifactReceiptItem",
     "AuditReplayRequest",
     "CacheIntegrityError",
     "CacheIssueKind",
@@ -67,10 +86,12 @@ __all__ = [
     "CacheScanIssue",
     "CachedArtifact",
     "Clock",
+    "ConsumptionObservationType",
     "DECISION_RECORD_SCHEMA_VERSION",
     "DEFAULT_CACHE_SOFT_LIMIT_BYTES",
     "DecisionRecord",
     "DecisionState",
+    "DeliveryTransport",
     "EventState",
     "ExpectationClass",
     "FixedClock",
@@ -82,9 +103,14 @@ __all__ = [
     "ImmutableMappingError",
     "MarketRegime",
     "PositionState",
+    "ProviderReleaseStatus",
+    "ReleaseAdmissionObservation",
+    "ReleaseAdmissionStatus",
+    "ReleaseStatusObservation",
     "RunMode",
     "RuleGovernanceError",
     "RuleStatus",
+    "SchemaValidationResult",
     "STRATEGY_RUN_MANIFEST_SCHEMA_VERSION",
     "STORAGE_SCHEMA_VERSION",
     "StrategyInputRef",

@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/observations/0.1.0-draft/consumption-observations.schema.json",
+  "title": "Release Consumption Observations (InvestSystem Draft)",
+  "description": "InvestSystem-owned append-only fetch, provider-status, and local-admission observations. The three axes remain independent and do not change receipt identity.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/artifactFetchObservation"
+    },
+    {
+      "$ref": "#/$defs/releaseStatusObservation"
+    },
+    {
+      "$ref": "#/$defs/releaseAdmissionObservation"
+    }
+  ],
+  "$defs": {
+    "reasonCodes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+      }
+    },
+    "nullableId": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableHash": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "artifactFetchObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "observation_id",
+        "release_id",
+        "strategy_input_ref",
+        "observed_at",
+        "transport",
+        "source_endpoint",
+        "schema_validation_result",
+        "receipt_hash",
+        "artifact_ids",
+        "response_or_export_bytes_hash",
+        "failure_reasons",
+        "local_cache_keys",
+        "supersedes",
+        "observation_type"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0-draft"
+        },
+        "observation_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        "release_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/exactReleaseId"
+        },
+        "strategy_input_ref": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/strategyInputRef"
+        },
+        "observed_at": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+        },
+        "transport": {
+          "enum": [
+            "read_only_http_api",
+            "immutable_export"
+          ]
+        },
+        "source_endpoint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_validation_result": {
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "receipt_hash": {
+          "$ref": "#/$defs/nullableHash"
+        },
+        "artifact_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+          }
+        },
+        "response_or_export_bytes_hash": {
+          "$ref": "#/$defs/nullableHash"
+        },
+        "failure_reasons": {
+          "$ref": "#/$defs/reasonCodes"
+        },
+        "local_cache_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "supersedes": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "observation_type": {
+          "const": "artifact_fetch"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "schema_validation_result": {
+                "const": "passed"
+              }
+            },
+            "required": [
+              "schema_validation_result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "failure_reasons": {
+                "maxItems": 0
+              },
+              "receipt_hash": {
+                "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+              },
+              "artifact_ids": {
+                "minItems": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "failure_reasons": {
+                "minItems": 1
+              },
+              "receipt_hash": {
+                "const": null
+              },
+              "artifact_ids": {
+                "maxItems": 0
+              },
+              "local_cache_keys": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "releaseStatusObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "observation_id",
+        "release_id",
+        "strategy_input_ref",
+        "observed_at",
+        "schema_validation_result",
+        "status",
+        "status_event_id",
+        "status_event_hash",
+        "failure_reasons",
+        "supersedes",
+        "observation_type"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0-draft"
+        },
+        "observation_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        "release_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/exactReleaseId"
+        },
+        "strategy_input_ref": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/strategyInputRef"
+        },
+        "observed_at": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+        },
+        "schema_validation_result": {
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "status": {
+          "anyOf": [
+            {
+              "enum": [
+                "building",
+                "validated",
+                "published",
+                "withdrawn"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status_event_id": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "status_event_hash": {
+          "$ref": "#/$defs/nullableHash"
+        },
+        "failure_reasons": {
+          "$ref": "#/$defs/reasonCodes"
+        },
+        "supersedes": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "observation_type": {
+          "const": "release_status"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "schema_validation_result": {
+                "const": "passed"
+              }
+            },
+            "required": [
+              "schema_validation_result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "building",
+                  "validated",
+                  "published",
+                  "withdrawn"
+                ]
+              },
+              "status_event_id": {
+                "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+              },
+              "status_event_hash": {
+                "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+              },
+              "failure_reasons": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "status": {
+                "const": null
+              },
+              "status_event_id": {
+                "const": null
+              },
+              "status_event_hash": {
+                "const": null
+              },
+              "failure_reasons": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "releaseAdmissionObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "observation_id",
+        "release_id",
+        "strategy_input_ref",
+        "observed_at",
+        "status_observation_id",
+        "admission_status",
+        "failure_reasons",
+        "supersedes",
+        "observation_type"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0-draft"
+        },
+        "observation_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        "release_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/exactReleaseId"
+        },
+        "strategy_input_ref": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/strategyInputRef"
+        },
+        "observed_at": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+        },
+        "status_observation_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        "admission_status": {
+          "enum": [
+            "authorized",
+            "unconfirmed",
+            "denied"
+          ]
+        },
+        "failure_reasons": {
+          "$ref": "#/$defs/reasonCodes"
+        },
+        "supersedes": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "observation_type": {
+          "const": "release_admission"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "admission_status": {
+                "const": "authorized"
+              }
+            },
+            "required": [
+              "admission_status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "failure_reasons": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "failure_reasons": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

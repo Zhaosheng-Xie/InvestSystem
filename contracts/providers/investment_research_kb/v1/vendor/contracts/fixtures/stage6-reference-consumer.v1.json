@@ -1,0 +1,719 @@
+{
+  "schema_version": "1.0.0",
+  "purpose": "Small, synthetic, redistribution-safe cross-repository fixture for the invest_system reference adapter.",
+  "releases": [
+    {
+      "dataset_release": {
+        "schema_version": "1.0.0",
+        "release_id": "rel_stage6_fixture_evidence",
+        "created_at": "2026-07-28T01:00:00.000000Z",
+        "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+        "supersedes_release_id": null,
+        "manifest_ref": {
+          "schema_version": "1.0.0",
+          "hash": {
+            "algorithm": "sha256",
+            "value": "be24d93d5a0302bd72fdf5131de755f50e737fd9d2796376fbee7b47484f66cc"
+          }
+        },
+        "current_status": {
+          "status": "published",
+          "sequence": 3,
+          "event_id": "evt_stage6_fixture_evidence_published",
+          "event_hash": {
+            "algorithm": "sha256",
+            "value": "4444444444444444444444444444444444444444444444444444444444444444"
+          },
+          "recorded_at": "2026-07-28T01:00:00.000000Z"
+        }
+      },
+      "manifest": {
+        "schema_version": "1.0.0",
+        "release_id": "rel_stage6_fixture_evidence",
+        "created_at": "2026-07-28T01:00:00.000000Z",
+        "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+        "supersedes_release_id": null,
+        "time_semantics_version": "1.0.0",
+        "canonicalization_profile": "irkb-jsonl-v1",
+        "code": {
+          "repository": "investment-research-kb-stage6-fixture",
+          "commit": "ffffffffffffffffffffffffffffffffffffffff",
+          "dirty": false
+        },
+        "inputs": {
+          "source_snapshots": [],
+          "document_versions": [
+            {
+              "document_version_id": "docv_stage6_fixture",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "1111111111111111111111111111111111111111111111111111111111111111"
+              }
+            }
+          ],
+          "configs": [
+            {
+              "config_id": "stage6-reference-fixture",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "2222222222222222222222222222222222222222222222222222222222222222"
+              }
+            }
+          ],
+          "normalizers": [],
+          "parsers": [
+            {
+              "parser_id": "stage6-reference-parser",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "3333333333333333333333333333333333333333333333333333333333333333"
+              }
+            }
+          ],
+          "availability_policies": [
+            {
+              "policy_id": "document.first-seen",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "92399a658d14ea6dcd72dc3dcc272d00cb8671eba2f395c9407898e5c8587a99"
+              }
+            }
+          ],
+          "review_policy": {
+            "policy_id": "qualitative-review",
+            "version": "1",
+            "content_hash": {
+              "algorithm": "sha256",
+              "value": "68425234601199f40a1d5e668436989625887836973cb9a1a07bdd9521593b01"
+            }
+          },
+          "authorization_policy": {
+            "policy_id": "internal-research-release",
+            "version": "1",
+            "content_hash": {
+              "algorithm": "sha256",
+              "value": "9f5b6ea62d4245d0d666b48bbd02c2dfb7a040a13f65cfd59996c070fc6a88d0"
+            }
+          }
+        },
+        "release_items": [
+          {
+            "artifact_id": "evidence-bundle-fixture-v1",
+            "item_type": "evidence_bundle",
+            "logical_path": "artifacts/evidence_bundle.fixture.v1.json",
+            "media_type": "application/json",
+            "format": "json",
+            "record_schema_id": "urn:investment-research-kb:contract:evidence-bundle:v1",
+            "record_schema_version": "1.0.0",
+            "record_schema_hash": {
+              "algorithm": "sha256",
+              "value": "660a2c3ce25a3bb4d541c8a532c9ff062a702f40d495753031ce87feae9b0658"
+            },
+            "sort_keys": [],
+            "record_count": 1,
+            "size_bytes": 3787,
+            "artifact_hash": {
+              "algorithm": "sha256",
+              "value": "5e854a89b3f31cc6f5d392119d14ce3d81a64bba7cbdb4a8c674da0c40aef24d"
+            },
+            "logical_content_hash": {
+              "algorithm": "sha256",
+              "value": "5e854a89b3f31cc6f5d392119d14ce3d81a64bba7cbdb4a8c674da0c40aef24d"
+            }
+          },
+          {
+            "artifact_id": "evidence-bundle-fixture-v1-record-schema",
+            "item_type": "schema",
+            "logical_path": "schemas/evidence-bundle.v1.schema.json",
+            "media_type": "application/schema+json",
+            "format": "json",
+            "record_schema_id": "urn:investment-research-kb:contract:evidence-bundle:v1",
+            "record_schema_version": "1.0.0",
+            "record_schema_hash": {
+              "algorithm": "sha256",
+              "value": "660a2c3ce25a3bb4d541c8a532c9ff062a702f40d495753031ce87feae9b0658"
+            },
+            "sort_keys": [],
+            "record_count": null,
+            "size_bytes": 13138,
+            "artifact_hash": {
+              "algorithm": "sha256",
+              "value": "c1dd633ff0966cfee40c8168b0219473e9e2c1a3bc128a8b4962d4c5375d8f0c"
+            },
+            "logical_content_hash": {
+              "algorithm": "sha256",
+              "value": "c1dd633ff0966cfee40c8168b0219473e9e2c1a3bc128a8b4962d4c5375d8f0c"
+            }
+          }
+        ],
+        "manifest_hash": {
+          "algorithm": "sha256",
+          "value": "be24d93d5a0302bd72fdf5131de755f50e737fd9d2796376fbee7b47484f66cc"
+        }
+      },
+      "artifacts": {
+        "evidence-bundle-fixture-v1": {
+          "schema_version": "1.0.0",
+          "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+          "document_versions": [
+            {
+              "document_version_id": "docv_stage6_fixture",
+              "document_id": "doc_stage6_fixture",
+              "provider": "stage6_fixture",
+              "provider_document_id": "synthetic-optical-note-v1",
+              "document_type": "announcement",
+              "title": "Synthetic optical component note",
+              "company_ids": [
+                "company_stage6_fixture"
+              ],
+              "source_url": "https://fixtures.invalid/stage6-optical-note.txt",
+              "mime_type": "text/plain",
+              "source_published_at": "2026-07-27T09:00:00.000000Z",
+              "first_seen_at": "2026-07-27T10:00:00.000000Z",
+              "fetched_at": "2026-07-27T10:00:00.000000Z",
+              "available_at": "2026-07-27T10:00:00.000000Z",
+              "time_precision": "second",
+              "time_quality": "official_timestamp",
+              "availability_policy_version": "1.0.0",
+              "availability_evidence": {
+                "basis": "synthetic_fixture"
+              },
+              "authorization_status": "approved",
+              "authorization_policy_version": "1.0.0",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "1111111111111111111111111111111111111111111111111111111111111111"
+              },
+              "manifest_hash": {
+                "algorithm": "sha256",
+                "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "supersedes_document_version_id": null
+            }
+          ],
+          "evidence_spans": [
+            {
+              "evidence_span_id": "span_stage6_fixture",
+              "span_key": "stage6.fixture.optical_component",
+              "document_version_id": "docv_stage6_fixture",
+              "locator": {
+                "page": null,
+                "paragraph": 1,
+                "char_start": 0,
+                "char_end": 61,
+                "table_id": null
+              },
+              "content": {
+                "text": "Synthetic Company supplies optical components for test systems.",
+                "redaction_reason": null
+              },
+              "span_content_hash": {
+                "algorithm": "sha256",
+                "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              },
+              "parser": {
+                "parser_id": "stage6-reference-parser",
+                "version": "1",
+                "config_hash": {
+                  "algorithm": "sha256",
+                  "value": "3333333333333333333333333333333333333333333333333333333333333333"
+                }
+              },
+              "available_at": "2026-07-27T10:00:00.000000Z",
+              "review": {
+                "status": "approved",
+                "reviewed_at": "2026-07-27T11:00:00.000000Z",
+                "reviewer_ref": "stage6-fixture-reviewer",
+                "reason_code": "synthetic_source_verified",
+                "review_policy_version": "1.0.0",
+                "decision_hash": {
+                  "algorithm": "sha256",
+                  "value": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                }
+              },
+              "supersedes_evidence_span_id": null
+            }
+          ],
+          "facts": [
+            {
+              "fact_id": "fact_stage6_fixture",
+              "fact_key": "stage6.fixture.industry_role",
+              "predicate": "industry_chain_role",
+              "object": {
+                "role": "component_supplier"
+              },
+              "supersedes_fact_id": null,
+              "company_id": "company_stage6_fixture",
+              "event_at": null,
+              "effective_at": null,
+              "confidence_decimal": "1",
+              "extraction_method": "manual",
+              "extractor_id": "stage6.fixture",
+              "extractor_version": "1",
+              "available_at": "2026-07-27T11:00:00.000000Z",
+              "knowledge_published_at": "2026-07-27T12:00:00.000000Z",
+              "review": {
+                "status": "approved",
+                "reviewed_at": "2026-07-27T11:00:00.000000Z",
+                "reviewer_ref": "stage6-fixture-reviewer",
+                "reason_code": "synthetic_source_verified",
+                "review_policy_version": "1.0.0",
+                "decision_hash": {
+                  "algorithm": "sha256",
+                  "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+                }
+              },
+              "publication": {
+                "status": "published",
+                "sequence": 1,
+                "recorded_at": "2026-07-27T12:00:00.000000Z",
+                "event_hash": {
+                  "algorithm": "sha256",
+                  "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                }
+              },
+              "evidence_link_ids": [
+                "elink_stage6_fixture"
+              ],
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+              }
+            }
+          ],
+          "candidate_events": [],
+          "evidence_links": [
+            {
+              "evidence_link_id": "elink_stage6_fixture",
+              "evidence_span_id": "span_stage6_fixture",
+              "target_kind": "fact",
+              "target_id": "fact_stage6_fixture",
+              "stance": "supports",
+              "rationale": "Synthetic evidence supports the fixture relation.",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "9999999999999999999999999999999999999999999999999999999999999999"
+              }
+            }
+          ],
+          "bundle_hash": {
+            "algorithm": "sha256",
+            "value": "4cc0f8ee72c4b6717aebe25345f8680b0b69c7bd942544bf8d4f50d4d622e8d6"
+          }
+        },
+        "evidence-bundle-fixture-v1-record-schema": {
+          "fixture_contract_file": "evidence-bundle.v1.schema.json"
+        }
+      }
+    },
+    {
+      "dataset_release": {
+        "schema_version": "1.0.0",
+        "release_id": "rel_stage6_fixture_context",
+        "created_at": "2026-07-28T02:00:00.000000Z",
+        "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+        "supersedes_release_id": null,
+        "manifest_ref": {
+          "schema_version": "1.0.0",
+          "hash": {
+            "algorithm": "sha256",
+            "value": "affa7ceffce07081ac3e1d930a25c1da7ea2d3bc4a87848e8615f2bf26a2d0f8"
+          }
+        },
+        "current_status": {
+          "status": "published",
+          "sequence": 3,
+          "event_id": "evt_stage6_fixture_context_published",
+          "event_hash": {
+            "algorithm": "sha256",
+            "value": "5555555555555555555555555555555555555555555555555555555555555555"
+          },
+          "recorded_at": "2026-07-28T02:00:00.000000Z"
+        }
+      },
+      "manifest": {
+        "schema_version": "1.0.0",
+        "release_id": "rel_stage6_fixture_context",
+        "created_at": "2026-07-28T02:00:00.000000Z",
+        "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+        "supersedes_release_id": null,
+        "time_semantics_version": "1.0.0",
+        "canonicalization_profile": "irkb-jsonl-v1",
+        "code": {
+          "repository": "investment-research-kb-stage6-fixture",
+          "commit": "ffffffffffffffffffffffffffffffffffffffff",
+          "dirty": false
+        },
+        "inputs": {
+          "source_snapshots": [],
+          "document_versions": [
+            {
+              "document_version_id": "docv_stage6_fixture",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "1111111111111111111111111111111111111111111111111111111111111111"
+              }
+            }
+          ],
+          "configs": [
+            {
+              "config_id": "stage6-reference-fixture",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "2222222222222222222222222222222222222222222222222222222222222222"
+              }
+            }
+          ],
+          "normalizers": [],
+          "parsers": [
+            {
+              "parser_id": "stage6-reference-parser",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "3333333333333333333333333333333333333333333333333333333333333333"
+              }
+            }
+          ],
+          "availability_policies": [
+            {
+              "policy_id": "document.first-seen",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "92399a658d14ea6dcd72dc3dcc272d00cb8671eba2f395c9407898e5c8587a99"
+              }
+            }
+          ],
+          "review_policy": {
+            "policy_id": "qualitative-review",
+            "version": "1",
+            "content_hash": {
+              "algorithm": "sha256",
+              "value": "68425234601199f40a1d5e668436989625887836973cb9a1a07bdd9521593b01"
+            }
+          },
+          "authorization_policy": {
+            "policy_id": "internal-research-release",
+            "version": "1",
+            "content_hash": {
+              "algorithm": "sha256",
+              "value": "9f5b6ea62d4245d0d666b48bbd02c2dfb7a040a13f65cfd59996c070fc6a88d0"
+            }
+          }
+        },
+        "release_items": [
+          {
+            "artifact_id": "context-pack-fixture-v1",
+            "item_type": "context_pack",
+            "logical_path": "artifacts/context_pack.fixture.v1.json",
+            "media_type": "application/json",
+            "format": "json",
+            "record_schema_id": "urn:investment-research-kb:contract:context-pack:v1",
+            "record_schema_version": "1.0.0",
+            "record_schema_hash": {
+              "algorithm": "sha256",
+              "value": "a6432ef884861eae5652faa59b0593841e1f1e68d67b7b615510271820d16e68"
+            },
+            "sort_keys": [],
+            "record_count": 1,
+            "size_bytes": 3834,
+            "artifact_hash": {
+              "algorithm": "sha256",
+              "value": "bda589a8fd8ee7577e89a29e29e6c8ed98956f1d200517e81115235a3870092d"
+            },
+            "logical_content_hash": {
+              "algorithm": "sha256",
+              "value": "bda589a8fd8ee7577e89a29e29e6c8ed98956f1d200517e81115235a3870092d"
+            }
+          },
+          {
+            "artifact_id": "context-pack-fixture-v1-record-schema",
+            "item_type": "schema",
+            "logical_path": "schemas/context-pack.v1.schema.json",
+            "media_type": "application/schema+json",
+            "format": "json",
+            "record_schema_id": "urn:investment-research-kb:contract:context-pack:v1",
+            "record_schema_version": "1.0.0",
+            "record_schema_hash": {
+              "algorithm": "sha256",
+              "value": "a6432ef884861eae5652faa59b0593841e1f1e68d67b7b615510271820d16e68"
+            },
+            "sort_keys": [],
+            "record_count": null,
+            "size_bytes": 15476,
+            "artifact_hash": {
+              "algorithm": "sha256",
+              "value": "c5888c5f1c06488f45f499a6899db996a70c1232b9e48df44e7b90c2094b143b"
+            },
+            "logical_content_hash": {
+              "algorithm": "sha256",
+              "value": "c5888c5f1c06488f45f499a6899db996a70c1232b9e48df44e7b90c2094b143b"
+            }
+          }
+        ],
+        "context_pack_build": {
+          "context_pack_id": "ctx_11111111111111111111111111111111",
+          "pack_key": "stage6_fixture",
+          "version": "fixture-v1",
+          "supersedes_context_pack_id": null,
+          "source_release": {
+            "release_id": "rel_stage6_fixture_evidence",
+            "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+            "manifest_hash": {
+              "algorithm": "sha256",
+              "value": "be24d93d5a0302bd72fdf5131de755f50e737fd9d2796376fbee7b47484f66cc"
+            }
+          },
+          "compiler": {
+            "compiler_id": "context-pack-compiler",
+            "version": "1",
+            "code_path": "investment_research_kb.application.context_packs:ContextPackService.compile_from_release"
+          },
+          "config_files": [
+            {"path": "knowledge_packs/stage6_fixture/a.yaml", "content_hash": {"algorithm": "sha256", "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}},
+            {"path": "knowledge_packs/stage6_fixture/b.yaml", "content_hash": {"algorithm": "sha256", "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}},
+            {"path": "knowledge_packs/stage6_fixture/c.yaml", "content_hash": {"algorithm": "sha256", "value": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}},
+            {"path": "knowledge_packs/stage6_fixture/d.yaml", "content_hash": {"algorithm": "sha256", "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}},
+            {"path": "knowledge_packs/stage6_fixture/e.yaml", "content_hash": {"algorithm": "sha256", "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}},
+            {"path": "knowledge_packs/stage6_fixture/f.yaml", "content_hash": {"algorithm": "sha256", "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}},
+            {"path": "knowledge_packs/stage6_fixture/g.yaml", "content_hash": {"algorithm": "sha256", "value": "9999999999999999999999999999999999999999999999999999999999999999"}}
+          ],
+          "company_identities": []
+        },
+        "manifest_hash": {
+          "algorithm": "sha256",
+          "value": "affa7ceffce07081ac3e1d930a25c1da7ea2d3bc4a87848e8615f2bf26a2d0f8"
+        }
+      },
+      "artifacts": {
+        "context-pack-fixture-v1": {
+          "schema_version": "1.0.0",
+          "context_pack_id": "ctx_11111111111111111111111111111111",
+          "pack_key": "stage6_fixture",
+          "version": "fixture-v1",
+          "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+          "supersedes_context_pack_id": null,
+          "source_graph_hash": {
+            "algorithm": "sha256",
+            "value": "0b5d74c8b0997dcd9f1f11f01bd634d365050d4b06bd84d5184b7973692c367e"
+          },
+          "terminology": [],
+          "industry_graph": {
+            "nodes": [
+              {
+                "industry_node_id": "inode_stage6_company",
+                "industry_node_version_id": "inodev_stage6_company_v1",
+                "node_key": "company:stage6_fixture",
+                "node_type": "company",
+                "display_name": "Synthetic Company",
+                "aliases": [],
+                "attributes": {
+                  "company_id": "company_stage6_fixture"
+                },
+                "effective_from": null,
+                "effective_to": null,
+                "available_at": "2026-07-27T12:00:00.000000Z",
+                "confidence_decimal": "1",
+                "review_status": "approved",
+                "conflict_status": "none",
+                "unrecoverable_fields": [],
+                "evidence_ref_ids": [],
+                "content_hash": {
+                  "algorithm": "sha256",
+                  "value": "1212121212121212121212121212121212121212121212121212121212121212"
+                },
+                "supersedes_industry_node_version_id": null
+              },
+              {
+                "industry_node_id": "inode_stage6_component",
+                "industry_node_version_id": "inodev_stage6_component_v1",
+                "node_key": "component:stage6_fixture",
+                "node_type": "component",
+                "display_name": "Synthetic Optical Component",
+                "aliases": [],
+                "attributes": {
+                  "category": "synthetic_fixture"
+                },
+                "effective_from": null,
+                "effective_to": null,
+                "available_at": "2026-07-27T12:00:00.000000Z",
+                "confidence_decimal": "1",
+                "review_status": "approved",
+                "conflict_status": "none",
+                "unrecoverable_fields": [],
+                "evidence_ref_ids": [],
+                "content_hash": {
+                  "algorithm": "sha256",
+                  "value": "3434343434343434343434343434343434343434343434343434343434343434"
+                },
+                "supersedes_industry_node_version_id": null
+              }
+            ],
+            "edges": [
+              {
+                "industry_edge_id": "iedge_stage6_fixture",
+                "industry_edge_version_id": "iedgev_stage6_fixture_v1",
+                "edge_key": "fact:stage6.fixture.industry_role",
+                "from_industry_node_id": "inode_stage6_company",
+                "from_node_key": "company:stage6_fixture",
+                "to_industry_node_id": "inode_stage6_component",
+                "to_node_key": "component:stage6_fixture",
+                "relation_type": "industry_chain_role",
+                "attributes": {
+                  "fact_id": "fact_stage6_fixture",
+                  "role": "component_supplier"
+                },
+                "effective_from": null,
+                "effective_to": null,
+                "available_at": "2026-07-27T12:00:00.000000Z",
+                "confidence_decimal": "1",
+                "review_status": "approved",
+                "conflict_status": "none",
+                "unrecoverable_fields": [],
+                "evidence_ref_ids": [
+                  "iref_stage6_fixture"
+                ],
+                "content_hash": {
+                  "algorithm": "sha256",
+                  "value": "5656565656565656565656565656565656565656565656565656565656565656"
+                },
+                "supersedes_industry_edge_version_id": null
+              }
+            ],
+            "evidence_refs": [
+              {
+                "industry_evidence_ref_id": "iref_stage6_fixture",
+                "target_kind": "edge",
+                "target_version_id": "iedgev_stage6_fixture_v1",
+                "evidence_link_id": "elink_stage6_fixture",
+                "evidence_span_id": "span_stage6_fixture",
+                "fact_id": "fact_stage6_fixture",
+                "candidate_event_id": null,
+                "stance": "supports",
+                "rationale": "Synthetic evidence closes the fixture edge.",
+                "available_at": "2026-07-27T12:00:00.000000Z",
+                "content_hash": {
+                  "algorithm": "sha256",
+                  "value": "7878787878787878787878787878787878787878787878787878787878787878"
+                }
+              }
+            ]
+          },
+          "company_mappings": [],
+          "key_metrics": [],
+          "known_events": [],
+          "known_counterexamples": [],
+          "missing_items": [],
+          "sources": [
+            {
+              "document_version_id": "docv_stage6_fixture",
+              "provider": "stage6_fixture",
+              "title": "Synthetic optical component note",
+              "source_url": "https://fixtures.invalid/stage6-optical-note.txt",
+              "available_at": "2026-07-27T10:00:00.000000Z",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "1111111111111111111111111111111111111111111111111111111111111111"
+              },
+              "evidence_span_ids": [
+                "span_stage6_fixture"
+              ]
+            }
+          ],
+          "source_releases": [
+            {
+              "release_id": "rel_stage6_fixture_evidence",
+              "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+              "manifest_hash": {
+                "algorithm": "sha256",
+                "value": "be24d93d5a0302bd72fdf5131de755f50e737fd9d2796376fbee7b47484f66cc"
+              }
+            }
+          ],
+          "context_pack_hash": {
+            "algorithm": "sha256",
+            "value": "fc0fa467eca9a585f0aa6d7fc5eb7337bd7405513dc192f9445ea3c0b3bb30f1"
+          }
+        },
+        "context-pack-fixture-v1-record-schema": {
+          "fixture_contract_file": "context-pack.v1.schema.json"
+        }
+      }
+    }
+  ],
+  "changes": [
+    {
+      "schema_version": "1.0.0",
+      "change_id": "evt_stage6_fixture_evidence_published",
+      "change_type": "dataset_release.published",
+      "cursor": "eyJhZnRlciI6MSwidiI6MX0",
+      "recorded_at": "2026-07-28T01:00:00.000000Z",
+      "resource_type": "dataset_release",
+      "release_id": "rel_stage6_fixture_evidence",
+      "release_schema_version": "1.0.0",
+      "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+      "supersedes_release_id": null,
+      "manifest_ref": {
+        "schema_version": "1.0.0",
+        "hash": {
+          "algorithm": "sha256",
+          "value": "be24d93d5a0302bd72fdf5131de755f50e737fd9d2796376fbee7b47484f66cc"
+        }
+      },
+      "status_event": {
+        "event_id": "evt_stage6_fixture_evidence_published",
+        "sequence": 3,
+        "status": "published",
+        "reason_code": null,
+        "event_hash": {
+          "algorithm": "sha256",
+          "value": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "change_id": "evt_stage6_fixture_context_published",
+      "change_type": "dataset_release.published",
+      "cursor": "eyJhZnRlciI6MiwidiI6MX0",
+      "recorded_at": "2026-07-28T02:00:00.000000Z",
+      "resource_type": "dataset_release",
+      "release_id": "rel_stage6_fixture_context",
+      "release_schema_version": "1.0.0",
+      "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+      "supersedes_release_id": null,
+      "manifest_ref": {
+        "schema_version": "1.0.0",
+        "hash": {
+          "algorithm": "sha256",
+          "value": "affa7ceffce07081ac3e1d930a25c1da7ea2d3bc4a87848e8615f2bf26a2d0f8"
+        }
+      },
+      "status_event": {
+        "event_id": "evt_stage6_fixture_context_published",
+        "sequence": 3,
+        "status": "published",
+        "reason_code": null,
+        "event_hash": {
+          "algorithm": "sha256",
+          "value": "5555555555555555555555555555555555555555555555555555555555555555"
+        }
+      }
+    }
+  ],
+  "expected_strategy_input_ref": {
+    "schema_version": "1.0.0",
+    "dataset_release_id": "rel_stage6_fixture_context",
+    "knowledge_cutoff": "2026-07-28T00:00:00.000000Z",
+    "release_manifest_schema_version": "1.0.0",
+    "manifest_hash": {
+      "algorithm": "sha256",
+      "value": "affa7ceffce07081ac3e1d930a25c1da7ea2d3bc4a87848e8615f2bf26a2d0f8"
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:source-document-manifest:v1",
+  "title": "Source Document Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source_url",
+    "source_provider",
+    "document_id",
+    "version_id",
+    "parent_version_id",
+    "mime_type",
+    "source_published_at",
+    "first_seen_at",
+    "fetched_at",
+    "available_at",
+    "time_precision",
+    "time_quality",
+    "authorization_status",
+    "authorization_policy_version",
+    "availability_policy_version",
+    "availability_evidence",
+    "content_hash",
+    "size_bytes",
+    "license_or_usage_note",
+    "manifest_hash"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://[^#]+$",
+      "maxLength": 2048
+    },
+    "source_provider": { "$ref": "#/$defs/id" },
+    "document_id": { "$ref": "#/$defs/id" },
+    "version_id": { "$ref": "#/$defs/id" },
+    "parent_version_id": {
+      "oneOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }]
+    },
+    "mime_type": {
+      "enum": ["application/pdf", "text/html", "text/plain"]
+    },
+    "source_published_at": {
+      "oneOf": [{ "$ref": "#/$defs/time" }, { "type": "null" }]
+    },
+    "first_seen_at": { "$ref": "#/$defs/time" },
+    "fetched_at": { "$ref": "#/$defs/time" },
+    "available_at": { "$ref": "#/$defs/time" },
+    "time_precision": {
+      "enum": ["second", "minute", "date_only", "unknown"]
+    },
+    "time_quality": {
+      "enum": [
+        "official_timestamp",
+        "provider_timestamp",
+        "first_seen_fallback",
+        "ingest_time_proxy"
+      ]
+    },
+    "authorization_status": {
+      "enum": ["approved", "restricted", "prohibited"]
+    },
+    "authorization_policy_version": { "$ref": "#/$defs/version" },
+    "availability_policy_version": { "$ref": "#/$defs/version" },
+    "availability_evidence": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "content_hash": { "$ref": "#/$defs/hash" },
+    "size_bytes": { "type": "integer", "minimum": 0 },
+    "license_or_usage_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "manifest_hash": { "$ref": "#/$defs/hash" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "hash": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "value": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

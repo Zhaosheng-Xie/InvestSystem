@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:change-record:v1",
+  "title": "Integration Change Record v1",
+  "description": "An append-only polling record for a Dataset Release publication or withdrawal. The cursor is an opaque resume token and is not a release or strategy identity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "change_id",
+    "change_type",
+    "cursor",
+    "recorded_at",
+    "resource_type",
+    "release_id",
+    "release_schema_version",
+    "knowledge_cutoff",
+    "supersedes_release_id",
+    "manifest_ref",
+    "status_event"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "change_id": {
+      "$ref": "#/$defs/id"
+    },
+    "change_type": {
+      "type": "string",
+      "enum": [
+        "dataset_release.published",
+        "dataset_release.withdrawn"
+      ]
+    },
+    "cursor": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "recorded_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "resource_type": {
+      "const": "dataset_release"
+    },
+    "release_id": {
+      "$ref": "#/$defs/releaseId"
+    },
+    "release_schema_version": {
+      "const": "1.0.0"
+    },
+    "knowledge_cutoff": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "supersedes_release_id": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/releaseId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "manifest_ref": {
+      "$ref": "#/$defs/manifestRef"
+    },
+    "status_event": {
+      "$ref": "#/$defs/statusEvent"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "change_type": {
+            "const": "dataset_release.published"
+          }
+        },
+        "required": [
+          "change_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "status_event": {
+            "properties": {
+              "status": {
+                "const": "published"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "change_type": {
+            "const": "dataset_release.withdrawn"
+          }
+        },
+        "required": [
+          "change_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "status_event": {
+            "properties": {
+              "status": {
+                "const": "withdrawn"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "releaseId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "not": {
+        "const": "latest"
+      }
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "manifestRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "hash"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "statusEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "sequence",
+        "status",
+        "reason_code",
+        "event_hash"
+      ],
+      "properties": {
+        "event_id": {
+          "$ref": "#/$defs/id"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "published",
+            "withdrawn"
+          ]
+        },
+        "reason_code": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-z][a-z0-9_.-]*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "event_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "published"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reason_code": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "reason_code": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[a-z][a-z0-9_.-]*$"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

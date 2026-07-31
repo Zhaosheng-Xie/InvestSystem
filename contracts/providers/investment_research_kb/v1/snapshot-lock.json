@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0.0",
+  "provider": "InvestmentResearchKB",
+  "source_repository": "https://github.com/Zhaosheng-Xie/InvestmentResearchKB",
+  "source_commit": "58ed9c5cb5302e3e719f1696bed83a03c5d6313b",
+  "source_commit_tree": "9eb315afc2eef438892d10aeb9549b609fe91031",
+  "source_contracts_tree": "70dde21b860b5a854fa648e5c1550e3f218e7ab1",
+  "retrieval_method": "git_object",
+  "canonicalization_profile": "irkb-jsonl-v1",
+  "vendor_root": "vendor",
+  "selection": "all locked v1 schemas plus Stage 2A public compatibility fixtures",
+  "files": [
+    {
+      "path": "contracts/change-record.v1.schema.json",
+      "git_blob": "fd9884cc080983c40b0d47cf32067747ad94f257",
+      "size_bytes": 5458,
+      "sha256": "e83344e39db3acb62e006f3aca0ad9048f5a91b92dc5e2b3857ef8498085e1a2"
+    },
+    {
+      "path": "contracts/context-pack.v1.schema.json",
+      "git_blob": "d1f7c29db07eea660afde7db9facae68fcadd924",
+      "size_bytes": 15476,
+      "sha256": "c5888c5f1c06488f45f499a6899db996a70c1232b9e48df44e7b90c2094b143b"
+    },
+    {
+      "path": "contracts/dataset-release.v1.schema.json",
+      "git_blob": "9d0fb93e66e8aded7250ab2c250366c5d4d1a2fd",
+      "size_bytes": 2954,
+      "sha256": "10f86e9bab957478f2ab50547ce0206afb8af555f5a03c147232675778f03a01"
+    },
+    {
+      "path": "contracts/disclosure-schedule-record.v1.schema.json",
+      "git_blob": "cc3df7e7b78d99d33d7786a9604d747b7ebeedb4",
+      "size_bytes": 4660,
+      "sha256": "9dc62f197d209ac67d50bf4e425314b705705ca21a3a43d5fc957ffaaf3018e5"
+    },
+    {
+      "path": "contracts/evidence-bundle.v1.schema.json",
+      "git_blob": "7e13414dd90d06fd2b57a7f73ecc50f276079aee",
+      "size_bytes": 13138,
+      "sha256": "c1dd633ff0966cfee40c8168b0219473e9e2c1a3bc128a8b4962d4c5375d8f0c"
+    },
+    {
+      "path": "contracts/evidence.v1.schema.json",
+      "git_blob": "6d01a19d85dd76e97279bd4da022eb8a60c02560",
+      "size_bytes": 10872,
+      "sha256": "16676eb33549048a685d4c43a1e63bf1dfa97d4b2a2d529326a8793778b20c75"
+    },
+    {
+      "path": "contracts/financial-segment-record.v1.schema.json",
+      "git_blob": "35e389af1058e3b7d16185ea0517e1c1766effa9",
+      "size_bytes": 5895,
+      "sha256": "f10d2f6f3141937dd70ff81b16adc14e34f9b865e5ae83d9f8c848342118bd33"
+    },
+    {
+      "path": "contracts/financial-statement-record.v1.schema.json",
+      "git_blob": "e6638e41156bc1b68bf2a52a8a3c76b8d7af9cbc",
+      "size_bytes": 7577,
+      "sha256": "64b1fe05f538ae8034dcfdda3a6cc0087ad4299b793a87dc5b3e8281cbe1408c"
+    },
+    {
+      "path": "contracts/market-daily-record.v1.schema.json",
+      "git_blob": "3091d347a917ffc2f49b8ac7504abe11a2f56707",
+      "size_bytes": 4934,
+      "sha256": "4de0da22e52518a953022b8ad1cef040dde78c35ed69c86a6f05ac78dc98a7a7"
+    },
+    {
+      "path": "contracts/release-manifest.v1.schema.json",
+      "git_blob": "83ee8bae6f6ea54cf1fdd2d0f45e0f264d37bbbe",
+      "size_bytes": 17321,
+      "sha256": "e8fecabaa835125905c2c262e3eecda507ebf8cb4651e5acfad8622d58afbd95"
+    },
+    {
+      "path": "contracts/release-status-event.v1.schema.json",
+      "git_blob": "3ea2f14fe806cc170512db6335b4ef45663ca70f",
+      "size_bytes": 3771,
+      "sha256": "c907bd92e24d54944b6eb2a2d35d1852b11b08be4b5d8d847c74ea211a519e02"
+    },
+    {
+      "path": "contracts/source-document-manifest.v1.schema.json",
+      "git_blob": "7e1fe5516e692daa99d57fb56c3ae05bf665614f",
+      "size_bytes": 3050,
+      "sha256": "8be36ff84c71c77d00031027f6c043b9dca9e34601699f44a1df7cc1cec17812"
+    },
+    {
+      "path": "contracts/strategy-input-ref.v1.schema.json",
+      "git_blob": "5c2800d19b46e9980176b5c0a157e8c48abbf69f",
+      "size_bytes": 1812,
+      "sha256": "55b381df48a80a046388c19c53bb27e924c25bd10294d7dba0d55097280f86b6"
+    },
+    {
+      "path": "contracts/tushare-financial-precision-manifest.v1.schema.json",
+      "git_blob": "53f3111f67e6fd793af6d0ba1e838e5c400a1c32",
+      "size_bytes": 10446,
+      "sha256": "3e4a6f737b3cd8c532d050f93638efbb8e723f57698d9ff6f7e5d930a9a33f24"
+    },
+    {
+      "path": "contracts/fixtures/README.md",
+      "git_blob": "fe6a9d14c2848c64dbf1be01b4f6c447fa0b46c8",
+      "size_bytes": 3664,
+      "sha256": "4d6e99a8f82b1fd12cd8c287514ed5868e6d219d96447966337f5c1d5a8102e5"
+    },
+    {
+      "path": "contracts/fixtures/contract-locks.stage6.v1.json",
+      "git_blob": "befd9d19f725e8e2390454b449ba4c4929055d4e",
+      "size_bytes": 612,
+      "sha256": "8ab647def3702ceebf65a8eecebe298a89547b6659a878d5e3d39f7543499413"
+    },
+    {
+      "path": "contracts/fixtures/contract-locks.v1.json",
+      "git_blob": "137d37b0cf647734e5d6b5235aa125a040b8363e",
+      "size_bytes": 6352,
+      "sha256": "5c782b81c05a50a85866be51b4b83fd8e3a9f9b2ab39bb381d72fcae573b9fff"
+    },
+    {
+      "path": "contracts/fixtures/release-hash-vectors.v1.json",
+      "git_blob": "481b232882233b217a467b2a33cec644c473153d",
+      "size_bytes": 6466,
+      "sha256": "e4e7ef21fecf513245202d0f3f7bee72adf51f22e5bb8d5b876fee3d7f8103c0"
+    },
+    {
+      "path": "contracts/fixtures/stage6-reference-consumer.v1.json",
+      "git_blob": "50bb4b50e710bf9c4da1063e29e0c5351c8f02d3",
+      "size_bytes": 28928,
+      "sha256": "82f90ac52611c816dcf60adeb9110f7a2a7124be52a80ab9262af887db1d474a"
+    },
+    {
+      "path": "contracts/fixtures/stage6-reference-consumer.v1.lock.json",
+      "git_blob": "e8f3ad6970a0ebf3cdfadb2e09573689fcf8762d",
+      "size_bytes": 210,
+      "sha256": "20ee1fff16a5a35100f023e987a1d0345b6cc7f4e953f813709086e9f5599177"
+    }
+  ]
+}

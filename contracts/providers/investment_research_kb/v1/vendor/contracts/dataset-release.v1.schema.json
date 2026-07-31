@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:dataset-release:v1",
+  "title": "Dataset Release v1",
+  "description": "Public identity, immutable manifest reference, and derived current status for a Dataset Release. Strategy, portfolio, execution, and P&L fields are outside this contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "release_id",
+    "created_at",
+    "knowledge_cutoff",
+    "supersedes_release_id",
+    "manifest_ref",
+    "current_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "release_id": {
+      "$ref": "#/$defs/releaseId"
+    },
+    "created_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "knowledge_cutoff": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "supersedes_release_id": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/releaseId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "manifest_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "hash"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "current_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "sequence",
+        "event_id",
+        "event_hash",
+        "recorded_at"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/releaseStatus"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "event_id": {
+          "$ref": "#/$defs/id"
+        },
+        "event_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/utcTimestamp"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "releaseId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "not": {
+        "const": "latest"
+      }
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "releaseStatus": {
+      "type": "string",
+      "enum": [
+        "building",
+        "validated",
+        "published",
+        "withdrawn"
+      ]
+    }
+  }
+}

@@ -1,0 +1,524 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:context-pack:v1",
+  "title": "Context Pack v1",
+  "description": "Canonical point-in-time industry graph and source context. Strategy state, gates, decisions, positions, execution and P&L are outside this contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "context_pack_id",
+    "pack_key",
+    "version",
+    "knowledge_cutoff",
+    "supersedes_context_pack_id",
+    "source_graph_hash",
+    "terminology",
+    "industry_graph",
+    "company_mappings",
+    "key_metrics",
+    "known_events",
+    "known_counterexamples",
+    "missing_items",
+    "sources",
+    "source_releases",
+    "context_pack_hash"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "context_pack_id": { "$ref": "#/$defs/id" },
+    "pack_key": { "$ref": "#/$defs/packKey" },
+    "version": { "$ref": "#/$defs/version" },
+    "knowledge_cutoff": { "$ref": "#/$defs/time" },
+    "supersedes_context_pack_id": { "$ref": "#/$defs/nullableId" },
+    "source_graph_hash": { "$ref": "#/$defs/hash" },
+    "terminology": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/terminologyItem" }
+    },
+    "industry_graph": { "$ref": "#/$defs/industryGraph" },
+    "company_mappings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/companyMapping" }
+    },
+    "key_metrics": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/keyMetric" }
+    },
+    "known_events": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/knownEvent" }
+    },
+    "known_counterexamples": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/knownCounterexample" }
+    },
+    "missing_items": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/missingItem" }
+    },
+    "sources": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "source_releases": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/sourceRelease" }
+    },
+    "context_pack_hash": { "$ref": "#/$defs/hash" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "nullableId": {
+      "oneOf": [
+        { "$ref": "#/$defs/id" },
+        { "type": "null" }
+      ]
+    },
+    "packKey": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "not": { "const": "latest" }
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$",
+      "not": { "const": "latest" }
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "nullableTime": {
+      "oneOf": [
+        { "$ref": "#/$defs/time" },
+        { "type": "null" }
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "nullableDate": {
+      "oneOf": [
+        { "$ref": "#/$defs/date" },
+        { "type": "null" }
+      ]
+    },
+    "hash": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "nullableHash": {
+      "oneOf": [
+        { "$ref": "#/$defs/hash" },
+        { "type": "null" }
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "pattern": "^(?:0(?:\\.\\d+)?|1(?:\\.0+)?)$"
+    },
+    "nodeType": {
+      "enum": [
+        "industry",
+        "subindustry",
+        "product",
+        "technology",
+        "component",
+        "equipment",
+        "material",
+        "company",
+        "supplier",
+        "customer",
+        "application",
+        "alternative_route",
+        "metric",
+        "driver",
+        "risk",
+        "term"
+      ]
+    },
+    "conflictStatus": {
+      "enum": ["none", "open", "resolved", "unknown"]
+    },
+    "semanticValue": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "boolean" },
+        { "type": "null" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/$defs/semanticValue" }
+        },
+        { "$ref": "#/$defs/semanticObject" }
+      ]
+    },
+    "semanticObject": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Za-z_][A-Za-z0-9_.-]*$": {
+          "$ref": "#/$defs/semanticValue"
+        }
+      },
+      "additionalProperties": false
+    },
+    "terminologyItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "term_id",
+        "name",
+        "node_type",
+        "node_key",
+        "provenance_status"
+      ],
+      "properties": {
+        "term_id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "node_type": { "$ref": "#/$defs/nodeType" },
+        "node_key": { "$ref": "#/$defs/id" },
+        "provenance_status": { "$ref": "#/$defs/id" }
+      }
+    },
+    "industryGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes", "edges", "evidence_refs"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/industryNode" }
+        },
+        "edges": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/industryEdge" }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/industryEvidenceRef" }
+        }
+      }
+    },
+    "industryNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "industry_node_id",
+        "industry_node_version_id",
+        "node_key",
+        "node_type",
+        "display_name",
+        "aliases",
+        "attributes",
+        "effective_from",
+        "effective_to",
+        "available_at",
+        "confidence_decimal",
+        "review_status",
+        "conflict_status",
+        "unrecoverable_fields",
+        "evidence_ref_ids",
+        "content_hash",
+        "supersedes_industry_node_version_id"
+      ],
+      "properties": {
+        "industry_node_id": { "$ref": "#/$defs/id" },
+        "industry_node_version_id": { "$ref": "#/$defs/id" },
+        "node_key": { "$ref": "#/$defs/id" },
+        "node_type": { "$ref": "#/$defs/nodeType" },
+        "display_name": { "type": "string", "minLength": 1 },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "attributes": { "$ref": "#/$defs/semanticObject" },
+        "effective_from": { "$ref": "#/$defs/nullableTime" },
+        "effective_to": { "$ref": "#/$defs/nullableTime" },
+        "available_at": { "$ref": "#/$defs/time" },
+        "confidence_decimal": { "$ref": "#/$defs/confidence" },
+        "review_status": { "enum": ["approved", "needs_review"] },
+        "conflict_status": { "$ref": "#/$defs/conflictStatus" },
+        "unrecoverable_fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "evidence_ref_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "content_hash": { "$ref": "#/$defs/hash" },
+        "supersedes_industry_node_version_id": {
+          "$ref": "#/$defs/nullableId"
+        }
+      }
+    },
+    "industryEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "industry_edge_id",
+        "industry_edge_version_id",
+        "edge_key",
+        "from_industry_node_id",
+        "from_node_key",
+        "to_industry_node_id",
+        "to_node_key",
+        "relation_type",
+        "attributes",
+        "effective_from",
+        "effective_to",
+        "available_at",
+        "confidence_decimal",
+        "review_status",
+        "conflict_status",
+        "unrecoverable_fields",
+        "evidence_ref_ids",
+        "content_hash",
+        "supersedes_industry_edge_version_id"
+      ],
+      "properties": {
+        "industry_edge_id": { "$ref": "#/$defs/id" },
+        "industry_edge_version_id": { "$ref": "#/$defs/id" },
+        "edge_key": { "$ref": "#/$defs/id" },
+        "from_industry_node_id": { "$ref": "#/$defs/id" },
+        "from_node_key": { "$ref": "#/$defs/id" },
+        "to_industry_node_id": { "$ref": "#/$defs/id" },
+        "to_node_key": { "$ref": "#/$defs/id" },
+        "relation_type": { "$ref": "#/$defs/id" },
+        "attributes": { "$ref": "#/$defs/semanticObject" },
+        "effective_from": { "$ref": "#/$defs/nullableTime" },
+        "effective_to": { "$ref": "#/$defs/nullableTime" },
+        "available_at": { "$ref": "#/$defs/time" },
+        "confidence_decimal": { "$ref": "#/$defs/confidence" },
+        "review_status": { "enum": ["approved", "needs_review"] },
+        "conflict_status": { "$ref": "#/$defs/conflictStatus" },
+        "unrecoverable_fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "evidence_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "content_hash": { "$ref": "#/$defs/hash" },
+        "supersedes_industry_edge_version_id": {
+          "$ref": "#/$defs/nullableId"
+        }
+      }
+    },
+    "industryEvidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "industry_evidence_ref_id",
+        "target_kind",
+        "target_version_id",
+        "evidence_link_id",
+        "evidence_span_id",
+        "fact_id",
+        "candidate_event_id",
+        "stance",
+        "rationale",
+        "available_at",
+        "content_hash"
+      ],
+      "properties": {
+        "industry_evidence_ref_id": { "$ref": "#/$defs/id" },
+        "target_kind": { "enum": ["node", "edge"] },
+        "target_version_id": { "$ref": "#/$defs/id" },
+        "evidence_link_id": { "$ref": "#/$defs/id" },
+        "evidence_span_id": { "$ref": "#/$defs/id" },
+        "fact_id": { "$ref": "#/$defs/nullableId" },
+        "candidate_event_id": { "$ref": "#/$defs/nullableId" },
+        "stance": { "enum": ["supports", "refutes"] },
+        "rationale": { "type": "string", "minLength": 1 },
+        "available_at": { "$ref": "#/$defs/time" },
+        "content_hash": { "$ref": "#/$defs/hash" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "fact_id": { "$ref": "#/$defs/id" },
+            "candidate_event_id": { "type": "null" }
+          }
+        },
+        {
+          "properties": {
+            "fact_id": { "type": "null" },
+            "candidate_event_id": { "$ref": "#/$defs/id" }
+          }
+        }
+      ]
+    },
+    "companyMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mapping_id",
+        "company_node_key",
+        "industry_node_key",
+        "edge_version_id",
+        "role",
+        "reporting_period_end",
+        "primary_fact_id",
+        "evidence_ref_ids",
+        "status"
+      ],
+      "properties": {
+        "mapping_id": { "$ref": "#/$defs/id" },
+        "company_node_key": { "$ref": "#/$defs/id" },
+        "industry_node_key": { "$ref": "#/$defs/id" },
+        "edge_version_id": { "$ref": "#/$defs/id" },
+        "role": { "$ref": "#/$defs/id" },
+        "reporting_period_end": { "$ref": "#/$defs/nullableDate" },
+        "primary_fact_id": { "$ref": "#/$defs/nullableId" },
+        "evidence_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "status": { "$ref": "#/$defs/id" }
+      }
+    },
+    "keyMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric_id", "status"],
+      "properties": {
+        "metric_id": { "$ref": "#/$defs/id" },
+        "status": { "$ref": "#/$defs/id" }
+      }
+    },
+    "knownEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_event_id",
+        "event_type",
+        "summary",
+        "company_id",
+        "attributes",
+        "event_at",
+        "effective_at",
+        "available_at",
+        "evidence_link_ids"
+      ],
+      "properties": {
+        "candidate_event_id": { "$ref": "#/$defs/id" },
+        "event_type": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string", "minLength": 1 },
+        "company_id": { "$ref": "#/$defs/id" },
+        "attributes": { "$ref": "#/$defs/semanticObject" },
+        "event_at": { "$ref": "#/$defs/nullableTime" },
+        "effective_at": { "$ref": "#/$defs/nullableTime" },
+        "available_at": { "$ref": "#/$defs/time" },
+        "evidence_link_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
+    "knownCounterexample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_ref_id", "edge_version_id", "rationale"],
+      "properties": {
+        "evidence_ref_id": { "$ref": "#/$defs/id" },
+        "edge_version_id": { "$ref": "#/$defs/id" },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "missingItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "category", "description", "status"],
+      "properties": {
+        "item_id": { "$ref": "#/$defs/id" },
+        "category": { "$ref": "#/$defs/id" },
+        "description": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/id" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document_version_id",
+        "provider",
+        "title",
+        "source_url",
+        "available_at",
+        "content_hash",
+        "evidence_span_ids"
+      ],
+      "properties": {
+        "document_version_id": { "$ref": "#/$defs/id" },
+        "provider": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "available_at": { "$ref": "#/$defs/time" },
+        "content_hash": { "$ref": "#/$defs/hash" },
+        "evidence_span_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
+    "sourceRelease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["release_id", "knowledge_cutoff", "manifest_hash"],
+      "properties": {
+        "release_id": { "$ref": "#/$defs/id" },
+        "knowledge_cutoff": { "$ref": "#/$defs/nullableTime" },
+        "manifest_hash": { "$ref": "#/$defs/nullableHash" }
+      }
+    }
+  }
+}

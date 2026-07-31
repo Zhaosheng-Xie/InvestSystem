@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:strategy-input-ref:v1",
+  "title": "Strategy Input Reference v1",
+  "description": "The complete and only InvestmentResearchKB-owned subset embedded by invest_system in a StrategyRunManifest. The full strategy run contract and all strategy, decision, portfolio, execution, and P&L fields belong to invest_system.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_release_id",
+    "knowledge_cutoff",
+    "release_manifest_schema_version",
+    "manifest_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "dataset_release_id": {
+      "$ref": "#/$defs/releaseId"
+    },
+    "knowledge_cutoff": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "release_manifest_schema_version": {
+      "const": "1.0.0"
+    },
+    "manifest_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "releaseId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "not": {
+        "const": "latest"
+      }
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    }
+  }
+}

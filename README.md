@@ -6,10 +6,12 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v0.7](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—1 completed / Stage 2A + Stage 2B not_started`。
+- [InvestSystem 实施计划 v0.8](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—1 completed / Stage 2A in_progress / Stage 2B not_started`。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 `0.1.0-draft` 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。这些只证明工程骨架可安装、可测试、可审计；KB Adapter、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合、执行和 P&L 均尚未实现。
+
+Stage 2A 已在 `codex/stage2` 分支启动。当前从 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定了 20 个官方文件，并完成 provider canonical、契约 catalog、消费 receipt/observation draft 模型和官方 reference fixture 验证/窄投影的首个离线实现。Stage 2A 仍为 `in_progress`：固定提交没有锁定的公共 HTTP envelope/OpenAPI 或不可变 export-package 契约，HTTP/export transport、SQLite v2、持久 observation 和 receipt-derived atomic pin 尚未实现；Stage 2B 仍未启动，也没有策略能力。
 
 ## 当前项目
 

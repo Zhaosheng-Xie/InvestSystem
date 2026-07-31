@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:disclosure-schedule:v1",
+  "title": "Financial Disclosure Schedule Release Record v1",
+  "description": "Point-in-time disclosure schedule revision with semantic deduplication and frozen source lineage.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "financial_disclosure_schedule_id",
+    "supersedes_financial_disclosure_schedule_id",
+    "company_id",
+    "period_end",
+    "ann_date",
+    "pre_date",
+    "actual_date",
+    "modify_date_raw",
+    "event_at",
+    "source_published_at",
+    "first_seen_at",
+    "ingested_at",
+    "verified_at",
+    "available_at",
+    "time_precision",
+    "time_quality",
+    "availability_policy_version",
+    "availability_evidence",
+    "first_source_record_id",
+    "source_snapshot_id",
+    "source_provider",
+    "source_dataset",
+    "semantic_content_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "financial_disclosure_schedule_id": {
+      "$ref": "#/$defs/id"
+    },
+    "supersedes_financial_disclosure_schedule_id": {
+      "$ref": "#/$defs/nullableId"
+    },
+    "company_id": {
+      "$ref": "#/$defs/id"
+    },
+    "period_end": {
+      "$ref": "#/$defs/yyyymmdd"
+    },
+    "ann_date": {
+      "$ref": "#/$defs/nullableYyyymmdd"
+    },
+    "pre_date": {
+      "$ref": "#/$defs/nullableYyyymmdd"
+    },
+    "actual_date": {
+      "$ref": "#/$defs/nullableYyyymmdd"
+    },
+    "modify_date_raw": {
+      "$ref": "#/$defs/nullableText"
+    },
+    "event_at": {
+      "$ref": "#/$defs/nullableEventTime"
+    },
+    "source_published_at": {
+      "$ref": "#/$defs/nullableUtcTimestamp"
+    },
+    "first_seen_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "ingested_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "verified_at": {
+      "$ref": "#/$defs/nullableUtcTimestamp"
+    },
+    "available_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "time_precision": {
+      "$ref": "#/$defs/timePrecision"
+    },
+    "time_quality": {
+      "$ref": "#/$defs/timeQuality"
+    },
+    "availability_policy_version": {
+      "$ref": "#/$defs/version"
+    },
+    "availability_evidence": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "first_source_record_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_snapshot_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_provider": {
+      "const": "tushare"
+    },
+    "source_dataset": {
+      "const": "disclosure_date"
+    },
+    "semantic_content_hash": {
+      "$ref": "#/$defs/sha256Value"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "nullableId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "sha256Value": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "yyyymmdd": {
+      "type": "string",
+      "pattern": "^\\d{8}$"
+    },
+    "nullableYyyymmdd": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/yyyymmdd"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^.*\\S.*$"
+    },
+    "nullableText": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "nullableUtcTimestamp": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableEventTime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "timePrecision": {
+      "type": "string",
+      "enum": [
+        "second",
+        "minute",
+        "date_only",
+        "unknown"
+      ]
+    },
+    "timeQuality": {
+      "type": "string",
+      "enum": [
+        "official_timestamp",
+        "provider_timestamp",
+        "first_seen_fallback",
+        "ingest_time_proxy"
+      ]
+    }
+  }
+}

@@ -1,0 +1,779 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:release-manifest:v1",
+  "title": "Release Manifest v1",
+  "description": "Canonical immutable inputs and artifacts for a Dataset Release. manifest_hash is SHA-256 over the canonical manifest with manifest_hash omitted. Current publication status and all strategy-layer state are deliberately excluded.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "release_id",
+    "created_at",
+    "knowledge_cutoff",
+    "supersedes_release_id",
+    "time_semantics_version",
+    "canonicalization_profile",
+    "code",
+    "inputs",
+    "release_items",
+    "manifest_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "release_id": {
+      "$ref": "#/$defs/releaseId"
+    },
+    "created_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "knowledge_cutoff": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "supersedes_release_id": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/releaseId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "time_semantics_version": {
+      "$ref": "#/$defs/version"
+    },
+    "canonicalization_profile": {
+      "const": "irkb-jsonl-v1"
+    },
+    "code": {
+      "$ref": "#/$defs/code"
+    },
+    "inputs": {
+      "$ref": "#/$defs/inputs"
+    },
+    "release_items": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/releaseItem"
+      }
+    },
+    "context_pack_build": {
+      "$ref": "#/$defs/contextPackBuild"
+    },
+    "manifest_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "release_items": {
+            "contains": {
+              "properties": {
+                "item_type": {
+                  "const": "context_pack"
+                }
+              },
+              "required": [
+                "item_type"
+              ]
+            }
+          }
+        },
+        "required": [
+          "release_items"
+        ]
+      },
+      "then": {
+        "required": [
+          "context_pack_build"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "context_pack_build"
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "releaseId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "not": {
+        "const": "latest"
+      }
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "code": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "commit",
+        "dirty"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "dirty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "sourceSnapshotRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_id",
+        "provider",
+        "dataset",
+        "schema_hash",
+        "content_hash"
+      ],
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/id"
+        },
+        "provider": {
+          "$ref": "#/$defs/id"
+        },
+        "dataset": {
+          "$ref": "#/$defs/id"
+        },
+        "schema_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "documentVersionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document_version_id",
+        "content_hash"
+      ],
+      "properties": {
+        "document_version_id": {
+          "$ref": "#/$defs/id"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "configRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "config_id",
+        "version",
+        "content_hash"
+      ],
+      "properties": {
+        "config_id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "normalizerRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normalizer_id",
+        "version",
+        "content_hash"
+      ],
+      "properties": {
+        "normalizer_id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "parserRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parser_id",
+        "version",
+        "content_hash"
+      ],
+      "properties": {
+        "parser_id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "availabilityPolicyRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_id",
+        "version",
+        "content_hash"
+      ],
+      "properties": {
+        "policy_id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "policyRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_id",
+        "version",
+        "content_hash"
+      ],
+      "properties": {
+        "policy_id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_snapshots",
+        "document_versions",
+        "configs",
+        "normalizers",
+        "parsers",
+        "availability_policies",
+        "review_policy",
+        "authorization_policy"
+      ],
+      "properties": {
+        "source_snapshots": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/sourceSnapshotRef"
+          }
+        },
+        "document_versions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/documentVersionRef"
+          }
+        },
+        "configs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/configRef"
+          }
+        },
+        "normalizers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/normalizerRef"
+          }
+        },
+        "parsers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/parserRef"
+          }
+        },
+        "availability_policies": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/availabilityPolicyRef"
+          }
+        },
+        "review_policy": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/policyRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authorization_policy": {
+          "$ref": "#/$defs/policyRef"
+        }
+      },
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "properties": {
+                "source_snapshots": {
+                  "minItems": 1
+                }
+              }
+            },
+            {
+              "properties": {
+                "document_versions": {
+                  "minItems": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "anyOf": [
+            {
+              "properties": {
+                "normalizers": {
+                  "minItems": 1
+                }
+              }
+            },
+            {
+              "properties": {
+                "parsers": {
+                  "minItems": 1
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "releaseItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "item_type",
+        "logical_path",
+        "media_type",
+        "format",
+        "record_schema_id",
+        "record_schema_version",
+        "record_schema_hash",
+        "sort_keys",
+        "record_count",
+        "size_bytes",
+        "artifact_hash",
+        "logical_content_hash"
+      ],
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/id"
+        },
+        "item_type": {
+          "type": "string",
+          "enum": [
+            "dataset",
+            "context_pack",
+            "evidence_bundle",
+            "schema"
+          ]
+        },
+        "logical_path": {
+          "$ref": "#/$defs/logicalRelativePath"
+        },
+        "media_type": {
+          "type": "string",
+          "enum": [
+            "application/json",
+            "application/schema+json",
+            "application/x-ndjson"
+          ]
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "json",
+            "jsonl"
+          ]
+        },
+        "record_schema_id": {
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "record_schema_version": {
+          "$ref": "#/$defs/version"
+        },
+        "record_schema_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sort_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$"
+          }
+        },
+        "record_count": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "logical_content_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "item_type": {
+                "const": "dataset"
+              }
+            },
+            "required": [
+              "item_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "sort_keys": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "item_type": {
+                "const": "schema"
+              }
+            },
+            "required": [
+              "item_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "format": {
+                "const": "json"
+              },
+              "media_type": {
+                "const": "application/schema+json"
+              },
+              "record_count": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "format": {
+                "const": "json"
+              }
+            },
+            "required": [
+              "format"
+            ]
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "enum": [
+                  "application/json",
+                  "application/schema+json"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "format": {
+                "const": "jsonl"
+              }
+            },
+            "required": [
+              "format"
+            ]
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "application/x-ndjson"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "contextPackBuild": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_pack_id",
+        "pack_key",
+        "version",
+        "supersedes_context_pack_id",
+        "source_release",
+        "compiler",
+        "config_files",
+        "company_identities"
+      ],
+      "properties": {
+        "context_pack_id": {
+          "$ref": "#/$defs/id"
+        },
+        "pack_key": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "supersedes_context_pack_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_release": {
+          "$ref": "#/$defs/contextPackSourceRelease"
+        },
+        "compiler": {
+          "$ref": "#/$defs/contextPackCompiler"
+        },
+        "config_files": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/contextPackConfigFile"
+          }
+        },
+        "company_identities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/contextPackCompanyIdentity"
+          }
+        }
+      }
+    },
+    "contextPackSourceRelease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "release_id",
+        "knowledge_cutoff",
+        "manifest_hash"
+      ],
+      "properties": {
+        "release_id": {
+          "$ref": "#/$defs/releaseId"
+        },
+        "knowledge_cutoff": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "manifest_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "contextPackCompiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "compiler_id",
+        "version",
+        "code_path"
+      ],
+      "properties": {
+        "compiler_id": {
+          "const": "context-pack-compiler"
+        },
+        "version": {
+          "const": "1"
+        },
+        "code_path": {
+          "const": "investment_research_kb.application.context_packs:ContextPackService.compile_from_release"
+        }
+      }
+    },
+    "contextPackConfigFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "content_hash"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/logicalRelativePath"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "contextPackCompanyIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "company_id",
+        "legal_name",
+        "short_name",
+        "country",
+        "ts_code"
+      ],
+      "properties": {
+        "company_id": {
+          "$ref": "#/$defs/id"
+        },
+        "legal_name": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "short_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "country": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "ts_code": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "logicalRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^(?!.*(?:/\\.\\.?)(?:/|$))[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9._-]+)*$"
+    }
+  }
+}

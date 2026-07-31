@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0.0",
+  "path": "stage6-reference-consumer.v1.json",
+  "file_sha256": {
+    "algorithm": "sha256",
+    "value": "82f90ac52611c816dcf60adeb9110f7a2a7124be52a80ab9262af887db1d474a"
+  }
+}

@@ -86,36 +86,92 @@ def test_source_never_imports_the_kb_package_or_mutates_pythonpath(
     assert violations == []
 
 
+def strategy_provider_import_violations(path: Path) -> list[str]:
+    violations: list[str] = []
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            modules = [alias.name for alias in node.names]
+        elif isinstance(node, ast.ImportFrom):
+            modules = [node.module or ""]
+            if node.level and (
+                (node.module or "") == "integrations"
+                or (node.module or "").startswith("integrations.")
+                or (
+                    node.module is None
+                    and any(alias.name == "integrations" for alias in node.names)
+                )
+            ):
+                violations.append(f"{path}:{node.lineno}: relative provider integration")
+        elif isinstance(node, ast.Call):
+            call_name = dotted_name(node.func)
+            if call_name not in {"__import__", "importlib.import_module"} or not node.args:
+                continue
+            argument = node.args[0]
+            if not isinstance(argument, ast.Constant) or not isinstance(argument.value, str):
+                continue
+            dynamic_module = argument.value.lstrip(".")
+            if dynamic_module in {"integrations", "invest_system.integrations"} or (
+                dynamic_module.startswith(("invest_system.integrations.", "integrations."))
+            ):
+                violations.append(f"{path}:{node.lineno}: dynamic provider integration")
+            continue
+        else:
+            continue
+        for module in modules:
+            if module == "invest_system.integrations" or module.startswith(
+                "invest_system.integrations."
+            ):
+                violations.append(f"{path}:{node.lineno}: {module}")
+    return violations
+
+
 def test_strategy_code_cannot_import_provider_integrations(repository_root: Path) -> None:
     strategies_root = repository_root / "src" / "invest_system" / "strategies"
-    if not strategies_root.exists():
-        return
-
-    violations: list[str] = []
-    for path in strategies_root.rglob("*.py"):
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):
-                modules = [alias.name for alias in node.names]
-            elif isinstance(node, ast.ImportFrom):
-                modules = [node.module or ""]
-            else:
-                continue
-            for module in modules:
-                if module == "invest_system.integrations" or module.startswith(
-                    "invest_system.integrations."
-                ):
-                    violations.append(f"{path}:{node.lineno}: {module}")
+    violations = (
+        [
+            violation
+            for path in strategies_root.rglob("*.py")
+            for violation in strategy_provider_import_violations(path)
+        ]
+        if strategies_root.exists()
+        else []
+    )
 
     assert violations == []
+
+
+def test_strategy_import_guard_covers_absolute_relative_and_dynamic_forms(
+    tmp_path: Path,
+) -> None:
+    samples = {
+        "absolute.py": "from invest_system.integrations import investment_research_kb\n",
+        "relative.py": "from ..integrations import investment_research_kb\n",
+        "relative_alias.py": "from .. import integrations\n",
+        "dynamic.py": (
+            "import importlib\n"
+            "importlib.import_module('invest_system.integrations.investment_research_kb')\n"
+        ),
+    }
+    for name, source in samples.items():
+        path = tmp_path / name
+        path.write_text(source, encoding="utf-8")
+        assert strategy_provider_import_violations(path), name
+
+    safe = tmp_path / "safe.py"
+    safe.write_text("from invest_system.models import VerifiedKnowledgeInput\n", encoding="utf-8")
+    assert strategy_provider_import_violations(safe) == []
 
 
 def test_source_contains_no_executable_sibling_repository_reference(
     repository_root: Path,
 ) -> None:
-    """Ignore prose docstrings while rejecting executable sibling-repo literals."""
+    """Allow provider IDs only in its adapter; reject them in domain code."""
 
     violations: list[str] = []
+    provider_adapter_root = (
+        repository_root / "src" / "invest_system" / "integrations" / "investment_research_kb"
+    )
     for path in python_files(repository_root):
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         documentation = docstring_node_ids(tree)
@@ -125,6 +181,13 @@ def test_source_contains_no_executable_sibling_repository_reference(
             if isinstance(node, ast.Constant) and isinstance(node.value, str):
                 normalized = node.value.casefold().replace("\\", "/")
                 if any(identifier in normalized for identifier in BANNED_SIBLING_IDENTIFIERS):
+                    is_public_adapter_identifier = path.is_relative_to(provider_adapter_root) and (
+                        normalized == "investmentresearchkb"
+                        or normalized == "https://github.com/zhaosheng-xie/investmentresearchkb"
+                        or normalized.startswith("urn:investment-research-kb:contract:")
+                    )
+                    if is_public_adapter_identifier:
+                        continue
                     violations.append(f"{path}:{node.lineno}: sibling repository literal")
 
     assert violations == []

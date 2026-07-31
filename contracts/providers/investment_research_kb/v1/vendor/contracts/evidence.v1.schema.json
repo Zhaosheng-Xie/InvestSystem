@@ -1,0 +1,518 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:evidence:v1",
+  "title": "Evidence v1",
+  "description": "Cross-source evidence core for an API record or document span. This contract intentionally excludes claims, theses, strategy events, gates, decisions, positions, orders, and P&L.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "evidence_kind",
+    "source_ref",
+    "source_content_hash",
+    "locator",
+    "span_content_hash",
+    "content",
+    "times",
+    "review",
+    "authorization_policy_version",
+    "supersedes_evidence_id"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "evidence_id": {
+      "$ref": "#/$defs/id"
+    },
+    "evidence_kind": {
+      "type": "string",
+      "enum": [
+        "api_record",
+        "document_span"
+      ]
+    },
+    "source_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/apiSourceRef"
+        },
+        {
+          "$ref": "#/$defs/documentSourceRef"
+        }
+      ]
+    },
+    "source_content_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "locator": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/apiLocator"
+        },
+        {
+          "$ref": "#/$defs/documentLocator"
+        }
+      ]
+    },
+    "span_content_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "content": {
+      "$ref": "#/$defs/content"
+    },
+    "times": {
+      "$ref": "#/$defs/times"
+    },
+    "review": {
+      "$ref": "#/$defs/review"
+    },
+    "authorization_policy_version": {
+      "$ref": "#/$defs/version"
+    },
+    "supersedes_evidence_id": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "evidence_kind": {
+            "const": "api_record"
+          }
+        },
+        "required": [
+          "evidence_kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_ref": {
+            "$ref": "#/$defs/apiSourceRef"
+          },
+          "locator": {
+            "$ref": "#/$defs/apiLocator"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "source_ref": {
+            "$ref": "#/$defs/documentSourceRef"
+          },
+          "locator": {
+            "$ref": "#/$defs/documentLocator"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "nullableUtcTimestamp": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableEventTime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "apiSourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_id",
+        "source_record_id"
+      ],
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/id"
+        },
+        "source_record_id": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "documentSourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "document_version_id",
+        "evidence_span_id"
+      ],
+      "properties": {
+        "document_version_id": {
+          "$ref": "#/$defs/id"
+        },
+        "evidence_span_id": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "apiLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_key"
+      ],
+      "properties": {
+        "record_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      }
+    },
+    "documentLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "page",
+        "paragraph",
+        "char_start",
+        "char_end",
+        "table_id"
+      ],
+      "properties": {
+        "page": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "paragraph": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "char_start": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "char_end": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "table_id": {
+          "$ref": "#/$defs/nullableId"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "page": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "properties": {
+            "paragraph": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "properties": {
+            "char_start": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "properties": {
+            "char_end": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "properties": {
+            "table_id": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "redaction_reason"
+      ],
+      "properties": {
+        "text": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "redaction_reason": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1
+            },
+            "redaction_reason": {
+              "type": "null"
+            }
+          }
+        },
+        {
+          "properties": {
+            "text": {
+              "type": "null"
+            },
+            "redaction_reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "times": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_at",
+        "source_published_at",
+        "first_seen_at",
+        "ingested_at",
+        "verified_at",
+        "effective_at",
+        "available_at",
+        "time_precision",
+        "time_quality",
+        "availability_policy_version",
+        "knowledge_published_at"
+      ],
+      "properties": {
+        "event_at": {
+          "$ref": "#/$defs/nullableEventTime"
+        },
+        "source_published_at": {
+          "$ref": "#/$defs/nullableUtcTimestamp"
+        },
+        "first_seen_at": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "ingested_at": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "verified_at": {
+          "$ref": "#/$defs/nullableUtcTimestamp"
+        },
+        "effective_at": {
+          "$ref": "#/$defs/nullableUtcTimestamp"
+        },
+        "available_at": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "time_precision": {
+          "type": "string",
+          "enum": [
+            "second",
+            "minute",
+            "date_only",
+            "unknown"
+          ]
+        },
+        "time_quality": {
+          "type": "string",
+          "enum": [
+            "official_timestamp",
+            "provider_timestamp",
+            "first_seen_fallback",
+            "ingest_time_proxy"
+          ]
+        },
+        "availability_policy_version": {
+          "$ref": "#/$defs/version"
+        },
+        "knowledge_published_at": {
+          "$ref": "#/$defs/nullableUtcTimestamp"
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewed_at",
+        "reviewer_ref",
+        "review_policy_version"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "validated",
+            "approved",
+            "rejected"
+          ]
+        },
+        "reviewed_at": {
+          "$ref": "#/$defs/nullableUtcTimestamp"
+        },
+        "reviewer_ref": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "review_policy_version": {
+          "$ref": "#/$defs/version"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "draft"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reviewed_at": {
+                "type": "null"
+              },
+              "reviewer_ref": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "reviewed_at": {
+                "$ref": "#/$defs/utcTimestamp"
+              },
+              "reviewer_ref": {
+                "$ref": "#/$defs/id"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

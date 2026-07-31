@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "purpose": "Immutable Stage 6 v1 contract additions for cross-repository compatibility.",
+  "contracts": [
+    {
+      "path": "change-record.v1.schema.json",
+      "contract_id": "urn:investment-research-kb:contract:change-record:v1",
+      "schema_version": "1.0.0",
+      "canonical_sha256": {
+        "algorithm": "sha256",
+        "value": "37329fb4e9ec010fe0464aaa11949037952bf74aba0e32a454017c6dc53e983e"
+      },
+      "file_sha256": {
+        "algorithm": "sha256",
+        "value": "e83344e39db3acb62e006f3aca0ad9048f5a91b92dc5e2b3857ef8498085e1a2"
+      }
+    }
+  ]
+}

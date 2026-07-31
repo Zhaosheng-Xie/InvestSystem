@@ -1,6 +1,6 @@
 # 实现
 
-需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架已经通过根级[正式验收](../../docs/validation/stage1-acceptance.md)。Stage 2A 与 Stage 2B 尚未启动；首个纵向切片分为可并行的策略轨和契约轨，再以正式 Release E2E 汇合：
+需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架已经通过根级[正式验收](../../docs/validation/stage1-acceptance.md)。Stage 2A 已在 `codex/stage2` 启动，Stage 2B 仍未启动；首个纵向切片分为可并行的策略轨和契约轨，再以正式 Release E2E 汇合：
 
 - 策略轨：`合成策略 fixture → provider-neutral DTO → StrategyRunManifest → E3.5/E4 → 四道门 → 利润桥/预期/估值 → DecisionRecord + replay_hash`；
 - 契约轨：`KB 官方 fixture → 独立只读 Adapter → ArtifactConsumptionReceipt + ArtifactFetchObservation + ReleaseStatusObservation → provider-neutral DTO`；
@@ -8,6 +8,8 @@
 - 汇合：`精确 Context Pack Published Release → 同一策略入口 → 真实只读 smoke（允许 ABSTAIN）`。
 
 完整策略、TargetPortfolio 和 paper 成交回放在后续阶段开发，可与正式 Release E2E 并行；正式历史验证须在两支都完成后开始。
+
+Stage 2A 当前已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按原始字节引入 20 个官方文件，并完成 provider canonical、契约 catalog、消费 receipt/observation draft 模型和官方 reference fixture 验证/窄投影的首个离线实现。固定提交尚无锁定的公共 HTTP envelope/OpenAPI 或不可变 export-package 契约，因此 HTTP/export transport 未实现；SQLite v2、持久 observation 和 receipt-derived atomic pin 也仍待实现。Stage 2A 不得在这些完成并验收前标记为 `completed`。
 
 根级采用 `src/` 包布局、GitHub Actions 和规范 JSON。本地实现使用工作站级 `E:\Conda\envs\Data_Analysis`（Python 3.12）作为共享开发解释器，但 InvestSystem 必须独立维护 `pyproject.toml`、`requirements-build.in`、带哈希的 runtime/dev lock、TOML 配置、`var/cache/kb-releases/`、`var/state/invest_system.sqlite3` 和运行目录。项目只以 editable `--no-deps --no-build-isolation` 注册；缺包安装前后保存环境基线并运行 `pip check`，不得未经确认改变既有共享包。CI 和可复现验收必须从 InvestSystem lock 创建干净环境。
 

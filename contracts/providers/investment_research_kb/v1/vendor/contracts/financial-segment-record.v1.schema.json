@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:financial-segment:v1",
+  "title": "Financial Business Segment Release Record v1",
+  "description": "One item from a complete point-in-time financial business-segment set.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "financial_segment_set_id",
+    "supersedes_financial_segment_set_id",
+    "financial_segment_item_id",
+    "company_id",
+    "period_end",
+    "segment_type",
+    "item_name",
+    "currency",
+    "sales_decimal",
+    "profit_decimal",
+    "cost_decimal",
+    "update_flag",
+    "segment_row_count",
+    "completeness_status",
+    "event_at",
+    "source_published_at",
+    "first_seen_at",
+    "ingested_at",
+    "verified_at",
+    "available_at",
+    "time_precision",
+    "time_quality",
+    "availability_policy_version",
+    "availability_evidence",
+    "source_record_id",
+    "source_snapshot_id",
+    "source_provider",
+    "source_dataset",
+    "segment_set_content_hash",
+    "content_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "financial_segment_set_id": {
+      "$ref": "#/$defs/id"
+    },
+    "supersedes_financial_segment_set_id": {
+      "$ref": "#/$defs/nullableId"
+    },
+    "financial_segment_item_id": {
+      "$ref": "#/$defs/id"
+    },
+    "company_id": {
+      "$ref": "#/$defs/id"
+    },
+    "period_end": {
+      "$ref": "#/$defs/yyyymmdd"
+    },
+    "segment_type": {
+      "type": "string",
+      "enum": [
+        "P",
+        "D",
+        "I"
+      ],
+      "description": "Tushare product, region, or industry dimension."
+    },
+    "item_name": {
+      "$ref": "#/$defs/nonEmptyText"
+    },
+    "currency": {
+      "$ref": "#/$defs/nonEmptyText"
+    },
+    "sales_decimal": {
+      "$ref": "#/$defs/nullableCanonicalDecimal"
+    },
+    "profit_decimal": {
+      "$ref": "#/$defs/nullableCanonicalDecimal"
+    },
+    "cost_decimal": {
+      "$ref": "#/$defs/nullableCanonicalDecimal"
+    },
+    "update_flag": {
+      "oneOf": [
+        {
+          "enum": [
+            "0",
+            "1"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "segment_row_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99
+    },
+    "completeness_status": {
+      "const": "complete_by_contract"
+    },
+    "event_at": {
+      "$ref": "#/$defs/nullableEventTime"
+    },
+    "source_published_at": {
+      "$ref": "#/$defs/nullableUtcTimestamp"
+    },
+    "first_seen_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "ingested_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "verified_at": {
+      "$ref": "#/$defs/nullableUtcTimestamp"
+    },
+    "available_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "time_precision": {
+      "$ref": "#/$defs/timePrecision"
+    },
+    "time_quality": {
+      "$ref": "#/$defs/timeQuality"
+    },
+    "availability_policy_version": {
+      "$ref": "#/$defs/version"
+    },
+    "availability_evidence": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "source_record_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_snapshot_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_provider": {
+      "const": "tushare"
+    },
+    "source_dataset": {
+      "const": "fina_mainbz"
+    },
+    "segment_set_content_hash": {
+      "$ref": "#/$defs/sha256Value"
+    },
+    "content_hash": {
+      "$ref": "#/$defs/sha256Value"
+    }
+  },
+  "anyOf": [
+    {
+      "properties": {
+        "sales_decimal": {
+          "$ref": "#/$defs/canonicalDecimal"
+        }
+      }
+    },
+    {
+      "properties": {
+        "profit_decimal": {
+          "$ref": "#/$defs/canonicalDecimal"
+        }
+      }
+    },
+    {
+      "properties": {
+        "cost_decimal": {
+          "$ref": "#/$defs/canonicalDecimal"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "nullableId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "sha256Value": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "yyyymmdd": {
+      "type": "string",
+      "pattern": "^\\d{8}$"
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^.*\\S.*$"
+    },
+    "canonicalDecimal": {
+      "type": "string",
+      "pattern": "^(?:0|-?[1-9]\\d*|-?(?:0|[1-9]\\d*)\\.\\d*[1-9])$"
+    },
+    "nullableCanonicalDecimal": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/canonicalDecimal"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "nullableUtcTimestamp": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableEventTime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "timePrecision": {
+      "type": "string",
+      "enum": [
+        "second",
+        "minute",
+        "date_only",
+        "unknown"
+      ]
+    },
+    "timeQuality": {
+      "type": "string",
+      "enum": [
+        "official_timestamp",
+        "provider_timestamp",
+        "first_seen_fallback",
+        "ingest_time_proxy"
+      ]
+    }
+  }
+}

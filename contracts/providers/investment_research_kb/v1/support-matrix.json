@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0.0",
+  "provider": "InvestmentResearchKB",
+  "stage": "Stage 2A",
+  "stage_status": "in_progress",
+  "invest_system_branch": "codex/stage2",
+  "source_commit": "58ed9c5cb5302e3e719f1696bed83a03c5d6313b",
+  "snapshot": {
+    "status": "pinned",
+    "official_file_count": 20,
+    "locked_v1_schema_count": 14,
+    "byte_preservation": "required",
+    "lock_file": "snapshot-lock.json"
+  },
+  "capabilities": {
+    "provider_canonical": {
+      "status": "implemented_offline",
+      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+    },
+    "contract_catalog": {
+      "status": "implemented_offline",
+      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+    },
+    "artifact_consumption_receipt": {
+      "status": "implemented_draft_model",
+      "persistence": "not_implemented",
+      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+    },
+    "consumption_observations": {
+      "status": "implemented_draft_models",
+      "persistence": "not_implemented",
+      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+    },
+    "reference_fixture_validation_and_projection": {
+      "status": "implemented_offline_fixture_only",
+      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+    },
+    "http_transport": {
+      "status": "not_implemented",
+      "blocker": "locked_public_http_envelope_or_openapi_contract_missing"
+    },
+    "immutable_export_transport": {
+      "status": "not_implemented",
+      "blocker": "locked_export_package_schema_lock_and_fixture_missing"
+    },
+    "sqlite_v2": {
+      "status": "not_implemented"
+    },
+    "receipt_derived_atomic_pin": {
+      "status": "not_implemented",
+      "includes": "input_release_artifacts_and_transitive_source_release_retention"
+    },
+    "strategy_semantics": {
+      "status": "not_implemented",
+      "stage": "Stage 2B or later"
+    }
+  },
+  "constraints": [
+    "No KB repository, package, SQLite, raw, staging, published directory, or worktree dependency.",
+    "No HTTP or export transport may be claimed before its public contract is pinned and validated.",
+    "Stage 2A remains in_progress until every completion gate has acceptance evidence."
+  ]
+}

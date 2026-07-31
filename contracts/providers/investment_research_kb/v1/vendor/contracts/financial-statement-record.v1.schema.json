@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:financial-statement:v1",
+  "title": "Financial Statement Release Record v1",
+  "description": "Point-in-time financial statement with canonical decimal metrics and frozen source lineage.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "financial_statement_id",
+    "supersedes_financial_statement_id",
+    "company_id",
+    "dataset",
+    "period_end",
+    "ann_date",
+    "f_ann_date",
+    "report_type",
+    "comp_type",
+    "end_type",
+    "update_flag",
+    "period_basis",
+    "consolidation_scope",
+    "currency",
+    "source_unit",
+    "canonical_unit",
+    "metrics",
+    "event_at",
+    "source_published_at",
+    "first_seen_at",
+    "ingested_at",
+    "verified_at",
+    "available_at",
+    "time_precision",
+    "time_quality",
+    "availability_policy_version",
+    "availability_evidence",
+    "source_record_id",
+    "source_snapshot_id",
+    "source_provider",
+    "source_dataset",
+    "content_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "financial_statement_id": {
+      "$ref": "#/$defs/id"
+    },
+    "supersedes_financial_statement_id": {
+      "$ref": "#/$defs/nullableId"
+    },
+    "company_id": {
+      "$ref": "#/$defs/id"
+    },
+    "dataset": {
+      "$ref": "#/$defs/financialDataset"
+    },
+    "period_end": {
+      "$ref": "#/$defs/yyyymmdd"
+    },
+    "ann_date": {
+      "$ref": "#/$defs/nullableYyyymmdd"
+    },
+    "f_ann_date": {
+      "$ref": "#/$defs/nullableYyyymmdd"
+    },
+    "report_type": {
+      "$ref": "#/$defs/nullableText"
+    },
+    "comp_type": {
+      "$ref": "#/$defs/nullableText"
+    },
+    "end_type": {
+      "$ref": "#/$defs/nullableText"
+    },
+    "update_flag": {
+      "oneOf": [
+        {
+          "enum": [
+            "0",
+            "1"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "period_basis": {
+      "type": "string",
+      "enum": [
+        "cumulative",
+        "single_quarter",
+        "instant",
+        "derived"
+      ]
+    },
+    "consolidation_scope": {
+      "type": "string",
+      "enum": [
+        "consolidated",
+        "parent",
+        "provider_unspecified"
+      ]
+    },
+    "currency": {
+      "$ref": "#/$defs/nonEmptyText"
+    },
+    "source_unit": {
+      "$ref": "#/$defs/nonEmptyText"
+    },
+    "canonical_unit": {
+      "$ref": "#/$defs/nonEmptyText"
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/metric"
+      },
+      "description": "Metrics are emitted in ascending metric_id order."
+    },
+    "event_at": {
+      "$ref": "#/$defs/nullableEventTime"
+    },
+    "source_published_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "first_seen_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "ingested_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "verified_at": {
+      "$ref": "#/$defs/nullableUtcTimestamp"
+    },
+    "available_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "time_precision": {
+      "$ref": "#/$defs/timePrecision"
+    },
+    "time_quality": {
+      "$ref": "#/$defs/timeQuality"
+    },
+    "availability_policy_version": {
+      "$ref": "#/$defs/version"
+    },
+    "availability_evidence": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "source_record_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_snapshot_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_provider": {
+      "const": "tushare"
+    },
+    "source_dataset": {
+      "$ref": "#/$defs/financialDataset"
+    },
+    "content_hash": {
+      "$ref": "#/$defs/sha256Value"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "nullableId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "sha256Value": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "yyyymmdd": {
+      "type": "string",
+      "pattern": "^\\d{8}$"
+    },
+    "nullableYyyymmdd": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/yyyymmdd"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^.*\\S.*$"
+    },
+    "nullableText": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "canonicalDecimal": {
+      "type": "string",
+      "pattern": "^(?:0|-?[1-9]\\d*|-?(?:0|[1-9]\\d*)\\.\\d*[1-9])$"
+    },
+    "positiveCanonicalDecimal": {
+      "type": "string",
+      "pattern": "^(?:[1-9]\\d*|(?:0|[1-9]\\d*)\\.\\d*[1-9])$"
+    },
+    "financialDataset": {
+      "type": "string",
+      "enum": [
+        "income",
+        "balancesheet",
+        "cashflow",
+        "fina_indicator"
+      ]
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_id",
+        "metric_id",
+        "source_field",
+        "value_decimal",
+        "currency",
+        "unit",
+        "source_unit",
+        "canonical_unit",
+        "conversion_factor_decimal",
+        "source_record_id",
+        "content_hash"
+      ],
+      "properties": {
+        "observation_id": {
+          "$ref": "#/$defs/id"
+        },
+        "metric_id": {
+          "$ref": "#/$defs/id"
+        },
+        "source_field": {
+          "$ref": "#/$defs/id"
+        },
+        "value_decimal": {
+          "$ref": "#/$defs/canonicalDecimal"
+        },
+        "currency": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nonEmptyText"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_unit": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "canonical_unit": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "conversion_factor_decimal": {
+          "$ref": "#/$defs/positiveCanonicalDecimal"
+        },
+        "source_record_id": {
+          "$ref": "#/$defs/id"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256Value"
+        }
+      }
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "nullableUtcTimestamp": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableEventTime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "timePrecision": {
+      "type": "string",
+      "enum": [
+        "second",
+        "minute",
+        "date_only",
+        "unknown"
+      ]
+    },
+    "timeQuality": {
+      "type": "string",
+      "enum": [
+        "official_timestamp",
+        "provider_timestamp",
+        "first_seen_fallback",
+        "ingest_time_proxy"
+      ]
+    }
+  }
+}
