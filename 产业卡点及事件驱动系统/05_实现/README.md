@@ -1,6 +1,6 @@
 # 实现
 
-需求与边界已于 Stage 0 冻结；Stage 1 的本地工程实现已经形成，仍需 GitHub Actions 与正式验收记录关闭阶段。首个纵向切片分为可并行的策略轨和契约轨，再以正式 Release E2E 汇合：
+需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架已经通过根级[正式验收](../../docs/validation/stage1-acceptance.md)。Stage 2A 与 Stage 2B 尚未启动；首个纵向切片分为可并行的策略轨和契约轨，再以正式 Release E2E 汇合：
 
 - 策略轨：`合成策略 fixture → provider-neutral DTO → StrategyRunManifest → E3.5/E4 → 四道门 → 利润桥/预期/估值 → DecisionRecord + replay_hash`；
 - 契约轨：`KB 官方 fixture → 独立只读 Adapter → ArtifactConsumptionReceipt + ArtifactFetchObservation + ReleaseStatusObservation → provider-neutral DTO`；

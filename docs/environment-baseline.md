@@ -57,13 +57,16 @@ New-Item -ItemType Directory -Force -Path $baseline | Out-Null
 
 ## 当前安装后状态
 
-`registered_without_dependency_changes`（`2026-07-31`）：已生成 runtime/dev hash lock，并以
+`registered_without_dependency_changes`（`2026-07-31`，实现提交 `f8d58f2`）：已生成 runtime/dev hash lock，并以
 `python -m pip install -e . --no-deps --no-build-isolation` 注册 InvestSystem。没有把 lock 强装
 进共享环境，因为现有 `jsonschema`、`pytest`、`ruff` 已满足项目声明，而 lock 中的较新固定版本
 会改变共享包。共享环境既有 `mypy==2.1.0` 超出本项目声明的 `<2` 范围；本项目没有为满足开发
 便利而降级这一共享包。正式类型检查证据来自按 `requirements-dev.lock` 安装的隔离环境，其中
 固定 `mypy==1.20.2`；共享环境的 mypy 2.1 检查只作为额外的向前兼容检查。
 
-安装前后完整清单位于已忽略的 `var/environment-baseline/`。`pip freeze` 的唯一新增项是本仓库的
-editable `invest-system`；没有既有包升级、降级或卸载。安装后的 `pip check` 与安装前相同，仍只
+安装前后及 `after-stage1` 完整清单位于已忽略的 `var/environment-baseline/`。Conda 显式清单和
+排除 editable/VCS 表示后的 `pip freeze` 没有差异；本次 pip 事务只重装了本仓库自己的 editable
+`invest-system`，没有升级、降级、安装或卸载其他包。`pip freeze` 会根据各工作树当时的 Git
+状态，把共享环境中原已存在的其他 editable 项在“本地路径”和“Git URL + commit”之间换一种
+显示方式；这不表示本项目改装了这些包，也不构成依赖。安装后的 `pip check` 与安装前相同，仍只
 报告上述既有 OpenCV/NumPy 冲突。项目导入解析到本仓库的 `src/invest_system/__init__.py`。

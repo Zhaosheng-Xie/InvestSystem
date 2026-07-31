@@ -6,10 +6,10 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v0.6](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0 completed / Stage 1 in_progress`。
+- [InvestSystem 实施计划 v0.7](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—1 completed / Stage 2A + Stage 2B not_started`。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
-Stage 1 已建立独立包装、hash lock、TOML、InvestSystem 自有 `0.1.0-draft` 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 CI。这些只证明工程骨架可安装、可测试、可审计；KB Adapter、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合、执行和 P&L 均尚未实现。
+Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 `0.1.0-draft` 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。这些只证明工程骨架可安装、可测试、可审计；KB Adapter、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合、执行和 P&L 均尚未实现。
 
 ## 当前项目
 

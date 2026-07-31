@@ -1,6 +1,6 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；规则规格待编写；Stage 1 工程骨架进行中；尚无策略实现`
+项目状态：`PRD v0.3 approved；规则规格待编写；Stage 1 工程骨架已验收；Stage 2A/2B 未启动；尚无策略实现`
 基线日期：`2026-07-31`
 市场范围：`中国 A 股`
 当前边界：`研究、回测、paper/shadow；不接自动实盘`
@@ -28,6 +28,7 @@
 3. [来源登记表 v0.1](02_研究/来源登记表_v0.1.md)
 4. [Alpha 竞争假设补充研究 v0.1](02_研究/Alpha竞争假设补充研究_v0.1.md)
 5. [ADR-0001：KB/InvestSystem 边界及 Release 消费政策](../docs/adr/ADR-0001-kb-investsystem-boundary.md)
+6. [Stage 1 工程与机器契约骨架验收记录](../docs/validation/stage1-acceptance.md)
 
 ## 推荐研发顺序
 

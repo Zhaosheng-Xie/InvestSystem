@@ -1,10 +1,10 @@
-# InvestSystem 实施计划（v0.6）
+# InvestSystem 实施计划（v0.7）
 
-> 计划版本：`v0.6`
+> 计划版本：`v0.7`
 > 基线日期：`2026-07-31`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 1 / in_progress；Stage 0 / completed`
+> 当前阶段：`Stage 0—1 / completed；Stage 2A + Stage 2B / not_started`
 > 当前成熟度：`engineering_skeleton / strategy_not_implemented`
 > 生产边界：`仅研究、回测、shadow/paper；不得自动实盘`
 
@@ -23,7 +23,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 ### 1.1 仓库事实
 
 - 仓库的需求、研究、规则占位、原始材料和历史归档仍是业务内容主体；这些文档不等于实现。
-- `2026-07-31` 已按用户授权启动 Stage 1：存在独立包装/依赖锁/TOML、InvestSystem 自有 draft Schema、provider-neutral DTO、规范序列化、强制规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成 fixture、自动测试和独立 CI；阶段仍等待 GitHub Actions 首次实跑与最终验收记录。
+- `2026-07-31` Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装/依赖锁/TOML、InvestSystem 自有 draft Schema、provider-neutral DTO、规范序列化、强制规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成 fixture、自动测试和 Windows/Linux CI 均已形成并验证。
 - 当前仍没有 KB Adapter、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合/执行、P&L 或可运行策略；Stage 1 契约版本均为 InvestSystem 自有 `0.1.0-draft`，不得冒充 KB 官方契约或已实现业务能力。
 - [产业卡点及事件驱动系统 PRD v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md) 已于 `2026-07-31` 获用户批准并 `supersedes` v0.2；规则状态仍为 `rule_spec_pending`，因此需求生效不等于策略规则或实现生效。v0.2 只作历史追溯。
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md) 仅完成独立研究建档，需求、规则和实现尚未开始。
@@ -39,7 +39,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | 阶段 | 状态 | 目标 | 主要依赖 |
 |---|---|---|---|
 | Stage 0 | `completed` | 治理、边界和需求冻结 | 已于 `2026-07-31` 验收关闭 |
-| Stage 1 | `in_progress` | 工程与机器契约骨架 | Stage 0 已完成 |
+| Stage 1 | `completed` | 工程与机器契约骨架 | 已于 `2026-07-31` 验收关闭 |
 | Stage 2A | `not_started` | KB 公共契约适配与黑盒契约验收 | Stage 1；固定的 KB 公共 Schema/lock/fixture |
 | Stage 2B | `not_started` | 最小 approved 策略规格与合成纵向切片 | Stage 1；用户批准最小规则包 |
 | Stage 3 | `not_started` | KB 正式 Release 传输与策略端到端验收 | Stage 2A、Stage 2B；KB Stage 6A 已完成（已满足） |
@@ -65,7 +65,7 @@ Stage 2A + Stage 2B                                │
 题材系统：独立 deferred track（另行批准、另立阶段，不接在 Stage 8 后）
 ```
 
-Stage 0 已于 `2026-07-31` 关闭，当前只推进 Stage 1；在 Stage 1 完成前不得进入 Stage 2A/2B。KB Stage 6A 已完成，不是 Stage 1 阻塞项。Stage 1 完成后，Stage 2A 与 Stage 2B 可以并行。二者完成后既可进入 Stage 4，也可进入 Stage 3：当前正式 `market-daily` Release 只能完成 Stage 3 的传输、校验和消费记录核验；Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 provider-neutral 策略、组合或执行引擎开发。
+Stage 0 与 Stage 1 已于 `2026-07-31` 关闭；Stage 2A 和 Stage 2B 尚未启动，后续可并行推进。Stage 2B 开工前仍须由用户批准最小合成场景和规则包。二者完成后既可进入 Stage 4，也可进入 Stage 3：当前正式 `market-daily` Release 只能完成 Stage 3 的传输、校验和消费记录核验；Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 provider-neutral 策略、组合或执行引擎开发。
 
 ---
 
@@ -433,9 +433,9 @@ InvestSystem 合成策略 fixture
 
 ### Stage 1：工程与契约骨架
 
-状态：`in_progress`
+状态：`completed`
 
-启动记录：`2026-07-31` 用户授权开始 Stage 1。当前工作仅覆盖独立工程、draft 契约、规则防线和合成测试，不连接真实 KB，也不实现投资策略语义。
+完成记录：`2026-07-31` 用户授权开始并完成 Stage 1；实现提交 `f8d58f296fb5aa6dfaf3229c9b11422492e5021f` 的 Windows/Linux GitHub Actions 均成功，正式证据见 [Stage 1 验收记录](docs/validation/stage1-acceptance.md)。本阶段只覆盖独立工程、draft 契约、规则防线、存储/缓存边界和合成测试，不连接真实 KB，也不实现投资策略语义。
 
 目标：建立可安装、可测试、可复现的独立工程，以及不依赖真实 KB 的 provider-neutral 契约骨架。
 
@@ -464,7 +464,7 @@ InvestSystem 合成策略 fixture
 - 在没有 KB 仓库、网络和服务的干净环境中，合成策略 fixture 测试仍可全部运行。
 - InvestSystem 与 KB 的 required CI、项目依赖、缓存、DB 和 volume 相互独立；本地共享 `Data_Analysis` 例外不进入 CI 或运行契约。
 
-验收证据：`Data_Analysis` 安装前后基线、自有 `pyproject.toml` 与 hash lock、干净 CI 环境、Schema、provider-neutral DTO、合成 fixture、架构测试、测试报告和示例 Manifest。
+验收证据：[Stage 1 验收记录](docs/validation/stage1-acceptance.md)、`Data_Analysis` 安装前后基线、自有 `pyproject.toml` 与 hash lock、Windows/Linux 干净 CI、Schema、provider-neutral DTO、合成 fixture、架构测试、测试报告和示例 Manifest。
 
 明确不做：不连接真实 KB、不实现完整策略、不评价 Alpha。
 
@@ -827,7 +827,7 @@ InvestSystem 合成策略 fixture
 | 阶段 | 当前证据 | 仍缺少 | 结论 |
 |---|---|---|---|
 | Stage 0 | PLAN v0.4 用户批准；PRD v0.3 需求基线批准；ADR-0001；根/产业文档同步；工程栈、单输入、双传输面、SQLite、缓存和撤回政策冻结；remote 核查；`upstream` push 禁用且 dry-run 在联网前以 128 失败 | 无 | `completed` |
-| Stage 1 | 安装前后环境基线；自有 `pyproject.toml`、可重复 hash lock、TOML；editable `--no-deps --no-build-isolation`；双平台独立 CI 配置；provider-neutral DTO 与 `0.1.0-draft` Schema；规范 JSON/哈希/时钟；构造级规则成熟度防线；SQLite 状态/准入、精确子集 pin、内容寻址缓存和独立审计重放；明确 synthetic fixture；类型检查、Ruff、compileall 通过；共享环境及全新锁定环境均为 `194 passed, 3 skipped`，3 项仅因当前 Windows 账户无 symlink 权限，隔离环境 `pip check` 通过 | GitHub Actions 首次实际运行；最终 Stage 1 验收记录 | `in_progress` |
+| Stage 1 | [正式验收记录](docs/validation/stage1-acceptance.md)；实现提交 `f8d58f2`；安装前后环境基线；自有 `pyproject.toml`、可重复 hash lock、TOML；editable `--no-deps --no-build-isolation`；provider-neutral DTO 与 `0.1.0-draft` Schema；规范 JSON/哈希/时钟；构造级规则成熟度防线；SQLite 状态/准入、精确子集 pin、内容寻址缓存和独立审计重放；共享环境及全新锁定环境均为 `194 passed, 3 skipped`；GitHub Actions run `30636576903` 的 Windows/Linux 作业均成功 | 无 | `completed` |
 | Stage 2A | KB Stage 6A 已正式完成；provider/contract 基线 `58ed9c5`、验收记录 `6ea33c4` 和快照边界澄清 `1d6b823` 已推送；公共契约材料可供审计 | 显式依赖更新 PR、固定官方 fixture、独立 Adapter/contract tests、`ArtifactConsumptionReceipt`、Observations、DTO | `not_started` |
 | Stage 2B | 研究材料和 PRD 草案 | approved 最小规则包、五类结果 golden matrix、Manifest、DecisionRecord、replay | `not_started` |
 | Stage 3 | KB Stage 6A 已正式完成；`rel_10e257ad87734d7bb5cadc55e7b444e7` 可用于正式传输核验，但只有 `market-daily` 样本 | Stage 2A/2B、正式依赖更新、正式 Context Pack 受支持交付、传输与策略两类 smoke、离线 replay、非阻塞 E2E | `not_started` |
@@ -842,13 +842,12 @@ InvestSystem 合成策略 fixture
 
 ## 13. 近期执行顺序
 
-Stage 0 已完成。当前执行顺序为：
+Stage 0 与 Stage 1 已完成。下一步执行顺序为：
 
-1. 完成 Stage 1 的类型检查门、SQLite/缓存边界实现与测试、GitHub Actions 首次运行和最终验收记录。
-2. Stage 1 完成后并行推进 Stage 2A 与 Stage 2B；Stage 2B 开始前先批准最小合成场景和规则包。
-3. 2A/2B 完成后可进入 Stage 4，在其中逐项批准并实现完整 P0 规则；Stage 4 完成后进入 Stage 5，均无需等待 KB 部署。
-4. KB Stage 6A 完成条件已经满足；2A/2B 完成后进入 Stage 3，先核验现有正式 `market-daily` Release 的传输链，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
-5. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
+1. 并行准备 Stage 2A 与 Stage 2B；Stage 2A 先固定 KB 公共契约与官方 fixture，Stage 2B 开工前先由用户批准最小合成场景和规则包。
+2. 2A/2B 完成后可进入 Stage 4，在其中逐项批准并实现完整 P0 规则；Stage 4 完成后进入 Stage 5，均无需等待 KB 部署。
+3. KB Stage 6A 完成条件已经满足；2A/2B 完成后进入 Stage 3，先核验现有正式 `market-daily` Release 的传输链，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
+4. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
 
 ---
 
@@ -862,3 +861,4 @@ Stage 0 已完成。当前执行顺序为：
 | `v0.4` | 2026-07-30 | `approved_baseline / 2026-07-31` | 按用户决定复用 Python 3.12 `Data_Analysis` 作为本地开发解释器；参照 KB 区分 `pyproject.toml`、带哈希的 runtime/dev lock 与 `config/default.toml`，加入 editable `--no-deps`、缺包受控安装、环境前后基线和干净 CI 隔离要求。 |
 | `v0.5` | 2026-07-31 | `active` | 按用户授权启动 Stage 1 隔离工程骨架；记录包装、可重复 hash lock、TOML、draft 契约、provider-neutral DTO、规则成熟度防线、合成测试、独立 CI 与干净环境验收，同时明确 Stage 0 未完成、Stage 2 未开始且没有策略能力。 |
 | `v0.6` | 2026-07-31 | `active` | 落实用户批准：关闭 Stage 0，登记 ADR-0001、PRD v0.3、生效的 upstream no-push 护栏、根级工程栈、单输入引用、HTTP/export 双传输面、自有 SQLite、`var/cache/kb-releases/`、20 GiB 软上限及撤回后仅审计重放政策。 |
+| `v0.7` | 2026-07-31 | `active` | 以共享环境、全新锁定环境和 GitHub Actions Windows/Linux 成功证据关闭 Stage 1；登记正式验收记录、确定性锚点、跨仓隔离和未实现能力，令 Stage 2A/2B 成为尚未启动的下一并行阶段。 |
