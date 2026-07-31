@@ -1,0 +1,35 @@
+schema_version = "1.0.0"
+
+[runtime]
+mode = "research"
+canonical_timezone = "UTC"
+display_timezone = "Asia/Shanghai"
+random_seed = 0
+
+[paths]
+runtime_root = "var/runtime"
+kb_release_cache_root = "var/cache/kb-releases"
+state_database = "var/state/invest_system.sqlite3"
+log_root = "var/log"
+
+[strategy_inputs]
+max_refs_per_run = 1
+
+[release_delivery]
+allowed_transports = ["read_only_http_api", "immutable_export"]
+
+[release_cache]
+soft_limit_gib = 20
+auto_delete_historically_referenced = false
+automatic_gc_enabled = false
+
+[release_withdrawal]
+block_new_runs = true
+retain_historical_material = true
+historical_replay_mode = "audit_replay"
+
+[safety]
+fail_closed = true
+allow_external_network = false
+allow_broker_connections = false
+allow_order_submission = false

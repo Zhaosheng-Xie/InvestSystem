@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/gate-result/0.1.0-draft/gate-result.schema.json",
+  "title": "GateResult (InvestSystem Draft)",
+  "description": "InvestSystem-owned audit result for one non-compensating gate. This draft defines representation only, not approved strategy semantics.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "gate_id",
+    "outcome",
+    "evaluated_at",
+    "rule_id",
+    "rule_version",
+    "supporting_fact_ids",
+    "conflicting_fact_ids",
+    "reason_codes",
+    "details"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "gate_id": {
+      "enum": [
+        "gate_1_authenticity",
+        "gate_2_profit_materiality",
+        "gate_3_expectation_gap",
+        "gate_4_executable_return"
+      ]
+    },
+    "outcome": {
+      "enum": [
+        "PASS",
+        "REJECT",
+        "ABSTAIN",
+        "BLOCKED",
+        "SHADOW_ONLY"
+      ]
+    },
+    "evaluated_at": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+    },
+    "rule_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "rule_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "supporting_fact_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+      }
+    },
+    "conflicting_fact_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+      }
+    },
+    "reason_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+      }
+    },
+    "details": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/jsonValue"
+      }
+    }
+  }
+}

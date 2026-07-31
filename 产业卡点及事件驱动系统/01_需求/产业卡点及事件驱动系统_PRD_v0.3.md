@@ -1,18 +1,22 @@
 # 产业卡点及事件驱动系统 PRD v0.3
 
-文档状态：`draft_for_user_review`
+文档状态：`approved_requirements_baseline`
 
-决策基础：`requirements_confirmed through 2026-07-22；repository boundary review through 2026-07-30`
+决策基础：`requirements_confirmed through 2026-07-22；repository boundary review and owner approval through 2026-07-31`
 
 规则状态：`rule_spec_pending`
 
 版本日期：`2026-07-30`
 
+批准日期：`2026-07-31`
+
 目标市场：`中国 A 股`
 
 第一用户：`个人投资者 / PM，人工最终批准`
 
-版本关系：`proposed_supersedes` [PRD v0.2](产业卡点及事件驱动系统_PRD_v0.2.md)；仅在用户批准本版本后生效
+版本关系：`supersedes` [PRD v0.2](产业卡点及事件驱动系统_PRD_v0.2.md)；v0.2 仅作历史追溯
+
+边界决策：[ADR-0001：InvestmentResearchKB 与 InvestSystem 边界及 Release 消费政策](../../docs/adr/ADR-0001-kb-investsystem-boundary.md)
 
 研究边界：`2019—2026 历史回放；2024—2026 为 AI 驱动主验证期`
 
@@ -148,7 +152,7 @@ InvestSystem 不得：
 
 ### 5.1 五字段 `strategy_input_ref`
 
-每次 run 至少绑定一个符合 KB `strategy-input-ref.v1` 的输入引用。首个纵向切片只允许一个引用；多 Release 聚合必须另行批准契约。
+首版每次 run 必须且只能绑定一个符合 KB `strategy-input-ref.v1` 的输入引用。多 Release 聚合不在当前契约内，必须另行批准 ADR、版本化契约、规范排序与哈希规则并重新验证。
 
 ~~~json
 {
@@ -202,14 +206,14 @@ StrategyRunManifest 必须引用本次启动所用的 `ArtifactFetchObservation`
 
 ### 5.3 消费步骤与失败关闭
 
-1. 按精确 `dataset_release_id` 请求 Release 与 Manifest，并核对二者身份、发布状态和引用关系；
+1. 通过版本化只读 HTTP API 或授权的不可变导出包，按精确 `dataset_release_id` 取得 Release 与 Manifest，并核对二者身份、发布状态和引用关系；
 2. 校验 Manifest Schema 版本、必填字段和 `manifest_hash` 对象结构；
 3. 严格按 KB 公共契约，对排除 `manifest_hash` 字段自身后的不可变 Manifest 做规范化序列化并重算语义 `manifest_hash`，再与声明值和 `strategy_input_ref` 比较；
 4. 保存用于验证的规范化 Manifest 快照及语义哈希；若传输面提供 HTTP response 或 sealed export 字节，可在 `ArtifactFetchObservation` 中另记可选物理字节哈希，但不得把它误当语义 `manifest_hash`；
 5. 按 Manifest 中的精确 `artifact_id` 获取制品；
 6. 校验每个制品的字节哈希、Schema 和声明的知识边界；
 7. 检查 Release 的当前追加式状态事件，并确认精确制品可按 Release、授权和法律状态取得；不得创造公共契约中不存在的 artifact-level withdrawn 状态；
-8. 将已验证字节复制到 InvestSystem 自有内容寻址缓存；
+8. 将已验证字节复制到 InvestSystem 自有 `var/cache/kb-releases/` 内容寻址缓存；缓存软上限为 `20 GiB`，不得自动删除被历史 run 或审计记录引用的制品；
 9. 写入确定性 receipt 和 append-only `ArtifactFetchObservation` / `ReleaseStatusObservation`，再建立 `StrategyRunManifest`；
 10. 只有全部 P0 校验通过，策略引擎才可读取投影后的 provider-neutral DTO。
 
@@ -222,7 +226,7 @@ StrategyRunManifest 必须引用本次启动所用的 `ArtifactFetchObservation`
 - 关键制品缺失、内容冲突未处理或 receipt 不完整；
 - 代码尝试访问 KB 内部路径、数据库或实现模块。
 
-历史 run 的输入字节、receipt 和结果保留用于审计；撤回会阻断新的生产性判断，不得悄悄改写历史结果。
+历史 run 的输入字节、receipt 和结果保留用于审计；撤回会阻断全部新 run，不得悄悄改写历史结果。撤回后的固定材料只允许标记为 `audit_replay` 的历史审计重放，不得生成新的当前判断、仓位、批准、订单或 paper/live 行为。
 
 ### 5.4 Fixture 政策
 
@@ -704,7 +708,7 @@ approver, supersedes, replay_hash
 | FR-KB-002 | P0 | 校验五字段输入引用、Manifest 和全部所需制品 | 哈希、Schema、截止时间任一失败均 `BLOCKED` |
 | FR-KB-003 | P0 | 生成确定性 receipt、append-only observations 和 StrategyRunManifest | 每个决策可追到固定 Release 内容、消费者契约及启动前状态观察 |
 | FR-KB-004 | P0 | 处理撤回和不兼容 Schema | 新 run 失败关闭，历史 run 不被改写 |
-| FR-KB-005 | P0 | 使用 InvestSystem 自有只读缓存 | 不共享 KB 数据库、缓存、迁移或 volume |
+| FR-KB-005 | P0 | 使用 `var/cache/kb-releases/` 内容寻址缓存和自有 SQLite 索引 | `20 GiB` 软上限；历史引用制品不自动删除；不共享 KB 数据库、缓存、迁移或 volume |
 | FR-KB-006 | P0 | 契约 fixture、策略 fixture、正式 Release 分离 | 合成事实不能冒充 KB 正式数据 |
 
 ### 19.2 产业与事件
@@ -818,13 +822,13 @@ approver, supersedes, replay_hash
 工程隔离必须满足：
 
 - 本地开发按已确认方案复用工作站级 Python 3.12 Conda 环境 `E:\Conda\envs\Data_Analysis`，但它只提供解释器和受控共享包，不构成 KB/InvestSystem 代码依赖；
-- InvestSystem 独立拥有 `pyproject.toml`、带哈希的 runtime/dev lock、TOML 配置、缓存、SQLite/存储和运行目录；CI 必须在干净 Python 3.12 环境中按本项目 lock 安装；
-- InvestSystem 只以 editable `--no-deps` 注册。缺包可在精确锁定、保存安装前基线且不改变既有共享包的前提下加入 `Data_Analysis`；安装后必须验证 `pip check` 不新增冲突并运行本项目测试；
+- InvestSystem 独立拥有 `pyproject.toml`、带哈希的 runtime/dev lock、TOML 配置、`var/cache/kb-releases/` 缓存、`var/state/invest_system.sqlite3` SQLite 索引和运行目录；缓存软上限为 `20 GiB`，历史引用制品不得自动删除；CI 必须在干净 Python 3.12 环境中按本项目 lock 安装；
+- InvestSystem 只以 editable `--no-deps --no-build-isolation` 注册。缺包可在精确锁定、保存安装前基线且不改变既有共享包的前提下加入 `Data_Analysis`；安装后必须验证 `pip check` 不新增冲突并运行本项目测试；
 - 不复用 KB 的项目包、项目虚拟环境、数据库、缓存、迁移或部署 volume；即使 KB editable 包已存在于共享解释器中，策略代码和测试也不得导入；
 - 消费凭证若存在，只授予发布面只读权限，不得获得 KB 管理写权限；
 - 两个项目 required CI 各自只构建和测试本仓库；
 - InvestSystem 固定已发布的 Schema、lock 和 fixture 字节/哈希，升级通过显式依赖更新；
-- 真实 HTTP 兼容验收由 InvestSystem 或独立任务发起，只读 KB，不阻塞 KB 主线发布；
+- HTTP API 与不可变导出包兼容验收由 InvestSystem 或独立任务发起，只读 KB，不阻塞 KB 主线发布；
 - KB 暂时不可用时，已验证缓存可支持固定历史 Release 的离线重放，但不能解析新的 `latest` 或改变输入。
 
 ---
@@ -833,12 +837,12 @@ approver, supersedes, replay_hash
 
 ### 阶段 A：边界和需求冻结
 
-- 用户审阅并批准本 PRD；
+- 用户已于 `2026-07-31` 审阅并批准本 PRD；
 - 修正产业项目中残留的采集、raw/staging 和原文归档职责描述；
 - 冻结 KB/InvestSystem 边界、术语和权威层级；
 - 把最小纵向切片所需 `hypothesis` 转写为规则规格。
 
-完成门：文档无职责矛盾，未知项全部显式标记，用户批准需求基线。
+完成门：文档无职责矛盾，未知项全部显式标记，用户批准需求基线。该门已随 Stage 0 边界 ADR、仓库文档同步和 Git remote 护栏验证一并关闭；规则规格仍须另行批准。
 
 ### 阶段 B：独立工程与契约骨架
 
@@ -887,10 +891,12 @@ approver, supersedes, replay_hash
 
 ## 23. 下游待规格化事项
 
-以下必须在 `03_规则与规格/`、公共契约或 `06_测试与验证/` 中明确，不能由代码或 LLM 自行决定：
+以下治理项已由 [ADR-0001](../../docs/adr/ADR-0001-kb-investsystem-boundary.md) 冻结：首版单一 `strategy_input_ref`；HTTP API 与不可变导出包双传输面；InvestSystem 自有 SQLite；`var/cache/kb-releases/` 与 `20 GiB` 软上限；历史引用制品不自动删除；撤回阻断新 run，历史材料仅供 `audit_replay`。
 
-1. StrategyRunManifest 完整 Schema、单/多 Release 聚合规则和 receipt 生命周期；
-2. KB Release 撤回后的缓存保留、重放和新运行政策；
+以下内容仍必须在 `03_规则与规格/`、公共契约或 `06_测试与验证/` 中明确，不能由代码或 LLM 自行决定：
+
+1. StrategyRunManifest 完整 Schema 和 receipt 生命周期；
+2. 缓存未引用制品的 GC 宽限期、并发保护和操作流程；
 3. `standard_track` 的利润稳健性判定；
 4. E0—E7 的状态转换、降级、冲突和证据覆盖规则；
 5. Gate 2 情景变量的历史误差校准；
@@ -917,6 +923,6 @@ approver, supersedes, replay_hash
 7. 合成策略 fixture 与正式 KB Release 清晰隔离，KB 不为策略正例定制事实；
 8. 所有数值参数的 `hypothesis` 身份清晰；
 9. 验证有效、追加资金和任何未来 live 都有预先冻结的证据门槛；
-10. 用户批准本 PRD 后，才进入最小规则包和工程骨架实施。
+10. 本 PRD 已获批准，可以推进工程骨架；最小规则包仍须逐项批准后才能实现或进入回测。
 
 系统在任何阶段都不能声称能够保证从 10 万元增长到 1,000 万元。它只能通过严格的样本外和前瞻证据，逐步证明或否定是否存在可执行的正期望。

@@ -1,10 +1,11 @@
-# InvestSystem 实施计划（v0.4）
+# InvestSystem 实施计划（v0.6）
 
-> 计划版本：`v0.4`
-> 基线日期：`2026-07-30`
-> 文档状态：`draft_for_user_review`
-> 当前阶段：`Stage 0 / in_progress`
-> 当前成熟度：`documentation-first / implementation_not_started`
+> 计划版本：`v0.6`
+> 基线日期：`2026-07-31`
+> 批准基线：`v0.4 / approved 2026-07-31`
+> 文档状态：`active / approved decisions integrated`
+> 当前阶段：`Stage 1 / in_progress；Stage 0 / completed`
+> 当前成熟度：`engineering_skeleton / strategy_not_implemented`
 > 生产边界：`仅研究、回测、shadow/paper；不得自动实盘`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
@@ -21,13 +22,14 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 
 ### 1.1 仓库事实
 
-- 当前仓库只有需求、研究、规则占位、数据/实现/验证目录说明、原始材料和历史归档。
-- 当前没有可运行的策略代码、依赖清单、正式 Schema、自动测试、CI、运行 Manifest 或可复现的策略结果。
-- [产业卡点及事件驱动系统 PRD v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md) 已按 KB/InvestSystem 新边界重写，状态仍为 `draft_for_user_review`，规则状态仍为 `rule_spec_pending`；它仅 `proposed_supersedes` v0.2，在用户批准前不得作为已生效规格。v0.2 继续作为当前历史基线保留。
+- 仓库的需求、研究、规则占位、原始材料和历史归档仍是业务内容主体；这些文档不等于实现。
+- `2026-07-31` 已按用户授权启动 Stage 1：存在独立包装/依赖锁/TOML、InvestSystem 自有 draft Schema、provider-neutral DTO、规范序列化、强制规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成 fixture、自动测试和独立 CI；阶段仍等待 GitHub Actions 首次实跑与最终验收记录。
+- 当前仍没有 KB Adapter、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合/执行、P&L 或可运行策略；Stage 1 契约版本均为 InvestSystem 自有 `0.1.0-draft`，不得冒充 KB 官方契约或已实现业务能力。
+- [产业卡点及事件驱动系统 PRD v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md) 已于 `2026-07-31` 获用户批准并 `supersedes` v0.2；规则状态仍为 `rule_spec_pending`，因此需求生效不等于策略规则或实现生效。v0.2 只作历史追溯。
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md) 仅完成独立研究建档，需求、规则和实现尚未开始。
 - `原始文档/` 是同事提出的设想和材料基线；`归档/` 中的 HTML、截图和旧规格只供追溯，均不得冒充当前实现或验证证据。
 - 本计划建立时的 Git 基线为提交 `bf095f4787b045e6518d6d63217b46aebd5b5bd5`，分支为 `main`。
-- `origin` 当前指向 `git@github.com:Zhaosheng-Xie/InvestSystem.git`；`upstream` 当前指向 `https://github.com/dnaouo/invest_system.git`；禁止向 `upstream` 推送。
+- `origin` 指向 `git@github.com:Zhaosheng-Xie/InvestSystem.git`；`upstream` fetch 指向 `https://github.com/dnaouo/invest_system.git`。当前 clone 已把 upstream push 改为 `disabled://upstream-push-prohibited`，并通过联网前失败的 dry-run 验证。
 - 截至 `2026-07-30` 本轮复核，KB 的 `codex/stage6` 工作树干净并与 `origin/codex/stage6` 对齐，当前文档 HEAD 为 `1d6b823`；`6ea33c4` 记录正式验收，`1d6b823` 进一步明确快照边界。KB PLAN v2.20 已正式关闭 Stage 6A。其 provider 实现与公共契约基线为干净提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b`，正式验收 Release 为 `rel_10e257ad87734d7bb5cadc55e7b444e7`，Manifest SHA-256 为 `2e7b3bc389316e63bb46c8beea5269fb504d38a0b7dc20ed92939cc58ee2fd21`。但该公网 Release 只有 16 条 `market-daily` 样本；阶段 4/5 的财务、Evidence 与 Context Pack 正式数据仍在 KB 本地活动库，尚未通过正式发布面交付。本次快照只在 tcloud 生成和验证，未复制到第二台机器；异机副本属于 KB 后续灾备/公网生产门，不是 InvestSystem 依赖。不得把“Stage 6A 交付面完成”表述为“全部正式数据已公网部署”。
 
 ### 1.2 阶段状态
@@ -36,8 +38,8 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 
 | 阶段 | 状态 | 目标 | 主要依赖 |
 |---|---|---|---|
-| Stage 0 | `in_progress` | 治理、边界和需求冻结 | 用户确认 |
-| Stage 1 | `not_started` | 工程与机器契约骨架 | Stage 0 |
+| Stage 0 | `completed` | 治理、边界和需求冻结 | 已于 `2026-07-31` 验收关闭 |
+| Stage 1 | `in_progress` | 工程与机器契约骨架 | Stage 0 已完成 |
 | Stage 2A | `not_started` | KB 公共契约适配与黑盒契约验收 | Stage 1；固定的 KB 公共 Schema/lock/fixture |
 | Stage 2B | `not_started` | 最小 approved 策略规格与合成纵向切片 | Stage 1；用户批准最小规则包 |
 | Stage 3 | `not_started` | KB 正式 Release 传输与策略端到端验收 | Stage 2A、Stage 2B；KB Stage 6A 已完成（已满足） |
@@ -63,7 +65,7 @@ Stage 2A + Stage 2B                                │
 题材系统：独立 deferred track（另行批准、另立阶段，不接在 Stage 8 后）
 ```
 
-KB Stage 6A 已完成，不再是 InvestSystem 的并行待办或阻塞项。现阶段只推进 InvestSystem Stage 0—1；Stage 1 完成后，Stage 2A 与 Stage 2B 可以并行。二者完成后既可进入 Stage 4，也可进入 Stage 3：当前正式 `market-daily` Release 只能完成 Stage 3 的传输、校验和消费记录核验；Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 provider-neutral 策略、组合或执行引擎开发。
+Stage 0 已于 `2026-07-31` 关闭，当前只推进 Stage 1；在 Stage 1 完成前不得进入 Stage 2A/2B。KB Stage 6A 已完成，不是 Stage 1 阻塞项。Stage 1 完成后，Stage 2A 与 Stage 2B 可以并行。二者完成后既可进入 Stage 4，也可进入 Stage 3：当前正式 `market-daily` Release 只能完成 Stage 3 的传输、校验和消费记录核验；Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 provider-neutral 策略、组合或执行引擎开发。
 
 ---
 
@@ -130,8 +132,8 @@ InvestSystem 不得：
 两个项目必须同时满足以下可执行隔离要求：
 
 - 本地开发按用户已确认的例外复用共享 Conda 环境 `E:\Conda\envs\Data_Analysis`，当前基线为 Python `3.12.4`。这是工作站级开发解释器，不是 KB 所有的项目环境，也不是 InvestSystem 的依赖契约；不得因此导入、安装或引用 KB 项目包。
-- InvestSystem 独立拥有 `pyproject.toml`、`requirements.lock`、`requirements-dev.lock`、`.env.example`、`config/default.toml`、数据库、内容寻址缓存和运行目录。`pyproject.toml` 声明直接依赖及 Python 范围，两个 lock 固定完整传递依赖与哈希，`config/default.toml` 只管理无凭证运行配置；三者职责不得混用。
-- 项目代码在 `Data_Analysis` 中只用 `python -m pip install -e . --no-deps` 注册，禁止解析或自动升级共享依赖。开工前后保存 Conda 显式清单、`pip freeze` 和 `pip check`；当前已知既有基线是 `opencv-python 4.12.0.88` 要求 NumPy `>=2,<2.3`，而环境中为 NumPy `1.26.4`，InvestSystem 不得擅自“修复”该冲突。
+- InvestSystem 独立拥有 `pyproject.toml`、`requirements.lock`、`requirements-dev.lock`、`.env.example`、`config/default.toml`、`var/state/invest_system.sqlite3`、`var/cache/kb-releases/` 和运行目录。Release 缓存软上限为 `20 GiB`，历史引用制品不得自动删除。`pyproject.toml` 声明直接依赖及 Python 范围，两个 lock 固定完整传递依赖与哈希，`config/default.toml` 只管理无凭证运行配置；职责不得混用。
+- 项目代码在 `Data_Analysis` 中只用 `python -m pip install -e . --no-deps --no-build-isolation` 注册，禁止解析或自动升级共享依赖。开工前后保存 Conda 显式清单、`pip freeze` 和 `pip check`；当前已知既有基线是 `opencv-python 4.12.0.88` 要求 NumPy `>=2,<2.3`，而环境中为 NumPy `1.26.4`，InvestSystem 不得擅自“修复”该冲突。
 - 用户已允许把 InvestSystem 确实缺少的包安装到 `Data_Analysis`，但必须先在本项目 `pyproject.toml` 和 lock 中固定精确兼容版本，记录安装前基线与变更清单，并在安装后运行 `pip check` 和本项目测试。允许新增缺包，不允许未经单独确认升级、降级或卸载既有共享包；若解析计划会改变既有包，必须停止并报告影响。
 - 干净 CI、正式构建和可复现验收不得依赖 `Data_Analysis` 的偶然现状，必须从 InvestSystem 自有 lock 在隔离环境中安装。共享本地解释器只是开发便利，不得成为跨仓 required CI 或生产运行耦合。
 - 除上述工作站级解释器例外外，不得复用 KB 的项目虚拟环境、SQLite、迁移、缓存、临时目录或 Compose volume。
@@ -139,8 +141,8 @@ InvestSystem 不得：
 - InvestSystem 的 required CI 只能 checkout 和测试 InvestSystem；KB 的 required CI 只能 checkout 和测试 KB。任何一方的 required CI 不得依赖另一个工作树、服务进程或未发布分支。
 - KB 契约升级只能通过显式依赖更新 PR 固定新的 Schema、lock、fixture 字节和来源哈希；不得自动跟随 KB `main`、本地目录或 `latest`。
 - InvestSystem 的 KB 身份只允许取得发布面所需的只读 scope（例如 `research:read`、`export:read`）；不得持有管理写权限，也不得调用 KB 的 `POST`、`PUT`、`PATCH`、`DELETE` 管理接口。
-- 从 KB 下载的制品必须复制到 InvestSystem 自有的内容寻址缓存并验证；不得直接把 KB 的 `published/` 或其他目录作为运行路径。
-- KB 暂时不可用时，可以离线重放已经固定、验证并按政策保留的历史 Release；不得把缓存伪装成新的 KB 发布，也不得绕过新运行所需的撤回检查。
+- KB 只通过版本化只读 HTTP API 或授权的不可变导出包交付；下载制品必须复制到 InvestSystem 自有的内容寻址缓存并验证，不得直接把 KB 的 `published/` 或其他目录作为运行路径。
+- Release 撤回后必须阻断新 run；历史输入、receipt、Manifest、决策和审计材料保留，只允许标记为 `audit_replay` 的固定历史审计重放，不得产生新的当前决策或仓位。
 - 两边除已批准的工作站级 `Data_Analysis` 开发解释器外，共享的只能是版本化公共契约和不可变测试字节，不能共享项目安装、可变数据库、状态目录、凭证、运行账本或发布目录。
 
 ### 2.7 当前非目标
@@ -257,7 +259,7 @@ InvestSystem/
 
 ### 5.1 KB 输入引用
 
-每个正式运行至少保存以下五字段输入引用：
+首版每个正式运行必须且只能保存一个以下五字段输入引用：
 
 - `schema_version`
 - `dataset_release_id`
@@ -265,7 +267,7 @@ InvestSystem/
 - `release_manifest_schema_version`
 - `manifest_hash`，且必须是 `{ "algorithm": "sha256", "value": "..." }` 对象，不得降格为裸字符串
 
-字段名和结构必须严格服从 KB 发布的 `strategy-input-ref.v1` Schema；不得用含义相近的 `release_id` 替代 `dataset_release_id`。确定性 `ArtifactConsumptionReceipt` 保存 `schema_version`、`consumer_contract_version`、输入引用、按 `artifact_id` 排序的类型/大小/哈希/记录数和规范 `receipt_hash`；获取时间、端点、传输观察和当前 Release 状态检查另存为 append-only `ArtifactFetchObservation` / `ReleaseStatusObservation`，不得进入 receipt identity 或策略 `replay_hash`。一次运行使用一个还是有序多个输入引用，留待 Stage 0 决定；无论哪种选择，都必须可规范序列化并参与运行哈希。
+字段名和结构必须严格服从 KB 发布的 `strategy-input-ref.v1` Schema；不得用含义相近的 `release_id` 替代 `dataset_release_id`。确定性 `ArtifactConsumptionReceipt` 保存 `schema_version`、`consumer_contract_version`、输入引用、按 `artifact_id` 排序的类型/大小/哈希/记录数和规范 `receipt_hash`；获取时间、端点、传输观察和当前 Release 状态检查另存为 append-only `ArtifactFetchObservation` / `ReleaseStatusObservation`，不得进入 receipt identity 或策略 `replay_hash`。多 Release 聚合须另行批准 ADR 和版本化契约。
 
 `StrategyRunManifest` 必须引用本次准入使用的 `ArtifactFetchObservation` 与 `ReleaseStatusObservation` ID。状态观察保存 KB 公共 `status_event_id`、`status_event_hash` 和授权结果；获取/状态 observation 的 ID、时间和端点用于审计，但不进入确定性 `replay_hash`。
 
@@ -394,7 +396,9 @@ InvestSystem 合成策略 fixture
 
 ### Stage 0：治理与边界冻结
 
-状态：`in_progress`
+状态：`completed`
+
+完成记录：`2026-07-31` 用户批准 PLAN v0.4、产业 PRD v0.3 与 KB/InvestSystem 边界方案，并确认工程栈、单输入引用、双传输面、SQLite、缓存及撤回政策；[ADR-0001](docs/adr/ADR-0001-kb-investsystem-boundary.md) 已登记，`upstream` no-push 护栏已通过 dry-run 验证。
 
 目标：把同事设想、当前事实、KB 边界、产品需求和负责人决策分开，形成可以安全开工的权威基线。
 
@@ -407,7 +411,7 @@ InvestSystem 合成策略 fixture
 - 冻结产业系统优先、题材系统独立、人工最终批准和不得自动实盘的边界。
 - 确认 `origin` / `upstream` 管理方式，并设置不可向 `upstream` 推送的技术护栏；这是 Stage 0 必做项，不再作为可选问题。
 - 冻结两个仓库的环境、路径、存储、权限和 required CI 隔离规则。
-- 已确认本地开发使用 Python 3.12 的 `Data_Analysis`，参照 KB 采用 `pyproject.toml`、hash lock、TOML 运行配置和 editable `--no-deps` 管理；其余 Stage 1 工具链、输入引用数量、KB 正式传输面、内容寻址缓存位置和 Release 撤回/历史重放政策仍是 Stage 0 阻塞项。
+- 已确认本地开发使用 Python 3.12 的 `Data_Analysis`，采用根级 `src/`、GitHub Actions、规范 JSON、项目自有 `pyproject.toml`/hash lock/TOML/SQLite；首版单输入引用；HTTP API 与不可变导出包双传输面；`var/cache/kb-releases/`、`20 GiB` 软上限、历史引用不自动删除及撤回后仅审计重放政策。
 
 完成门：
 
@@ -417,7 +421,7 @@ InvestSystem 合成策略 fixture
 - `upstream` 防误推护栏已生效并有只读验证记录。
 - 跨仓隔离要求写入 ADR，且没有 sibling path、共享可变存储或双仓 required CI 依赖。
 - 工程栈剩余项、输入引用数量、正式传输面、缓存位置和撤回/历史重放政策已形成明确决策；环境方案有安装前后基线与共享环境变更纪律。
-- 仓库仍准确表述为 documentation-first，未声称已有实现或验证。
+- 仓库准确区分已存在的工程骨架、尚未实现的策略能力和未完成的验证，不以文档或 draft 契约冒充能力。
 
 验收证据：
 
@@ -425,11 +429,13 @@ InvestSystem 合成策略 fixture
 - 文档状态审计结果与干净的文档链接检查。
 - Git remote 检查、防误推护栏验证和跨仓隔离审计记录。
 
-明确不做：不实现策略、不连接真实 KB、不回测、不声称能力。
+明确不做：Stage 0 不批准策略实现、真实 KB 连接或回测；用户另行授权的 Stage 1 隔离工程骨架不改变这些边界。
 
 ### Stage 1：工程与契约骨架
 
-状态：`not_started`
+状态：`in_progress`
+
+启动记录：`2026-07-31` 用户授权开始 Stage 1。当前工作仅覆盖独立工程、draft 契约、规则防线和合成测试，不连接真实 KB，也不实现投资策略语义。
 
 目标：建立可安装、可测试、可复现的独立工程，以及不依赖真实 KB 的 provider-neutral 契约骨架。
 
@@ -442,7 +448,7 @@ InvestSystem 合成策略 fixture
 - 定义 `StrategyRunManifest`、`DecisionRecord`、`GateResult` 等最小 Schema。
 - 定义 provider-neutral `VerifiedKnowledgeInput`；策略层不得识别 KB Schema、HTTP DTO 或内部类型。
 - 实现规范 JSON、哈希、时钟注入、随机种子和版本记录。
-- 建立 InvestSystem 自有 SQLite/运行目录/内容寻址缓存边界，但不连接 KB 数据库或目录。
+- 建立 `var/state/invest_system.sqlite3`、运行目录与 `var/cache/kb-releases/` 内容寻址缓存边界，落实 `20 GiB` 软上限、历史引用 pin 与撤回后 `audit_replay` 隔离；不连接 KB 数据库或目录。
 - 使用最小 provider-neutral 合成 DTO 建立 Schema、规范序列化、结果枚举和 fixture/test harness；不在本阶段实现具体策略结果语义，也不生成真实 `ArtifactConsumptionReceipt` 实例。
 - 实现规则状态防线，确保未批准规则最多只能产生研究或 shadow 输出。
 - 增加架构测试，禁止 KB 内部路径、数据库驱动、内部模块、兄弟目录 `PYTHONPATH`、把 KB editable install 作为依赖、submodule、硬链接、符号链接、junction 和共享可变存储。
@@ -735,25 +741,30 @@ InvestSystem 合成策略 fixture
 - KB 契约升级必须由 InvestSystem 的显式依赖更新 PR 引入，包含新旧差异、固定字节/哈希和兼容性证据；不得自动跟随分支或目录。
 - InvestSystem 的新字段需求先形成 provider contract 变更请求，由 KB 决定通用事实/证据表达；策略语义仍留在本仓库。
 - KB Release 撤回后，新运行必须停止消费；历史收据、Manifest 和审计记录不得删除。
-- 是否保留已验证制品用于合规重放，以及撤回后的重放策略，需要在 Stage 0 ADR 中明确。
+- 撤回后阻断新 run；已验证历史制品与审计链保留且只允许 `audit_replay`。该政策已由 ADR-0001 冻结。
 - KB required CI 只 checkout/test KB，InvestSystem required CI 只 checkout/test InvestSystem；任何真实 HTTP E2E 失败只阻塞 InvestSystem 的对应集成验收，不反向阻塞 KB 主线，除非 KB 自己的发布规则另有独立失败证据。
 - 两边不得共享可变运行状态。KB 不可用只会阻止需要重新获取或重新确认状态的新运行，不应改变已完成的历史决策和按政策允许的离线 replay。
 
 ---
 
-## 10. 已锁定默认决策
+## 10. 已批准决策
 
-除非用户通过新决策显式修改，以下内容视为当前默认：
+以下内容已由用户于 `2026-07-31` 明确批准；除非通过新决策修改，不得由实现自行改变：
 
 - 本仓库根目录为 `D:\Python\Python_Project\InvestSystem`。
 - `origin` 是 `git@github.com:Zhaosheng-Xie/InvestSystem.git`，`upstream` 是 `https://github.com/dnaouo/invest_system.git`，禁止向 upstream 推送。
-- Stage 0 必须落实 `upstream` 防误推技术护栏，而不是只保留文字约定。
+- 当前 clone 已落实 `upstream` 防误推技术护栏：fetch URL 保留，push 使用被 Git 禁止的 `disabled` 协议，无参数 push 默认指向 `origin`。
 - 产业卡点及事件驱动系统优先实施。
 - 题材扩散与资金轮动系统是独立 deferred track，不属于产业 Stage 8；默认不互通信号，并隔离输入引用、Manifest、状态、规则、账本、验证和 P&L。
 - InvestmentResearchKB 是数据与证据平台，InvestSystem 是策略与决策消费者。
 - 跨仓保持从 KB 到 InvestSystem 的单向依赖：设计与测试阶段只能通过显式依赖更新固定 KB 公共 Schema、lock 和官方 fixture；运行阶段只能通过版本化只读发布 API 或不可变导出包消费精确 Published Release。
+- 根级采用 `src/`、GitHub Actions 和规范 JSON；InvestSystem 使用自有 `var/state/invest_system.sqlite3`，不得复制 KB 数据库或表结构。
+- 首版每次 run 只允许一个 `strategy_input_ref`；多输入聚合需要新的 ADR 和契约版本。
+- KB 的版本化只读 HTTP API 与授权的不可变导出包均为正式传输面，二者进入相同的身份、Schema、哈希、状态、receipt 和 provider-neutral DTO 校验链。
+- KB Release 缓存在 `var/cache/kb-releases/`，软上限 `20 GiB`；历史引用制品不得自动删除，未引用内容的 GC 规则另行规格化。
+- Release 撤回或状态无法确认时阻断新 run；历史材料保留，只允许明确标记的 `audit_replay`，不得形成新的当前决策、仓位或订单。
 - 本地开发复用工作站级 `E:\Conda\envs\Data_Analysis`（Python 3.12），但两仓的依赖声明/lock、项目安装、路径、数据库、缓存、volume、凭证、required CI 和发布流程相互独立；禁止 sibling path、把 KB editable 安装作为依赖、`PYTHONPATH`、submodule、硬链接、符号链接、junction 或共享可变存储。
-- InvestSystem 采用自己的 `pyproject.toml`、带哈希的 runtime/dev lock 和 `config/default.toml`；项目自身只用 editable `--no-deps` 注册。缺包可按用户授权安装到 `Data_Analysis`，前提是精确锁定、记录基线、不改变既有包且安装后不新增 `pip check` 冲突。
+- InvestSystem 采用自己的 `pyproject.toml`、带哈希的 runtime/dev lock 和 `config/default.toml`；项目自身只用 editable `--no-deps --no-build-isolation` 注册。缺包可按用户授权安装到 `Data_Analysis`，前提是精确锁定、记录基线、不改变既有包且安装后不新增 `pip check` 冲突。
 - InvestSystem 只使用 KB 只读发布权限，不调用管理写 API；KB 版本升级通过显式依赖更新 PR 引入。
 - 策略层只消费 provider-neutral DTO；KB 不可用时，只允许按政策离线重放已经固定和验证的历史制品。
 - 原始文档作为不可变输入保留；派生分析进入对应项目目录。
@@ -769,34 +780,37 @@ InvestSystem 合成策略 fixture
 ### 11.1 主要风险
 
 - KB Stage 6A 已完成，但当前公网正式 Release 只有 16 条 `market-daily` 样本；若把“交付面验收完成”误写成“财务、Evidence 与 Context Pack 已公网部署”，会让 InvestSystem 针对不存在的正式输入开发或验收。
-- PRD v0.3 已修正旧职责边界，但仍是 `draft_for_user_review`；在用户批准前不得把它或保留追溯的 v0.2 当作已生效实现依据。
+- PRD v0.3 已批准为需求基线，但规则状态仍为 `rule_spec_pending`；把需求批准误写成策略已实现或规则已批准仍是主要治理风险。
 - `Data_Analysis` 被多个项目共用且已有 OpenCV/NumPy 冲突；若普通 `pip install` 触发解析器升级、降级或卸载既有包，会同时影响 KB 和其他项目。必须坚持精确 lock、editable `--no-deps`、安装前后基线和干净 CI 复验。
 - 若通过兄弟目录、把 KB editable install 当依赖、`PYTHONPATH`、submodule、链接、共享 DB/cache/volume 或双仓 required CI 求方便，会形成不可审计的隐式耦合。
 - KB 官方 contract fixture、InvestSystem 合成策略 fixture、失败注入 fixture 和正式 Release 若标识不清，可能把传输测试、策略测试、故障测试或真实证据相互冒充。
 - 当前公网发布面没有正式 Context Pack；直接读取 KB 本地活动库或工作树来绕过交付会破坏双仓边界。未来正式交付的 Context Pack 也未必包含订单/合同正例和完整时点；把合理的 `ABSTAIN` 误判成集成失败，会诱导为测试而污染 KB 事实。
-- 已验证缓存支持离线重放，但若撤回检查、留存政策和“新运行/历史重放”边界不清，可能错误复用已撤回输入。
+- Stage 1 已实现 SQLite 状态/准入、精确 run pin 和独立 `audit_replay` 读取边界，但真实 Adapter 与策略运行编排尚未实现；Stage 2A/2B 接入时若绕过原子准入 API，仍可能错误复用已撤回输入。
 - Gate 2/3/4、市场状态、成本、风险、退出和若干 E 级事件定义仍含 `hypothesis` 或 `TBD`。
 - 2019—2026 的历史 PIT、题材成员、市场预期和首次可见时间可能不可恢复；正确处理是 `ABSTAIN`，不是事后补齐。
 - Gate 3 的历史市场预期重建可能成为最大的数据缺口。
 - 独立 E4 和可交易样本可能不足；不得通过放宽定义制造样本。
 - A 股历史交易规则、公司行动、涨跌停和不可成交处理错误会制造虚假收益。
 - 文档丰富容易被误认为功能成熟，因此所有完成结论必须带代码、测试、Manifest 和报告。
-- `upstream` 防误推护栏在 Stage 0 落实前仍存在误操作风险；不得仅依赖人员记忆。
+- `upstream` 护栏是 clone-local 配置，新 clone 不会继承；每个新 clone 都必须重新设置并验证，GitHub 权限仍应保持无上游写权限。
 
-### 11.2 需要用户确认
+### 11.2 已确认架构决策
 
-其中第 1—5 项是 Stage 0 完成阻塞项；第 6 项是 Stage 2B 进入条件；第 7 项在 Stage 4 内逐项批准并阻塞其完成；第 8 项是 Stage 8 的非阻塞延后决策。
+以下 Stage 0 决策已关闭：
 
-1. 是否批准本文件为唯一正式实施计划，并以 Stage 0 为当前阶段。
-2. Python 3.12、共享本地 `Data_Analysis`、`pyproject.toml`、hash lock 和 TOML 配置方案已经确认；仍需确认是否采用根级 `src/`、GitHub Actions、规范 JSON 运行档案和 InvestSystem 自有 SQLite 索引。
-3. 一次运行允许一个还是有序多个 `strategy_input_ref`。
-4. KB 制品以 HTTP API、不可变导出包或二者为正式传输面；InvestSystem 内容寻址缓存的保存位置和容量策略是什么。
-5. KB Release 撤回后，历史制品保留、审计、离线重放以及新运行禁用采用什么规则。
-6. Stage 2B 的合成订单/合同场景和最小 approved 规则包具体采用哪组业务假设。
-7. Gate、利润桥、预期、估值、成本、风险和退出规则的最终批准责任与版本流程。
-8. Stage 8 是否长期停在 shadow/paper，还是未来允许另行评估人工批准的小额 canary。
+1. PLAN v0.4、产业 PRD v0.3 和 KB/InvestSystem 边界方案获批。
+2. 根级 `src/`、GitHub Actions、规范 JSON、InvestSystem 自有 SQLite 及独立环境/lock/TOML 获批。
+3. 首版每次 run 恰好一个 `strategy_input_ref`。
+4. 同时支持只读 HTTP API 和不可变导出包；缓存使用 `var/cache/kb-releases/`、`20 GiB` 软上限，历史引用制品不自动删除。
+5. Release 撤回后阻断新 run；历史材料保留且只允许 `audit_replay`。
 
-### 11.3 明确延后
+### 11.3 后续需要用户确认
+
+1. Stage 2B 的合成订单/合同场景和最小 approved 规则包具体采用哪组业务假设。
+2. Gate、利润桥、预期、估值、成本、风险和退出规则的最终批准责任与版本流程。
+3. Stage 8 是否长期停在 shadow/paper，还是未来允许另行评估人工批准的小额 canary。
+
+### 11.4 明确延后
 
 - 题材策略的需求冻结、数据审计、实现和验证。
 - 任何产业/题材信号互通；默认保持零互通。
@@ -812,8 +826,8 @@ InvestSystem 合成策略 fixture
 
 | 阶段 | 当前证据 | 仍缺少 | 结论 |
 |---|---|---|---|
-| Stage 0 | 仓库全量文档盘点；Git 分支与 remote 核查；双仓边界/隔离复核；本计划 v0.4；PRD v0.3 与相关 README 边界修订草案；`Data_Analysis`/TOML/lock 环境决策 | accepted ADR、用户批准、剩余工程栈/输入数量/传输面/缓存与撤回重放决策、upstream 技术护栏 | `in_progress` |
-| Stage 1 | 已确认 `Data_Analysis` 为 Python 3.12.4，当前 `pip check` 只有既有 OpenCV/NumPy 冲突 | 环境前后基线、自有 `pyproject.toml`/hash lock/配置、独立 CI、provider-neutral DTO、Schema、合成 fixture、架构测试 | `not_started` |
+| Stage 0 | PLAN v0.4 用户批准；PRD v0.3 需求基线批准；ADR-0001；根/产业文档同步；工程栈、单输入、双传输面、SQLite、缓存和撤回政策冻结；remote 核查；`upstream` push 禁用且 dry-run 在联网前以 128 失败 | 无 | `completed` |
+| Stage 1 | 安装前后环境基线；自有 `pyproject.toml`、可重复 hash lock、TOML；editable `--no-deps --no-build-isolation`；双平台独立 CI 配置；provider-neutral DTO 与 `0.1.0-draft` Schema；规范 JSON/哈希/时钟；构造级规则成熟度防线；SQLite 状态/准入、精确子集 pin、内容寻址缓存和独立审计重放；明确 synthetic fixture；类型检查、Ruff、compileall 通过；共享环境及全新锁定环境均为 `194 passed, 3 skipped`，3 项仅因当前 Windows 账户无 symlink 权限，隔离环境 `pip check` 通过 | GitHub Actions 首次实际运行；最终 Stage 1 验收记录 | `in_progress` |
 | Stage 2A | KB Stage 6A 已正式完成；provider/contract 基线 `58ed9c5`、验收记录 `6ea33c4` 和快照边界澄清 `1d6b823` 已推送；公共契约材料可供审计 | 显式依赖更新 PR、固定官方 fixture、独立 Adapter/contract tests、`ArtifactConsumptionReceipt`、Observations、DTO | `not_started` |
 | Stage 2B | 研究材料和 PRD 草案 | approved 最小规则包、五类结果 golden matrix、Manifest、DecisionRecord、replay | `not_started` |
 | Stage 3 | KB Stage 6A 已正式完成；`rel_10e257ad87734d7bb5cadc55e7b444e7` 可用于正式传输核验，但只有 `market-daily` 样本 | Stage 2A/2B、正式依赖更新、正式 Context Pack 受支持交付、传输与策略两类 smoke、离线 replay、非阻塞 E2E | `not_started` |
@@ -828,19 +842,13 @@ InvestSystem 合成策略 fixture
 
 ## 13. 近期执行顺序
 
-在获得用户确认后，先完成 Stage 0，再按独立分支推进：
+Stage 0 已完成。当前执行顺序为：
 
-1. 接受或修订本计划的阶段、目录和完成门。
-2. 编写并批准 InvestSystem / InvestmentResearchKB 边界 ADR。
-3. 设置并验证 `upstream` 防误推技术护栏。
-4. 审阅并批准产业 PRD v0.3 及相关 README 的边界修订。
-5. 冻结权威性矩阵、规则状态词、运行隔离和两个策略默认零信号互通要求。
-6. 按已确认的 `Data_Analysis` + 自有 TOML/lock 方案冻结剩余工程栈，并决定输入引用数量、KB 制品获取/内容寻址缓存/撤回留存策略。
-7. Stage 0 验收通过后创建 Stage 1；最小合成场景和规则包的批准是 Stage 2B 进入条件，不是 Stage 0 完成门。
-8. Stage 1 完成后并行推进 Stage 2A 与 Stage 2B。
-9. 2A/2B 完成后可进入 Stage 4，在其中逐项批准并实现完整 P0 规则；Stage 4 完成后进入 Stage 5，均无需等待 KB 部署。
-10. KB Stage 6A 完成条件已经满足；2A/2B 完成后进入 Stage 3，先核验现有正式 `market-daily` Release 的传输链，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
-11. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
+1. 完成 Stage 1 的类型检查门、SQLite/缓存边界实现与测试、GitHub Actions 首次运行和最终验收记录。
+2. Stage 1 完成后并行推进 Stage 2A 与 Stage 2B；Stage 2B 开始前先批准最小合成场景和规则包。
+3. 2A/2B 完成后可进入 Stage 4，在其中逐项批准并实现完整 P0 规则；Stage 4 完成后进入 Stage 5，均无需等待 KB 部署。
+4. KB Stage 6A 完成条件已经满足；2A/2B 完成后进入 Stage 3，先核验现有正式 `market-daily` Release 的传输链，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
+5. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
 
 ---
 
@@ -851,4 +859,6 @@ InvestSystem 合成策略 fixture
 | `v0.1` | 2026-07-30 | `draft_for_user_review` | 建立唯一实施计划、KB 边界、Stage 0—8、第一纵向切片和完成门。 |
 | `v0.2` | 2026-07-30 | `draft_for_user_review` | 根据双仓复核拆分 Stage 2A/2B，令 Stage 3 与 Stage 4→5 并行并在 Stage 6 汇合；加入 provider-neutral DTO、三类 fixture、确定性 receipt/append-only observations、运行/权限/CI 隔离、正式依赖更新、离线重放、题材独立 deferred track 和 upstream 强制防误推门。 |
 | `v0.3` | 2026-07-30 | `draft_for_user_review` | 同步 KB PLAN v2.20 的 Stage 6A 正式验收及 `1d6b823` 快照边界澄清；固定 provider/contract 基线与验收记录职责，区分 16 条 `market-daily` 正式传输样本和尚未通过公网发布面交付的 Context Pack，避免把交付面完成误写为策略数据或策略能力就绪。 |
-| `v0.4` | 2026-07-30 | `draft_for_user_review` | 按用户决定复用 Python 3.12 `Data_Analysis` 作为本地开发解释器；参照 KB 区分 `pyproject.toml`、带哈希的 runtime/dev lock 与 `config/default.toml`，加入 editable `--no-deps`、缺包受控安装、环境前后基线和干净 CI 隔离要求。 |
+| `v0.4` | 2026-07-30 | `approved_baseline / 2026-07-31` | 按用户决定复用 Python 3.12 `Data_Analysis` 作为本地开发解释器；参照 KB 区分 `pyproject.toml`、带哈希的 runtime/dev lock 与 `config/default.toml`，加入 editable `--no-deps`、缺包受控安装、环境前后基线和干净 CI 隔离要求。 |
+| `v0.5` | 2026-07-31 | `active` | 按用户授权启动 Stage 1 隔离工程骨架；记录包装、可重复 hash lock、TOML、draft 契约、provider-neutral DTO、规则成熟度防线、合成测试、独立 CI 与干净环境验收，同时明确 Stage 0 未完成、Stage 2 未开始且没有策略能力。 |
+| `v0.6` | 2026-07-31 | `active` | 落实用户批准：关闭 Stage 0，登记 ADR-0001、PRD v0.3、生效的 upstream no-push 护栏、根级工程栈、单输入引用、HTTP/export 双传输面、自有 SQLite、`var/cache/kb-releases/`、20 GiB 软上限及撤回后仅审计重放政策。 |

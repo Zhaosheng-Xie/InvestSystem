@@ -6,12 +6,14 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v0.4](PLAN.md)：本仓库唯一正式实施路线图；当前为 `draft_for_user_review / Stage 0 in_progress`。
+- [InvestSystem 实施计划 v0.6](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0 completed / Stage 1 in_progress`。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
+
+Stage 1 已建立独立包装、hash lock、TOML、InvestSystem 自有 `0.1.0-draft` 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 CI。这些只证明工程骨架可安装、可测试、可审计；KB Adapter、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合、执行和 P&L 均尚未实现。
 
 ## 当前项目
 
-- [产业卡点及事件驱动系统](产业卡点及事件驱动系统/README.md)：需求基础已确认，PRD v0.3 待用户验收，规则规格待编写。
+- [产业卡点及事件驱动系统](产业卡点及事件驱动系统/README.md)：PRD v0.3 已于 `2026-07-31` 批准，规则规格待编写，尚无策略实现。
   - 第一读物：[需求文档 v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md)
   - 研究裁决：[框架审计与研究结论 v0.1](产业卡点及事件驱动系统/02_研究/框架审计与研究结论_v0.1.md)
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md)：独立、延后的研究轨道，需求与规则尚未冻结；默认不向产业策略提供信号。
@@ -19,13 +21,13 @@
 
 ## 根级工程目录
 
-以下目录将在对应实施阶段建立；列入规划不代表当前已经实现：
+以下目录已开始按阶段建立；目录存在只代表对应骨架或测试存在，不代表其中规划的策略能力已经实现：
 
 - `contracts/`：InvestSystem 自有契约，以及固定版本的外部提供方契约。
 - `config/`：版本化、可审计且不包含凭证的配置。
 - `src/`：策略、集成、组合、执行和审计代码。
 - `tests/`：契约、单元、黄金案例、回放、集成和验收测试。
-- `var/`：InvestSystem 自有的验证后 Release 缓存、确定性消费回执、append-only 获取/状态观察和运行产物；属于运行工作区，不作为源码提交。
+- `var/`：InvestSystem 自有运行工作区；KB Release 缓存在 `var/cache/kb-releases/`，状态索引使用 `var/state/invest_system.sqlite3`。它不作为源码提交，也不与 KB 共享。
 
 ## 本地环境与依赖管理
 
@@ -36,7 +38,9 @@ Stage 1 本地开发复用 `E:\Conda\envs\Data_Analysis` 的 Python 3.12，但�
 - `config/default.toml`：不含凭证的运行默认配置，与依赖声明分离；
 - `docs/environment-baseline.md`：安装前后 Conda、pip 和 `pip check` 基线。
 
-项目自身只以 `python -m pip install -e . --no-deps` 注册。确实缺少的包可以在精确锁定并核对影响后安装到 `Data_Analysis`，但不得未经确认升级、降级或卸载既有共享包。当前环境已有一条 OpenCV/NumPy 冲突，属于复用前基线；正式 CI 和可复现验收必须从 InvestSystem 自有 lock 建立干净环境。
+已批准的 KB 边界、单输入引用、双传输面、SQLite、缓存和撤回政策见 [ADR-0001](docs/adr/ADR-0001-kb-investsystem-boundary.md)。KB Release 缓存固定在 `var/cache/kb-releases/`，软上限 `20 GiB`；历史引用制品不得自动删除。
+
+项目自身已以 `python -m pip install -e . --no-deps --no-build-isolation` 注册。安装前后唯一新增的是 InvestSystem editable 包，没有升级、降级或卸载既有共享包。确实缺少的包可以在精确锁定并核对影响后安装到 `Data_Analysis`，但不得未经确认改变既有共享包。当前环境仍只有复用前已存在的 OpenCV/NumPy 冲突；正式 CI 和可复现验收从 InvestSystem 自有 lock 建立干净环境。
 
 ## 资料区
 

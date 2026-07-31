@@ -1,0 +1,339 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json",
+  "title": "DecisionRecord (InvestSystem Draft)",
+  "description": "InvestSystem-owned PRD v0.3 audit skeleton. Opaque economic fields do not define or approve strategy rules.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_record_schema_version",
+    "decision_id",
+    "run_id",
+    "decision_at",
+    "strategy_input_ref",
+    "strategy_version",
+    "rule_status",
+    "event_state",
+    "decision_state",
+    "position_state",
+    "supporting_fact_ids",
+    "conflicting_fact_ids",
+    "gate_results",
+    "facts_used",
+    "assumptions",
+    "judgments",
+    "profit_bridge",
+    "scenarios",
+    "expectation_class",
+    "first_executable_at",
+    "first_executable_price",
+    "execution_window",
+    "price_method",
+    "estimated_cost_rate",
+    "estimated_slippage_rate",
+    "market_regime",
+    "risk_cluster_ids",
+    "planned_account_risk",
+    "risk_limits",
+    "target_weight",
+    "approved_weight",
+    "actual_weight",
+    "falsifiers",
+    "next_verification",
+    "block_reasons",
+    "approver",
+    "supersedes",
+    "replay_hash"
+  ],
+  "properties": {
+    "decision_record_schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "decision_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "run_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "decision_at": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+    },
+    "strategy_input_ref": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/strategyInputRef"
+    },
+    "strategy_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "rule_status": {
+      "enum": [
+        "requirements_confirmed",
+        "hypothesis",
+        "draft",
+        "placeholder",
+        "TBD",
+        "approved"
+      ]
+    },
+    "event_state": {
+      "enum": [
+        "E0",
+        "E1",
+        "E2",
+        "E3",
+        "E3.5",
+        "E4",
+        "E5",
+        "E6",
+        "E7"
+      ]
+    },
+    "decision_state": {
+      "enum": [
+        "RESEARCH",
+        "SHADOW_ONLY",
+        "TRADE_READY",
+        "REJECT",
+        "ABSTAIN",
+        "BLOCKED"
+      ]
+    },
+    "position_state": {
+      "enum": [
+        "FLAT",
+        "STARTER",
+        "CORE",
+        "TRIM",
+        "EXIT"
+      ]
+    },
+    "supporting_fact_ids": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/idArray"
+    },
+    "conflicting_fact_ids": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/idArray"
+    },
+    "gate_results": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.investsystem.local/gate-result/0.1.0-draft/gate-result.schema.json"
+      }
+    },
+    "facts_used": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/idArray"
+    },
+    "assumptions": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/jsonArray"
+    },
+    "judgments": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/jsonArray"
+    },
+    "profit_bridge": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/jsonValue"
+    },
+    "scenarios": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/jsonArray"
+    },
+    "expectation_class": {
+      "anyOf": [
+        {
+          "enum": [
+            "unexpected",
+            "partially_priced",
+            "fully_priced",
+            "unknown"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "first_executable_at": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "first_executable_price": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/nullableDecimal"
+    },
+    "execution_window": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/jsonValue"
+    },
+    "price_method": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/nullableText"
+    },
+    "estimated_cost_rate": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/nullableDecimal"
+    },
+    "estimated_slippage_rate": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/nullableDecimal"
+    },
+    "market_regime": {
+      "anyOf": [
+        {
+          "enum": [
+            "NORMAL",
+            "DEFENSIVE",
+            "CRISIS"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "risk_cluster_ids": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/idArray"
+    },
+    "planned_account_risk": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/nullableDecimal"
+    },
+    "risk_limits": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/jsonValue"
+    },
+    "target_weight": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/nullableDecimal"
+    },
+    "approved_weight": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/nullableDecimal"
+    },
+    "actual_weight": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/nullableDecimal"
+    },
+    "falsifiers": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/textArray"
+    },
+    "next_verification": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/jsonValue"
+    },
+    "block_reasons": {
+      "$ref": "https://schemas.investsystem.local/decision-record/0.1.0-draft/decision-record.schema.json#/$defs/textArray"
+    },
+    "approver": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "supersedes": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "replay_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "rule_status": {
+            "not": {
+              "const": "approved"
+            }
+          }
+        },
+        "required": [
+          "rule_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision_state": {
+            "enum": [
+              "RESEARCH",
+              "SHADOW_ONLY"
+            ]
+          },
+          "position_state": {
+            "const": "FLAT"
+          },
+          "target_weight": {
+            "$ref": "#/$defs/nullableZeroDecimal"
+          },
+          "approved_weight": {
+            "$ref": "#/$defs/nullableZeroDecimal"
+          },
+          "actual_weight": {
+            "$ref": "#/$defs/nullableZeroDecimal"
+          },
+          "approver": {
+            "const": null
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "idArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+      }
+    },
+    "textArray": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "jsonArray": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/jsonValue"
+      }
+    },
+    "nullableText": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableDecimal": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/decimalString"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableZeroDecimal": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^-?0(?:\\.0+)?$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

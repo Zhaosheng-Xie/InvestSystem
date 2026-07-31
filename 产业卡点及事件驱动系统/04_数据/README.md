@@ -4,7 +4,7 @@
 
 `InvestmentResearchKB` 独立负责采集、`raw`、`staging`、PIT、Document、Evidence、Fact、CandidateEvent、审核、Context Pack、Published Release、Release Manifest 和修订血缘。InvestSystem 只能通过正式发布面按精确 `dataset_release_id` 只读消费，不得读取 KB SQLite、内部目录、缓存或 Python 实现，也不得向 KB 写入策略结果。
 
-每次正式运行必须保存完整五字段 `strategy_input_ref`：
+首版每次正式运行必须且只能保存一个完整五字段 `strategy_input_ref`；多 Release 聚合需要新的 ADR 和契约版本：
 
 ~~~text
 schema_version
@@ -14,9 +14,11 @@ release_manifest_schema_version
 manifest_hash = {algorithm: "sha256", value: "<64 lowercase hex>"}
 ~~~
 
-`dataset_release_id` 禁止使用 `latest`，`manifest_hash` 是对象而不是裸字符串。消费者按 KB 公共契约验证 Manifest Schema，并对排除 `manifest_hash` 字段自身后的规范化 Manifest 重算语义哈希；随后校验精确制品、Schema、制品哈希和 Release 当前状态，再把已验证字节存入 InvestSystem 自有内容寻址缓存。
+`dataset_release_id` 禁止使用 `latest`，`manifest_hash` 是对象而不是裸字符串。正式输入可以来自版本化只读 HTTP API 或授权的不可变导出包；二者必须经过相同的 Release 身份、Manifest Schema/语义哈希、精确制品哈希和当前状态校验，再把已验证字节存入 `var/cache/kb-releases/` 内容寻址缓存。
 
-`ArtifactConsumptionReceipt` 是确定性内容回执：固定 consumer contract 版本、五字段输入引用，以及按 `artifact_id` 排序的 `{artifact_id, item_type, artifact_hash, size_bytes, record_count}`，并计算规范 `receipt_hash`。获取时间、端点、HTTP response 或 sealed export 的可选物理字节哈希、当前 Release 状态及授权结果另存为 append-only `ArtifactFetchObservation` / `ReleaseStatusObservation`，不得进入 receipt identity。HTTP API envelope 不得冒充 sealed `manifest.json` 原始字节，任何物理传输哈希也不得冒充语义 `manifest_hash`。失败时新运行必须 `BLOCKED`；不得为继续运行而回退到 KB 内部数据。
+缓存软上限为 `20 GiB`。达到或越过上限时报告超限并进入容量复核，不得自动删除被历史 receipt、Manifest、run 或审计记录引用的制品；未引用内容的 GC 宽限期与操作流程尚待规格化，在此之前不自动清理。InvestSystem 自有 `var/state/invest_system.sqlite3` 只保存消费索引、Observation、run/decision 和审计元数据，不复制 KB 数据库、表结构或事实权威。
+
+`ArtifactConsumptionReceipt` 是确定性内容回执：固定 consumer contract 版本、五字段输入引用，以及按 `artifact_id` 排序的 `{artifact_id, item_type, artifact_hash, size_bytes, record_count}`，并计算规范 `receipt_hash`。获取时间、端点、HTTP response 或 sealed export 的可选物理字节哈希、当前 Release 状态及授权结果另存为 append-only `ArtifactFetchObservation` / `ReleaseStatusObservation`，不得进入 receipt identity。HTTP API envelope 不得冒充 sealed `manifest.json` 原始字节，任何物理传输哈希也不得冒充语义 `manifest_hash`。失败或撤回时新运行必须 `BLOCKED`；历史材料保留且只允许明确标记的 `audit_replay`，不得形成新的当前决策、仓位或订单；不得为继续运行而回退到 KB 内部数据。
 
 第一批需要定义的对象：
 

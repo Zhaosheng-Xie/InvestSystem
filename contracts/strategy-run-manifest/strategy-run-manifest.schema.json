@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/strategy-run-manifest/0.1.0-draft/strategy-run-manifest.schema.json",
+  "title": "StrategyRunManifest (InvestSystem Draft)",
+  "description": "InvestSystem-owned minimum run manifest from PRD v0.3. Fetch and status observation identities are audit references and are not a replay-hash policy.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "strategy_run_manifest_schema_version",
+    "run_id",
+    "created_at",
+    "strategy_id",
+    "strategy_version",
+    "code_commit",
+    "rule_bundle_version",
+    "rule_status",
+    "config_hash",
+    "strategy_input_ref",
+    "artifact_consumption_receipt_hash",
+    "artifact_fetch_observation_id",
+    "release_status_observation_id",
+    "release_admission_observation_id",
+    "random_seed",
+    "run_mode",
+    "runtime_environment_lock_hash"
+  ],
+  "properties": {
+    "strategy_run_manifest_schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "run_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "created_at": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+    },
+    "strategy_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "strategy_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "code_commit": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "rule_bundle_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "rule_status": {
+      "enum": [
+        "requirements_confirmed",
+        "hypothesis",
+        "draft",
+        "placeholder",
+        "TBD",
+        "approved"
+      ]
+    },
+    "config_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "strategy_input_ref": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/strategyInputRef"
+    },
+    "artifact_consumption_receipt_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "artifact_fetch_observation_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "release_status_observation_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "release_admission_observation_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "random_seed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "run_mode": {
+      "enum": [
+        "research",
+        "backtest",
+        "paper",
+        "shadow"
+      ]
+    },
+    "runtime_environment_lock_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "rule_status": {
+            "not": {
+              "const": "approved"
+            }
+          }
+        },
+        "required": [
+          "rule_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "run_mode": {
+            "enum": [
+              "research",
+              "shadow"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

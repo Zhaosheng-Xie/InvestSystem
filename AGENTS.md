@@ -13,15 +13,18 @@ Read the root `README.md`, the relevant project `README.md`, and its PRD when on
 
 ## Development & Validation Commands
 
-There is no configured build, package manager, or automated test runner. Use these repository-level checks from PowerShell:
+The Stage 1 engineering skeleton uses Python 3.12, setuptools, hash-locked dependencies, pytest, Ruff, and GitHub Actions. Use these repository-level checks from PowerShell:
 
 ```powershell
-rg --files -g "*.md"
-rg -n "draft|hypothesis|placeholder|approved" "产业卡点及事件驱动系统" "题材扩散与资金轮动系统"
+& "E:\Conda\envs\Data_Analysis\python.exe" -m pytest -q
+& "E:\Conda\envs\Data_Analysis\python.exe" -m ruff check .
+& "E:\Conda\envs\Data_Analysis\python.exe" -m ruff format --check .
+& "E:\Conda\envs\Data_Analysis\python.exe" -m mypy
+& "E:\Conda\envs\Data_Analysis\python.exe" -m compileall -q src tests
 git diff --check
 ```
 
-These inventory documentation, audit rule statuses, and find whitespace errors in a valid Git checkout. Document implementation tooling in the relevant project's `05_实现/README.md`.
+Generate reproducible locks with `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\compile-locks.ps1`. Do not install the full dev lock into the shared environment when that would change existing packages. Document implementation tooling in the relevant project's `05_实现/README.md`.
 
 ## Writing Style & Naming Conventions
 
@@ -46,5 +49,9 @@ Never commit credentials, broker tokens, or account data. Research agents must n
 The approved local-development exception is the workstation Conda environment `E:\Conda\envs\Data_Analysis` with Python 3.12. Treat it only as a shared interpreter, not as the dependency contract: InvestSystem owns its `pyproject.toml`, hash-locked runtime/dev requirements, TOML configuration, cache, database, and runtime directory. Register this project with editable `--no-deps`; never import the KB package from the shared environment. Before and after adding an InvestSystem package, record the environment baseline and run `pip check`; install only exact locked missing packages without changing existing shared packages unless the user separately approves that impact. CI and reproducible validation must build an isolated environment from the InvestSystem lock.
 
 KB credentials must be read-only and limited to the published delivery surface. Preserve `origin` as the writable fork remote, never push to `upstream`, and establish and verify a technical no-push guard on `upstream` during Stage 0 before that stage can complete.
+
+ADR-0001 is approved. The first version permits exactly one `strategy_input_ref` per run and supports both versioned read-only HTTP API and authorized immutable export packages. InvestSystem owns `var/state/invest_system.sqlite3` and the content-addressed cache at `var/cache/kb-releases/`; the cache has a 20 GiB soft limit, and historically referenced artifacts must never be automatically deleted. A withdrawn or unconfirmable Release blocks every new run. Preserved historical material may be used only for explicitly labeled `audit_replay`, never for a new current decision, position, approval, or order.
+
+The current clone's `upstream` push URL uses the prohibited `disabled` transport and `remote.pushDefault=origin`. This is clone-local: verify and reapply the guard in every new clone before development.
 
 Industrial-event and theme-rotation strategies default to zero signal interchange. They may separately pin the same KB Release, read the same provider-neutral immutable content-addressed Release cache, and reuse provider-neutral execution or market-rule libraries, but each must own its input references, consumption receipt/observations, Manifest, states, rules, ledger, attribution, and P&L. Any future cross-strategy feature requires an approved ADR, a versioned contract, and revalidation of every affected strategy.

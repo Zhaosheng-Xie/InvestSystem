@@ -1,0 +1,48 @@
+{
+  "fixture_metadata": {
+    "fixture_class": "invest_system_synthetic",
+    "synthetic": true,
+    "not_a_published_release": true,
+    "not_strategy_evidence": true,
+    "purpose": "Stage 1 provider-neutral representation and deterministic serialization"
+  },
+  "verified_knowledge_input": {
+    "schema_version": "0.1.0-draft",
+    "input_id": "synthetic_input_stage1_001",
+    "strategy_input_ref": {
+      "schema_version": "1.0.0",
+      "dataset_release_id": "synthetic_release_stage1_001",
+      "knowledge_cutoff": "2026-07-30T08:00:00.000000Z",
+      "release_manifest_schema_version": "1.0.0",
+      "manifest_hash": {
+        "algorithm": "sha256",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "facts": [
+      {
+        "fact_id": "synthetic_fact_001",
+        "subject_id": "synthetic_company_001",
+        "predicate": "synthetic_contract_marker",
+        "value": {
+          "amount_scaled": 1250000,
+          "confirmed": true,
+          "currency": "CNY"
+        },
+        "verified_at": "2026-07-30T07:30:00.000000Z",
+        "available_at": "2026-07-30T07:00:00.000000Z",
+        "evidence_ids": [
+          "synthetic_evidence_001"
+        ],
+        "event_at": "2026-07-29T09:00:00.000000Z",
+        "source_published_at": "2026-07-30T06:45:00.000000Z",
+        "first_seen_at": "2026-07-30T06:50:00.000000Z",
+        "metadata": {
+          "fixture_class": "invest_system_synthetic",
+          "not_a_published_release": true,
+          "synthetic": true
+        }
+      }
+    ]
+  }
+}

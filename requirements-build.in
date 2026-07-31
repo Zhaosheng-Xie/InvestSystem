@@ -1,0 +1,5 @@
+# Build tools included in the reproducible runtime/dev locks.
+# pip-tools itself is installed only inside scripts/compile-locks.ps1's
+# temporary environment and is never installed into Data_Analysis.
+setuptools>=72.1,<81
+wheel>=0.43,<1
