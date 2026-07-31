@@ -161,26 +161,30 @@ def load_strict_json_bytes(content: bytes, *, source: str = "<bytes>") -> Any:
         raise StrictJsonError(f"invalid strict UTF-8 JSON in {source}: {exc}") from exc
 
 
-def _object(value: Any, *, field: str) -> dict[str, Any]:
+def _object(value: object, *, field: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ContractValidationError(f"{field} must be a JSON object")
     return value
 
 
-def _array(value: Any, *, field: str) -> list[Any]:
+def _array(value: object, *, field: str) -> list[Any]:
     if not isinstance(value, list):
         raise ContractValidationError(f"{field} must be a JSON array")
     return value
 
 
-def _text(value: Any, *, field: str) -> str:
+def _text(value: object, *, field: str) -> str:
     if not isinstance(value, str) or not value:
         raise ContractValidationError(f"{field} must be a non-empty string")
     return value
 
 
-def _integer(value: Any, *, field: str) -> int:
-    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+def _integer(value: object, *, field: str) -> int:
+    if isinstance(value, bool):
+        raise ContractValidationError(f"{field} must be a non-negative integer")
+    if not isinstance(value, int):
+        raise ContractValidationError(f"{field} must be a non-negative integer")
+    if value < 0:
         raise ContractValidationError(f"{field} must be a non-negative integer")
     return value
 
@@ -195,7 +199,7 @@ def _exact_keys(value: Mapping[str, Any], expected: set[str], *, field: str) -> 
         )
 
 
-def _digest_object(value: Any, *, field: str) -> str:
+def _digest_object(value: object, *, field: str) -> str:
     digest = _object(value, field=field)
     _exact_keys(digest, {"algorithm", "value"}, field=field)
     if digest["algorithm"] != "sha256":
@@ -206,7 +210,7 @@ def _digest_object(value: Any, *, field: str) -> str:
     return result
 
 
-def _relative_path(value: Any, *, field: str) -> str:
+def _relative_path(value: object, *, field: str) -> str:
     raw = _text(value, field=field)
     if "\\" in raw:
         raise ContractValidationError(f"{field} must use POSIX separators")
@@ -271,7 +275,7 @@ def _git_blob_id(content: bytes) -> str:
     return sha1(header + content, usedforsecurity=False).hexdigest()
 
 
-def _parse_snapshot_files(value: Any) -> dict[str, SnapshotFile]:
+def _parse_snapshot_files(value: object) -> dict[str, SnapshotFile]:
     entries: dict[str, SnapshotFile] = {}
     for index, raw_entry in enumerate(_array(value, field="snapshot-lock.files")):
         entry = _object(raw_entry, field=f"snapshot-lock.files[{index}]")
@@ -473,7 +477,7 @@ def _load_snapshot_lock(snapshot_root: Path) -> tuple[Path, dict[str, SnapshotFi
     return vendor_root, files
 
 
-def _parse_contract_entry(raw_entry: Any, *, location: str) -> SchemaContract:
+def _parse_contract_entry(raw_entry: object, *, location: str) -> SchemaContract:
     entry = _object(raw_entry, field=location)
     _exact_keys(
         entry,

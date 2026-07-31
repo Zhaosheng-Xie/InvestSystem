@@ -30,7 +30,7 @@ from ...models import (
     VerifiedFact,
     VerifiedKnowledgeInput,
 )
-from .contracts import ContractValidationError, KBContractCatalog
+from .contracts import ContractValidationError, KBContractCatalog, SchemaContract
 from .provider_canonical import (
     CANONICALIZATION_PROFILE,
     canonical_json_bytes,
@@ -137,26 +137,36 @@ def _fail(code: ReferenceValidationCode, message: str) -> NoReturn:
     raise ReferenceFixtureError(code, message)
 
 
-def _object(value: Any, *, field: str) -> dict[str, Any]:
+def _object(value: object, *, field: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         _fail(ReferenceValidationCode.FIXTURE_STRUCTURE, f"{field} must be an object")
     return value
 
 
-def _array(value: Any, *, field: str) -> list[Any]:
+def _array(value: object, *, field: str) -> list[Any]:
     if not isinstance(value, list):
         _fail(ReferenceValidationCode.FIXTURE_STRUCTURE, f"{field} must be an array")
     return value
 
 
-def _text(value: Any, *, field: str) -> str:
+def _text(value: object, *, field: str) -> str:
     if not isinstance(value, str) or not value:
         _fail(ReferenceValidationCode.FIXTURE_STRUCTURE, f"{field} must be text")
     return value
 
 
-def _integer(value: Any, *, field: str) -> int:
-    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+def _integer(value: object, *, field: str) -> int:
+    if isinstance(value, bool):
+        _fail(
+            ReferenceValidationCode.FIXTURE_STRUCTURE,
+            f"{field} must be a non-negative integer",
+        )
+    if not isinstance(value, int):
+        _fail(
+            ReferenceValidationCode.FIXTURE_STRUCTURE,
+            f"{field} must be a non-negative integer",
+        )
+    if value < 0:
         _fail(
             ReferenceValidationCode.FIXTURE_STRUCTURE,
             f"{field} must be a non-negative integer",
@@ -164,7 +174,7 @@ def _integer(value: Any, *, field: str) -> int:
     return value
 
 
-def _digest(value: Any, *, field: str) -> HashDigest:
+def _digest(value: object, *, field: str) -> HashDigest:
     digest = _object(value, field=field)
     if set(digest) != {"algorithm", "value"}:
         _fail(ReferenceValidationCode.FIXTURE_STRUCTURE, f"{field} must be a hash object")
@@ -177,7 +187,7 @@ def _digest(value: Any, *, field: str) -> HashDigest:
         ) from exc
 
 
-def _utc(value: Any, *, field: str) -> datetime:
+def _utc(value: object, *, field: str) -> datetime:
     text = _text(value, field=field)
     try:
         return datetime.fromisoformat(text.replace("Z", "+00:00"))
@@ -188,7 +198,7 @@ def _utc(value: Any, *, field: str) -> datetime:
         ) from exc
 
 
-def _optional_utc(value: Any, *, field: str) -> datetime | None:
+def _optional_utc(value: object, *, field: str) -> datetime | None:
     if value is None:
         return None
     return _utc(value, field=field)
@@ -197,7 +207,7 @@ def _optional_utc(value: Any, *, field: str) -> datetime | None:
 def _validate(
     catalog: KBContractCatalog,
     contract_id: str,
-    instance: Any,
+    instance: object,
     *,
     field: str,
 ) -> None:
@@ -210,7 +220,7 @@ def _validate(
         ) from exc
 
 
-def _schema_contract(catalog: KBContractCatalog, contract_id: str) -> Any:
+def _schema_contract(catalog: KBContractCatalog, contract_id: str) -> SchemaContract:
     for contract in catalog.schema_contracts:
         if contract.contract_id == contract_id:
             return contract
@@ -248,7 +258,7 @@ def _verify_semantic_content_hash(
 def _artifact_bytes(
     catalog: KBContractCatalog,
     item: Mapping[str, Any],
-    fixture_value: Any,
+    fixture_value: object,
 ) -> bytes:
     if item.get("item_type") == "schema":
         pointer = _object(fixture_value, field="schema artifact pointer")
@@ -385,7 +395,7 @@ def _validate_artifacts(
 
 def _validate_release(
     catalog: KBContractCatalog,
-    raw_release: Any,
+    raw_release: object,
 ) -> tuple[ValidatedRelease, dict[str, Any], dict[str, Any]]:
     release = _object(raw_release, field="release")
     if set(release) != {"dataset_release", "manifest", "artifacts"}:
@@ -486,7 +496,7 @@ def _validate_release(
     )
 
 
-def _strategy_input_ref(raw: Any) -> StrategyInputRef:
+def _strategy_input_ref(raw: object) -> StrategyInputRef:
     value = _object(raw, field="expected_strategy_input_ref")
     return StrategyInputRef(
         schema_version=_text(value["schema_version"], field="schema_version"),
@@ -502,7 +512,7 @@ def _strategy_input_ref(raw: Any) -> StrategyInputRef:
 
 def _validate_changes(
     catalog: KBContractCatalog,
-    raw_changes: Any,
+    raw_changes: object,
     releases: Mapping[str, ValidatedRelease],
 ) -> tuple[ValidatedChange, ...]:
     changes: list[ValidatedChange] = []
@@ -568,7 +578,7 @@ def _validate_changes(
     return tuple(changes)
 
 
-def _assert_pit(value: Any, *, cutoff: datetime, path: str = "context_pack") -> None:
+def _assert_pit(value: object, *, cutoff: datetime, path: str = "context_pack") -> None:
     if isinstance(value, dict):
         for key, nested in value.items():
             if key == "available_at" and _utc(nested, field=f"{path}.available_at") > cutoff:
@@ -579,7 +589,7 @@ def _assert_pit(value: Any, *, cutoff: datetime, path: str = "context_pack") -> 
             _assert_pit(nested, cutoff=cutoff, path=f"{path}[{index}]")
 
 
-def _index_objects(values: Any, *, key: str, field: str) -> dict[str, dict[str, Any]]:
+def _index_objects(values: object, *, key: str, field: str) -> dict[str, dict[str, Any]]:
     indexed: dict[str, dict[str, Any]] = {}
     for index, raw_value in enumerate(_array(values, field=field)):
         value = _object(raw_value, field=f"{field}[{index}]")
@@ -594,7 +604,7 @@ def _index_objects(values: Any, *, key: str, field: str) -> dict[str, dict[str, 
 
 
 def _bind_source_release(
-    raw_reference: Any,
+    raw_reference: object,
     releases: Mapping[str, ValidatedRelease],
 ) -> ValidatedRelease:
     reference = _object(raw_reference, field="source_release")
