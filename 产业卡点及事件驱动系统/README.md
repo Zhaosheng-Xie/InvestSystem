@@ -30,7 +30,7 @@
 5. [ADR-0001：KB/InvestSystem 边界及 Release 消费政策](../docs/adr/ADR-0001-kb-investsystem-boundary.md)
 6. [Stage 1 工程与机器契约骨架验收记录](../docs/validation/stage1-acceptance.md)
 
-Stage 2A 当前只推进固定公共契约的离线验收：`codex/stage2` 已从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并完成 provider canonical、catalog、receipt/observation draft 模型与 reference fixture 验证/窄投影的首个离线实现。公共 HTTP envelope/OpenAPI、不可变 export-package 契约及其 transport 尚未实现，SQLite v2、持久 observation 与 receipt-derived atomic pin 也待补齐；不得把这些内容表述为真实 Release 消费或策略实现。
+Stage 2A 当前推进固定公共契约的离线验收：`codex/stage2` 已从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并完成 provider canonical、catalog、receipt/observation 模型、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v2 的正式 Receipt/Observation 持久化和 receipt-derived atomic pin。公共 HTTP envelope/OpenAPI、不可变 export-package 契约及其 transport、真实 current status 获取、完整失败矩阵与 Stage 2A 阶段验收仍未完成；不得把这些内容表述为真实 Release 消费或策略实现。
 
 ## 推荐研发顺序
 

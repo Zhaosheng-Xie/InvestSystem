@@ -30,11 +30,19 @@ from ...models import (
     VerifiedFact,
     VerifiedKnowledgeInput,
 )
+from ...retention import (
+    ArtifactPayload,
+    ReleaseManifestPayload,
+    ReleaseRetentionClosure,
+    ReleaseRetentionNode,
+    RetentionArtifact,
+)
 from .contracts import ContractValidationError, KBContractCatalog, SchemaContract
 from .provider_canonical import (
     CANONICALIZATION_PROFILE,
     canonical_json_bytes,
     manifest_sha256,
+    sealed_manifest_bytes,
 )
 
 CONSUMER_CONTRACT_VERSION = "1.0.0"
@@ -95,6 +103,7 @@ class ValidatedArtifact:
 @dataclass(frozen=True, slots=True)
 class ValidatedRelease:
     release_id: str
+    release_manifest_schema_version: str
     created_at: datetime
     knowledge_cutoff: datetime
     supersedes_release_id: str | None
@@ -120,6 +129,9 @@ class ValidatedChange:
 class ReferenceFixtureResult:
     strategy_input_ref: StrategyInputRef
     receipt: ArtifactConsumptionReceipt
+    retention_closure: ReleaseRetentionClosure
+    artifact_payloads: tuple[ArtifactPayload, ...]
+    manifest_payloads: tuple[ReleaseManifestPayload, ...]
     verified_knowledge_input: VerifiedKnowledgeInput
     releases: tuple[ValidatedRelease, ...]
     changes: tuple[ValidatedChange, ...]
@@ -407,6 +419,10 @@ def _validate_release(
     _validate(catalog, _RELEASE_MANIFEST_ID, manifest, field="manifest")
 
     release_id = _text(dataset["release_id"], field="release_id")
+    release_manifest_schema_version = _text(
+        manifest["schema_version"],
+        field="manifest.schema_version",
+    )
     if release_id != manifest.get("release_id"):
         _fail(
             ReferenceValidationCode.RELEASE_IDENTITY_MISMATCH,
@@ -442,7 +458,10 @@ def _validate_release(
     if manifest_sha256(manifest) != manifest_hash.value:
         _fail(ReferenceValidationCode.MANIFEST_HASH_MISMATCH, "Manifest self-hash differs")
     manifest_ref = _object(dataset["manifest_ref"], field="dataset_release.manifest_ref")
-    if _digest(manifest_ref["hash"], field="manifest_ref.hash") != manifest_hash:
+    if (
+        manifest_ref.get("schema_version") != release_manifest_schema_version
+        or _digest(manifest_ref["hash"], field="manifest_ref.hash") != manifest_hash
+    ):
         _fail(
             ReferenceValidationCode.RELEASE_IDENTITY_MISMATCH,
             "dataset Release Manifest reference differs",
@@ -481,6 +500,7 @@ def _validate_release(
     return (
         ValidatedRelease(
             release_id=release_id,
+            release_manifest_schema_version=release_manifest_schema_version,
             created_at=_utc(created_at_text, field="created_at"),
             knowledge_cutoff=knowledge_cutoff,
             supersedes_release_id=supersedes_release_id,
@@ -508,6 +528,117 @@ def _strategy_input_ref(raw: object) -> StrategyInputRef:
         ),
         manifest_hash=_digest(value["manifest_hash"], field="manifest_hash"),
     )
+
+
+def _release_strategy_input_ref(
+    release: ValidatedRelease,
+    *,
+    schema_version: str,
+) -> StrategyInputRef:
+    """Map a validated provider Release to the complete public five-field identity."""
+
+    return StrategyInputRef(
+        schema_version=schema_version,
+        dataset_release_id=release.release_id,
+        knowledge_cutoff=release.knowledge_cutoff,
+        release_manifest_schema_version=release.release_manifest_schema_version,
+        manifest_hash=release.manifest_hash,
+    )
+
+
+def _retention_artifacts(release: ValidatedRelease) -> tuple[RetentionArtifact, ...]:
+    return tuple(
+        RetentionArtifact(
+            artifact_id=artifact.artifact_id,
+            item_type=artifact.item_type,
+            artifact_hash=artifact.artifact_hash,
+            size_bytes=artifact.size_bytes,
+            record_count=artifact.record_count,
+        )
+        for artifact in release.artifacts
+    )
+
+
+def _retention_node(
+    release: ValidatedRelease,
+    *,
+    strategy_input_ref_schema_version: str,
+    manifest_document: bytes,
+    dependency_release_ids: tuple[str, ...] = (),
+) -> ReleaseRetentionNode:
+    """Commit one validated Release and its exact canonical Manifest document."""
+
+    return ReleaseRetentionNode(
+        strategy_input_ref=_release_strategy_input_ref(
+            release,
+            schema_version=strategy_input_ref_schema_version,
+        ),
+        manifest_document_hash=HashDigest(
+            algorithm="sha256",
+            value=sha256(manifest_document).hexdigest(),
+        ),
+        manifest_size_bytes=len(manifest_document),
+        artifacts=_retention_artifacts(release),
+        dependency_release_ids=dependency_release_ids,
+    )
+
+
+def _retention_materials(
+    *,
+    root_input_ref: StrategyInputRef,
+    context_release: ValidatedRelease,
+    source_release: ValidatedRelease,
+    manifests: Mapping[str, Mapping[str, Any]],
+) -> tuple[
+    ReleaseRetentionClosure,
+    tuple[ArtifactPayload, ...],
+    tuple[ReleaseManifestPayload, ...],
+]:
+    """Build retention only from the source edge already proven by the adapter."""
+
+    closure_releases = (context_release, source_release)
+    manifest_documents = {
+        release.release_id: sealed_manifest_bytes(manifests[release.release_id])
+        for release in closure_releases
+    }
+    closure = ReleaseRetentionClosure.create(
+        root_strategy_input_ref=root_input_ref,
+        releases=(
+            _retention_node(
+                context_release,
+                strategy_input_ref_schema_version=root_input_ref.schema_version,
+                manifest_document=manifest_documents[context_release.release_id],
+                dependency_release_ids=(source_release.release_id,),
+            ),
+            _retention_node(
+                source_release,
+                strategy_input_ref_schema_version=root_input_ref.schema_version,
+                manifest_document=manifest_documents[source_release.release_id],
+            ),
+        ),
+    )
+    artifact_payloads = tuple(
+        sorted(
+            (
+                ArtifactPayload(
+                    release_id=release.release_id,
+                    artifact_id=artifact.artifact_id,
+                    content=artifact.content,
+                )
+                for release in closure_releases
+                for artifact in release.artifacts
+            ),
+            key=lambda payload: (payload.release_id, payload.artifact_id),
+        )
+    )
+    manifest_payloads = tuple(
+        ReleaseManifestPayload(
+            release_id=release.release_id,
+            content=manifest_documents[release.release_id],
+        )
+        for release in sorted(closure_releases, key=lambda item: item.release_id)
+    )
+    return closure, artifact_payloads, manifest_payloads
 
 
 def _validate_changes(
@@ -1174,11 +1305,9 @@ def _verify_stage6_reference_document(
     context_release = release_by_id.get(input_ref.dataset_release_id)
     if context_release is None:
         _fail(ReferenceValidationCode.INPUT_REF_MISMATCH, "input Release is absent")
-    if (
-        input_ref.knowledge_cutoff != context_release.knowledge_cutoff
-        or input_ref.manifest_hash != context_release.manifest_hash
-        or input_ref.schema_version != "1.0.0"
-        or input_ref.release_manifest_schema_version != "1.0.0"
+    if input_ref != _release_strategy_input_ref(
+        context_release,
+        schema_version=input_ref.schema_version,
     ):
         _fail(
             ReferenceValidationCode.INPUT_REF_MISMATCH,
@@ -1222,6 +1351,12 @@ def _verify_stage6_reference_document(
         release_by_id,
         fixture_artifacts,
     )
+    retention_closure, artifact_payloads, manifest_payloads = _retention_materials(
+        root_input_ref=input_ref,
+        context_release=context_release,
+        source_release=source_release,
+        manifests=manifests,
+    )
     projection_evidence = _validate_closed_evidence_chain(
         context_pack,
         evidence_bundle,
@@ -1237,6 +1372,9 @@ def _verify_stage6_reference_document(
     return ReferenceFixtureResult(
         strategy_input_ref=input_ref,
         receipt=receipt,
+        retention_closure=retention_closure,
+        artifact_payloads=artifact_payloads,
+        manifest_payloads=manifest_payloads,
         verified_knowledge_input=verified_input,
         releases=tuple(sorted(validated_releases, key=lambda release: release.release_id)),
         changes=changes,

@@ -1,4 +1,4 @@
-"""InvestSystem's provider-neutral Stage 1 contract surface."""
+"""InvestSystem's provider-neutral contract and persistence surface."""
 
 from .canonical import (
     CanonicalJsonError,
@@ -24,6 +24,7 @@ from .consumption import (
     ReleaseAdmissionStatus,
     ReleaseStatusObservation,
     SchemaValidationResult,
+    consumption_observation_from_canonical_bytes,
 )
 from .governance import RuleGovernanceError, validate_rule_maturity
 from .models import (
@@ -47,6 +48,14 @@ from .models import (
     StrategyRunManifest,
     VerifiedFact,
     VerifiedKnowledgeInput,
+)
+from .retention import (
+    RELEASE_RETENTION_CLOSURE_SCHEMA_VERSION,
+    ArtifactPayload,
+    ReleaseManifestPayload,
+    ReleaseRetentionClosure,
+    ReleaseRetentionNode,
+    RetentionArtifact,
 )
 from .storage import (
     DEFAULT_CACHE_SOFT_LIMIT_BYTES,
@@ -77,6 +86,7 @@ __all__ = [
     "AdmissionStatus",
     "ArtifactConsumptionReceipt",
     "ArtifactFetchObservation",
+    "ArtifactPayload",
     "ArtifactRead",
     "ArtifactReceiptItem",
     "AuditReplayRequest",
@@ -104,9 +114,14 @@ __all__ = [
     "MarketRegime",
     "PositionState",
     "ProviderReleaseStatus",
+    "RELEASE_RETENTION_CLOSURE_SCHEMA_VERSION",
     "ReleaseAdmissionObservation",
     "ReleaseAdmissionStatus",
+    "ReleaseManifestPayload",
+    "ReleaseRetentionClosure",
+    "ReleaseRetentionNode",
     "ReleaseStatusObservation",
+    "RetentionArtifact",
     "RunMode",
     "RuleGovernanceError",
     "RuleStatus",
@@ -124,6 +139,7 @@ __all__ = [
     "canonical_json",
     "canonical_json_bytes",
     "canonical_sha256",
+    "consumption_observation_from_canonical_bytes",
     "format_utc",
     "freeze_json",
     "normalize_utc",

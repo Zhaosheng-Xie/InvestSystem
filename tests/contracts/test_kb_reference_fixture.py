@@ -13,6 +13,7 @@ from invest_system.integrations.investment_research_kb.contracts import (
 from invest_system.integrations.investment_research_kb.provider_canonical import (
     canonical_json_bytes,
     manifest_sha256,
+    sealed_manifest_bytes,
 )
 from invest_system.integrations.investment_research_kb.reference_fixture import (
     ReferenceFixtureError,
@@ -131,6 +132,11 @@ def test_official_reference_fixture_projects_deterministically(
     second = verify_stage6_reference_fixture(catalog)
 
     assert first == second
+    assert first.retention_closure.closure_hash == second.retention_closure.closure_hash
+    assert (
+        first.retention_closure.to_canonical_bytes()
+        == second.retention_closure.to_canonical_bytes()
+    )
     assert first.strategy_input_ref.manifest_hash.value == EXPECTED_MANIFEST_HASH
     assert first.receipt.receipt_hash.value == EXPECTED_RECEIPT_HASH
     assert first.receipt.canonical_sha256() == second.receipt.canonical_sha256()
@@ -151,7 +157,41 @@ def test_official_reference_fixture_projects_deterministically(
         "context-pack-fixture-v1",
         "context-pack-fixture-v1-record-schema",
     ]
+    assert len(first.receipt.artifacts) == 2
     assert [item.record_count for item in first.receipt.artifacts] == [1, None]
+    assert [
+        (release.release_id, release.dependency_release_ids)
+        for release in first.retention_closure.releases
+    ] == [
+        ("rel_stage6_fixture_context", ("rel_stage6_fixture_evidence",)),
+        ("rel_stage6_fixture_evidence", ()),
+    ]
+    assert sum(len(release.artifacts) for release in first.retention_closure.releases) == 4
+    assert len(first.artifact_payloads) == 4
+    assert [
+        (payload.release_id, payload.artifact_id) for payload in first.artifact_payloads
+    ] == sorted((payload.release_id, payload.artifact_id) for payload in first.artifact_payloads)
+    expected_manifests = {
+        release["dataset_release"]["release_id"]: sealed_manifest_bytes(release["manifest"])
+        for release in catalog.stage6_fixture["releases"]
+    }
+    assert [payload.release_id for payload in first.manifest_payloads] == [
+        "rel_stage6_fixture_context",
+        "rel_stage6_fixture_evidence",
+    ]
+    assert all(
+        payload.content == expected_manifests[payload.release_id]
+        for payload in first.manifest_payloads
+    )
+    manifest_payload_by_release = {
+        payload.release_id: payload.content for payload in first.manifest_payloads
+    }
+    assert all(
+        node.manifest_document_hash.value
+        == sha256(manifest_payload_by_release[node.release_id]).hexdigest()
+        and node.manifest_size_bytes == len(manifest_payload_by_release[node.release_id])
+        for node in first.retention_closure.releases
+    )
     assert [fact.fact_id for fact in first.verified_knowledge_input.facts] == [
         "iedgev_stage6_fixture_v1"
     ]

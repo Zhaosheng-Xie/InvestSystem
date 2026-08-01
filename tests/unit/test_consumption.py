@@ -27,6 +27,7 @@ from invest_system.consumption import (
     ReleaseAdmissionStatus,
     ReleaseStatusObservation,
     SchemaValidationResult,
+    consumption_observation_from_canonical_bytes,
 )
 from invest_system.models import HashDigest, StrategyInputRef
 
@@ -196,6 +197,9 @@ def test_observation_axes_are_separate_and_provider_event_identity_is_preserved(
         status=ProviderReleaseStatus.PUBLISHED,
         status_event_id="provider_status_event_001",
         status_event_hash=digest("e"),
+        previous_status_event_hash=digest("d"),
+        status_sequence=3,
+        status_recorded_at=FIXED_TIME,
     )
     admission = ReleaseAdmissionObservation(
         schema_version=CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
@@ -221,6 +225,81 @@ def test_observation_axes_are_separate_and_provider_event_identity_is_preserved(
     assert admission.status_observation_id == status.observation_id
     assert fetch.artifact_ids == ("facts_a", "facts_b")
     assert fetch.strategy_input_ref == status.strategy_input_ref == admission.strategy_input_ref
+
+
+def test_canonical_observation_parser_round_trips_all_axes_and_rejects_drift(
+    input_ref: StrategyInputRef,
+    receipt: ArtifactConsumptionReceipt,
+) -> None:
+    fetch = ArtifactFetchObservation(
+        schema_version=CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
+        observation_id="fetch_strict_parser_001",
+        release_id=input_ref.dataset_release_id,
+        strategy_input_ref=input_ref,
+        observed_at=FIXED_TIME,
+        transport=DeliveryTransport.IMMUTABLE_EXPORT,
+        source_endpoint="export:strict-parser",
+        schema_validation_result=SchemaValidationResult.PASSED,
+        receipt_hash=receipt.receipt_hash,
+        artifact_ids=tuple(item.artifact_id for item in receipt.artifacts),
+        response_or_export_bytes_hash=digest("1"),
+        local_cache_keys=("sha256/strict-parser",),
+    )
+    status = ReleaseStatusObservation(
+        schema_version=CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
+        observation_id="status_strict_parser_001",
+        release_id=input_ref.dataset_release_id,
+        strategy_input_ref=input_ref,
+        observed_at=FIXED_TIME,
+        schema_validation_result=SchemaValidationResult.PASSED,
+        status=ProviderReleaseStatus.PUBLISHED,
+        status_event_id="provider/status/strict-parser",
+        status_event_hash=digest("2"),
+        previous_status_event_hash=digest("1"),
+        status_sequence=2,
+        status_recorded_at=FIXED_TIME,
+    )
+    admission = ReleaseAdmissionObservation(
+        schema_version=CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
+        observation_id="admission_strict_parser_001",
+        release_id=input_ref.dataset_release_id,
+        strategy_input_ref=input_ref,
+        observed_at=FIXED_TIME,
+        status_observation_id=status.observation_id,
+        admission_status=ReleaseAdmissionStatus.AUTHORIZED,
+    )
+    for observation in (fetch, status, admission):
+        assert (
+            consumption_observation_from_canonical_bytes(observation.to_canonical_bytes())
+            == observation
+        )
+
+    invalid_documents: list[dict[str, Any]] = []
+    unexpected = status.to_json_value()
+    unexpected["unexpected_contract_field"] = True
+    invalid_documents.append(unexpected)
+    nested_input = status.to_json_value()
+    nested_input["strategy_input_ref"]["unexpected_contract_field"] = True
+    invalid_documents.append(nested_input)
+    nested_hash = status.to_json_value()
+    nested_hash["status_event_hash"]["unexpected_contract_field"] = True
+    invalid_documents.append(nested_hash)
+    bool_sequence = status.to_json_value()
+    bool_sequence["status_sequence"] = True
+    invalid_documents.append(bool_sequence)
+    noncanonical_time = status.to_json_value()
+    noncanonical_time["observed_at"] = "2026-07-31T08:00:00+00:00"
+    invalid_documents.append(noncanonical_time)
+    future_status_time = status.to_json_value()
+    future_status_time["status_recorded_at"] = "2026-07-31T08:00:00.000001Z"
+    invalid_documents.append(future_status_time)
+
+    for document in invalid_documents:
+        with pytest.raises((TypeError, ValueError)):
+            consumption_observation_from_canonical_bytes(canonical_json_bytes(document))
+
+    with pytest.raises(ValueError, match="SQLite signed integer limit"):
+        replace(status, status_sequence=2**63)
 
 
 def test_observations_enforce_failure_and_admission_semantics(
@@ -267,6 +346,34 @@ def test_observations_enforce_failure_and_admission_semantics(
             strategy_input_ref=input_ref,
             observed_at=FIXED_TIME,
             schema_validation_result=SchemaValidationResult.PASSED,
+        )
+    with pytest.raises(ValueError, match="status_sequence"):
+        ReleaseStatusObservation(
+            schema_version=CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
+            observation_id="status_invalid_sequence_001",
+            release_id=input_ref.dataset_release_id,
+            strategy_input_ref=input_ref,
+            observed_at=FIXED_TIME,
+            schema_validation_result=SchemaValidationResult.PASSED,
+            status=ProviderReleaseStatus.PUBLISHED,
+            status_event_id="provider_status_event_invalid_sequence_001",
+            status_event_hash=digest("a"),
+            status_sequence=0,
+            status_recorded_at=FIXED_TIME,
+        )
+    with pytest.raises(ValueError, match="must be <= observed_at"):
+        ReleaseStatusObservation(
+            schema_version=CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
+            observation_id="status_future_recorded_at_001",
+            release_id=input_ref.dataset_release_id,
+            strategy_input_ref=input_ref,
+            observed_at=FIXED_TIME,
+            schema_validation_result=SchemaValidationResult.PASSED,
+            status=ProviderReleaseStatus.PUBLISHED,
+            status_event_id="provider_status_event_future_001",
+            status_event_hash=digest("a"),
+            status_sequence=1,
+            status_recorded_at=FIXED_TIME + timedelta(microseconds=1),
         )
     with pytest.raises(ValueError, match="must not expose"):
         ReleaseStatusObservation(
@@ -373,6 +480,9 @@ def test_every_observation_binds_the_full_input_reference_identity(
             status=ProviderReleaseStatus.PUBLISHED,
             status_event_id="provider_status_event_001",
             status_event_hash=digest("c"),
+            previous_status_event_hash=digest("b"),
+            status_sequence=3,
+            status_recorded_at=FIXED_TIME,
         )
     with pytest.raises(ValueError, match="does not match release_id"):
         ReleaseAdmissionObservation(
@@ -462,7 +572,8 @@ def test_consumption_contracts_are_valid_and_models_serialize_to_them(
         Draft202012Validator.check_schema(contracts[name])
         assert contracts[name]["x-owner"] == "InvestSystem"
         assert contracts[name]["x-contract-status"] == "draft"
-        assert contracts[name]["x-contract-version"] == "0.1.0-draft"
+    assert contracts["receipt"]["x-contract-version"] == "0.1.0-draft"
+    assert contracts["observations"]["x-contract-version"] == "0.2.0-draft"
 
     fetch = ArtifactFetchObservation(
         schema_version=CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
@@ -485,6 +596,9 @@ def test_consumption_contracts_are_valid_and_models_serialize_to_them(
         status=ProviderReleaseStatus.WITHDRAWN,
         status_event_id="provider_status_event_schema_001",
         status_event_hash=digest("e"),
+        previous_status_event_hash=digest("d"),
+        status_sequence=4,
+        status_recorded_at=FIXED_TIME,
     )
     admission = ReleaseAdmissionObservation(
         schema_version=CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
@@ -512,6 +626,8 @@ def test_consumption_contracts_are_valid_and_models_serialize_to_them(
         "fetch-failed-with-success-fields",
         "fetch-missing-input-ref",
         "status-passed-without-event-hash",
+        "status-passed-without-sequence",
+        "status-sequence-overflow",
         "status-failed-with-untrusted-event",
         "admission-authorized-with-failure",
         "admission-unknown-state",
@@ -563,6 +679,8 @@ def test_consumption_schemas_fail_closed(
             del value["strategy_input_ref"]
     elif mutation in {
         "status-passed-without-event-hash",
+        "status-passed-without-sequence",
+        "status-sequence-overflow",
         "status-failed-with-untrusted-event",
     }:
         value = ReleaseStatusObservation(
@@ -575,9 +693,16 @@ def test_consumption_schemas_fail_closed(
             status=ProviderReleaseStatus.PUBLISHED,
             status_event_id="provider_status_event_schema_001",
             status_event_hash=digest("a"),
+            previous_status_event_hash=digest("b"),
+            status_sequence=3,
+            status_recorded_at=FIXED_TIME,
         ).to_json_value()
         if mutation == "status-passed-without-event-hash":
             value["status_event_hash"] = None
+        elif mutation == "status-passed-without-sequence":
+            value["status_sequence"] = None
+        elif mutation == "status-sequence-overflow":
+            value["status_sequence"] = 2**63
         else:
             value["schema_validation_result"] = "failed"
             value["failure_reasons"] = ["status_event_hash_mismatch"]
@@ -604,7 +729,7 @@ def test_consumption_schemas_fail_closed(
 
 def test_contract_schema_versions_are_exact_constants() -> None:
     assert ARTIFACT_CONSUMPTION_RECEIPT_SCHEMA_VERSION == "0.1.0-draft"
-    assert CONSUMPTION_OBSERVATION_SCHEMA_VERSION == "0.1.0-draft"
+    assert CONSUMPTION_OBSERVATION_SCHEMA_VERSION == "0.2.0-draft"
 
 
 def test_provider_status_axis_preserves_every_public_release_state(
@@ -627,7 +752,14 @@ def test_provider_status_axis_preserves_every_public_release_state(
             observed_at=FIXED_TIME,
             schema_validation_result=SchemaValidationResult.PASSED,
             status=status,
-            status_event_id=f"provider_status_event_{index}",
+            status_event_id=(
+                "provider/events/" + ("x" * 239) + str(index)
+                if index == 0
+                else f"provider_status_event_{index}"
+            ),
             status_event_hash=digest("a"),
+            previous_status_event_hash=digest("a") if index > 0 else None,
+            status_sequence=index + 1,
+            status_recorded_at=FIXED_TIME,
         )
         validator("observations", contracts).validate(observation.to_json_value())

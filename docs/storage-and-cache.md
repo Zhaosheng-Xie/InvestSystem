@@ -1,61 +1,93 @@
-# InvestSystem 状态库与 Release 缓存
+# InvestSystem SQLite v2 与 Release 缓存
 
-本文说明 Stage 1 已实现的本项目状态与缓存边界。它不是 KB Adapter、KB Schema 副本、正式 `ArtifactConsumptionReceipt` 或策略运行器。
+本文记录 Stage 2A 已实现的本地存储纵向切片：正式 `ArtifactConsumptionReceipt`、三类消费观察、Release 留存闭包、由 Receipt 派生的原子 run pin，以及内容寻址缓存的读取和容量报告。这些是 InvestSystem 自有能力，不是 KB 的存储副本。
+
+当前仍未实现 KB 只读 HTTP API 适配器、不可变导出包适配器和真实 provider current status 的获取或订阅。`ReleaseCacheStore` 只接收由边界 Adapter 已验证的 InvestSystem 中立合同和精确字节；本地 current head 只表示已持久化的最新观察，不应冒充 KB 的实时状态。E0—E7、四道门、利润桥、估值、分析结论和决策仍属后续策略实现。
 
 ## 所有权与路径
 
-- SQLite 默认位于 `var/state/invest_system.sqlite3`，只保存 InvestSystem 自有的状态/准入观察、缓存对象、artifact 映射、run pin 和审计元数据。
-- 内容寻址缓存默认位于 `var/cache/kb-releases/sha256/<前两位>/<完整摘要>`。
-- 两者均由 InvestSystem 独立持有；实现不读取 KB SQLite、`raw/`、`staging/`、`published/`、工作树或 Python 包。
+- SQLite 默认位于 `var/state/invest_system.sqlite3`，使用 `PRAGMA user_version=2`。
+- 内容寻址缓存默认位于 `var/cache/kb-releases/sha256/<前两位>/<完整 SHA-256>`，Release Manifest 和 artifact 使用同一 CAS。
+- 数据库、缓存和运行配置均由 InvestSystem 独立持有。实现不读取 KB SQLite、`raw/`、`staging/`、`published/`、工作树或 Python 包，也不将策略状态写回 KB。
 
-SQLite 使用 `PRAGMA user_version=1`。初始化在 `BEGIN IMMEDIATE` 内串行完成；未知版本、未版本化的非空数据库、未知表/索引/view/trigger、列/主键/唯一约束/外键/检查约束不一致、`quick_check` 或 `foreign_key_check` 失败都会拒绝打开，不自动猜测或收养外部表结构。
+## 身份、Receipt 与留存闭包
 
-## 状态与准入
+### 完整五字段引用
 
-提供方生命周期与 InvestSystem 本地准入分成两个不可混用的轴：
+每个根 Release 和 source Release 都保存完整 `StrategyInputRef`，五个字段不得漂移：
 
-- provider status 只表示 `published` 或终态 `withdrawn`；每次观察绑定完整五字段 `StrategyInputRef`，同一 `dataset_release_id` 的身份不得漂移。
-- local admission 表示 `authorized`、`unconfirmed` 或 `denied`，并且只能引用该 Release 最新的 provider status observation。
-- 新的 provider observation 会令此前 admission 失效；旧的 `published` 或 `authorized` 观察不能被复用来绕过更新的状态。
-- `withdrawn` 不可逆；状态无法确认或授权失败时也不能准入新 run。
+1. `schema_version`；
+2. `dataset_release_id`；
+3. `knowledge_cutoff`；
+4. `release_manifest_schema_version`；
+5. `manifest_hash`。
 
-`StrategyRunManifest` 同时固定 `release_status_observation_id` 和 `release_admission_observation_id`。`pin_run()` 在同一个 `BEGIN IMMEDIATE` 事务内重核最新 provider 状态、完整输入身份和本地授权，避免“先检查、后撤回、再落 run”的竞态。
+同一 `dataset_release_id` 若尝试重映射到不同的任一字段，存储层都会失败关闭。首版 `StrategyRunManifest` 仍严格限定一个 `strategy_input_ref`。
 
-## 写入、pin 与完整性
+`manifest_hash` 是提供方 Manifest 合同的语义哈希，由 Adapter 按对应规范验证。每个闭包节点另以 `manifest_document_hash + manifest_size_bytes` 承诺完整 Manifest 文档的物理身份；SQLite 在首次写入前逐字节核对，并将物理摘要保存到 CAS 和 run pin。两条哈希轴不得假定相等。KB reference Adapter 使用 `irkb-jsonl-v1` 的 sealed Manifest 表示（规范 JSON 后恰好一个 LF），确保 HTTP/export 对同一规范文档得到相同物理身份。同理，Receipt 和闭包的合同身份哈希，与 SQLite 中保存的完整 canonical document hash 也是明确分离的校验轴。
 
-`ReleaseCacheStore` 只接收调用方已经取得的 `bytes`、精确 `release_id`、`artifact_id` 和预期 SHA-256：
+### 根 Receipt 与传递 source 闭包
 
-1. 写入前验证摘要格式和实际字节哈希。
-2. 使用同目录临时文件、`flush`、`fsync` 与 `os.replace` 原子落盘。
-3. 写入、重复写、读取和 pin 时都重新验证大小与 SHA-256。
-4. 同一 `release_id + artifact_id` 不得重映射到其他字节；相同内容重试保持幂等。
-5. 符号链接、junction 或多硬链接对象不被当作本项目独占缓存收养。
-6. 每个 run 只 pin 调用方明确声明、按 `artifact_id` 规范排序的精确制品子集；保存原 Manifest canonical bytes、SHA-256、canonical profile 版本和每个制品的 SHA-256/大小。
+- `ArtifactConsumptionReceipt` 只描述本次策略直接消费的根 Release 及其精确 artifact 集；不把 source Release artifact 冒充为根消费项。
+- `ReleaseRetentionClosure` 从该根 Release 出发，记录所有可达的传递 source Release、每个节点的完整五字段引用、Manifest 完整文档摘要/大小、精确 artifact 描述和直接依赖边。
+- 闭包模型强制节点和 artifact 唯一且规范排序、依赖端点存在、无环、全部节点从根可达，且 source `knowledge_cutoff` 不得晚于其父 Release。
+- Receipt artifact 集必须与闭包根节点完全相等；artifact 字节和 Manifest 字节则必须精确覆盖闭包每个成员，不得缺失或多交。
+- Receipt 到 closure 的对应是不可变映射；同一身份只允许字节完全相同的幂等重试。
 
-一个 run 的 pin 不冻结整个 Release。后续 run 可以在同一 Release 中消费另一精确子集；旧 run 的审计读取仍只能看到它自己的固定快照。Stage 1 尚不生成正式 receipt，因此本阶段由调用方声明 `artifact_ids`；Stage 2A 必须把该集合与已验证的 `ArtifactConsumptionReceipt` 逐项核对后才能准入。
+v2 的主要表组为：`receipts` / `receipt_artifacts` / `receipt_closures`、`retention_closures` / `closure_releases` / `closure_dependencies` / `closure_artifacts`、`release_manifests` / `release_artifacts`、三类 observation 表及 `release_heads`，以及 `strategy_run_pins` / `pin_releases` / `pin_artifacts`。`pin_artifacts` 使用 `run_id + release_id + artifact_id` 三元主键，因而不会把不同 source Release 中同名 artifact 混同。
 
-文件成功落盘而 SQLite 事务未完成时可能留下未登记的内容寻址孤立文件。后续收养仍须重新验证；软容量阈值既不是准入上限，也不是跳过完整性检查的理由。
+## 持久化与观察链
 
-## 容量与留存
+`record_verified_consumption(receipt, retention_closure, artifact_payloads, manifest_payloads)` 执行精确集合校验，验证 artifact 的字节数和 SHA-256，再持久化 CAS、Receipt、Manifest 快照和留存闭包。文件必须先成功落盘，之后 SQLite 元数据才在 `BEGIN IMMEDIATE` 事务中一次可见。如果元数据事务失败，可能留下未登记的内容寻址孤立文件；它不会暴露部分 Receipt 或闭包，后续收养时仍须重新验证。
 
-- 默认运营软阈值为 `20 GiB`，由 `DEFAULT_CACHE_SOFT_LIMIT_BYTES` 与 TOML 配置共同表达。
-- `quota_report()` 报告实际物理缓存、已登记对象、未登记孤立文件和被历史 pin 覆盖的唯一字节。
-- 报告会显式列出 missing、corrupt、metadata、scan failure 异常，并标明扫描是否完整；快速容量盘点可以不重哈希内容，但不能静默隐藏缺失或扫描失败。
-- 超过软阈值时只通过 `over_limit` 告警并进入人工容量复核，不硬拒绝写入，也不授权删除；实际磁盘写满仍会使事务失败并回滚元数据。
-- Stage 1 不提供自动 GC 或删除 API。未来若设计未引用对象 GC，必须另立规格，并且任何历史 pin 引用的制品都不得自动删除。
+`append_observation()` 持久化三条彼此分离的观察链：
+
+- `ArtifactFetchObservation`：记录运输和 Schema 验证结果；`passed` 观察必须绑定已持久化的精确 Receipt 和完全相同的 artifact ID 集。
+- `ReleaseStatusObservation`：记录已验证的 provider status event 或失败关闭结果；支持 `building`、`validated`、`published` 和终态 `withdrawn`。
+- `ReleaseAdmissionObservation`：记录 InvestSystem 本地 `authorized`、`unconfirmed` 或 `denied`，只能指向该 Release 精确的 current status observation；只有已验证的 `published` 可被授权。
+
+每个 Release 的每类观察只有一条线性 current head。新观察的 `supersedes` 必须精确指向当前 head，`observed_at` 不得倒退且不得晚于可信持久化时钟；新 status 不删除 admission head，而是通过其绑定的 status ID 不再等于 current status 使旧授权立即失效，下一条 admission 继续 supersede 旧 head。通过验证的 provider status 必须从 sequence 1 开始形成无缺口 hash chain：新事件的 `status_sequence` 恰好递增 1，`previous_status_event_hash` 等于上一事件 hash，`status_recorded_at` 不倒退。允许用新 Observation 精确重复确认最新同一 provider event，以便从临时 `unconfirmable` 恢复和定期刷新；事件 ID/hash 重映射、较旧事件回放、链跳跃和 `withdrawn` 后的新事件全部失败关闭。provider-owned event/artifact ID 作为最长 256 字符的 opaque ID 保存，允许公共合同中的 `/`，但从不用于拼接缓存路径。
+
+除可变 current-head 投影 `release_heads` 外，v2 表都有禁止 `UPDATE` 和 `DELETE` 的 SQLite trigger，并为全部主键/唯一键增加冲突插入防线，外部连接即使使用默认 `recursive_triggers=OFF` 的 `INSERT OR REPLACE` 也不能替换不可变行。`release_heads` 禁止删除，其每次更新只能推进一个 head，且新 Observation 必须属于同一 Release/类型并精确 supersede 旧 head；pin/read 还会独立确认 head 是唯一链尾。Receipt 与 closure 的 canonical BLOB 是聚合权威，所有 child index 在 fetch、pin 和 read 时都须与其精确一致，不能通过追加自洽子行扩大既有 Receipt、闭包或 run pin。Observation canonical BLOB 每次都会按精确字段集、嵌套类型、枚举、规范 UTC 和模型语义严格反序列化，再逐字节重新规范化并核对 subtype 投影；数据库直写不能用“投影一致但合同非法”的文档取得授权。
+
+## Receipt 派生的原子 pin
+
+`pin_run(manifest)` 不再接收调用方声明的 `artifact_ids`。它从 `StrategyRunManifest.artifact_consumption_receipt_hash` 解析已持久化 Receipt，再通过不可变映射得到整个留存闭包。一个 `BEGIN IMMEDIATE` 事务会重核：
+
+1. Manifest 中的完整五字段根引用和 Receipt 身份；
+2. current fetch head 是否对该 Receipt 验证通过；
+3. 根 Release 的 current status 是否为通过验证的 `published`，且 current admission 是否对该 status `authorized`；
+4. 闭包中每一个根或 source Release 的 current status 是否均为通过验证的 `published`；
+5. Manifest 和 artifact CAS 字节、大小、哈希和映射是否完整；Receipt、闭包、Manifest、artifact 和所有用于准入的 Observation 的 `persisted_at`/`observed_at` 均不晚于 run `created_at`，且 `created_at` 不晚于 pin 事务的可信时钟。
+
+全部条件成立后，才会同时写入 run pin：`pin_releases` 固定每个闭包 Release 的 Manifest 文档 SHA-256 和当时 status observation，`pin_artifacts` 固定所有闭包 artifact 的三元身份、哈希和大小。任一条件失败都不会产生部分 pin。这保证策略运行的历史依赖由已验证 Receipt 和闭包派生，而不是一个可以少报的调用方子集。
 
 ## 普通读取与审计重放
 
-- 普通读取必须来自已经原子准入并 pin 的 source run，并使用 `RunPurpose.NEW_RUN`；每次读取仍要求当前 provider/admission 与该 pin 一致且保持授权。
-- 撤回、状态无法确认、授权失效或观察被替换后，普通读取失败关闭。
-- 审计使用独立 `AuditReplayRequest`，以 `source_run_id + source_manifest_hash` 绑定原 Manifest；原 Manifest 的普通 `run_mode`、canonical bytes 和哈希不会为重放而改写。
-- 审计只能读取 source run 的精确 pin 集。返回的 `ArtifactRead` 明示 `purpose=audit_replay`、原 run/Manifest/观察身份以及当前 provider/admission 状态，因此撤回不会被缓存伪装成新的 Published Release。
-- 审计读取仍重验路径、大小和哈希。该只读能力不提供创建新 pin、当前 DecisionRecord、目标仓位、批准或订单的接口。
+- 创建新 run 时，根 fetch/status/admission 必须与 current head 精确相等，闭包每个成员都必须 current passed/published。撤回、无法确认、未发布、本地未授权、观察失效或缓存损坏任一情况都失败关闭。
+- `RunPurpose.NEW_RUN` 普通读取只向策略暴露根 Receipt 的 artifact，不直接暴露 source Release artifact。读取时仍要求根 fetch/status/admission 和每个闭包成员的 status observation 与 pin 时快照精确相同；即使新观察仍为 `published`，也不会静默改写旧 run 的证据边界。
+- `RunPurpose.AUDIT_REPLAY` 必须提供 `AuditReplayRequest`，并以 `source_run_id + source_manifest_hash` 精确绑定已 pin 的原始 run。审计可读取根或 source Release 的历史 pin artifact，即使当前已撤回也仍可追溯；返回值明确区分目标 Release 的历史 pinned status、根 Release 的历史 admission，以及目标 Release 的 current access，不能用 root 的 `authorized` 隐藏 source 的撤回。每次读取仍重验完整闭包、文件路径、大小和哈希。
+- 审计读取不会改写原 `StrategyRunManifest`，也不能被用于创建新的当前决策、仓位、批准或订单。
 
-## 阶段边界
+## 容量与留存
 
-Stage 1 只证明 provider-neutral 本地状态、准入和缓存骨架。以下内容留在后续阶段：
+- 默认软阈值为 `20 GiB`。`quota_report()` 按物理 CAS 字节判断 `over_limit`，并分别报告已登记字节、孤立文件字节和被历史 pin 覆盖的唯一 Manifest/artifact 字节。
+- 软阈值只产生运营告警，不是硬准入上限，也不授权删除。实际磁盘写满仍会使写入失败。
+- v2 不提供自动 GC 或删除 API，历史 run pin 引用的 Manifest 和 artifact 永不自动删除。如果未来增加未引用对象清理，必须另立规格并继续保护全部历史 pin。
+- 容量扫描会显式报告 missing、corrupt、metadata 和 scan failure；符号链接、junction 和多硬链接对象不会被当作本项目独占且可信的缓存。
 
-- Stage 2A：只读 HTTP/export Adapter、KB 官方契约固定、正式 Receipt 与公共 Observation 映射；
-- Stage 2B：获批的最小策略规则和合成纵向切片；
-- Stage 3：正式 Published Release 传输与策略 smoke。
+## Schema 升级与失败关闭
+
+新库直接创建 v2。并发首次打开先在一致的只读 snapshot 中预检，再通过有界 SQLITE_BUSY/LOCKED retry 建立 WAL，最后在单个 `BEGIN IMMEDIATE` 中重新识别、建表或迁移并验证完整 Schema；并发构造不会暴露半成品。打开旧 `user_version=1` 库时，只有表、列和显式索引 inventory 与已知 v1 完全相等，且所有 v1 表均为空，才会升级为 v2。
+
+任何非空 v1 库都缺少正式 Receipt、三类 canonical observation 和真实传递闭包，无法无损推导；因此必须保持原样并失败关闭，不把旧的调用方 artifact 子集伪装成新 Receipt 或闭包。未知版本、未版本化的非空数据库、未知表/索引/view/trigger、v2 定义偏移、`quick_check` 或 `foreign_key_check` 失败也都拒绝打开。
+
+## 未完成的阶段边界
+
+- 生产级 KB HTTP API 传输、鉴权、重试、超时和响应封装验证；
+- 生产级不可变导出包发现、解包和完整性验证；
+- 从 KB 获取或订阅真实 current status，并将其转换为可持久化 observation；
+- 使用正式 KB Published Release 的端到端 smoke；
+- 产业事件策略与题材轮动策略的 E0—E7、规则、归因、估值和决策逻辑。
+
+因此，v2 已经提供可审计的本地“消费—观察—准入—留存”骨架，但不应宣称已能从真实 KB 独立获取 Release，也不应宣称任何策略已实现。

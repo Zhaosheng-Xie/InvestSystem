@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/release-retention-closure/0.1.0-draft/release-retention-closure.schema.json",
+  "title": "ReleaseRetentionClosure (InvestSystem Draft)",
+  "description": "InvestSystem-owned provider-neutral identity for the exact transitive Release manifests and artifacts retained for one consumed root Release.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "x-canonical-profile": "investsystem-canonical-json-v1",
+  "x-semantic-invariants": [
+    "root_strategy_input_ref must equal all five fields of exactly one root Release node",
+    "release_id, artifact_id, and dependency identifiers must be unique in their scopes and arrays must be canonically sorted",
+    "every dependency endpoint must exist, the dependency graph must be acyclic, and every node must be reachable from the root",
+    "a dependency knowledge_cutoff must be less than or equal to its parent knowledge_cutoff",
+    "every Release node commits to the SHA-256 and positive byte size of its complete sealed Manifest document bytes",
+    "closure_hash is sha256 over the canonical object containing schema_version, root_strategy_input_ref, and releases, excluding closure_hash itself"
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "root_strategy_input_ref",
+    "releases",
+    "closure_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "root_strategy_input_ref": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/strategyInputRef"
+    },
+    "releases": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/releaseRetentionNode"
+      }
+    },
+    "closure_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    }
+  },
+  "$defs": {
+    "retentionArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "item_type",
+        "artifact_hash",
+        "size_bytes",
+        "record_count"
+      ],
+      "properties": {
+        "artifact_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/providerOpaqueId"
+        },
+        "item_type": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        "artifact_hash": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "record_count": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "releaseRetentionNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "strategy_input_ref",
+        "manifest_document_hash",
+        "manifest_size_bytes",
+        "artifacts",
+        "dependency_release_ids"
+      ],
+      "properties": {
+        "strategy_input_ref": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/strategyInputRef"
+        },
+        "manifest_document_hash": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+        },
+        "manifest_size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/retentionArtifact"
+          }
+        },
+        "dependency_release_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/exactReleaseId"
+          }
+        }
+      }
+    }
+  }
+}

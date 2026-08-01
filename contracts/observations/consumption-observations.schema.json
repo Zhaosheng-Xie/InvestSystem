@@ -1,11 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.investsystem.local/observations/0.1.0-draft/consumption-observations.schema.json",
+  "$id": "https://schemas.investsystem.local/observations/0.2.0-draft/consumption-observations.schema.json",
   "title": "Release Consumption Observations (InvestSystem Draft)",
   "description": "InvestSystem-owned append-only fetch, provider-status, and local-admission observations. The three axes remain independent and do not change receipt identity.",
+  "x-semantic-invariants": [
+    "status_recorded_at must be less than or equal to observed_at",
+    "within each Release and observation type, supersedes must identify the exact current head and observed_at must not move backwards",
+    "passed provider status events must form one contiguous hash chain; exact re-observation of the latest event is allowed, but event identities must not be remapped and older events must not be replayed",
+    "withdrawn is terminal for passed provider status observations, and every new status observation invalidates prior local admission",
+    "authorized admission must target the exact current passed/published status observation"
+  ],
   "x-owner": "InvestSystem",
   "x-contract-status": "draft",
-  "x-contract-version": "0.1.0-draft",
+  "x-contract-version": "0.2.0-draft",
   "oneOf": [
     {
       "$ref": "#/$defs/artifactFetchObservation"
@@ -29,6 +36,16 @@
       "anyOf": [
         {
           "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableProviderId": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/providerOpaqueId"
         },
         {
           "type": "null"
@@ -67,7 +84,7 @@
       ],
       "properties": {
         "schema_version": {
-          "const": "0.1.0-draft"
+          "const": "0.2.0-draft"
         },
         "observation_id": {
           "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
@@ -104,7 +121,7 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/providerOpaqueId"
           }
         },
         "response_or_export_bytes_hash": {
@@ -185,13 +202,16 @@
         "status",
         "status_event_id",
         "status_event_hash",
+        "previous_status_event_hash",
+        "status_sequence",
+        "status_recorded_at",
         "failure_reasons",
         "supersedes",
         "observation_type"
       ],
       "properties": {
         "schema_version": {
-          "const": "0.1.0-draft"
+          "const": "0.2.0-draft"
         },
         "observation_id": {
           "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
@@ -227,10 +247,35 @@
           ]
         },
         "status_event_id": {
-          "$ref": "#/$defs/nullableId"
+          "$ref": "#/$defs/nullableProviderId"
         },
         "status_event_hash": {
           "$ref": "#/$defs/nullableHash"
+        },
+        "previous_status_event_hash": {
+          "$ref": "#/$defs/nullableHash"
+        },
+        "status_sequence": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status_recorded_at": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "failure_reasons": {
           "$ref": "#/$defs/reasonCodes"
@@ -265,10 +310,18 @@
                 ]
               },
               "status_event_id": {
-                "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+                "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/providerOpaqueId"
               },
               "status_event_hash": {
                 "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+              },
+              "status_sequence": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9223372036854775807
+              },
+              "status_recorded_at": {
+                "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
               },
               "failure_reasons": {
                 "maxItems": 0
@@ -286,8 +339,68 @@
               "status_event_hash": {
                 "const": null
               },
+              "previous_status_event_hash": {
+                "const": null
+              },
+              "status_sequence": {
+                "const": null
+              },
+              "status_recorded_at": {
+                "const": null
+              },
               "failure_reasons": {
                 "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "schema_validation_result": {
+                "const": "passed"
+              },
+              "status_sequence": {
+                "const": 1
+              }
+            },
+            "required": [
+              "schema_validation_result",
+              "status_sequence"
+            ]
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "const": "building"
+              },
+              "previous_status_event_hash": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "schema_validation_result": {
+                "const": "passed"
+              },
+              "status_sequence": {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 9223372036854775807
+              }
+            },
+            "required": [
+              "schema_validation_result",
+              "status_sequence"
+            ]
+          },
+          "then": {
+            "properties": {
+              "previous_status_event_hash": {
+                "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
               }
             }
           }
@@ -311,7 +424,7 @@
       ],
       "properties": {
         "schema_version": {
-          "const": "0.1.0-draft"
+          "const": "0.2.0-draft"
         },
         "observation_id": {
           "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"

@@ -23,12 +23,17 @@
     },
     "artifact_consumption_receipt": {
       "status": "implemented_draft_model",
-      "persistence": "not_implemented",
+      "persistence": "implemented_offline_sqlite_v2",
       "acceptance": "pending_ci_and_stage_2a_completion_gate"
     },
     "consumption_observations": {
       "status": "implemented_draft_models",
-      "persistence": "not_implemented",
+      "persistence": "implemented_offline_sqlite_v2",
+      "provider_status_history_requirement": "complete_event_chain_from_sequence_1_with_previous_event_hash",
+      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+    },
+    "release_retention_closure": {
+      "status": "implemented_draft_model_and_offline_persistence",
       "acceptance": "pending_ci_and_stage_2a_completion_gate"
     },
     "reference_fixture_validation_and_projection": {
@@ -44,11 +49,13 @@
       "blocker": "locked_export_package_schema_lock_and_fixture_missing"
     },
     "sqlite_v2": {
-      "status": "not_implemented"
+      "status": "implemented_offline",
+      "acceptance": "pending_ci_and_stage_2a_completion_gate"
     },
     "receipt_derived_atomic_pin": {
-      "status": "not_implemented",
-      "includes": "input_release_artifacts_and_transitive_source_release_retention"
+      "status": "implemented_offline",
+      "includes": "input_release_manifests_and_artifacts_and_transitive_source_release_retention",
+      "acceptance": "pending_ci_and_stage_2a_completion_gate"
     },
     "strategy_semantics": {
       "status": "not_implemented",
@@ -58,6 +65,7 @@
   "constraints": [
     "No KB repository, package, SQLite, raw, staging, published directory, or worktree dependency.",
     "No HTTP or export transport may be claimed before its public contract is pinned and validated.",
+    "A current-status summary or a status-event chain with any missing predecessor is unconfirmable and cannot authorize a new run.",
     "Stage 2A remains in_progress until every completion gate has acceptance evidence."
   ]
 }

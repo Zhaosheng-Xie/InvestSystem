@@ -9,7 +9,7 @@
 
 完整策略、TargetPortfolio 和 paper 成交回放在后续阶段开发，可与正式 Release E2E 并行；正式历史验证须在两支都完成后开始。
 
-Stage 2A 当前已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按原始字节引入 20 个官方文件，并完成 provider canonical、契约 catalog、消费 receipt/observation draft 模型和官方 reference fixture 验证/窄投影的首个离线实现。固定提交尚无锁定的公共 HTTP envelope/OpenAPI 或不可变 export-package 契约，因此 HTTP/export transport 未实现；SQLite v2、持久 observation 和 receipt-derived atomic pin 也仍待实现。Stage 2A 不得在这些完成并验收前标记为 `completed`。
+Stage 2A 当前已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按原始字节引入 20 个官方文件，并完成 provider canonical、契约 catalog、消费 receipt/observation 模型、官方 reference fixture 验证/窄投影，以及 SQLite v2 的正式 Receipt/Observation 持久化、传递 source Release 留存闭包和 receipt-derived atomic pin。固定提交尚无锁定的公共 HTTP envelope/OpenAPI 或不可变 export-package 契约，因此 HTTP/export transport 和真实当前状态获取仍未实现。Stage 2A 不得在传输契约、完整失败矩阵和阶段验收完成前标记为 `completed`。
 
 根级采用 `src/` 包布局、GitHub Actions 和规范 JSON。本地实现使用工作站级 `E:\Conda\envs\Data_Analysis`（Python 3.12）作为共享开发解释器，但 InvestSystem 必须独立维护 `pyproject.toml`、`requirements-build.in`、带哈希的 runtime/dev lock、TOML 配置、`var/cache/kb-releases/`、`var/state/invest_system.sqlite3` 和运行目录。项目只以 editable `--no-deps --no-build-isolation` 注册；缺包安装前后保存环境基线并运行 `pip check`，不得未经确认改变既有共享包。CI 和可复现验收必须从 InvestSystem lock 创建干净环境。
 
@@ -28,7 +28,15 @@ Stage 1 已实现的根级工程能力包括：
 - 原子核对最新 provider 状态与本地准入后，按 run 固定精确 artifact 子集；撤回后阻止普通读取和新 pin，只允许通过独立 `AuditReplayRequest` 读取既有 pin 的审计上下文；
 - pytest、Ruff、mypy、双平台 GitHub Actions 和跨仓隔离测试。
 
-缓存和状态层的行为边界见根级 [存储与 Release 缓存说明](../../docs/storage-and-cache.md)。这些能力不包含 HTTP/export Adapter、KB 正式 Receipt/Observation 或任何策略规则语义。
+Stage 2A 本轮在该骨架上新增：
+
+- `ReleaseRetentionClosure` 机器契约，显式保存根 Release 到 source Release 的传递依赖，不从 fixture 中“出现过的全部 Release”猜测闭包；
+- 完整 sealed Manifest 文档快照、物理文档哈希/大小与 provider 的 self-excluding `manifest_hash` 分开保存，并共同进入闭包身份；
+- 三类 Observation 的完整 canonical bytes、从 sequence 1 开始的连续 provider status previous-hash 链、线性 `supersedes` 与不可回拨当前 head；
+- `pin_run(manifest)` 只从持久 Receipt/闭包推导 root、source Manifest 和制品 pin，并在同一事务中重核当前状态、准入和缓存字节；
+- Receipt/closure canonical aggregate、关系索引、CAS 字节与 `persisted_at <= run.created_at <= pin clock` 在 pin/read 时重核；撤回或无法确认后阻止新 pin 和普通读取，既有完整闭包只供显式 `audit_replay`。
+
+缓存和状态层的行为边界见根级 [存储与 Release 缓存说明](../../docs/storage-and-cache.md)。这些能力仍不包含 HTTP/export transport、真实 Release 当前状态获取或任何策略规则语义。
 
 策略内核只依赖 provider-neutral DTO。E0—E7、四道门、利润桥、预期、估值、Decision、组合、执行和 P&L 全部属于 InvestSystem，不能回写 KB。
 
