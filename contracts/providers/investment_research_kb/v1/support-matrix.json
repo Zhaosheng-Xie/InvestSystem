@@ -2,9 +2,15 @@
   "schema_version": "1.0.0",
   "provider": "InvestmentResearchKB",
   "stage": "Stage 2A",
-  "stage_status": "in_progress",
+  "stage_status": "completed",
   "invest_system_branch": "codex/stage2",
   "source_commit": "58ed9c5cb5302e3e719f1696bed83a03c5d6313b",
+  "acceptance": {
+    "completed_at": "2026-08-02",
+    "implementation_commit": "01073c1acbcb0350c3710749b29f581bdc7c56f6",
+    "ci_run_id": 30744115034,
+    "record": "docs/validation/stage2a-acceptance.md"
+  },
   "snapshot": {
     "status": "pinned",
     "official_file_count": 20,
@@ -15,16 +21,16 @@
   "capabilities": {
     "provider_canonical": {
       "status": "implemented_offline",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "contract_catalog": {
       "status": "implemented_offline",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "artifact_consumption_receipt": {
       "status": "implemented_draft_model",
       "persistence": "implemented_offline_sqlite_v3",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "consumption_observations": {
       "status": "implemented_draft_models",
@@ -32,15 +38,15 @@
       "synthetic_storage_requirement": "complete_event_chain_from_sequence_1_with_previous_event_hash",
       "official_fixture_status_evidence": "summary_cross_binding_only_not_current_authority",
       "production_status_requirement": "complete_provider_event_bodies_and_self_hashes_from_a_pinned_public_transport_contract",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "release_retention_closure": {
       "status": "implemented_draft_model_and_offline_sqlite_v3_persistence",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "reference_fixture_validation_and_projection": {
       "status": "implemented_offline_fixture_only",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "http_transport": {
       "status": "not_implemented",
@@ -56,8 +62,8 @@
     },
     "sqlite_v3": {
       "status": "implemented_offline",
-      "migration": "nonempty_verified_v2_upgrades_losslessly_with_legacy_pins_audit_only",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "migration": "nonempty_verified_v2_upgrades_losslessly_with_immutable_legacy_pin_quarantine",
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "run_scoped_status_confirmation": {
       "status": "implemented_draft_contract_and_offline_sqlite_v3_gate",
@@ -65,17 +71,17 @@
       "canonical_validation": "strict_exact_field_model_roundtrip_and_sqlite_projection_reconciliation",
       "default_authority_policy": "deny_all",
       "real_authority_enablement": "Stage 3 only after an authenticated public transport and current-status contract are pinned and raw response evidence is retained and reverified",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "legacy_v2_run_quarantine": {
       "status": "implemented_offline",
       "behavior": "immutable_permanent_audit_only_marker_ignores_later_injected_confirmation_bindings",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "receipt_derived_atomic_pin": {
       "status": "implemented_offline",
       "includes": "input_release_manifests_and_artifacts_and_transitive_source_release_retention",
-      "acceptance": "pending_ci_and_stage_2a_completion_gate"
+      "acceptance": "completed_2026-08-02_run_30744115034"
     },
     "strategy_semantics": {
       "status": "not_implemented",
@@ -88,6 +94,6 @@
     "A current-status summary or a status-event chain with any missing predecessor is unconfirmable and cannot authorize a new run.",
     "The pinned official fixture contains status summaries, not complete status-event bodies, and never authorizes a new run.",
     "Without an explicitly pinned and allowed current-status authority contract, every new run fails closed.",
-    "Stage 2A remains in_progress until every completion gate has acceptance evidence."
+    "Stage 2A completion covers only the offline validation, projection, persistence, confirmation, admission, pin, and retention kernel; real transports and authority enablement remain Stage 3."
   ]
 }

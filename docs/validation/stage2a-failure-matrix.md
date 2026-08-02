@@ -1,10 +1,10 @@
 # Stage 2A 离线内核失败矩阵
 
-> 文档状态：`active / implementation_mapped / ci_acceptance_pending`
+> 文档状态：`active / implementation_mapped / accepted`
 > 适用范围：`Stage 2A 公共契约验证、provider-neutral 投影、消费持久化、run-scoped 状态确认、准入与留存内核`
 > 不在范围：`HTTP transport、immutable export transport、真实 provider current status、正式 Release E2E、策略语义`
 
-本文把 Stage 2A 完成门映射到仓库中已经存在的测试 ID。测试存在只表示行为已有可执行检查，不能替代锁定环境和 Windows/Linux CI 的实际成功记录；本文不登记 Stage 2A 已完成，也不登记当前 CI 已通过。
+本文把 Stage 2A 完成门映射到仓库中 100 个已经存在的测试 ID。测试存在只表示行为已有可执行检查；锁定环境和 Windows/Linux CI 的成功证据由 [Stage 2A 验收记录](stage2a-acceptance.md) 独立登记。
 
 ## 1. 输入分类
 
@@ -139,14 +139,14 @@
 | `STATIC_ISOLATION_GUARD` | 依赖声明引入 KB editable/VCS/local path，或仓库出现 submodule/link/junction/hardlink | 架构测试失败 | `tests/architecture/test_repository_isolation.py::test_dependencies_contain_no_kb_editable_vcs_or_local_path`；`tests/architecture/test_repository_isolation.py::test_repository_has_no_submodule_symlink_junction_or_hardlink` |
 | `STATIC_ISOLATION_GUARD` | required CI checkout 另一仓、依赖服务进程或共享状态 | 架构测试失败 | `tests/architecture/test_repository_isolation.py::test_required_ci_checks_out_only_this_repository_without_services` |
 
-## 10. 正式验收要求
+## 10. 正式验收证据
 
-Stage 2A 关闭前，正式验收记录必须在精确实现提交上补充以下运行证据：
+Stage 2A 已在精确实现提交 `01073c1` 上形成以下运行证据：
 
-1. 从 `requirements-dev.lock` 建立的干净 Python 3.12 环境完成 `pip check`、Ruff、mypy、pytest、compileall 和 `git diff --check`；
-2. GitHub Actions 的 Windows 与 Ubuntu 作业均完整执行并成功，登记 run/job URL、测试数和跳过原因；
-3. 本矩阵中的测试 ID 与最终提交一致，任何改名、删除或语义变化均同步更新；
+1. 从 `requirements-dev.lock` 建立的干净 Python 3.12 环境已完成 `pip check`、Ruff、mypy、`396 passed, 4 skipped`、compileall 和 `git diff --check`；
+2. GitHub Actions [run 30744115034](https://github.com/Zhaosheng-Xie/InvestSystem/actions/runs/30744115034) 的 Windows 与 Ubuntu 作业均完整执行并成功；本地 4 个 skip 原因均为 Windows 当前账户无 symlink/junction 权限；
+3. 本矩阵的 `100` 个测试 ID 与验收实现一致，收口检查为 `0 missing`；后续任何改名、删除或语义变化仍须同步更新；
 4. 官方 fixture、InvestSystem failure injection、SQLite corruption injection 和 CAS corruption injection 的报告标签保持分离；
-5. 验收结论继续明确：Stage 2A 离线内核不等于 HTTP/export transport、真实 Release 消费、provider 当前状态确认或策略实现。
+5. 验收结论明确：Stage 2A 离线内核不等于 HTTP/export transport、真实 Published Release acquisition、provider 当前状态 authority 或策略实现。
 
-在上述证据形成前，本矩阵只能作为实现映射，不能单独把 Stage 2A 标记为 `completed`。
+完整结论、锚点和未实现边界见 [Stage 2A 正式验收记录](stage2a-acceptance.md)。本矩阵随实现继续维护，但不能单独扩张已验收能力范围。

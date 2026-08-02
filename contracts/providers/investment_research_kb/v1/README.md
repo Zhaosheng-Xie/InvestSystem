@@ -22,8 +22,8 @@ InvestSystem 的实现和测试只能读取本目录已经固定的公共字节�
 KB 工作树、Python 包、SQLite、`raw/`、`staging/` 或发布目录。
 
 当前固定基线没有公开、锁定的 immutable export-package Schema/fixture，也没有独立锁定
-的 HTTP envelope/OpenAPI Schema。因此 Stage 2A 首个切片只实现公共 Release 内容验证内核
-和固定 reference fixture 验证；HTTP 外壳必须严格按已发布只读接口解析，export package
+的 HTTP envelope/OpenAPI Schema。因此 Stage 2A 已验收公共 Release 内容离线验证/准入内核
+和固定 reference fixture 验证；Stage 3 的 HTTP 外壳必须严格按已发布只读接口解析，export package
 在正式公共契约发布前必须 fail closed 为 `not_supported`，不得复制 KB 内部 API 或采用
 KB 当前未提交文件。
 

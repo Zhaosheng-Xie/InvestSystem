@@ -6,12 +6,12 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v0.9](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—1 completed / Stage 2A in_progress / Stage 2B not_started`。
+- [InvestSystem 实施计划 v1.0](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2A completed / Stage 2B not_started`。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 `0.1.0-draft` 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。这些只证明工程骨架可安装、可测试、可审计；KB Adapter、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合、执行和 P&L 均尚未实现。
 
-Stage 2A 已在 `codex/stage2` 分支启动。当前从 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定了 20 个官方文件，并完成 provider canonical、契约 catalog、消费 receipt/observation 模型、官方 reference fixture 验证/窄投影，以及 InvestSystem 自有 SQLite v3 的 receipt、append-only observation、传递留存闭包、run-scoped 当前状态确认和 receipt-derived atomic pin。根 Receipt 只标识本次策略输入的制品，留存闭包另行固定其实际依赖的 source Release、Manifest 快照与制品；调用方不能声明任意 pin 子集。真实 current-status authority 默认为空，且两种批准传输面都会在 I/O 前显式失败关闭，因此官方 fixture 不能授权新 run。Stage 2A 仍为 `in_progress`，等待隔离 CI 和正式阶段验收；HTTP/export acquisition、完整 status-event 正文验证和真实 authority 启用归入 Stage 3。Stage 2B 仍未启动，也没有策略能力。
+Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)。仓库从 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定了 20 个官方文件，并完成 provider canonical、契约 catalog、官方 reference fixture 验证/窄投影，以及 InvestSystem 自有 SQLite v3 的 Receipt、append-only Observation、传递留存闭包、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。根 Receipt 只标识本次策略输入的制品，留存闭包另行固定实际依赖的 source Release、Manifest 快照与制品；调用方不能声明任意 pin 子集。真实 current-status authority 默认为空，且两种批准 transport 都会在 I/O 前显式失败关闭，因此官方 fixture 不能授权新 run。HTTP/export acquisition、完整 status-event 正文、认证 transport、原始响应留存和真实 authority 启用归入 Stage 3。Stage 2B 仍未启动，也没有策略能力。
 
 ## 当前项目
 

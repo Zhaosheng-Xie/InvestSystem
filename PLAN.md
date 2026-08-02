@@ -1,11 +1,11 @@
-# InvestSystem 实施计划（v0.9）
+# InvestSystem 实施计划（v1.0）
 
-> 计划版本：`v0.9`
-> 基线日期：`2026-08-01`
+> 计划版本：`v1.0`
+> 基线日期：`2026-08-02`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 0—1 / completed；Stage 2A / in_progress；Stage 2B / not_started`
-> 当前成熟度：`public_contract_persistence_in_progress / strategy_not_implemented`
+> 当前阶段：`Stage 0—2A / completed；Stage 2B / not_started`
+> 当前成熟度：`offline_release_admission_kernel_completed / real_transport_not_implemented / strategy_not_implemented`
 > 生产边界：`仅研究、回测、shadow/paper；不得自动实盘`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
@@ -24,8 +24,8 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 
 - 仓库的需求、研究、规则占位、原始材料和历史归档仍是业务内容主体；这些文档不等于实现。
 - `2026-07-31` Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装/依赖锁/TOML、InvestSystem 自有 draft Schema、provider-neutral DTO、规范序列化、强制规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成 fixture、自动测试和 Windows/Linux CI 均已形成并验证。
-- Stage 2A 已在 `codex/stage2` 分支启动：已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按 Git 对象原始字节引入 20 个官方文件，并实现 provider canonical、契约目录校验、消费 receipt/observation、显式 Release 留存闭包、官方 reference fixture 的只读验证/投影，以及 SQLite v2 的正式持久化和 receipt-derived atomic pin。以上仍是 `in_progress` 工作，不代表 HTTP/export Adapter、真实 Release 消费或 Stage 2A 已验收完成。
-- 当前仍没有可用的 KB HTTP/export 传输层、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合/执行、P&L 或可运行策略；Stage 1 契约版本为 InvestSystem 自有 `0.1.0-draft`，Stage 2A observation 已提升为 `0.2.0-draft` 并新增 `0.1.0-draft` retention closure，均不得冒充 KB 官方契约或已实现业务能力。
+- Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)：从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按 Git 对象原始字节引入 20 个官方文件，并完成 provider canonical、契约目录、官方 reference fixture 验证/窄投影、消费 Receipt/Observation、显式 Release 留存闭包，以及 SQLite v3 的 run-scoped 当前状态确认、默认拒绝 authority、receipt-derived atomic pin、legacy v2 quarantine 和审计留存。实现提交 `01073c1` 的 GitHub Actions run `30744115034` 在 Windows/Linux 均成功。
+- 当前仍没有可用的 KB HTTP/export acquisition、真实 Published Release 当前状态获取、E0—E7、四道门、利润桥、估值、组合/执行、P&L 或可运行策略；Stage 1/2A 的 InvestSystem 自有 draft 契约和固定官方 fixture 验证不得冒充 KB 真实 transport 或已实现业务能力。
 - [产业卡点及事件驱动系统 PRD v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md) 已于 `2026-07-31` 获用户批准并 `supersedes` v0.2；规则状态仍为 `rule_spec_pending`，因此需求生效不等于策略规则或实现生效。v0.2 只作历史追溯。
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md) 仅完成独立研究建档，需求、规则和实现尚未开始。
 - `原始文档/` 是同事提出的设想和材料基线；`归档/` 中的 HTML、截图和旧规格只供追溯，均不得冒充当前实现或验证证据。
@@ -41,9 +41,9 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 |---|---|---|---|
 | Stage 0 | `completed` | 治理、边界和需求冻结 | 已于 `2026-07-31` 验收关闭 |
 | Stage 1 | `completed` | 工程与机器契约骨架 | 已于 `2026-07-31` 验收关闭 |
-| Stage 2A | `in_progress` | KB 公共契约适配与黑盒契约验收 | Stage 1；固定的 KB 公共 Schema/lock/fixture |
-| Stage 2B | `not_started` | 最小 approved 策略规格与合成纵向切片 | Stage 1；用户批准最小规则包 |
-| Stage 3 | `not_started` | KB 正式 Release 传输与策略端到端验收 | Stage 2A、Stage 2B；KB Stage 6A 已完成（已满足） |
+| Stage 2A | `completed` | KB 公共契约离线验证、投影、消费持久化与准入内核 | 已于 `2026-08-02` 验收关闭 |
+| Stage 2B | `not_started` | 最小 approved 策略规格与合成纵向切片 | Stage 2A 消费/准入基线已完成；用户批准最小规则包 |
+| Stage 3 | `not_started` | KB 正式 Release 传输与策略端到端验收 | Stage 2A、Stage 2B；KB Stage 6A 已完成；固定的 HTTP/export/current-status 公共契约仍缺 |
 | Stage 4 | `not_started` | 完整产业事件规格与策略引擎 | Stage 2A、Stage 2B；规则在本阶段逐项批准 |
 | Stage 5 | `not_started` | 成交、组合与确定性回放 | Stage 4 |
 | Stage 6 | `not_started` | 历史验证与冠军挑战 | Stage 3、Stage 5 |
@@ -57,7 +57,8 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 ```text
 Stage 0 → Stage 1 → Stage 2A + Stage 2B
 
-Stage 2A + Stage 2B + KB Stage 6A 正式完成（已满足）
+Stage 2A + Stage 2B + KB Stage 6A 正式完成
++ 固定 HTTP/export/current-status 公共契约
 → Stage 3（正式 Release E2E）──────────────────────┐
                                                    ├→ Stage 6 → Stage 7 → Stage 8
 Stage 2A + Stage 2B                                │
@@ -66,7 +67,7 @@ Stage 2A + Stage 2B                                │
 题材系统：独立 deferred track（另行批准、另立阶段，不接在 Stage 8 后）
 ```
 
-Stage 0 与 Stage 1 已于 `2026-07-31` 关闭；Stage 2A 已在 `codex/stage2` 分支启动，Stage 2B 仍为 `not_started`。Stage 2B 开工前仍须由用户批准最小合成场景和规则包。二者完成后既可进入 Stage 4，也可进入 Stage 3：当前正式 `market-daily` Release 只能完成 Stage 3 的传输、校验和消费记录核验；Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 provider-neutral 策略、组合或执行引擎开发。
+Stage 0 与 Stage 1 已于 `2026-07-31` 关闭，Stage 2A 已于 `2026-08-02` 关闭；Stage 2B 仍为 `not_started`。Stage 2B 开工前仍须由用户批准最小合成场景和规则包。Stage 2B 完成后既可进入 Stage 4，也可进入 Stage 3：当前正式 `market-daily` Release 只能完成 Stage 3 的传输、校验和消费记录核验；Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 provider-neutral 策略、组合或执行引擎开发。
 
 ---
 
@@ -309,7 +310,7 @@ InvestSystem/
 
 | 输入类别 | 所有者 | 用途 | 不得证明 |
 |---|---|---|---|
-| KB 官方 contract fixture | KB；InvestSystem 固定原始字节与来源哈希 | 验证公共 Schema、Manifest/hash、published 状态、游标、HTTP 传输和 Adapter 映射 | 不证明撤回负例、产业策略规则正确或案例可交易 |
+| KB 官方 contract fixture | KB；InvestSystem 固定原始字节与来源哈希 | 验证公共 Schema、Manifest/hash、状态摘要、游标和离线投影 | 不证明 HTTP/export 传输、真实当前状态、撤回负例、产业策略规则正确或案例可交易 |
 | InvestSystem 合成策略 fixture | InvestSystem | 验证 provider-neutral DTO、最小 approved 规则及 `TRADE_READY`、`SHADOW_ONLY`、`REJECT`、`ABSTAIN` | 不冒充真实事实、正式 Release、live 授权或 Alpha 证据 |
 | 失败注入 fixture | InvestSystem；基于确定输入构造 | 验证篡改、撤回、不兼容 Schema、缺失制品和未来信息均严格失败关闭 | 不替代正常契约或策略案例，也不冒充 KB 发布 |
 | Stage 6A 正式 `market-daily` Release | KB；`rel_10e257ad87734d7bb5cadc55e7b444e7` | Stage 3 正式 HTTP/导出传输、Manifest、制品、状态、权限和消费记录核验 | 不包含 Context Pack，不进入订单/合同策略，不证明策略 smoke 成功 |
@@ -322,11 +323,11 @@ InvestSystem/
 ```text
 契约轨（Stage 2A）：
 KB 官方 fixture
-→ 独立只读 Adapter
-→ Schema / Manifest / 大小 / 哈希 / 状态验证
+→ 独立离线 validator / projector
+→ Schema / Manifest / 大小 / 哈希 / 状态摘要验证
 → ArtifactConsumptionReceipt
-→ ArtifactFetchObservation / ReleaseStatusObservation
-→ provider-neutral VerifiedKnowledgeInput
+→ Observations / Retention Closure / Run Status Confirmation 契约
+→ SQLite v3 默认拒绝准入内核 + provider-neutral VerifiedKnowledgeInput
 
 策略轨（Stage 2B）：
 InvestSystem 合成策略 fixture
@@ -355,7 +356,7 @@ InvestSystem 合成策略 fixture
 ### 6.3 最小交付
 
 - provider-neutral `VerifiedKnowledgeInput`，策略代码不识别 KB 内部或公共传输类型。
-- 独立只读 Release Adapter，不导入 KB 内部实现。
+- Stage 3 的独立只读 Release Adapter，不导入 KB 内部实现；Stage 2A 只交付已验收的离线 validator/projector 和 I/O 前失败关闭边界。
 - 一组原始字节不可变的 KB 官方 contract fixture。
 - 一组清晰标记的 InvestSystem 合成策略 fixture。
 - 一组与正常案例分离的失败注入 fixture。
@@ -469,38 +470,41 @@ InvestSystem 合成策略 fixture
 
 明确不做：不连接真实 KB、不实现完整策略、不评价 Alpha。
 
-### Stage 2A：KB 公共契约适配
+### Stage 2A：KB 公共契约与离线准入内核
 
-状态：`in_progress`
+状态：`completed / 2026-08-02`
 
 启动记录：`2026-07-31` 在分支 `codex/stage2` 开始；固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b`，不读取或跟随 KB 当前工作树。
 
-目标：仅依赖 KB 发布面和固定测试字节，实现独立、只读、黑盒的 KB Adapter；不等待正式 Release E2E，也不让 KB 状态阻塞策略内核。
+完成记录：实现提交 `01073c1acbcb0350c3710749b29f581bdc7c56f6`；GitHub Actions run `30744115034` 的 Windows/Linux 作业成功；[正式验收记录](docs/validation/stage2a-acceptance.md)。
+
+目标：仅依赖固定的 KB 公共契约和官方测试字节，完成独立、只读、黑盒的验证、provider-neutral 投影、消费持久化、状态确认、准入与留存内核；公共 transport 契约缺失时显式失败关闭，不用 KB 内部协议补齐。
 
 进入条件：
 
 - Stage 1 已完成。
-- KB 已提供可固定的公共 Schema、lock 和官方 contract fixture。当前固定提交没有锁定的公共 HTTP response envelope/OpenAPI，也没有不可变 export-package 的 Schema/lock/fixture；因此先推进离线公共契约验收，HTTP/export 传输实现等待正式公共契约，不得采用 KB 未发布的在研文件补齐。
+- KB 已提供可固定的公共 Schema、lock 和官方 contract fixture。当前固定提交没有锁定的公共 HTTP response envelope/OpenAPI，也没有不可变 export-package 的 Schema/lock/fixture；因此 Stage 2A 限定为离线公共契约与准入内核，HTTP/export 传输进入 Stage 3 并等待正式公共契约，不得采用 KB 未发布的在研文件补齐。
 
 工作内容：
 
 - 通过显式依赖更新提交/变更集固定 KB 公共契约的提交、Schema、lock、fixture 字节和来源哈希。
 - 以 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 作为 Stage 6A provider 实现与公共契约基线，以 `6ea33c4` 作为 KB PLAN v2.20 的验收记录提交，并记录 `1d6b823` 的后续快照边界澄清；InvestSystem 仍须通过自己的显式依赖更新固定所需文件、版本、原始字节和哈希，不跟随 KB 分支 HEAD，也不依赖 KB 工作树。
-- 在相应公共传输契约发布后，实现只依赖 HTTP/API 或不可变导出包的 Release Adapter；禁止导入 KB Python 包或引用 KB 工作树。
-- 使用 KB 官方 fixture 验证 `strategy-input-ref.v1`、Release Manifest、`manifest_hash` 对象、制品大小/哈希、published 状态和游标语义；官方 fixture 原始字节不得改写。
+- 建立可执行 transport capability 门；公共 HTTP/export 契约未固定时必须在 I/O 前拒绝，真实 acquisition 进入 Stage 3，禁止导入 KB Python 包或引用 KB 工作树补协议。
+- 使用 KB 官方 fixture 验证 `strategy-input-ref.v1`、Release Manifest、`manifest_hash` 对象、制品大小/哈希、状态摘要交叉绑定和游标语义；官方 fixture 原始字节不得改写，摘要不得冒充当前 authority。
 - 使用 InvestSystem 失败注入 fixture 验证撤回状态事件、篡改和不兼容输入的失败关闭，不把自建负例冒充 KB 官方 fixture。
 - 将 KB 公共对象显式映射为 provider-neutral `VerifiedKnowledgeInput`，保存确定性 `ArtifactConsumptionReceipt`，并把获取与状态检查另存为 append-only Observation。
 - 建立真正独立的黑盒 consumer contract tests；测试进程不能 import KB 模块，也不能通过同进程内部客户端伪装为外部消费。
 - 保持两仓 required CI 完全独立；KB 契约变更只能触发显式兼容性检查或依赖更新提交/变更集，不能自动修改或阻塞另一仓主线。
 
-当前进展（尚未构成阶段完成）：
+完成结果：
 
 - 已按 Git 对象固定 20 个官方文件及其 blob、字节数和 SHA-256，其中包含全部 14 个锁定 v1 Schema、官方 lock、hash vector 和 Stage 6 reference consumer fixture；vendor 原始字节禁止换行重写。
 - 已建立独立的 `irkb-jsonl-v1` provider canonical 实现与向量测试；它与拒绝浮点数的 InvestSystem 自有 canonical 明确隔离。
-- 契约 catalog、消费 receipt/observation Schema 与模型、官方 reference fixture 的验证和 provider-neutral 窄投影已完成首个离线实现；fixture Adapter 现在只从已经验证的 Context→source 关系显式生成 `ReleaseRetentionClosure`、全部制品 bytes 和每个 Release 的完整 Manifest 快照，不把 fixture 中出现的 Release 集合猜成依赖闭包，也不把 contract-test 的 `published` 冒充当前授权。
-- SQLite 已提升到 `user_version=2`：持久化确定性 Receipt、三类 append-only Observation、完整五字段 Release 身份、Manifest 文档快照、内容寻址制品和传递留存闭包；provider Manifest 的 self-excluding 语义哈希与 sealed 完整文档物理哈希/大小分开保存，并同时进入闭包承诺。canonical Receipt/closure 是聚合权威，关系 child row 只能是其精确索引。
-- `pin_run(manifest)` 已取消调用方 `artifact_ids` 旁路，只能从持久 Receipt/闭包推导 root 与全部 source Release/Manifest/制品；事务内重核 fetch、最新 status、local admission、闭包成员当前 `published` 状态、完整聚合和 CAS 字节。provider status 以 `previous_status_event_hash` 形成从 sequence 1 开始的连续链，允许精确重复确认最新事件但拒绝重映射/旧事件回放；线性 `supersedes`、不可回拨 current head、终态撤回、admission 失效及 `persisted_at <= run.created_at <= pin clock` 共同阻止陈旧或倒置因果的 `published/authorized` 重放。
-- 当前固定 KB 提交缺少锁定的公共 HTTP envelope/OpenAPI 与不可变 export-package 契约，所以 HTTP/export transport 和真实当前状态获取仍未实现；在完整失败矩阵、隔离 CI 与阶段完成门满足前，不得称为可用 Adapter 或真实 Release 消费能力。
+- 契约 catalog、消费 receipt/observation Schema 与模型、官方 reference fixture 的验证和 provider-neutral 窄投影已完成离线实现；fixture verifier/projector 只从已经验证的 Context→source 关系显式生成 `ReleaseRetentionClosure`、全部制品 bytes 和每个 Release 的完整 Manifest 快照，不把 fixture 中出现的 Release 集合猜成依赖闭包，也不把 contract-test 的 `published` 冒充当前授权。
+- SQLite 已提升到 `user_version=3`：除确定性 Receipt、三类 append-only Observation、完整五字段 Release 身份、Manifest 快照、CAS 和传递留存闭包外，还持久化严格 canonical 的 `RunReleaseStatusConfirmation`、全闭包 items 和 run binding。provider Manifest 语义哈希与 sealed 文档物理哈希/大小继续分轴保存；canonical parent 是聚合权威，关系 child row 只能是其精确索引。
+- `pin_run(manifest, confirmation)` 已取消调用方 `artifact_ids` 旁路，只能从持久 Receipt/闭包推导 root 与全部 source Release/Manifest/制品；事务内重核 fetch、current published status、local admission、受信 authority、最大年龄/时钟偏差、全闭包状态事件、完整聚合和 CAS 字节。authority 默认空集合；provider status 连续链、线性 `supersedes`、不可回拨 current head、终态撤回和真实持久化因果共同阻止陈旧授权。
+- 非空已验证 v2 无损升级到 v3，并把全部旧 pin 写入不可变 quarantine；后注入 confirmation/binding 不能恢复普通运行，历史材料仍可审计。
+- 两种批准 transport 在 I/O 前以稳定 blocker code 拒绝。当前固定 KB 提交缺少锁定的公共 HTTP envelope/OpenAPI、不可变 export-package 和完整 current-status response 契约，因此真实 acquisition、鉴权、重试、原始响应留存与 authority 启用明确进入 Stage 3，不作为 Stage 2A 已实现能力。
 
 完成门：
 
@@ -508,17 +512,19 @@ InvestSystem 合成策略 fixture
 - 未知 Schema、裸字符串 `manifest_hash`、哈希/大小不符、非法状态和撤回均 fail closed。
 - 策略层只接收 `VerifiedKnowledgeInput`，不知道 KB 传输类型。
 - 固定版本和 fixture 来源可审计，重复适配结果幂等。
-- Receipt/Observation/闭包的持久化、重试、冲突、撤回、缓存损坏、原子 pin、source 留存和独立 `audit_replay` 失败矩阵在 SQLite v2 上通过。
+- Receipt/Observation/闭包/confirmation 的持久化、重试、冲突、撤回、缓存损坏、原子 pin、source 留存、legacy quarantine 和独立 `audit_replay` 失败矩阵在 SQLite v3 上通过。
+- 默认 authority 为空；官方 fixture 的状态摘要不能授权新 run；HTTP/export 未支持入口在任何 I/O 前失败关闭。
+- 锁定环境、Windows/Linux required CI 和 100 个失败矩阵测试 ID 均有成功证据。
 
-验收证据：显式依赖更新提交/变更集、固定版本/字节/哈希清单、独立 consumer 测试、失败矩阵、`ArtifactConsumptionReceipt`、Observations 与 DTO 示例。
+验收证据：[Stage 2A 正式验收记录](docs/validation/stage2a-acceptance.md)、实现提交 `01073c1`、GitHub Actions run `30744115034`、固定版本/字节/哈希清单、[失败矩阵](docs/validation/stage2a-failure-matrix.md)、`ArtifactConsumptionReceipt`、Observations、Retention Closure、Run Status Confirmation 与 DTO 示例。
 
-明确不做：不把 KB Stage 6A 交付面完成解释为 Context Pack 已公网部署，不要求正式 Release 正例，不访问 KB 内部目录、代码或数据库，不建立双仓 required CI。
+明确不做：不把 KB Stage 6A 交付面完成解释为 Context Pack 已公网部署，不把固定 fixture 称为真实当前状态，不实现或猜测缺少公共契约的 HTTP/export transport，不访问 KB 内部目录、代码或数据库，不建立双仓 required CI。
 
 ### Stage 2B：最小 approved 策略切片
 
 状态：`not_started`
 
-目标：完全基于 provider-neutral DTO 和 InvestSystem 自有合成 fixture，实现第 6 节的最小订单/合同策略路径，与 Stage 2A 并行推进。
+目标：在已完成的 Stage 2A provider-neutral 消费/准入基线上，完全使用 InvestSystem 自有合成 fixture 实现第 6 节的最小订单/合同策略路径，不依赖 KB 服务或正式 Release。
 
 进入条件：
 
@@ -555,12 +561,14 @@ InvestSystem 合成策略 fixture
 - Stage 2A 和 Stage 2B 已完成。
 - KB Stage 6A 已于 `2026-07-30` 正式完成，provider 基线 `58ed9c5`、验收记录 `6ea33c4`、快照边界澄清 `1d6b823`、正式 Schema/lock、API—Release 一致性证据和撤回能力可供审计；该条件已经满足。KB 是否已有第二台机器快照副本属于其后续灾备门，不是 InvestSystem 的进入条件。
 - InvestSystem 通过显式依赖更新提交/变更集固定所需正式基线；不得自动跟随 KB 分支、Tag 或最新 Release。
+- KB 已发布且 InvestSystem 已固定 HTTP envelope/OpenAPI、immutable export package 与 current-status response/event 的公共 Schema、lock 和官方 fixture；缺少任一契约时对应 transport/authority 保持 `not_supported`，不得按内部实现猜测。
 - 正式传输核验可使用 `rel_10e257ad87734d7bb5cadc55e7b444e7`；Stage 3 的策略 smoke 和完成门还要求一个包含所需 Context Pack 的精确 Published Release。该制品当前未在公网 Stage 6A 数据集中交付，须由 KB 通过版本化只读 API 或授权的不可变导出包正式提供后再固定，InvestSystem 不得直接读取 KB 本地活动库或工作树代替交付。
 
 工作内容：
 
 - 使用只读 scope 通过正式 HTTP API 或授权的不可变导出包精确获取 `dataset_release_id` 和 `artifact_id`，禁止调用管理写 API。
 - 验证发布状态、Schema、Manifest、结构化 `manifest_hash`、制品大小/哈希、PIT 和撤回状态。
+- 由已认证 transport 保存 HTTP current-status 原始响应或 export 中的等价状态证据到 InvestSystem 自有不可变 CAS，重算 `response_bytes_hash`，并由 Adapter 而不是调用方构造 `RunReleaseStatusConfirmation`；只有固定 contract hash 的 authority policy 才能启用。
 - 将已验证制品复制到 InvestSystem 自有内容寻址缓存，保存 `ArtifactConsumptionReceipt`、`ArtifactFetchObservation`、`ReleaseStatusObservation`、`ReleaseAdmissionObservation` 和 `VerifiedKnowledgeInput`；provider 状态与本地准入分开记录，StrategyRunManifest 引用本次准入所用的三个 observation ID。
 - 先用 Stage 6A 正式 `market-daily` Release 验证真实传输、权限、Manifest、制品、状态、Receipt 和 Observations；该核验不创建虚假的 Context Pack、StrategyRunManifest 或订单/合同结论。
 - 待正式 Context Pack 通过受支持发布面交付后，用它运行真实策略 smoke；若不包含订单/合同正例或关键时点，预期结果可以是 `ABSTAIN`，不得推动 KB 修改事实来配合测试。
@@ -572,6 +580,7 @@ InvestSystem 合成策略 fixture
 - 正式 `market-daily` Release 的传输与审计链通过，且正式 Context Pack 的获取、验证、映射、策略 smoke 和审计链端到端成功；业务结果可以是 `ABSTAIN`。
 - 篡改、撤回、权限、未知 Schema、Manifest 不一致和 PIT 错误均在策略启动前 `BLOCKED`。
 - StrategyRunManifest 引用本次准入使用的 Fetch/Status/AdmissionObservation ID；状态事件身份与本地准入结果可分别审计，而 observation ID、时间和端点不进入确定性 `replay_hash`。
+- 每个新 run 的 immutable confirmation binding 可追溯到已认证 transport 的原始状态证据，且其响应哈希、authority contract、全闭包 status event 与 SQLite 投影均可重算；不能仅凭调用方自填 self hash 获得准入。
 - 历史运行使用精确制品，不通过 `latest` 漂移；KB 离线时仍可按留存政策确定性重放。
 - 不依赖 KB 工作树、内部目录、数据库、Python 包、环境、缓存、volume 或 required CI。
 
@@ -739,11 +748,11 @@ InvestSystem 合成策略 fixture
 | 工作 | 当前安排 | 对 InvestSystem 的影响 |
 |---|---|---|
 | KB Stage 6A：发布交付面 | 已于 `2026-07-30` 正式完成；当前文档 HEAD `1d6b823` 已与 origin 对齐，正式验收记录为 `6ea33c4` | 此 KB 阶段条件已满足；第二台机器快照属于 KB 后续灾备门，不阻塞 InvestSystem |
-| KB provider/contract 基线 `58ed9c5` | 两组 Linux CI、schema `0021`、API/制品交付、撤回和短期 HTTP 验收已由 KB PLAN v2.20 记录完成 | 可作为 Stage 2A 显式依赖更新的固定起点；不自动跟随 KB HEAD |
-| KB 公共 Schema/lock/官方 fixture | 已由 Stage 2A 显式依赖更新变更集固定 20 个官方文件的字节和来源哈希 | Stage 2A 只做公共契约与 Adapter，不阻塞 Stage 2B |
+| KB provider/contract 基线 `58ed9c5` | 两组 Linux CI、schema `0021`、API/制品交付、撤回和短期 HTTP 验收已由 KB PLAN v2.20 记录完成 | 已作为 Stage 2A 显式依赖更新的固定起点；后续仍不自动跟随 KB HEAD |
+| KB 公共 Schema/lock/官方 fixture | Stage 2A 已显式固定 20 个官方文件的字节和来源哈希并完成离线验收 | 为 Stage 3 的显式 transport 契约更新提供基线，不阻塞 Stage 2B |
 | KB Release/API 一致性与撤回 | 由 KB 仓库负责 | InvestSystem 只消费并验证外部行为 |
-| 最小策略切片 | 使用 InvestSystem 合成 fixture | Stage 2B 与 2A 并行，不依赖 KB 服务或正式 Release |
-| KB Stage 6B：真实消费者 | 在本仓库实现 | Stage 2A 建 Adapter，Stage 3 做正式 Release E2E |
+| 最小策略切片 | 使用 InvestSystem 合成 fixture | Stage 2B 经用户批准后可独立启动，不依赖 KB 服务或正式 Release |
+| KB Stage 6B：真实消费者 | 在本仓库实现 | Stage 2A 已关闭离线消费/准入内核；Stage 3 实现认证 transport 与正式 Release E2E |
 | Stage 6A 正式 `market-daily` Release | `rel_10e257ad87734d7bb5cadc55e7b444e7`，只有 16 条行情样本 | 可做正式传输/Receipt 核验；不得冒充 Context Pack 或策略 smoke |
 | 正式 Context Pack Release 交付 | 阶段 4/5 正式数据尚未进入当前公网数据集；须由 KB 另行备份、对账、授权并通过正式发布面提供 | 只阻塞 Stage 3 策略 smoke、Stage 3 完成和后续 Stage 6，不阻塞 Stage 1、2A、2B、4 或 5 |
 | 跨仓兼容/E2E | 显式、按需、非阻塞任务 | 只测公共发布面；不得成为任一仓 required CI |
@@ -798,7 +807,8 @@ InvestSystem 合成策略 fixture
 - 若通过兄弟目录、把 KB editable install 当依赖、`PYTHONPATH`、submodule、链接、共享 DB/cache/volume 或双仓 required CI 求方便，会形成不可审计的隐式耦合。
 - KB 官方 contract fixture、InvestSystem 合成策略 fixture、失败注入 fixture 和正式 Release 若标识不清，可能把传输测试、策略测试、故障测试或真实证据相互冒充。
 - 当前公网发布面没有正式 Context Pack；直接读取 KB 本地活动库或工作树来绕过交付会破坏双仓边界。未来正式交付的 Context Pack 也未必包含订单/合同正例和完整时点；把合理的 `ABSTAIN` 误判成集成失败，会诱导为测试而污染 KB 事实。
-- Stage 1 已实现 SQLite 状态/准入、精确 run pin 和独立 `audit_replay` 读取边界，但真实 Adapter 与策略运行编排尚未实现；Stage 2A/2B 接入时若绕过原子准入 API，仍可能错误复用已撤回输入。
+- Stage 2A 已实现 SQLite v3 的全闭包状态确认、原子 run pin 和独立 `audit_replay` 边界，但真实 transport 与策略运行编排尚未实现；未来 Stage 2B/3 编排若绕过该准入 API，仍可能错误复用已撤回或无法确认的输入。
+- Stage 3 的真实 authority 不能只信任调用方填写的 `authority_id`、contract hash、无密钥 confirmation self hash 或 `response_bytes_hash`；必须由已认证只读 transport 构造，并在 InvestSystem 自有不可变 CAS 中保留和重核原始响应/导出证据。
 - Gate 2/3/4、市场状态、成本、风险、退出和若干 E 级事件定义仍含 `hypothesis` 或 `TBD`。
 - 2019—2026 的历史 PIT、题材成员、市场预期和首次可见时间可能不可恢复；正确处理是 `ABSTAIN`，不是事后补齐。
 - Gate 3 的历史市场预期重建可能成为最大的数据缺口。
@@ -841,9 +851,9 @@ InvestSystem 合成策略 fixture
 |---|---|---|---|
 | Stage 0 | PLAN v0.4 用户批准；PRD v0.3 需求基线批准；ADR-0001；根/产业文档同步；工程栈、单输入、双传输面、SQLite、缓存和撤回政策冻结；remote 核查；`upstream` push 禁用且 dry-run 在联网前以 128 失败 | 无 | `completed` |
 | Stage 1 | [正式验收记录](docs/validation/stage1-acceptance.md)；实现提交 `f8d58f2`；安装前后环境基线；自有 `pyproject.toml`、可重复 hash lock、TOML；editable `--no-deps --no-build-isolation`；provider-neutral DTO 与 `0.1.0-draft` Schema；规范 JSON/哈希/时钟；构造级规则成熟度防线；SQLite 状态/准入、精确子集 pin、内容寻址缓存和独立审计重放；共享环境及全新锁定环境均为 `194 passed, 3 skipped`；GitHub Actions run `30636576903` 的 Windows/Linux 作业均成功 | 无 | `completed` |
-| Stage 2A | 已在 `codex/stage2` 启动；从固定提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 引入 20 个官方文件并记录原始字节/来源哈希；provider canonical、catalog、receipt/observation、显式 retention closure、reference fixture 验证/投影、SQLite v2 持久化与 receipt-derived atomic pin 已进入实现和测试 | 锁定的公共 HTTP envelope/OpenAPI 与 export-package 契约；HTTP/export transport；真实当前状态获取；完整失败矩阵、隔离 CI 与阶段验收 | `in_progress` |
+| Stage 2A | [正式验收记录](docs/validation/stage2a-acceptance.md)；实现提交 `01073c1`；固定 KB 提交 `58ed9c5` 的 20 个官方文件；provider canonical/catalog/reference fixture；Receipt/Observation/Retention Closure；SQLite v3 run-scoped confirmation、默认拒绝 authority、全闭包原子 pin、legacy quarantine、失败矩阵；GitHub Actions run `30744115034` 的 Windows/Linux 作业均成功 | 无；真实 HTTP/export/current-status transport 与 authority 启用属于 Stage 3，不是 Stage 2A 缺口 | `completed` |
 | Stage 2B | 研究材料和 PRD 草案 | approved 最小规则包、五类结果 golden matrix、Manifest、DecisionRecord、replay | `not_started` |
-| Stage 3 | KB Stage 6A 已正式完成；`rel_10e257ad87734d7bb5cadc55e7b444e7` 可用于正式传输核验，但只有 `market-daily` 样本 | Stage 2A/2B、正式依赖更新、正式 Context Pack 受支持交付、传输与策略两类 smoke、离线 replay、非阻塞 E2E | `not_started` |
+| Stage 3 | Stage 2A 已完成；KB Stage 6A 已正式完成；`rel_10e257ad87734d7bb5cadc55e7b444e7` 可用于正式传输核验，但只有 `market-daily` 样本 | Stage 2B；锁定的公共 HTTP/export/current-status 契约；认证 transport、原始响应留存/重核、正式 Context Pack 受支持交付、两类 smoke、离线 replay与非阻塞 E2E | `not_started` |
 | Stage 4 | 规则占位和研究审计 | approved 规则包、引擎、测试 | `not_started` |
 | Stage 5 | 需求级边界 | 市场规则、组合、执行、P&L 回放 | `not_started` |
 | Stage 6 | 研究方法要求 | 预注册、正式历史验证和报告 | `not_started` |
@@ -855,13 +865,12 @@ InvestSystem 合成策略 fixture
 
 ## 13. 近期执行顺序
 
-Stage 0 与 Stage 1 已完成，Stage 2A 已启动。下一步执行顺序为：
+Stage 0、Stage 1 与 Stage 2A 已完成。下一步执行顺序为：
 
-1. 继续 Stage 2A：在已经完成的离线 catalog、canonical、receipt/observation、reference fixture、retention closure 与 SQLite v2 原子持久化基础上补齐完整失败矩阵和隔离 CI；公共 HTTP/export 契约发布前保持传输层 fail closed，不以内部文件或临时协议代替。
-2. Stage 2B 开工前由用户批准最小合成场景和规则包；不得用默认业务假设代替批准。
-3. 2A/2B 完成后可进入 Stage 4，在其中逐项批准并实现完整 P0 规则；Stage 4 完成后进入 Stage 5，均无需等待 KB 部署。
-4. KB Stage 6A 完成条件已经满足；2A/2B 完成后进入 Stage 3，先核验现有正式 `market-daily` Release 的传输链，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
-5. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
+1. Stage 2B 开工前由用户批准最小合成订单/合同场景和 approved 规则包；不得用默认业务假设代替批准。
+2. Stage 2B 完成后可进入 Stage 4，在其中逐项批准并实现完整 P0 规则；Stage 4 完成后进入 Stage 5，均无需等待 KB 部署。
+3. Stage 3 继续保持 `not_started`，直到公共 HTTP/export/current-status 契约可被固定；届时先由认证 transport 核验现有正式 `market-daily` Release 并保留原始响应证据，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
+4. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
 
 ---
 
@@ -878,3 +887,4 @@ Stage 0 与 Stage 1 已完成，Stage 2A 已启动。下一步执行顺序为：
 | `v0.7` | 2026-07-31 | `active` | 以共享环境、全新锁定环境和 GitHub Actions Windows/Linux 成功证据关闭 Stage 1；登记正式验收记录、确定性锚点、跨仓隔离和未实现能力，令 Stage 2A/2B 成为尚未启动的下一并行阶段。 |
 | `v0.8` | 2026-07-31 | `active` | 在 `codex/stage2` 启动 Stage 2A，固定 KB 提交 `58ed9c5` 的 20 个官方公共契约/fixture 文件并登记 canonical、catalog、receipt/observation 和 reference fixture 在研进展；明确公共 HTTP envelope/export-package 契约、传输层、SQLite v2、持久 observation 和 receipt-derived atomic pin 仍缺失，Stage 2B 仍未启动。 |
 | `v0.9` | 2026-08-01 | `active` | 完成 Stage 2A 的 provider-neutral retention closure、官方 fixture 显式 Context→source 留存材料、Observation v0.2 与 SQLite v2 正式持久化/连续 provider status hash chain/receipt-derived atomic pin；明确 Manifest 语义哈希与 sealed 文档哈希分离并共同进入闭包、canonical aggregate/数据库 head 防回拨和真实持久化因果门、非空 v1 fail closed，且 HTTP/export transport、真实当前状态获取和策略能力仍未实现。 |
+| `v1.0` | 2026-08-02 | `active` | 以实现提交 `01073c1`、锁定环境 `396 passed, 4 skipped`、100 个失败矩阵测试 ID及 GitHub Actions run `30744115034` 的 Windows/Linux 成功证据关闭 Stage 2A；登记 SQLite v3 run-scoped confirmation、默认拒绝 authority、严格 canonical aggregate、全闭包原子 pin、legacy v2 quarantine 和 transport I/O 前失败关闭，并把真实 HTTP/export/current-status acquisition、认证 authority 和原始响应留存明确归入 Stage 3。 |
