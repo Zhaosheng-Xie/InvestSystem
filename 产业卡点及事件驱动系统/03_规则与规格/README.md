@@ -2,9 +2,11 @@
 
 下一阶段在此冻结可机器执行的规则。首个纵向切片应先批准最小规则包，再扩展完整策略。建议顺序：
 
-当前 Stage 2B-0 批准安全契约已完成。首个最小规则包以 `draft_for_owner_approval` 进入本目录；在 owner 逐项批准并登记精确版本/哈希前，它只能用于设计审阅，不得被代码解释为 `approved`，也不得产生 `TRADE_READY` 或非零仓位。
+Stage 2B 已完成并通过[正式验收](../../docs/validation/stage2b-acceptance.md)。owner 明确确认首个最小规则包全部 22 项，并以精确 canonical machine bundle 和 `RuleApprovalRecord` 登记；策略组合点只接受该记录签发的精确 capability，通用默认 registry 继续为空。批准严格限于 `stage2b_synthetic_validation`，只允许 `research` + `validation_only=true`，不授权 backtest、paper、shadow、live、仓位或订单。
 
-- [最小订单合同纵向切片规则包 v0.1](最小订单合同纵向切片规则包_v0.1.md)：`draft_for_owner_approval / 未生效、不可执行`。
+- [最小订单合同纵向切片规则包 v0.1](最小订单合同纵向切片规则包_v0.1.md)：`approved / implemented for stage2b_synthetic_validation only`。
+- [机器 rule bundle](机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.rule-bundle.json)：完整确定语义和授权边界的 canonical 运行制品；Markdown binding 只供追踪，运行时不得解析 Markdown。
+- [RuleApprovalRecord](机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.approval.json)：精确绑定 strategy、bundle、version、hash、批准人、时间、scope 和来源记录。
 
 1. `KB输入引用与失败关闭规格_v0.1.md`
 2. `StrategyRunManifest与决策审计规格_v0.1.md`
@@ -15,7 +17,7 @@
 7. `风险与目标仓位政策_v0.1.md`
 8. `A股成交规则版本表_v0.1.md`
 
-只有标记为 `approved` 且通过对应测试的规则可进入正式回测。
+规则只有在标记为 `approved`、通过对应测试且 approval scope 明确包含目标运行模式时，才可进入该模式。本规则包的 scope 不包含回测。
 
 KB 只提供已发布事实、证据引用和 Context Pack，不提供 E0—E7、Gate、利润桥或估值结论。任何规则不得依赖 KB SQLite、`raw/`、`staging/` 或内部实现，也不得把策略判断写回 KB。
 

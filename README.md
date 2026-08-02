@@ -6,18 +6,18 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v1.1](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2A completed / Stage 2B in_progress`。Stage 2B 当前只推进不产生业务结论的 `2B-0`，最小规则包仍等待 owner 逐项批准。
+- [InvestSystem 实施计划 v1.2](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed`。Stage 3 的正式 Release E2E 与 Stage 4 的完整产业策略可以按各自进入条件独立推进。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
-Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 `0.1.0-draft` 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。这些只证明工程骨架可安装、可测试、可审计；KB Adapter、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合、执行和 P&L 均尚未实现。
+Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。
 
 Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)。仓库从 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定了 20 个官方文件，并完成 provider canonical、契约 catalog、官方 reference fixture 验证/窄投影，以及 InvestSystem 自有 SQLite v3 的 Receipt、append-only Observation、传递留存闭包、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。根 Receipt 只标识本次策略输入的制品，留存闭包另行固定实际依赖的 source Release、Manifest 快照与制品；调用方不能声明任意 pin 子集。真实 current-status authority 默认为空，且两种批准 transport 都会在 I/O 前显式失败关闭，因此官方 fixture 不能授权新 run。HTTP/export acquisition、完整 status-event 正文、认证 transport、原始响应留存和真实 authority 启用归入 Stage 3。Stage 2A 本身没有交付任何策略能力。
 
-Stage 2B 已在独立 `codex/stage2b` 分支开工。[当前开发状态](docs/validation/stage2b-development-status.md)显示 `2B-0` 已交付 synthetic validation provenance、精确规则哈希批准边界和确定性 replay 契约，并起草待批准的最小订单/合同规则包；它不实现 E3.5/E4、四道门或任何 `TRADE_READY/REJECT/ABSTAIN` 业务语义。PRD 中仍标为 `hypothesis` 的阈值必须经 owner 明确批准后，才可进入 `2B-1`。
+Stage 2B 已通过[正式验收](docs/validation/stage2b-acceptance.md)：最小订单/合同规则包 22 项、精确批准 capability、24 个正常策略向量、10 个 admission failure 向量、E3.5/E4、四道门、窄版利润桥/预期/估值、完整 DecisionRecord 和确定性 replay 已形成。它只授权匿名合成 `research` validation；不授权 backtest、paper、shadow、live、仓位、组合、订单或资金部署，也不证明策略有效。
 
 ## 当前项目
 
-- [产业卡点及事件驱动系统](产业卡点及事件驱动系统/README.md)：PRD v0.3 已于 `2026-07-31` 批准；Stage 2B-0 已启动，最小规则规格正在形成但尚未获批，仍无策略实现。
+- [产业卡点及事件驱动系统](产业卡点及事件驱动系统/README.md)：PRD v0.3 已于 `2026-07-31` 批准；Stage 2B 最小合成 research-validation 切片已验收，完整产业策略仍未实现。
   - 第一读物：[需求文档 v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md)
   - 研究裁决：[框架审计与研究结论 v0.1](产业卡点及事件驱动系统/02_研究/框架审计与研究结论_v0.1.md)
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md)：独立、延后的研究轨道，需求与规则尚未冻结；默认不向产业策略提供信号。
@@ -55,6 +55,6 @@ Stage 1 本地开发复用 `E:\Conda\envs\Data_Analysis` 的 Python 3.12，但�
 
 1. 原始材料只提供观点和案例，不自动成为交易规则。
 2. `01_需求/` 定义系统为什么做、做什么、何时算完成。
-3. 各项目 `03_规则与规格/` 中标记为 `approved` 的规则才可进入回测。
+3. 规则只有在 `approved` 且批准 scope 明确包含目标运行模式时才可进入该模式；Stage 2B 的批准不包含回测。
 4. 带 `draft`、`hypothesis` 或 `placeholder` 的参数禁止用于实盘。
 5. 任何允许进入 paper，或未来另行获准进入 live 的版本，都必须能追溯到精确 KB 输入引用、消费回执、`StrategyRunManifest`、规则版本、测试报告和人工批准记录。

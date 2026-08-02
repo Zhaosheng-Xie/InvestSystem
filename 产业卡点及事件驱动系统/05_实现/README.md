@@ -1,10 +1,12 @@
 # 实现
 
-需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架已经通过根级[正式验收](../../docs/validation/stage1-acceptance.md)，Stage 2A 的离线 Release 消费与准入内核也已通过[正式验收](../../docs/validation/stage2a-acceptance.md)。Stage 2B 已启动，且不产生业务结论的 `2B-0` 已完成；最小规则包经 owner 明确批准后，才进入实现策略语义的 `2B-1`。首个纵向切片随后以正式 Release E2E 汇合：
+需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架、Stage 2A 的离线 Release 消费与准入内核，以及 Stage 2B 的最小合成策略纵向切片均已通过根级正式验收。Stage 2B 实现精确批准 capability、可信 fixture registry、E3.5/E4、四道门、窄版利润桥/预期/估值、DecisionRecord 与 replay；批准严格限于匿名合成 `research` validation，不授权 backtest、paper、shadow、live、仓位或订单。
 
-2B-0 的实际交付和未实现清单见根级 [Stage 2B 开发状态](../../docs/validation/stage2b-development-status.md)。
+Stage 2B 的实际交付、验证锚点和未授权范围见根级 [Stage 2B 正式验收记录](../../docs/validation/stage2b-acceptance.md)。
 
-- 策略轨：`合成策略 fixture → provider-neutral DTO → StrategyRunManifest → E3.5/E4 → 四道门 → 利润桥/预期/估值 → DecisionRecord + replay_hash`；
+Stage 2B runner 只能从精确 canonical [machine rule bundle](../03_规则与规格/机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.rule-bundle.json) 与对应 [RuleApprovalRecord](../03_规则与规格/机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.approval.json) 获取 capability；Markdown 只供审阅与追踪，运行时不得解析。strategy/bundle/version/hash/scope、SyntheticValidationInput flags、四类输入 hash、fixture registry pin 或 `run_mode=research` 任一不匹配都必须在 evaluator 前失败关闭。`SHADOW_ONLY` 是合成结果标签，不构成 shadow 运行授权。
+
+- 已完成的最小策略轨：`合成策略 fixture → provider-neutral DTO → StrategyRunManifest → E3.5/E4 → 四道门 → 利润桥/预期/估值 → DecisionRecord + replay_hash`；
 - 已完成契约轨：`KB 官方 fixture → 离线 validator/projector → ArtifactConsumptionReceipt + Observations + ReleaseRetentionClosure → provider-neutral DTO`；真实只读 Adapter/transport 属于 Stage 3；
 - 正式传输核验：`精确 market-daily Published Release → Manifest/制品/状态/权限/Receipt 验证`，不生成订单/合同策略结论；
 - 汇合：`精确 Context Pack Published Release → 同一策略入口 → 真实只读 smoke（允许 ABSTAIN）`。
@@ -45,5 +47,5 @@ Stage 2A 本轮在该骨架上新增：
 
 研究、风险和执行必须分层；任何研究 Agent 都不得访问交易凭证或直接提交订单。
 
-第一阶段用 InvestSystem 自有、明确标记的合成策略 fixture 打通完整链路；真实 KB Context Pack 只做只读 smoke/E2E，允许正确结果为 `ABSTAIN`，不得要求 KB 为正例定制事实。
+Stage 2B 已用 InvestSystem 自有、明确标记的合成策略 fixture 打通最小链路；真实 KB Context Pack 仍只做后续只读 smoke/E2E，允许正确结果为 `ABSTAIN`，不得要求 KB 为正例定制事实。当前 runner 只返回不可变审计对象，不写 SQLite；durable persistence 需在后续以独立契约和失败语义批准。
 

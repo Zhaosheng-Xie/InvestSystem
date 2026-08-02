@@ -23,3 +23,16 @@
 
 `TRADE_READY`、`SHADOW_ONLY`、`REJECT`、`ABSTAIN` 和 `BLOCKED` 案例必须共同入库；`BLOCKED` 使用独立失败 fixture，任何 `TRADE_READY` 合成正例必须先有对应 `approved` 规则，且不代表 paper/live 授权。
 
+## Stage 2B 已验收证据
+
+Stage 2B 的[正式验收记录](../../docs/validation/stage2b-acceptance.md)固定：
+
+- 24 个正常策略向量和 10 个独立 admission failure 向量；
+- 四类正常结果及 pre-engine `BLOCKED`；
+- Gate 等号、略低、超过 100 位精度、PIT、证据独立、三值逻辑和短路边界；
+- 24 个正常向量 evaluator 恰好调用一次，所有输入/治理错配 evaluator 调用为零；
+- 真实 runner 的 StrategyRunManifest、DecisionRecord、Replay 与 JSON Schema 闭合；
+- 全仓 `617 passed, 4 skipped`，两轮独立审阅 `P0=0 / P1=0`。
+
+这些证据只适用于匿名合成 `research` validation。历史回测、paper、shadow、live、仓位、订单及策略有效性仍没有授权或验证结论。
+
