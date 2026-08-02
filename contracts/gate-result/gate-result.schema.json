@@ -1,20 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.investsystem.local/gate-result/0.1.0-draft/gate-result.schema.json",
-  "title": "GateResult (InvestSystem Draft)",
-  "description": "InvestSystem-owned audit result for one non-compensating gate. This draft defines representation only, not approved strategy semantics.",
+  "$id": "https://schemas.investsystem.local/gate-result/0.2.0-draft/gate-result.schema.json",
+  "title": "GateResult (InvestSystem Draft v0.2)",
+  "description": "InvestSystem-owned audit result for one non-compensating gate, including explicit not-evaluated short-circuit state.",
   "x-owner": "InvestSystem",
   "x-contract-status": "draft",
-  "x-contract-version": "0.1.0-draft",
+  "x-contract-version": "0.2.0-draft",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema_version",
     "gate_id",
+    "evaluation_state",
     "outcome",
     "evaluated_at",
     "rule_id",
     "rule_version",
+    "short_circuit_reason_code",
     "supporting_fact_ids",
     "conflicting_fact_ids",
     "reason_codes",
@@ -22,7 +24,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "0.1.0-draft"
+      "const": "0.2.0-draft"
     },
     "gate_id": {
       "enum": [
@@ -32,13 +34,26 @@
         "gate_4_executable_return"
       ]
     },
-    "outcome": {
+    "evaluation_state": {
       "enum": [
-        "PASS",
-        "REJECT",
-        "ABSTAIN",
-        "BLOCKED",
-        "SHADOW_ONLY"
+        "evaluated",
+        "not_evaluated"
+      ]
+    },
+    "outcome": {
+      "anyOf": [
+        {
+          "enum": [
+            "PASS",
+            "REJECT",
+            "ABSTAIN",
+            "BLOCKED",
+            "SHADOW_ONLY"
+          ]
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "evaluated_at": {
@@ -49,6 +64,16 @@
     },
     "rule_version": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "short_circuit_reason_code": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "supporting_fact_ids": {
       "type": "array",
@@ -77,5 +102,45 @@
         "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/jsonValue"
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "evaluation_state": {
+            "const": "evaluated"
+          }
+        },
+        "required": [
+          "evaluation_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "outcome": {
+            "enum": [
+              "PASS",
+              "REJECT",
+              "ABSTAIN",
+              "BLOCKED",
+              "SHADOW_ONLY"
+            ]
+          },
+          "short_circuit_reason_code": {
+            "const": null
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "outcome": {
+            "const": null
+          },
+          "short_circuit_reason_code": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+          }
+        }
+      }
+    }
+  ]
 }

@@ -10,6 +10,9 @@ from invest_system import (
     CanonicalJsonError,
     DecisionRecord,
     DecisionState,
+    GateEvaluationState,
+    GateOutcome,
+    GateResult,
     HashDigest,
     PositionState,
     RuleStatus,
@@ -152,6 +155,38 @@ def test_manifest_is_deterministic_for_fixed_inputs(
     assert strategy_run_manifest.canonical_sha256() == (strategy_run_manifest.canonical_sha256())
 
 
+def test_gate_result_distinguishes_evaluated_from_short_circuited(
+    gate_result: GateResult,
+) -> None:
+    skipped = replace(
+        gate_result,
+        evaluation_state=GateEvaluationState.NOT_EVALUATED,
+        outcome=None,
+        short_circuit_reason_code="prior_gate_rejected",
+    )
+
+    assert skipped.outcome is None
+    assert skipped.short_circuit_reason_code == "prior_gate_rejected"
+
+    with pytest.raises(ValueError, match="evaluated gates require an outcome"):
+        replace(gate_result, outcome=None)
+    with pytest.raises(ValueError, match="must not have a short_circuit"):
+        replace(gate_result, short_circuit_reason_code="not_applicable")
+    with pytest.raises(ValueError, match="require outcome=None"):
+        replace(
+            gate_result,
+            evaluation_state=GateEvaluationState.NOT_EVALUATED,
+            outcome=GateOutcome.REJECT,
+            short_circuit_reason_code="prior_gate_rejected",
+        )
+    with pytest.raises(ValueError, match="require a short_circuit"):
+        replace(
+            gate_result,
+            evaluation_state=GateEvaluationState.NOT_EVALUATED,
+            outcome=None,
+        )
+
+
 def test_manifest_requires_full_commit_and_pit_cutoff(
     strategy_run_manifest: StrategyRunManifest,
 ) -> None:
@@ -176,14 +211,25 @@ def test_models_enforce_unapproved_rule_maturity_at_construction(
 ) -> None:
     for run_mode in (RunMode.BACKTEST, RunMode.PAPER):
         with pytest.raises(ValueError, match="requires research or shadow"):
-            replace(strategy_run_manifest, run_mode=run_mode)
+            replace(strategy_run_manifest, run_mode=run_mode, validation_only=False)
 
-    assert replace(strategy_run_manifest, run_mode=RunMode.SHADOW).run_mode is RunMode.SHADOW
+    assert (
+        replace(
+            strategy_run_manifest,
+            run_mode=RunMode.SHADOW,
+            validation_only=False,
+        ).run_mode
+        is RunMode.SHADOW
+    )
     assert (
         replace(
             strategy_run_manifest,
             rule_status=RuleStatus.APPROVED,
+            rule_approval_id="future_manifest_approval",
+            rule_approval_record_hash=HashDigest(algorithm="sha256", value="7" * 64),
+            rule_approval_scope="future_manifest_test_scope",
             run_mode=RunMode.PAPER,
+            validation_only=False,
         ).run_mode
         is RunMode.PAPER
     )
@@ -203,12 +249,51 @@ def test_models_enforce_unapproved_rule_maturity_at_construction(
     approved = replace(
         decision_record,
         rule_status=RuleStatus.APPROVED,
+        rule_approval_id="future_test_approval",
+        rule_approval_record_hash=HashDigest(algorithm="sha256", value="9" * 64),
+        rule_approval_scope="future_position_test_scope",
+        run_mode=RunMode.PAPER,
+        synthetic=False,
+        validation_only=False,
+        not_a_published_release=False,
+        not_strategy_evidence=False,
+        authorizes_positions=True,
         decision_state=DecisionState.TRADE_READY,
         position_state=PositionState.STARTER,
         target_weight="0.01",
         approver="human_approver_001",
     )
     assert approved.rule_status is RuleStatus.APPROVED
+
+
+def test_stage2b_synthetic_approval_never_authorizes_positions_or_orders(
+    decision_record: DecisionRecord,
+) -> None:
+    stage2b = replace(
+        decision_record,
+        rule_status=RuleStatus.APPROVED,
+        rule_approval_id="stage2b_test_approval",
+        rule_approval_record_hash=HashDigest(algorithm="sha256", value="8" * 64),
+        rule_approval_scope="stage2b_synthetic_validation",
+        decision_state=DecisionState.TRADE_READY,
+    )
+    assert stage2b.position_state is PositionState.FLAT
+    assert stage2b.target_weight == "0"
+    assert stage2b.approver is None
+
+    violations = (
+        {"run_mode": RunMode.SHADOW},
+        {"validation_only": False},
+        {"synthetic": False},
+        {"authorizes_positions": True},
+        {"authorizes_orders": True},
+        {"position_state": PositionState.STARTER},
+        {"target_weight": "0.01"},
+        {"approver": "human_approver_001"},
+    )
+    for changes in violations:
+        with pytest.raises(ValueError):
+            replace(stage2b, **changes)
 
 
 def test_contract_collections_reject_unordered_inputs_and_preserve_list_order(

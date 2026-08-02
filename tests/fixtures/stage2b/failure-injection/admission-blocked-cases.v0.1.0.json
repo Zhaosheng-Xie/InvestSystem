@@ -1,0 +1,158 @@
+{
+  "cases": [
+    {
+      "case_id": "INJECT-BLOCK-HASH-001",
+      "description": "声明的 Manifest 语义哈希与验证字节不一致。",
+      "expected_blocker_code": "MANIFEST_HASH_MISMATCH",
+      "failure_input": {
+        "actual_manifest_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "dataset_release_id": "synthetic_release_failure_hash_001",
+        "declared_manifest_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "fixture_id": "synthetic_failure_injection_hash_001",
+        "input_id": "synthetic_failure_input_hash_001"
+      },
+      "failure_layer": "stage2a_admission"
+    },
+    {
+      "case_id": "INJECT-BLOCK-WITHDRAWN-001",
+      "description": "精确 Release 的最新受信当前状态为 withdrawn。",
+      "expected_blocker_code": "RELEASE_WITHDRAWN",
+      "failure_input": {
+        "dataset_release_id": "synthetic_release_failure_withdrawn_001",
+        "fixture_id": "synthetic_failure_injection_withdrawn_001",
+        "input_id": "synthetic_failure_input_withdrawn_001",
+        "provider_current_status": "withdrawn",
+        "provider_status_observed_at": "2026-01-06T01:35:30.000000Z"
+      },
+      "failure_layer": "stage2a_admission"
+    },
+    {
+      "case_id": "INJECT-BLOCK-SCHEMA-001",
+      "description": "输入引用使用未固定且不受支持的 Schema 版本。",
+      "expected_blocker_code": "SCHEMA_UNSUPPORTED",
+      "failure_input": {
+        "dataset_release_id": "synthetic_release_failure_schema_001",
+        "fixture_id": "synthetic_failure_injection_schema_001",
+        "input_id": "synthetic_failure_input_schema_001",
+        "release_manifest_schema_version": "999.0.0",
+        "supported_release_manifest_schema_versions": [
+          "1.0.0"
+        ]
+      },
+      "failure_layer": "stage2a_validation"
+    },
+    {
+      "case_id": "INJECT-BLOCK-FUTURE-001",
+      "description": "被使用事实的 available_at 晚于 knowledge_cutoff。",
+      "expected_blocker_code": "PIT_VIOLATION",
+      "failure_input": {
+        "dataset_release_id": "synthetic_release_failure_future_001",
+        "fact_available_at": "2026-01-06T01:35:00.000001Z",
+        "fact_id": "SYN-FAILURE-FACT-FUTURE-001",
+        "fixture_id": "synthetic_failure_injection_future_001",
+        "input_id": "synthetic_failure_input_future_001",
+        "knowledge_cutoff": "2026-01-06T01:35:00.000000Z"
+      },
+      "failure_layer": "pit_validation"
+    },
+    {
+      "case_id": "INJECT-BLOCK-REVIEW-LATE-001",
+      "description": "消费者复核时点晚于决策时点，strategy_usable_at 不合法。",
+      "expected_blocker_code": "STRATEGY_USABLE_AT_AFTER_DECISION",
+      "failure_input": {
+        "available_at": "2026-01-06T01:35:00.000000Z",
+        "dataset_release_id": "synthetic_release_failure_review_late_001",
+        "decision_at": "2026-01-06T01:36:00.000000Z",
+        "fixture_id": "synthetic_failure_injection_review_late_001",
+        "input_id": "synthetic_failure_input_review_late_001",
+        "strategy_reviewed_at": "2026-01-06T01:36:00.000001Z"
+      },
+      "failure_layer": "pit_validation"
+    },
+    {
+      "case_id": "INJECT-BLOCK-DECIMAL-TYPE-001",
+      "description": "通过原始 JSON lexeme 注入 number 类型比例；测试向量自身不含浮点值。",
+      "expected_blocker_code": "DECIMAL_STRING_REQUIRED",
+      "failure_input": {
+        "dataset_release_id": "synthetic_release_failure_decimal_type_001",
+        "fixture_id": "synthetic_failure_injection_decimal_type_001",
+        "input_id": "synthetic_failure_input_decimal_type_001",
+        "materialization_instruction": {
+          "json_pointer": "/profit_bridge_input/incremental_gross_margin_rate/value",
+          "replacement_json_lexeme": "0.10",
+          "replacement_json_type": "number"
+        }
+      },
+      "failure_layer": "synthetic_input_validation"
+    },
+    {
+      "case_id": "INJECT-BLOCK-DECIMAL-CANONICAL-001",
+      "description": "十进制字符串带不允许的前导零。",
+      "expected_blocker_code": "DECIMAL_STRING_NONCANONICAL",
+      "failure_input": {
+        "dataset_release_id": "synthetic_release_failure_decimal_canonical_001",
+        "fixture_id": "synthetic_failure_injection_decimal_canonical_001",
+        "input_id": "synthetic_failure_input_decimal_canonical_001",
+        "json_pointer": "/profit_bridge_input/incremental_gross_margin_rate/value",
+        "replacement_value": "00.10"
+      },
+      "failure_layer": "synthetic_input_validation"
+    },
+    {
+      "case_id": "INJECT-BLOCK-AUTHORITY-001",
+      "description": "合成验证输入试图将 authorizes_orders 改为 true。",
+      "expected_blocker_code": "SYNTHETIC_INPUT_AUTHORITY_FORBIDDEN",
+      "failure_input": {
+        "authorizes_orders": true,
+        "dataset_release_id": "synthetic_release_failure_authority_001",
+        "fixture_id": "synthetic_failure_injection_authority_001",
+        "input_id": "synthetic_failure_input_authority_001",
+        "validation_only": true
+      },
+      "failure_layer": "synthetic_input_validation"
+    },
+    {
+      "case_id": "INJECT-BLOCK-PROVENANCE-001",
+      "description": "至少一个合成 Fact 缺少 not_a_published_release=true。",
+      "expected_blocker_code": "SYNTHETIC_FACT_PROVENANCE_MISSING",
+      "failure_input": {
+        "dataset_release_id": "synthetic_release_failure_provenance_001",
+        "fact_id": "SYN-FAILURE-FACT-PROVENANCE-001",
+        "fact_metadata": {
+          "synthetic": true
+        },
+        "fixture_id": "synthetic_failure_injection_provenance_001",
+        "input_id": "synthetic_failure_input_provenance_001"
+      },
+      "failure_layer": "synthetic_input_validation"
+    },
+    {
+      "case_id": "INJECT-BLOCK-RULE-HASH-001",
+      "description": "规则包文本身份匹配，但 canonical hash 不在受信批准登记表。",
+      "expected_blocker_code": "RULE_BUNDLE_HASH_NOT_APPROVED",
+      "failure_input": {
+        "bundle_id": "industrial_event_minimum_order_contract_slice",
+        "bundle_version": "0.1.0",
+        "dataset_release_id": "synthetic_release_failure_rule_hash_001",
+        "fixture_id": "synthetic_failure_injection_rule_hash_001",
+        "input_id": "synthetic_failure_input_rule_hash_001",
+        "unknown_bundle_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "failure_layer": "rule_governance"
+    }
+  ],
+  "expected_common": {
+    "decision_record_created": false,
+    "decision_state": "BLOCKED",
+    "normal_strategy_run_manifest_created": false,
+    "run_failure_audit_required": true,
+    "strategy_evaluator_calls": 0
+  },
+  "fixture_class": "invest_system_failure_injection",
+  "fixture_matrix_schema_version": "0.1.0",
+  "must_not_reuse_normal_fixture_identity": true,
+  "not_a_published_release": true,
+  "not_strategy_evidence": true,
+  "synthetic": true,
+  "validation_only": true
+}

@@ -1,0 +1,423 @@
+{
+  "base_input_ref": "normal/synthetic-order-contract-base.v0.1.0.json",
+  "cases": [
+    {
+      "case_id": "SYN-TRADE-001",
+      "description": "完整 E4、两条独立证据链和四门全部通过，但不产生仓位或订单权限。",
+      "expected": {
+        "actual_weight": "0",
+        "approved_weight": "0",
+        "approver": null,
+        "authorizes_orders": false,
+        "authorizes_positions": false,
+        "decision_record_created": true,
+        "decision_state": "TRADE_READY",
+        "derived": {
+          "base_scenario_equity_value": {
+            "amount": "9500000000",
+            "currency": "CNY"
+          },
+          "downside_loss": {
+            "display_6dp": "0.080000",
+            "raw": "0.0800"
+          },
+          "explicit_friction_rate": {
+            "display_6dp": "0.005000",
+            "raw": "0.0050"
+          },
+          "first_executable_market_cap": {
+            "amount": "8000000000.00",
+            "currency": "CNY"
+          },
+          "incremental_gross_profit": {
+            "amount": "210000000.00",
+            "currency": "CNY"
+          },
+          "net_base_remaining_return": {
+            "display_6dp": "0.182500",
+            "raw": "0.1825"
+          },
+          "net_downside_return": {
+            "display_6dp": "-0.080000",
+            "raw": "-0.0800"
+          },
+          "ntm_incremental_free_cash_flow": {
+            "amount": "120000000.00",
+            "currency": "CNY"
+          },
+          "ntm_incremental_parent_normalized_profit": {
+            "amount": "140000000.00",
+            "currency": "CNY"
+          },
+          "profit_materiality": {
+            "display_6dp": "0.140000",
+            "raw": "0.14"
+          },
+          "reward_to_downside": {
+            "display_6dp": "2.281250",
+            "raw": "2.28125"
+          }
+        },
+        "event_state": "E4",
+        "expectation_class": "unexpected",
+        "falsifiers": [
+          "binding_minimum_obligation_effectively_cancelled",
+          "profit_attribution_path_invalidated"
+        ],
+        "gate_results": [
+          {
+            "evaluation_state": "evaluated",
+            "gate_id": "gate_1_authenticity",
+            "outcome": "PASS",
+            "reason_codes": [
+              "e4_and_independent_evidence_satisfied"
+            ],
+            "rule_id": "S2B-G1-001",
+            "rule_version": "0.1.0"
+          },
+          {
+            "evaluation_state": "evaluated",
+            "gate_id": "gate_2_profit_materiality",
+            "outcome": "PASS",
+            "reason_codes": [
+              "profit_materiality_at_or_above_threshold"
+            ],
+            "rule_id": "S2B-G2-001",
+            "rule_version": "0.1.0"
+          },
+          {
+            "evaluation_state": "evaluated",
+            "gate_id": "gate_3_expectation_gap",
+            "outcome": "PASS",
+            "reason_codes": [
+              "binding_minimum_was_explicitly_zero"
+            ],
+            "rule_id": "S2B-G3-001",
+            "rule_version": "0.1.0"
+          },
+          {
+            "evaluation_state": "evaluated",
+            "gate_id": "gate_4_executable_return",
+            "outcome": "PASS",
+            "reason_codes": [
+              "return_odds_and_window_pass"
+            ],
+            "rule_id": "S2B-G4-001",
+            "rule_version": "0.1.0"
+          }
+        ],
+        "position_state": "FLAT",
+        "replay_hash": {
+          "algorithm": "sha256",
+          "must_be_deterministic": true,
+          "value_format": "64_lowercase_hex"
+        },
+        "run_mode": "research",
+        "strategy_evaluator_calls": 1,
+        "strategy_run_manifest_created": true,
+        "target_weight": "0",
+        "validation_only": true
+      },
+      "materialized_identity": {
+        "dataset_release_id": "synthetic_release_stage2b_optical_contract_001",
+        "fixture_id": "synthetic_fixture_stage2b_optical_contract_001",
+        "input_id": "synthetic_input_stage2b_optical_contract_001"
+      },
+      "mutations": []
+    },
+    {
+      "case_id": "SYN-SHADOW-001",
+      "description": "框架协议需后续实际订单，最低经济义务未闭合。",
+      "expected": {
+        "actual_weight": "0",
+        "approved_weight": "0",
+        "approver": null,
+        "authorizes_orders": false,
+        "authorizes_positions": false,
+        "decision_record_created": true,
+        "decision_state": "SHADOW_ONLY",
+        "derived": {},
+        "event_state": "E3.5",
+        "expectation_class": null,
+        "gate_results": [
+          {
+            "evaluation_state": "evaluated",
+            "gate_id": "gate_1_authenticity",
+            "outcome": "SHADOW_ONLY",
+            "reason_codes": [
+              "minimum_economic_obligation_not_closed"
+            ],
+            "rule_id": "S2B-G1-001",
+            "rule_version": "0.1.0"
+          },
+          {
+            "evaluation_state": "not_evaluated",
+            "gate_id": "gate_2_profit_materiality",
+            "outcome": null,
+            "rule_id": "S2B-G2-001",
+            "rule_version": "0.1.0",
+            "short_circuit_reason_code": "event_state_e3_5"
+          },
+          {
+            "evaluation_state": "not_evaluated",
+            "gate_id": "gate_3_expectation_gap",
+            "outcome": null,
+            "rule_id": "S2B-G3-001",
+            "rule_version": "0.1.0",
+            "short_circuit_reason_code": "event_state_e3_5"
+          },
+          {
+            "evaluation_state": "not_evaluated",
+            "gate_id": "gate_4_executable_return",
+            "outcome": null,
+            "rule_id": "S2B-G4-001",
+            "rule_version": "0.1.0",
+            "short_circuit_reason_code": "event_state_e3_5"
+          }
+        ],
+        "position_state": "FLAT",
+        "replay_hash": {
+          "algorithm": "sha256",
+          "must_be_deterministic": true,
+          "value_format": "64_lowercase_hex"
+        },
+        "run_mode": "research",
+        "strategy_evaluator_calls": 1,
+        "strategy_run_manifest_created": true,
+        "target_weight": "0",
+        "validation_only": true
+      },
+      "materialized_identity": {
+        "dataset_release_id": "synthetic_release_stage2b_shadow_001",
+        "fixture_id": "synthetic_fixture_stage2b_shadow_001",
+        "input_id": "synthetic_input_stage2b_shadow_001"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/commercial_event/binding_minimum_contract_amount/amount",
+          "value": "0"
+        },
+        {
+          "op": "replace",
+          "path": "/commercial_event/binding_minimum_obligation",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/commercial_event/orders_required_for_any_purchase",
+          "value": true
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-REJECT-001",
+      "description": "E4 完整但毛利率降至 0.15，利润重要性只有 0.02。",
+      "expected": {
+        "actual_weight": "0",
+        "approved_weight": "0",
+        "approver": null,
+        "authorizes_orders": false,
+        "authorizes_positions": false,
+        "decision_record_created": true,
+        "decision_state": "REJECT",
+        "derived": {
+          "incremental_gross_profit": {
+            "amount": "90000000.00",
+            "currency": "CNY"
+          },
+          "ntm_incremental_free_cash_flow": {
+            "amount": "0.00",
+            "currency": "CNY"
+          },
+          "ntm_incremental_parent_normalized_profit": {
+            "amount": "20000000.00",
+            "currency": "CNY"
+          },
+          "profit_materiality": {
+            "display_6dp": "0.020000",
+            "raw": "0.02"
+          }
+        },
+        "event_state": "E4",
+        "expectation_class": null,
+        "gate_results": [
+          {
+            "evaluation_state": "evaluated",
+            "gate_id": "gate_1_authenticity",
+            "outcome": "PASS",
+            "reason_codes": [
+              "e4_and_independent_evidence_satisfied"
+            ],
+            "rule_id": "S2B-G1-001",
+            "rule_version": "0.1.0"
+          },
+          {
+            "evaluation_state": "evaluated",
+            "gate_id": "gate_2_profit_materiality",
+            "outcome": "REJECT",
+            "reason_codes": [
+              "profit_materiality_below_threshold"
+            ],
+            "rule_id": "S2B-G2-001",
+            "rule_version": "0.1.0"
+          },
+          {
+            "evaluation_state": "not_evaluated",
+            "gate_id": "gate_3_expectation_gap",
+            "outcome": null,
+            "rule_id": "S2B-G3-001",
+            "rule_version": "0.1.0",
+            "short_circuit_reason_code": "gate_2_reject"
+          },
+          {
+            "evaluation_state": "not_evaluated",
+            "gate_id": "gate_4_executable_return",
+            "outcome": null,
+            "rule_id": "S2B-G4-001",
+            "rule_version": "0.1.0",
+            "short_circuit_reason_code": "gate_2_reject"
+          }
+        ],
+        "position_state": "FLAT",
+        "replay_hash": {
+          "algorithm": "sha256",
+          "must_be_deterministic": true,
+          "value_format": "64_lowercase_hex"
+        },
+        "run_mode": "research",
+        "strategy_evaluator_calls": 1,
+        "strategy_run_manifest_created": true,
+        "target_weight": "0",
+        "validation_only": true
+      },
+      "materialized_identity": {
+        "dataset_release_id": "synthetic_release_stage2b_reject_001",
+        "fixture_id": "synthetic_fixture_stage2b_reject_001",
+        "input_id": "synthetic_input_stage2b_reject_001"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profit_bridge_input/incremental_gross_margin_rate/value",
+          "value": "0.15"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-ABSTAIN-001",
+      "description": "不可撤销最低数量确认 E4，但价格、最低金额与可确认收入不可核验。",
+      "expected": {
+        "actual_weight": "0",
+        "approved_weight": "0",
+        "approver": null,
+        "authorizes_orders": false,
+        "authorizes_positions": false,
+        "decision_record_created": true,
+        "decision_state": "ABSTAIN",
+        "derived": {},
+        "event_state": "E4",
+        "expectation_class": null,
+        "gate_results": [
+          {
+            "evaluation_state": "evaluated",
+            "gate_id": "gate_1_authenticity",
+            "outcome": "PASS",
+            "reason_codes": [
+              "e4_minimum_quantity_and_evidence_satisfied"
+            ],
+            "rule_id": "S2B-G1-001",
+            "rule_version": "0.1.0"
+          },
+          {
+            "evaluation_state": "evaluated",
+            "gate_id": "gate_2_profit_materiality",
+            "outcome": "ABSTAIN",
+            "reason_codes": [
+              "price_and_recognizable_revenue_unknown"
+            ],
+            "rule_id": "S2B-G2-001",
+            "rule_version": "0.1.0"
+          },
+          {
+            "evaluation_state": "not_evaluated",
+            "gate_id": "gate_3_expectation_gap",
+            "outcome": null,
+            "rule_id": "S2B-G3-001",
+            "rule_version": "0.1.0",
+            "short_circuit_reason_code": "gate_2_abstain"
+          },
+          {
+            "evaluation_state": "not_evaluated",
+            "gate_id": "gate_4_executable_return",
+            "outcome": null,
+            "rule_id": "S2B-G4-001",
+            "rule_version": "0.1.0",
+            "short_circuit_reason_code": "gate_2_abstain"
+          }
+        ],
+        "position_state": "FLAT",
+        "replay_hash": {
+          "algorithm": "sha256",
+          "must_be_deterministic": true,
+          "value_format": "64_lowercase_hex"
+        },
+        "run_mode": "research",
+        "strategy_evaluator_calls": 1,
+        "strategy_run_manifest_created": true,
+        "target_weight": "0",
+        "validation_only": true
+      },
+      "materialized_identity": {
+        "dataset_release_id": "synthetic_release_stage2b_abstain_001",
+        "fixture_id": "synthetic_fixture_stage2b_abstain_001",
+        "input_id": "synthetic_input_stage2b_abstain_001"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/commercial_event/binding_minimum_contract_amount",
+          "value": null
+        },
+        {
+          "op": "replace",
+          "path": "/commercial_event/binding_minimum_quantity",
+          "value": {
+            "unit": "transceiver",
+            "value": "100000"
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/evidence_chains/0/fact_ids/2",
+          "value": "SYN-FACT-MINIMUM-QUANTITY-001"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence_chains/1/fact_ids/1",
+          "value": "SYN-FACT-BUYER-MINIMUM-QUANTITY-001"
+        },
+        {
+          "op": "replace",
+          "path": "/profit_bridge_input/ntm_recognizable_revenue",
+          "value": null
+        }
+      ]
+    }
+  ],
+  "fixture_class": "invest_system_synthetic_strategy_golden_matrix",
+  "fixture_matrix_schema_version": "0.1.0",
+  "not_a_published_release": true,
+  "not_strategy_evidence": true,
+  "rule_bundle_reference": {
+    "approval_id": "rule_approval_stage2b_minimum_order_contract_v0_1_0",
+    "approval_scope": "stage2b_synthetic_validation",
+    "bundle_id": "industrial_event_minimum_order_contract_slice",
+    "bundle_version": "0.1.0",
+    "canonical_hash_resolution": "trusted_approval_registry_at_test_time",
+    "rule_status_required": "approved",
+    "strategy_id": "industrial_bottleneck_event"
+  },
+  "synthetic": true,
+  "validation_only": true
+}

@@ -10,33 +10,44 @@ from invest_system.domain.replay import (
     REPLAY_CANONICAL_PROFILE_VERSION,
     REPLAY_ENVELOPE_SCHEMA_VERSION,
     ReplayEnvelope,
+    ReplayValidationError,
     compute_replay_hash,
     verify_replay_hash,
 )
 from invest_system.domain.rule_approval import (
     RULE_BUNDLE_DOCUMENT_SCHEMA_VERSION,
+    ApprovedRuleCapability,
+    RuleApprovalRecord,
+    RuleApprovalRegistry,
+    RuleApprovalScope,
     RuleBundleDocument,
 )
 from invest_system.domain.strategy_input import SyntheticValidationInput
-from invest_system.models import (
-    HashDigest,
-    RuleStatus,
-    RunMode,
-    StrategyRunManifest,
-    VerifiedKnowledgeInput,
+from invest_system.domain.synthetic_fixture import (
+    ApprovedSyntheticFixtureCapability,
+    SyntheticFixtureRegistration,
+    SyntheticFixtureRegistry,
 )
+from invest_system.models import HashDigest, RuleStatus, StrategyRunManifest, VerifiedKnowledgeInput
 
 
 def make_hash(character: str) -> HashDigest:
     return HashDigest(algorithm="sha256", value=character * 64)
 
 
-def make_envelope(
+def prepare_replay_inputs(
     *,
     manifest: StrategyRunManifest,
     verified_knowledge_input: VerifiedKnowledgeInput,
     fixture_id: str = "synthetic_fixture_stage2b_001",
-) -> ReplayEnvelope:
+) -> tuple[
+    StrategyRunManifest,
+    SyntheticValidationInput,
+    RuleBundleDocument,
+    ApprovedRuleCapability,
+    ApprovedSyntheticFixtureCapability,
+    HashDigest,
+]:
     synthetic_input = SyntheticValidationInput.from_verified_input(
         fixture_id=fixture_id,
         fixture_version="0.1.0-draft",
@@ -46,14 +57,101 @@ def make_envelope(
         schema_version=RULE_BUNDLE_DOCUMENT_SCHEMA_VERSION,
         strategy_id=manifest.strategy_id,
         bundle_id="synthetic_stage2b_replay_boundary",
-        bundle_version=manifest.rule_bundle_version,
-        declared_status=manifest.rule_status,
+        bundle_version="0.1.0",
+        declared_status=RuleStatus.APPROVED,
         rules={"business_semantics": False, "validation_only": True},
     )
-    return ReplayEnvelope.from_synthetic_validation(
+    approval = RuleApprovalRecord(
+        approval_id="synthetic_stage2b_replay_approval",
+        strategy_id=rule_bundle.strategy_id,
+        bundle_id=rule_bundle.bundle_id,
+        bundle_version=rule_bundle.bundle_version,
+        bundle_hash=rule_bundle.bundle_hash(),
+        approved_by="repository_owner",
+        approved_at=datetime(2026, 8, 2, 9, tzinfo=UTC),
+        approval_scope=RuleApprovalScope.STAGE2B_SYNTHETIC_VALIDATION,
+        approval_source_ref="stage2b_synthetic_replay_test_authorization",
+    )
+    capability = RuleApprovalRegistry((approval,)).require(rule_bundle)
+    case_hash = HashDigest(
+        algorithm="sha256",
+        value=verified_knowledge_input.canonical_sha256(),
+    )
+    prepared_manifest = replace(
+        manifest,
+        rule_bundle_id=rule_bundle.bundle_id,
+        rule_bundle_version=rule_bundle.bundle_version,
+        rule_bundle_hash=rule_bundle.bundle_hash(),
+        rule_status=RuleStatus.APPROVED,
+        rule_approval_id=capability.approval_id,
+        rule_approval_record_hash=capability.approval_record_hash,
+        rule_approval_scope=capability.approval_scope.value,
+        input_envelope_hash=HashDigest(
+            algorithm="sha256",
+            value=synthetic_input.canonical_sha256(),
+        ),
+        strategy_case_envelope_hash=HashDigest(
+            algorithm="sha256",
+            value=synthetic_input.canonical_sha256(),
+        ),
+        strategy_case_input_hash=case_hash,
+        synthetic_fixture_id=synthetic_input.fixture_id,
+        synthetic_fixture_version=synthetic_input.fixture_version,
+        synthetic_fixture_payload_hash=synthetic_input.fixture_payload_hash,
+    )
+    fixture_registration = SyntheticFixtureRegistration.from_trusted_case(
+        registration_id=f"replay_registration_{fixture_id}",
+        strategy_id=prepared_manifest.strategy_id,
+        case_id="synthetic_replay_case_stage2b_001",
+        strategy_input=synthetic_input,
+        strategy_case_envelope=synthetic_input,
+        strategy_case_input_hash=case_hash,
+    )
+    fixture_registry = SyntheticFixtureRegistry((fixture_registration,))
+    fixture_capability = fixture_registry.require_strategy_case(
+        strategy_id=prepared_manifest.strategy_id,
+        case_id=fixture_registration.case_id,
+        strategy_input=synthetic_input,
+        strategy_case_envelope=synthetic_input,
+        strategy_case_input_hash=case_hash,
+    )
+    return (
+        prepared_manifest,
+        synthetic_input,
+        rule_bundle,
+        capability,
+        fixture_capability,
+        case_hash,
+    )
+
+
+def make_envelope(
+    *,
+    manifest: StrategyRunManifest,
+    verified_knowledge_input: VerifiedKnowledgeInput,
+    fixture_id: str = "synthetic_fixture_stage2b_001",
+) -> ReplayEnvelope:
+    prepared = prepare_replay_inputs(
         manifest=manifest,
+        verified_knowledge_input=verified_knowledge_input,
+        fixture_id=fixture_id,
+    )
+    (
+        prepared_manifest,
+        synthetic_input,
+        rule_bundle,
+        capability,
+        fixture_capability,
+        case_hash,
+    ) = prepared
+    return ReplayEnvelope.from_synthetic_validation(
+        manifest=prepared_manifest,
         strategy_input=synthetic_input,
         rule_bundle=rule_bundle,
+        approval_capability=capability,
+        fixture_capability=fixture_capability,
+        strategy_input_envelope=synthetic_input,
+        strategy_case_input_hash=case_hash,
         evaluated_at=datetime(2026, 7, 30, 8, tzinfo=UTC),
         semantic_output={
             "artifact_class": "synthetic_validation",
@@ -114,6 +212,8 @@ def test_run_and_transport_audit_identities_do_not_change_replay_hash(
         {"nested": {"run_id": "volatile_run"}},
         {"items": [{"release_status_observation_id": "volatile_status"}]},
         {"transport": {"endpoint": "https://provider.invalid"}},
+        {"path": {"temporary_path": "D:/tmp/volatile"}},
+        {"clock": {"wall_clock": "volatile"}},
     ],
 )
 def test_replay_envelope_rejects_self_and_volatile_audit_keys(
@@ -125,11 +225,8 @@ def test_replay_envelope_rejects_self_and_volatile_audit_keys(
         manifest=strategy_run_manifest,
         verified_knowledge_input=verified_knowledge_input,
     )
-    with pytest.raises(ValueError, match="reserved replay key"):
-        replace(
-            baseline,
-            semantic_output=semantic_output,  # type: ignore[arg-type]
-        )
+    with pytest.raises(ReplayValidationError, match="RESERVED_REPLAY_KEY"):
+        replace(baseline, semantic_output=semantic_output)  # type: ignore[arg-type]
 
 
 def test_replay_envelope_rejects_float_semantics(
@@ -147,6 +244,19 @@ def test_replay_envelope_rejects_float_semantics(
         )
 
 
+def test_replay_envelope_rejects_non_approved_rule_status(
+    strategy_run_manifest: StrategyRunManifest,
+    verified_knowledge_input: VerifiedKnowledgeInput,
+) -> None:
+    baseline = make_envelope(
+        manifest=strategy_run_manifest,
+        verified_knowledge_input=verified_knowledge_input,
+    )
+
+    with pytest.raises(ValueError, match="requires approved rules"):
+        replace(baseline, rule_status=RuleStatus.DRAFT)
+
+
 def test_replay_hash_changes_when_a_deterministic_input_changes(
     strategy_run_manifest: StrategyRunManifest,
     verified_knowledge_input: VerifiedKnowledgeInput,
@@ -158,7 +268,8 @@ def test_replay_hash_changes_when_a_deterministic_input_changes(
     changed_rule = replace(baseline, rule_bundle_hash=make_hash("8"))
     changed_seed = replace(baseline, random_seed=baseline.random_seed + 1)
     changed_clock = replace(
-        baseline, evaluated_at=baseline.evaluated_at + timedelta(microseconds=1)
+        baseline,
+        evaluated_at=baseline.evaluated_at + timedelta(microseconds=1),
     )
     changed_output = replace(
         baseline,
@@ -182,24 +293,21 @@ def test_replay_envelope_requires_utc_evaluation_clock(
     strategy_run_manifest: StrategyRunManifest,
     verified_knowledge_input: VerifiedKnowledgeInput,
 ) -> None:
-    synthetic_input = SyntheticValidationInput.from_verified_input(
-        fixture_id="synthetic_fixture_stage2b_001",
-        fixture_version="0.1.0-draft",
-        verified_knowledge_input=verified_knowledge_input,
-    )
-    rule_bundle = RuleBundleDocument(
-        schema_version=RULE_BUNDLE_DOCUMENT_SCHEMA_VERSION,
-        strategy_id=strategy_run_manifest.strategy_id,
-        bundle_id="synthetic_stage2b_replay_boundary",
-        bundle_version=strategy_run_manifest.rule_bundle_version,
-        declared_status=strategy_run_manifest.rule_status,
-        rules={"business_semantics": False},
+    manifest, synthetic_input, rule_bundle, capability, fixture_capability, case_hash = (
+        prepare_replay_inputs(
+            manifest=strategy_run_manifest,
+            verified_knowledge_input=verified_knowledge_input,
+        )
     )
     with pytest.raises(ValueError, match="timezone-aware UTC"):
         ReplayEnvelope.from_synthetic_validation(
-            manifest=strategy_run_manifest,
+            manifest=manifest,
             strategy_input=synthetic_input,
             rule_bundle=rule_bundle,
+            approval_capability=capability,
+            fixture_capability=fixture_capability,
+            strategy_input_envelope=synthetic_input,
+            strategy_case_input_hash=case_hash,
             evaluated_at=datetime(2026, 7, 30, 8),
             semantic_output={"validation_only": True},
         )
@@ -210,7 +318,7 @@ def test_replay_envelope_requires_utc_evaluation_clock(
     [
         {"strategy_id": "different_strategy"},
         {"rule_bundle_version": "0.1.1"},
-        {"rule_status": RuleStatus.HYPOTHESIS},
+        {"rule_bundle_id": "different_bundle"},
     ],
 )
 def test_replay_builder_rejects_manifest_and_rule_bundle_identity_drift(
@@ -218,54 +326,23 @@ def test_replay_builder_rejects_manifest_and_rule_bundle_identity_drift(
     verified_knowledge_input: VerifiedKnowledgeInput,
     manifest_change: dict[str, object],
 ) -> None:
-    synthetic_input = SyntheticValidationInput.from_verified_input(
-        fixture_id="synthetic_fixture_stage2b_001",
-        fixture_version="0.1.0-draft",
-        verified_knowledge_input=verified_knowledge_input,
-    )
-    rule_bundle = RuleBundleDocument(
-        schema_version=RULE_BUNDLE_DOCUMENT_SCHEMA_VERSION,
-        strategy_id=strategy_run_manifest.strategy_id,
-        bundle_id="synthetic_stage2b_replay_boundary",
-        bundle_version=strategy_run_manifest.rule_bundle_version,
-        declared_status=strategy_run_manifest.rule_status,
-        rules={"business_semantics": False},
+    manifest, synthetic_input, rule_bundle, capability, fixture_capability, case_hash = (
+        prepare_replay_inputs(
+            manifest=strategy_run_manifest,
+            verified_knowledge_input=verified_knowledge_input,
+        )
     )
 
     with pytest.raises(ValueError, match="must match the run Manifest"):
         ReplayEnvelope.from_synthetic_validation(
-            manifest=replace(strategy_run_manifest, **manifest_change),  # type: ignore[arg-type]
+            manifest=replace(manifest, **manifest_change),  # type: ignore[arg-type]
             strategy_input=synthetic_input,
             rule_bundle=rule_bundle,
-            evaluated_at=strategy_run_manifest.created_at,
-            semantic_output={"validation_only": True},
-        )
-
-
-def test_synthetic_replay_builder_rejects_non_research_run_modes(
-    strategy_run_manifest: StrategyRunManifest,
-    verified_knowledge_input: VerifiedKnowledgeInput,
-) -> None:
-    synthetic_input = SyntheticValidationInput.from_verified_input(
-        fixture_id="synthetic_fixture_stage2b_001",
-        fixture_version="0.1.0-draft",
-        verified_knowledge_input=verified_knowledge_input,
-    )
-    rule_bundle = RuleBundleDocument(
-        schema_version=RULE_BUNDLE_DOCUMENT_SCHEMA_VERSION,
-        strategy_id=strategy_run_manifest.strategy_id,
-        bundle_id="synthetic_stage2b_replay_boundary",
-        bundle_version=strategy_run_manifest.rule_bundle_version,
-        declared_status=strategy_run_manifest.rule_status,
-        rules={"business_semantics": False},
-    )
-
-    with pytest.raises(ValueError, match="requires research run_mode"):
-        ReplayEnvelope.from_synthetic_validation(
-            manifest=replace(strategy_run_manifest, run_mode=RunMode.SHADOW),
-            strategy_input=synthetic_input,
-            rule_bundle=rule_bundle,
-            evaluated_at=strategy_run_manifest.created_at,
+            approval_capability=capability,
+            fixture_capability=fixture_capability,
+            strategy_input_envelope=synthetic_input,
+            strategy_case_input_hash=case_hash,
+            evaluated_at=manifest.created_at,
             semantic_output={"validation_only": True},
         )
 
@@ -274,29 +351,26 @@ def test_replay_builder_rejects_strategy_input_reference_drift(
     strategy_run_manifest: StrategyRunManifest,
     verified_knowledge_input: VerifiedKnowledgeInput,
 ) -> None:
-    synthetic_input = SyntheticValidationInput.from_verified_input(
-        fixture_id="synthetic_fixture_stage2b_001",
-        fixture_version="0.1.0-draft",
-        verified_knowledge_input=verified_knowledge_input,
-    )
-    rule_bundle = RuleBundleDocument(
-        schema_version=RULE_BUNDLE_DOCUMENT_SCHEMA_VERSION,
-        strategy_id=strategy_run_manifest.strategy_id,
-        bundle_id="synthetic_stage2b_replay_boundary",
-        bundle_version=strategy_run_manifest.rule_bundle_version,
-        declared_status=strategy_run_manifest.rule_status,
-        rules={"business_semantics": False},
+    manifest, synthetic_input, rule_bundle, capability, fixture_capability, case_hash = (
+        prepare_replay_inputs(
+            manifest=strategy_run_manifest,
+            verified_knowledge_input=verified_knowledge_input,
+        )
     )
     changed_reference = replace(
-        strategy_run_manifest.strategy_input_ref,
+        manifest.strategy_input_ref,
         dataset_release_id="synthetic_release_stage2b_other_001",
     )
 
     with pytest.raises(ValueError, match="strategy input reference must match"):
         ReplayEnvelope.from_synthetic_validation(
-            manifest=replace(strategy_run_manifest, strategy_input_ref=changed_reference),
+            manifest=replace(manifest, strategy_input_ref=changed_reference),
             strategy_input=synthetic_input,
             rule_bundle=rule_bundle,
-            evaluated_at=strategy_run_manifest.created_at,
+            approval_capability=capability,
+            fixture_capability=fixture_capability,
+            strategy_input_envelope=synthetic_input,
+            strategy_case_input_hash=case_hash,
+            evaluated_at=manifest.created_at,
             semantic_output={"validation_only": True},
         )

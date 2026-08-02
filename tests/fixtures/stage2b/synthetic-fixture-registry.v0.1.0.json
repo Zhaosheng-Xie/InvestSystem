@@ -1,0 +1,812 @@
+{
+  "failure_registration_count": 10,
+  "failure_registrations": [
+    {
+      "case_id": "INJECT-BLOCK-AUTHORITY-001",
+      "dataset_release_id": "synthetic_release_failure_authority_001",
+      "expected_blocker_code": "SYNTHETIC_INPUT_AUTHORITY_FORBIDDEN",
+      "failure_layer": "synthetic_input_validation",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "d2cda485fbf8e1fd944dfea71167af8d71d326cebd22d4f586e024367c1680a9"
+      },
+      "fixture_id": "synthetic_failure_injection_authority_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_authority_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_authority_001",
+      "schema_version": "0.1.0-draft"
+    },
+    {
+      "case_id": "INJECT-BLOCK-DECIMAL-CANONICAL-001",
+      "dataset_release_id": "synthetic_release_failure_decimal_canonical_001",
+      "expected_blocker_code": "DECIMAL_STRING_NONCANONICAL",
+      "failure_layer": "synthetic_input_validation",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "ac828babcfd2f50582d22c317d258b44bc9a542daf3f1abfa3be9a033d94679c"
+      },
+      "fixture_id": "synthetic_failure_injection_decimal_canonical_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_decimal_canonical_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_decimal_canonical_001",
+      "schema_version": "0.1.0-draft"
+    },
+    {
+      "case_id": "INJECT-BLOCK-DECIMAL-TYPE-001",
+      "dataset_release_id": "synthetic_release_failure_decimal_type_001",
+      "expected_blocker_code": "DECIMAL_STRING_REQUIRED",
+      "failure_layer": "synthetic_input_validation",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "393c8cf28f43da216db582f3177e39d17c6dd7000dc78b43ba4d15a57097e590"
+      },
+      "fixture_id": "synthetic_failure_injection_decimal_type_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_decimal_type_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_decimal_type_001",
+      "schema_version": "0.1.0-draft"
+    },
+    {
+      "case_id": "INJECT-BLOCK-FUTURE-001",
+      "dataset_release_id": "synthetic_release_failure_future_001",
+      "expected_blocker_code": "PIT_VIOLATION",
+      "failure_layer": "pit_validation",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "5b538da2fca71bda1239dcc2a042033f7dbb65c2159715aaae06d7f41af1e320"
+      },
+      "fixture_id": "synthetic_failure_injection_future_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_future_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_future_001",
+      "schema_version": "0.1.0-draft"
+    },
+    {
+      "case_id": "INJECT-BLOCK-HASH-001",
+      "dataset_release_id": "synthetic_release_failure_hash_001",
+      "expected_blocker_code": "MANIFEST_HASH_MISMATCH",
+      "failure_layer": "stage2a_admission",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "6c2927568406cc1b0ff4e8ffbae0fbc7151edf3bd5dac2e1e0aa2b47b5796d91"
+      },
+      "fixture_id": "synthetic_failure_injection_hash_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_hash_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_hash_001",
+      "schema_version": "0.1.0-draft"
+    },
+    {
+      "case_id": "INJECT-BLOCK-PROVENANCE-001",
+      "dataset_release_id": "synthetic_release_failure_provenance_001",
+      "expected_blocker_code": "SYNTHETIC_FACT_PROVENANCE_MISSING",
+      "failure_layer": "synthetic_input_validation",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "b65c4d6f47e9a9d4bdf3cc253723f9c7e2b7437549867694ebe317b46e8cf7e1"
+      },
+      "fixture_id": "synthetic_failure_injection_provenance_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_provenance_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_provenance_001",
+      "schema_version": "0.1.0-draft"
+    },
+    {
+      "case_id": "INJECT-BLOCK-REVIEW-LATE-001",
+      "dataset_release_id": "synthetic_release_failure_review_late_001",
+      "expected_blocker_code": "STRATEGY_USABLE_AT_AFTER_DECISION",
+      "failure_layer": "pit_validation",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "acfd0bd26b3c2040a66d8bb00ae862468aa9a96db17e6a0cec5995f1b888d48b"
+      },
+      "fixture_id": "synthetic_failure_injection_review_late_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_review_late_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_review_late_001",
+      "schema_version": "0.1.0-draft"
+    },
+    {
+      "case_id": "INJECT-BLOCK-RULE-HASH-001",
+      "dataset_release_id": "synthetic_release_failure_rule_hash_001",
+      "expected_blocker_code": "RULE_BUNDLE_HASH_NOT_APPROVED",
+      "failure_layer": "rule_governance",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "5f33d02450ea290b61a1b14886b360b39f8e1ae69628530752350f1b8748639f"
+      },
+      "fixture_id": "synthetic_failure_injection_rule_hash_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_rule_hash_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_rule_hash_001",
+      "schema_version": "0.1.0-draft"
+    },
+    {
+      "case_id": "INJECT-BLOCK-SCHEMA-001",
+      "dataset_release_id": "synthetic_release_failure_schema_001",
+      "expected_blocker_code": "SCHEMA_UNSUPPORTED",
+      "failure_layer": "stage2a_validation",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "789ec829c2d22cc13a5573b3a94c62767881d48e57f51ebffa75fda145676e84"
+      },
+      "fixture_id": "synthetic_failure_injection_schema_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_schema_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_schema_001",
+      "schema_version": "0.1.0-draft"
+    },
+    {
+      "case_id": "INJECT-BLOCK-WITHDRAWN-001",
+      "dataset_release_id": "synthetic_release_failure_withdrawn_001",
+      "expected_blocker_code": "RELEASE_WITHDRAWN",
+      "failure_layer": "stage2a_admission",
+      "failure_payload_hash": {
+        "algorithm": "sha256",
+        "value": "623306d74d1459579e4bb4d071fa281cc765d1397a860a5b846f78b57c991d5c"
+      },
+      "fixture_id": "synthetic_failure_injection_withdrawn_001",
+      "fixture_version": "0.1.0",
+      "input_id": "synthetic_failure_input_withdrawn_001",
+      "registration_id": "stage2b_failure_fixture_inject_block_withdrawn_001",
+      "schema_version": "0.1.0-draft"
+    }
+  ],
+  "profile": "invest_system.stage2b.synthetic_fixture_registry.v1",
+  "registry_snapshot_hash": {
+    "algorithm": "sha256",
+    "value": "9c746809cf9d56bf54419dead7dbe33331b0fce9e17899993d1307795fb629d7"
+  },
+  "schema_version": "0.1.0-draft",
+  "strategy_registration_count": 24,
+  "strategy_registrations": [
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-ABSTAIN-001",
+      "dataset_release_id": "synthetic_release_stage2b_abstain_001",
+      "fixture_id": "synthetic_fixture_stage2b_abstain_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "d212d82b4998126b5ea245dd56f3cc28114c65a5fe9c041d973d52a54c719b83"
+      },
+      "input_id": "synthetic_input_stage2b_abstain_001",
+      "registration_id": "stage2b_strategy_fixture_syn_abstain_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "0ba7023d9a7768e2cbefb71999d184effd95ce278b666c57c5920cf0f4ae48a5"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "b8738c45ec0db49a3c69d8568c0e2958d6bb1f0794ebf5efa308a2def808d586"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "03911a89a195578f7d14908ea9eaa877d92aa37db1e522295c96cf64c14ccd82"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-E4-CANCELLABLE-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_e4_cancellable_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_e4_cancellable_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "47936c54ec3be4073d17ddb832fc2489ba15db20160991a220bce96599577033"
+      },
+      "input_id": "synthetic_input_stage2b_syn_e4_cancellable_001",
+      "registration_id": "stage2b_strategy_fixture_syn_e4_cancellable_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "4aed7c8a33f959f35e2cd41bcc5b91d9856abf1a0bcf32ee96b1e35abcd45531"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "afa330ff6d9a461c41dd7c33b438c47299a82932e651383ac0100840d2fb305a"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "6d83a2936e03181b58ff83adbdc08d8588e198245e1633357a950bd1be66861b"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-E4-NOT-EFFECTIVE-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_e4_not_effective_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_e4_not_effective_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "e04224d521dce950ddfd72f05f5e0d7831336f15f74864940003085ad7acb42a"
+      },
+      "input_id": "synthetic_input_stage2b_syn_e4_not_effective_001",
+      "registration_id": "stage2b_strategy_fixture_syn_e4_not_effective_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "360c890aad213f0839ed38ada63a3d91ee154d5ea1db915d1745d27ab48c8992"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "462b67f90e225be4d8bacb49c970108383c636a83c238cb0411813b94da3fe3a"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "882f5391a73dfe6f63f594c623d8c7b75a40c01f8979b4327431bd19f9c0b5c8"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-E4-OWNERSHIP-UNKNOWN-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_e4_ownership_unknown_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_e4_ownership_unknown_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "d2c23bfc6bbcac2f3cd7f0dc53c7c473f855b4d007e210b1f46c15dc8cd5a8b5"
+      },
+      "input_id": "synthetic_input_stage2b_syn_e4_ownership_unknown_001",
+      "registration_id": "stage2b_strategy_fixture_syn_e4_ownership_unknown_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "c2c78a06a4f36b3183629c104e47c6f095c4f46c7ce3dc6d8ad1eac89de2fd76"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "c941ec8d841eb4226403822cd3b33f11ab598c249a7f7b7022f807f0be6759c0"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "af5b2badb778c2d2c86054378a1b49b718b55cf3e209a6e33cc520360d39d563"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-E4-UNSIGNED-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_e4_unsigned_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_e4_unsigned_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "902db891d49d40919c0ce3709549a7bdbb61e3b232988e3c8b67d8dc1d4504dc"
+      },
+      "input_id": "synthetic_input_stage2b_syn_e4_unsigned_001",
+      "registration_id": "stage2b_strategy_fixture_syn_e4_unsigned_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "1b90b1ac421df31cf17e47f0f8860eb214bdc88c1192b2c4b1ca4905097923f5"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "09b147b3a75c4652893fcc51efe8ad8003e9f1fbd799873866c83ad8ee1d7888"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "30edebf89e234a2dacdee782250c5c4eb6d4bc92bee74d191a0d2dfc1f9cdb00"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-EVIDENCE-DUPLICATE-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_evidence_duplicate_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_evidence_duplicate_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "757865d2a3fc8b485969eb07fd0dacf49273bbbcc7f13db6b486f47f5710b87a"
+      },
+      "input_id": "synthetic_input_stage2b_syn_evidence_duplicate_001",
+      "registration_id": "stage2b_strategy_fixture_syn_evidence_duplicate_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "05001128a34651c16678f5191164be7d45a5a06a4af2f30df2a43ee8118c742d"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "e99fd6cc9263395fcaec86351f5e8c8baae5443cd0c0c6135ea3a4cd0fa1fcc0"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "9b6d2c235c57910f50437f3672f7e7a726903860e82b80f4f0fe694ca9fb5a27"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G2-BELOW-DISPLAY-EQUAL-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g2_below_display_equal_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g2_below_display_equal_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "80b0d4faa615af40efa1fa20345ea5121496fc7b198e7c70a03bd32ddfea5c34"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g2_below_display_equal_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g2_below_display_equal_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "990ad699d6a4163e485cf27f1aa9d678f19726710d7522257ae0d125a4a2a73d"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "086e8cb62c1e3c8d9d36f36b327d2c08f3109b5df7d3e9a866253c31d90ad37f"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "242224a8b7b8002252d6b4f7b61c684befe244016918e0df8517f57ec7ed10a6"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G2-BELOW-DISPLAY-EQUAL-PRECISION-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g2_below_display_equal_precision_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g2_below_display_equal_precision_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "d011a5e0ebd20080c60559af7dc1d3e311b64568600cdfb9f9f49256f3b12594"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g2_below_display_equal_precision_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g2_below_display_equal_precision_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "d3aaa55a734b9f7cd3cf071f8acc695547c5d6fd98934077ff3287e79dd98473"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "3717f112ebad543a23e826bfca84e4c33d5a4d6acdd1b33e31d2439c836b9b3d"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "3d53c8265e64d1e2c8a4e6c969a8e5cb160c4af492b4d5dca32171da392abdda"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G2-CURRENCY-MISMATCH-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g2_currency_mismatch_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g2_currency_mismatch_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "ea93ee70f703932fb28260b5a071c5608e8fd3b8e70c651eddddc15d0d2fadfc"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g2_currency_mismatch_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g2_currency_mismatch_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "e84bac5260f809c515e46f8b31e919b3e479d927e5834f956cf35dd344236969"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "3d4cbb217d018180308e1352d9b8d8ba321278e05eb89fec6cf0a0434d850162"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "0373aa886229ca29a3491ea483eedfdb3386da67661a62f0f62c584ed54dc766"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G2-DENOMINATOR-ZERO-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g2_denominator_zero_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g2_denominator_zero_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "cab5f9f5eda85e420c0356c81c72d7bdf5690e972fe336064081845d689bf9e3"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g2_denominator_zero_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g2_denominator_zero_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "274af2923036502441c7ddc19fd4ef607149029c182e37548f55d2754db1d5e6"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "32c019fbf45785c7337e978c94c4a4a518cfb1b999b9aa30411de0c3addf1661"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "12577e75a52215aea9357c8753e1b3cad0651350e5cb1729bf880f7913b8f140"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G2-EQUALITY-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g2_equality_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g2_equality_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "10afceb42b061f83e4bbdeb1e9f1f1323d24aeacbecfbf26dd7b290a4e782528"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g2_equality_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g2_equality_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "89d3780d64eed4556a8e824bed80ff3ac0fa4a9890ede1e19027a5fa7fa6c69f"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "51810d3d759e4f10225545d83070f9122d06bf17c0faf148073f30001a3ddb53"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "90b4f681ef86eee8b263ba4fbfa8552101aea3930b2e14f04f9acf5bd8c3921d"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G3-FULLY-PRICED-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g3_fully_priced_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g3_fully_priced_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "413ddc2db08c13c3d7fd3bc210bc710163d918249ed868cb3f414796aa2ba896"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g3_fully_priced_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g3_fully_priced_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "5da5397ed08549eb29c03e5a1b70d92063f19b7bf71230ff1df9804aac5ff92a"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "92ca0f9bef3ced9994e9f0f23d8fdfe869871890d930aa04f7510e4c6ecff8ca"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "56f441b22556b6a9cfbb218215206a3de61bd7f7bb139aa9d3d96a8941e0902d"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G3-PARTIALLY-PRICED-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g3_partially_priced_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g3_partially_priced_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "4e0502e02953acbecf3aeab01e7202df0ee7870e2e4e685845263712e8e3e13d"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g3_partially_priced_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g3_partially_priced_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "9bad0d3d0f2f25088781b112e7923a0e42b917ad569bdbc6c6f6e48df468bf2e"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "18d40bf1fac1d3dc78be47de7980a9c008815cb9ac6ecf0bf710b90b42ddb3fd"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "eeae97518142bc6c634d6d491e55ab4054787e627593fae801e107ca64645d30"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G3-UNKNOWN-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g3_unknown_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g3_unknown_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "76252c80c63a5f1495e9a8133f37d067e7dd98693a9fa1a06c22697055209121"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g3_unknown_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g3_unknown_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "32d60f8bb089827e63cbbd4e0ef332ad279427cd86c412ace3f07e70cb7f390c"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "671131f0744d25171a4b3abe8a291c49e3d7cadc57b586302deeb2eff4b8244d"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "9b11e6eab39695b4c27e396b6a244b20310e94be14d45a7ebf010bb1977b1403"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G4-BELOW-DISPLAY-EQUAL-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g4_below_display_equal_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g4_below_display_equal_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "2c56eeaad328ba6b6dbde60e676d7b31a0fe5416366f0b9fa35433f78ec4f1f6"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g4_below_display_equal_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g4_below_display_equal_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "1995b28c955668f5e830d59f0c5737cdc98d939af051571696b087734edcb08e"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "def9ced80b88441411c40ee57de3b6ba5e35e0eb5008d4be2c107e6e7a003dde"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "99b515257eb17d6ed96cca5805777c06de89f487f139da8a82e0083e683281df"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G4-BELOW-DISPLAY-EQUAL-PRECISION-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g4_below_display_equal_precision_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g4_below_display_equal_precision_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "3c2b396f9029925b6f053ea2e790375c890062e59109dd7ea03756c1a7b5d3ac"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g4_below_display_equal_precision_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g4_below_display_equal_precision_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "fe3a4585d2e095594b4c8426b22170f59534d317c8e96332bc5d98f6e8f5847f"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "7f2088730898a4a3737b57817aab86be13333af9ee5c4d1213e33abe6fe7c1a4"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "85f00471d2f78a6f5c8ed58c969b267501229dfee546b417948b467d95f309ba"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G4-DOWNSIDE-NONNEGATIVE-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g4_downside_nonnegative_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g4_downside_nonnegative_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "86a299778cf001ce2f4095a0ed2822d295a97df58a96cf45ff3938ce3aa25bf7"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g4_downside_nonnegative_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g4_downside_nonnegative_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "86e986cc4100835e5286164cc5618bd56825cce7f8fb2ff84b17adb0e987c4e7"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "ba3f9d1d8504810df312d82f055db65ea9ebad3e88ffcf2e9371a31f428ebb31"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "b4f808bae75649d1782a11e8d82639f141cf89ff42add59285cd5ad41f5ed4e7"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G4-EQUALITY-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g4_equality_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g4_equality_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "b5b609bbe1ea751f001fdd20c99d1d19a35c2681eb84cf40b50e5d8bb4d7c9e9"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g4_equality_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g4_equality_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "c2c1bc0a072608cc154300a3a726d0c94314368c9d610e092b5d927dec2cf358"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "6511c44b2c055a7008f70ccdd8e92cd742b3e3d5f34f5d5a13c1e11c6b81eb24"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "23ff7f7d4020356385c919fa37cf6bfda5c8f9b7a9027f6f184eeb1500faaaca"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G4-WINDOW-ABOVE-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g4_window_above_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g4_window_above_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "a21ccf029a66a1122e8d83ced16d7aad31ce6816e38d3445fbce5b8b8ec57694"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g4_window_above_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g4_window_above_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "9ae2f0598e087e9903cd39cb48d0a0e66eace6f28b1106ea112c928f595bba73"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "510e7156e7ae04d059b38dab795dd0d49ff2ecd21ae74203b1a4e3cd46d25374"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "005189ee0325a2d358b70a8fd240b31270c0032e975356596b2c6c342efef5c5"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-G4-WINDOW-EQUALITY-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_g4_window_equality_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_g4_window_equality_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "102e17d5b182754fc6487bbec68a423e23526c20ecb65d7695bb3a36481c8774"
+      },
+      "input_id": "synthetic_input_stage2b_syn_g4_window_equality_001",
+      "registration_id": "stage2b_strategy_fixture_syn_g4_window_equality_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "16b1a8bf3210d74060a4b513204bcd8f84b83e7a7e52ce29f7998ca27116b9a5"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "5b6c2df39e0ddcf821d10fb29021073842113e3a991a75e253c1659e4612a8e8"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "fc316c607829790e3b5349d99f36be069adb17de77714b23654521605108d228"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-PIT-EQUALITY-001",
+      "dataset_release_id": "synthetic_release_stage2b_syn_pit_equality_001",
+      "fixture_id": "synthetic_fixture_stage2b_syn_pit_equality_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "11b7400b6631786c7b69bcb0ffd9c27e703aea82b58e3e2903caae7ad7b35a04"
+      },
+      "input_id": "synthetic_input_stage2b_syn_pit_equality_001",
+      "registration_id": "stage2b_strategy_fixture_syn_pit_equality_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "0b153a0ab15b952006583e78439866c899deb90b046de60ee413f068c4b521b0"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "9bb6b21c6b90e4f7bf05352fcdf7c134288e996dcc1e5364b4b12daa6af04338"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "123dedfe4ae5f66715988530a3430f7c02a52c7025658163e495a91aad883401"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-REJECT-001",
+      "dataset_release_id": "synthetic_release_stage2b_reject_001",
+      "fixture_id": "synthetic_fixture_stage2b_reject_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "9ff697011b8c1a4fb54e9701a19be7bad219ba357a3d0c78c3bd1f3da356264b"
+      },
+      "input_id": "synthetic_input_stage2b_reject_001",
+      "registration_id": "stage2b_strategy_fixture_syn_reject_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "dc78ac7004b2fe107dc3b6dead9c9af841985add3c89d0680c57ffb55bc092d2"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "eb3df7db16d79f6def2c11b4ecc934591bfb9224a96f32d6b3b65eddf83244b0"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "4d7e0427d70255692a9619ec08a408acfc330fc5ec39df9dd105c32fc9deff48"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-SHADOW-001",
+      "dataset_release_id": "synthetic_release_stage2b_shadow_001",
+      "fixture_id": "synthetic_fixture_stage2b_shadow_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "8b1657b8afa5651e080ee0c5877d1732b74421c2bff44fda7d4824866d3ea09d"
+      },
+      "input_id": "synthetic_input_stage2b_shadow_001",
+      "registration_id": "stage2b_strategy_fixture_syn_shadow_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "79cbcea6793631561baf1f76c60bd8c11afc31c1667df8a70acb2e391de1941f"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "ae790a01d6634ca4159d6bfc38f88c0b008e1cef71c679b915d4cd2fcf187f85"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "cce9f358eaa19abd86bd0094e15d60be1d267127e940b2de18df65183e7974d7"
+      }
+    },
+    {
+      "capability_scope": "stage2b_strategy_evaluation",
+      "case_id": "SYN-TRADE-001",
+      "dataset_release_id": "synthetic_release_stage2b_optical_contract_001",
+      "fixture_id": "synthetic_fixture_stage2b_optical_contract_001",
+      "fixture_version": "0.1.0",
+      "input_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "c152986b64194aeff727bb6c9cdf4cfe902ec6b53afc5d0308d1eb188512a627"
+      },
+      "input_id": "synthetic_input_stage2b_optical_contract_001",
+      "registration_id": "stage2b_strategy_fixture_syn_trade_001",
+      "schema_version": "0.1.0-draft",
+      "strategy_case_envelope_hash": {
+        "algorithm": "sha256",
+        "value": "401fb5310cf75a582add3fa6f5d890db6344ba341079d59f22f05d6c02a0fbe2"
+      },
+      "strategy_case_input_hash": {
+        "algorithm": "sha256",
+        "value": "8f8d0175624f8285127d36aa155b6c043fb5fb34868df7fb7f7e47c5ed447f45"
+      },
+      "strategy_id": "industrial_bottleneck_event",
+      "verified_input_hash": {
+        "algorithm": "sha256",
+        "value": "8adddb08b609979a06236c66e3fba273fef185e6c8f8cd9f852ca16eccef7bbe"
+      }
+    }
+  ]
+}

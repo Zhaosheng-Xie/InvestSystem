@@ -1,0 +1,261 @@
+{
+  "baseline_case_ref": "SYN-TRADE-001",
+  "excluded_components": [
+    "artifact_fetch_observation_id",
+    "decision_id",
+    "endpoint",
+    "observed_at",
+    "persisted_at",
+    "release_admission_observation_id",
+    "release_status_observation_id",
+    "replay_hash",
+    "run_id",
+    "temporary_path",
+    "wall_clock"
+  ],
+  "fixture_class": "invest_system_replay_hash_relation_matrix",
+  "fixture_matrix_schema_version": "0.1.0",
+  "hash_contract": {
+    "algorithm": "sha256",
+    "canonical_profile": "investsystem-replay-v1",
+    "digest_format": "64_lowercase_hex",
+    "rule_bundle_hash_resolution": "trusted_approval_registry_at_test_time",
+    "self_excluding": true
+  },
+  "relations": [
+    {
+      "description": "同一规范输入和显式语义重复执行。",
+      "expected_relation": "equal",
+      "mutations": [],
+      "relation_id": "REPLAY-EQUAL-REPEAT-001"
+    },
+    {
+      "description": "run、decision 与 observation ID 只属于审计，不改变策略 replay。",
+      "expected_relation": "equal",
+      "mutations": [
+        {
+          "component": "audit_only",
+          "field": "run_id",
+          "value": "synthetic_run_stage2b_retry_999"
+        },
+        {
+          "component": "audit_only",
+          "field": "decision_id",
+          "value": "synthetic_decision_stage2b_retry_999"
+        },
+        {
+          "component": "audit_only",
+          "field": "artifact_fetch_observation_id",
+          "value": "synthetic_fetch_stage2b_retry_999"
+        },
+        {
+          "component": "audit_only",
+          "field": "release_status_observation_id",
+          "value": "synthetic_status_stage2b_retry_999"
+        },
+        {
+          "component": "audit_only",
+          "field": "release_admission_observation_id",
+          "value": "synthetic_admission_stage2b_retry_999"
+        }
+      ],
+      "relation_id": "REPLAY-EQUAL-AUDIT-IDS-001"
+    },
+    {
+      "description": "墙上观察时钟和临时路径不属于显式策略时钟。",
+      "expected_relation": "equal",
+      "mutations": [
+        {
+          "component": "audit_only",
+          "field": "wall_clock",
+          "value": "2099-01-01T00:00:00.000000Z"
+        },
+        {
+          "component": "audit_only",
+          "field": "temporary_path",
+          "value": "X:/different/ephemeral/path"
+        }
+      ],
+      "relation_id": "REPLAY-EQUAL-EPHEMERAL-001"
+    },
+    {
+      "description": "合同最低义务属于业务输入，变化必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "canonical_input",
+          "field": "/commercial_event/binding_minimum_contract_amount/amount",
+          "value": "1200000001"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-BUSINESS-INPUT-001"
+    },
+    {
+      "description": "受信批准登记表解析出的规则包 hash 变化必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "rule_identity",
+          "field": "rule_bundle_hash",
+          "value": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-RULE-HASH-001"
+    },
+    {
+      "description": "规则版本变化必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "rule_identity",
+          "field": "rule_bundle_version",
+          "value": "0.1.1"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-RULE-VERSION-001"
+    },
+    {
+      "description": "代码提交变化必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "strategy_identity",
+          "field": "code_commit",
+          "value": "1111111111111111111111111111111111111111"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-CODE-001"
+    },
+    {
+      "description": "配置哈希变化必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "strategy_identity",
+          "field": "config_hash",
+          "value": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-CONFIG-001"
+    },
+    {
+      "description": "显式注入的评估时钟变化一微秒必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "strategy_identity",
+          "field": "evaluated_at",
+          "value": "2026-01-06T01:36:00.000001Z"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-CLOCK-001"
+    },
+    {
+      "description": "随机种子变化必须改变 replay hash，即使当前路径不使用随机数。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "strategy_identity",
+          "field": "random_seed",
+          "value": 1
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-SEED-001"
+    },
+    {
+      "description": "可信合成 fixture registration ID 变化必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "fixture_authorization",
+          "field": "synthetic_fixture_registration_id",
+          "value": "stage2b_strategy_fixture_untrusted_999"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-FIXTURE-REGISTRATION-ID-001"
+    },
+    {
+      "description": "可信合成 fixture registration 内容哈希变化必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "fixture_authorization",
+          "field": "synthetic_fixture_registration_hash",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-FIXTURE-REGISTRATION-HASH-001"
+    },
+    {
+      "description": "可信合成 fixture registry 聚合快照哈希变化必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "fixture_authorization",
+          "field": "synthetic_fixture_registry_snapshot_hash",
+          "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-FIXTURE-REGISTRY-SNAPSHOT-001"
+    },
+    {
+      "description": "确定性 Gate 输出变化必须改变 replay hash。",
+      "expected_relation": "different",
+      "mutations": [
+        {
+          "component": "semantic_output",
+          "field": "/decision_state",
+          "value": "REJECT"
+        }
+      ],
+      "relation_id": "REPLAY-DIFFERENT-OUTPUT-001"
+    },
+    {
+      "description": "replay_hash 自身不得进入 semantic output。",
+      "expected_blocker_code": "RESERVED_REPLAY_KEY",
+      "expected_relation": "rejected",
+      "mutations": [
+        {
+          "component": "semantic_output",
+          "field": "/replay_hash",
+          "value": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "relation_id": "REPLAY-REJECT-SELF-001"
+    },
+    {
+      "description": "provider endpoint 不得潜入 semantic output。",
+      "expected_blocker_code": "RESERVED_REPLAY_KEY",
+      "expected_relation": "rejected",
+      "mutations": [
+        {
+          "component": "semantic_output",
+          "field": "/transport/endpoint",
+          "value": "https://provider.invalid"
+        }
+      ],
+      "relation_id": "REPLAY-REJECT-ENDPOINT-001"
+    }
+  ],
+  "required_components": [
+    "canonical_input_envelope_hash",
+    "verified_input_hash",
+    "approved_rule_bundle_hash",
+    "rule_bundle_id",
+    "rule_bundle_version",
+    "rule_status",
+    "strategy_id",
+    "strategy_version",
+    "code_commit",
+    "config_hash",
+    "runtime_environment_lock_hash",
+    "run_mode",
+    "random_seed",
+    "evaluated_at",
+    "synthetic_fixture_registration_id",
+    "synthetic_fixture_registration_hash",
+    "synthetic_fixture_registry_snapshot_hash",
+    "deterministic_semantic_output"
+  ],
+  "validation_only": true
+}

@@ -1,0 +1,158 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_minimum_order_contract_slice",
+  "bundle_version": "0.1.0",
+  "declared_status": "approved",
+  "rules": {
+    "approval_items": [
+      "S2B-APPROVAL-001",
+      "S2B-APPROVAL-002",
+      "S2B-APPROVAL-003",
+      "S2B-APPROVAL-004",
+      "S2B-APPROVAL-005",
+      "S2B-APPROVAL-006",
+      "S2B-APPROVAL-007",
+      "S2B-APPROVAL-008",
+      "S2B-APPROVAL-009",
+      "S2B-APPROVAL-010",
+      "S2B-APPROVAL-011",
+      "S2B-APPROVAL-012",
+      "S2B-APPROVAL-013",
+      "S2B-APPROVAL-014",
+      "S2B-APPROVAL-015",
+      "S2B-APPROVAL-016",
+      "S2B-APPROVAL-017",
+      "S2B-APPROVAL-018",
+      "S2B-APPROVAL-019",
+      "S2B-APPROVAL-020",
+      "S2B-APPROVAL-021",
+      "S2B-APPROVAL-022"
+    ],
+    "authorization_boundary": {
+      "approval_scope": "stage2b_synthetic_validation",
+      "default_policy": "deny",
+      "allowed_run_modes": [
+        "research"
+      ],
+      "required_input": {
+        "provenance": "invest_system_synthetic",
+        "synthetic": true,
+        "validation_only": true,
+        "not_a_published_release": true,
+        "not_strategy_evidence": true,
+        "authorizes_positions": false,
+        "authorizes_orders": false
+      },
+      "forbidden_run_modes": [
+        "backtest",
+        "paper",
+        "shadow",
+        "live"
+      ],
+      "forbidden_effects": [
+        "target_portfolio",
+        "approved_position",
+        "actual_position",
+        "broker_order",
+        "capital_deployment"
+      ],
+      "shadow_only_is_a_result_label_not_run_authority": true,
+      "scope_must_match_exactly": true,
+      "scope_expansion_by_inference_is_forbidden": true,
+      "new_scope_requires_new_owner_approval": true
+    },
+    "decision_safety": {
+      "position_state": "FLAT",
+      "target_weight": "0",
+      "approved_weight": "0",
+      "actual_weight": "0",
+      "approver": null,
+      "authorizes_real_trade_ready": false,
+      "synthetic_trade_ready_proves_path_reachability_only": true
+    },
+    "decimal_policy": {
+      "binary_float_forbidden": true,
+      "intermediate_rounding_forbidden": true,
+      "comparison_uses_unrounded_decimal": true,
+      "display_decimal_places": 6,
+      "display_rounding": "ROUND_HALF_EVEN",
+      "unknown_is_not_zero": true
+    },
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/最小订单合同纵向切片规则包_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "9386d0c7bd404d28c39cb30568e5da33c85577231ed6f0bfc5e3cd206610d90f"
+      }
+    },
+    "event_and_gate_rules": {
+      "semantic_profile": "industrial_event_minimum_order_contract_v0.1",
+      "e4_predicate": "strict_and",
+      "e3_5_decision_state": "SHADOW_ONLY",
+      "minimum_independent_evidence_chains": 2,
+      "minimum_authoritative_original_chains": 1,
+      "standard_track_requires_positive_base_and_downside_counterfactual_profit": true,
+      "gate_3_comparison": "strict_exact_no_tolerance",
+      "gate_4_nonpositive_downside_loss_outcome": "ABSTAIN",
+      "rule_ids": [
+        "S2B-EVT-001",
+        "S2B-EVT-002",
+        "S2B-G1-001",
+        "S2B-G2-001",
+        "S2B-G3-001",
+        "S2B-G4-001",
+        "S2B-AGG-001",
+        "S2B-PIT-001",
+        "S2B-AUDIT-001",
+        "S2B-ISOLATION-001"
+      ],
+      "gate_2_profit_materiality_threshold": "0.10",
+      "gate_4_net_base_return_threshold": "0.15",
+      "gate_4_reward_to_downside_threshold": "2.00",
+      "next_verification_trading_days_max": 120,
+      "gate_aggregation": "strict_and",
+      "evaluation_order": [
+        "admission",
+        "event_state",
+        "gate_1_authenticity",
+        "gate_2_profit_materiality",
+        "gate_3_expectation_gap",
+        "gate_4_executable_return",
+        "decision_state"
+      ],
+      "short_circuit": true,
+      "short_circuit_outcomes": [
+        "REJECT",
+        "ABSTAIN",
+        "SHADOW_ONLY",
+        "BLOCKED"
+      ],
+      "not_evaluated_is_not_an_outcome": true
+    },
+    "fixture_identity": {
+      "fixture_id": "synthetic_fixture_stage2b_optical_contract_001",
+      "fixture_version": "0.1.0",
+      "dataset_release_id_prefix": "synthetic_release_",
+      "currency": "CNY",
+      "real_world_entity_mapping": "prohibited"
+    },
+    "golden_matrix": {
+      "strategy_fixture_results": [
+        "TRADE_READY",
+        "SHADOW_ONLY",
+        "REJECT",
+        "ABSTAIN"
+      ],
+      "admission_failure_result": "BLOCKED",
+      "blocked_must_precede_strategy_evaluation": true
+    },
+    "pit_policy": {
+      "required_relation": "available_at <= knowledge_cutoff <= decision_at",
+      "provider_available_at_must_not_be_recomputed": true,
+      "future_fact_policy": "BLOCKED"
+    },
+    "document_binding_is_traceability_only": true,
+    "runtime_must_not_parse_markdown": true
+  }
+}

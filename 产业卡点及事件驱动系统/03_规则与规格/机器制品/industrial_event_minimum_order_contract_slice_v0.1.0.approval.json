@@ -1,0 +1,15 @@
+{
+  "approval_id": "rule_approval_stage2b_minimum_order_contract_v0_1_0",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_minimum_order_contract_slice",
+  "bundle_version": "0.1.0",
+  "bundle_hash": {
+    "algorithm": "sha256",
+    "value": "8e5c4a9da107d4ea4834bce2498b5315e7f5aa2013d3dd7fa1f7ea66e381bbe4"
+  },
+  "approved_by": "repository_owner",
+  "approved_at": "2026-08-02T12:39:09.260545Z",
+  "approval_scope": "stage2b_synthetic_validation",
+  "approval_source_ref": "codex_thread_019fb33f_123d_7500_8b38_cb9bd6e820b8_owner_approval_20260802",
+  "schema_version": "0.1.0-draft"
+}

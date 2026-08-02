@@ -1,0 +1,439 @@
+{
+  "base_input_ref": "normal/synthetic-order-contract-base.v0.1.0.json",
+  "cases": [
+    {
+      "case_id": "SYN-G2-EQUALITY-001",
+      "description": "利润重要性原始值精确等于 0.10。",
+      "expected": {
+        "decision_state": "TRADE_READY",
+        "derived": {
+          "ntm_incremental_parent_normalized_profit": "100000000.00",
+          "profit_materiality_display_6dp": "0.100000",
+          "profit_materiality_raw": "0.10"
+        },
+        "terminal_gate": "gate_4_executable_return",
+        "terminal_outcome": "PASS",
+        "threshold_comparison_uses": "raw_decimal"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profit_bridge_input/incremental_operating_expense/amount",
+          "value": "70000000"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G2-BELOW-DISPLAY-EQUAL-001",
+      "description": "原始利润重要性 0.099999999 低于阈值，即使六位展示为 0.100000 仍拒绝。",
+      "expected": {
+        "decision_state": "REJECT",
+        "derived": {
+          "ntm_incremental_parent_normalized_profit": "99999999.00",
+          "profit_materiality_display_6dp": "0.100000",
+          "profit_materiality_raw": "0.099999999"
+        },
+        "terminal_gate": "gate_2_profit_materiality",
+        "terminal_outcome": "REJECT",
+        "threshold_comparison_uses": "raw_decimal"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profit_bridge_input/incremental_operating_expense/amount",
+          "value": "70000001"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G2-DENOMINATOR-ZERO-001",
+      "description": "反事实基准利润为零，不属于窄版 standard track。",
+      "expected": {
+        "decision_state": "SHADOW_ONLY",
+        "terminal_gate": "gate_2_profit_materiality",
+        "terminal_outcome": "SHADOW_ONLY"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profit_bridge_input/counterfactual_ntm_normalized_parent_profit_base/amount",
+          "value": "0"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G2-CURRENCY-MISMATCH-001",
+      "description": "收入与其余利润桥币种不一致，不允许隐式换算。",
+      "expected": {
+        "decision_state": "ABSTAIN",
+        "reason_code": "profit_bridge_currency_mismatch",
+        "terminal_gate": "gate_2_profit_materiality",
+        "terminal_outcome": "ABSTAIN"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profit_bridge_input/ntm_recognizable_revenue/currency",
+          "value": "USD"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G3-PARTIALLY-PRICED-001",
+      "description": "可比先验最低义务严格大于零且小于 E4。",
+      "expected": {
+        "decision_state": "TRADE_READY",
+        "expectation_class": "partially_priced",
+        "terminal_gate": "gate_4_executable_return",
+        "terminal_outcome": "PASS"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/expectation_snapshot/prior_expected_binding_minimum_amount",
+          "value": "600000000"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G3-FULLY-PRICED-001",
+      "description": "先验与 E4 关键元组及最低义务完全相同。",
+      "expected": {
+        "decision_state": "REJECT",
+        "expectation_class": "fully_priced",
+        "terminal_gate": "gate_3_expectation_gap",
+        "terminal_outcome": "REJECT"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/expectation_snapshot/prior_expected_binding_minimum_amount",
+          "value": "1200000000"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G3-UNKNOWN-001",
+      "description": "缺少可靠 E4 前预期快照，未找到资料不等于预期为零。",
+      "expected": {
+        "decision_state": "ABSTAIN",
+        "expectation_class": "unknown",
+        "terminal_gate": "gate_3_expectation_gap",
+        "terminal_outcome": "ABSTAIN"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/expectation_snapshot",
+          "value": null
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G4-EQUALITY-001",
+      "description": "净基准收益精确 0.15、赔率精确 2.00，两个等号都通过。",
+      "expected": {
+        "decision_state": "TRADE_READY",
+        "derived": {
+          "downside_loss_raw": "0.0750",
+          "net_base_remaining_return_raw": "0.1500",
+          "reward_to_downside_raw": "2"
+        },
+        "terminal_gate": "gate_4_executable_return",
+        "terminal_outcome": "PASS",
+        "threshold_comparison_uses": "raw_decimal"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/valuation_input/base_business_equity_value/amount",
+          "value": "8640000000"
+        },
+        {
+          "op": "replace",
+          "path": "/valuation_input/downside_scenario_equity_value/amount",
+          "value": "7440000000"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G4-BELOW-DISPLAY-EQUAL-001",
+      "description": "净基准收益略低于 0.15，即使展示为 0.150000 仍拒绝。",
+      "expected": {
+        "decision_state": "REJECT",
+        "derived": {
+          "net_base_remaining_return_display_6dp": "0.150000",
+          "net_base_remaining_return_raw": "0.149999999875"
+        },
+        "terminal_gate": "gate_4_executable_return",
+        "terminal_outcome": "REJECT",
+        "threshold_comparison_uses": "raw_decimal"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/valuation_input/base_business_equity_value/amount",
+          "value": "8639999999"
+        },
+        {
+          "op": "replace",
+          "path": "/valuation_input/downside_scenario_equity_value/amount",
+          "value": "7440000000"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G4-DOWNSIDE-NONNEGATIVE-001",
+      "description": "下行情景净收益为零，downside_loss 为零，窄版不得输出无穷赔率。",
+      "expected": {
+        "decision_state": "ABSTAIN",
+        "derived": {
+          "downside_loss_raw": "0",
+          "net_downside_return_raw": "0.0000",
+          "reward_to_downside": null
+        },
+        "reason_code": "downside_loss_not_positive",
+        "terminal_gate": "gate_4_executable_return",
+        "terminal_outcome": "ABSTAIN"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/valuation_input/downside_scenario_equity_value/amount",
+          "value": "8040000000"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G4-WINDOW-EQUALITY-001",
+      "description": "下一验证窗口精确 120 个交易日。",
+      "expected": {
+        "decision_state": "TRADE_READY",
+        "terminal_gate": "gate_4_executable_return",
+        "terminal_outcome": "PASS"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/valuation_input/next_verification/trading_days",
+          "value": 120
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G4-WINDOW-ABOVE-001",
+      "description": "下一验证窗口 121 个交易日，已知且超过门槛。",
+      "expected": {
+        "decision_state": "REJECT",
+        "reason_code": "verification_window_above_limit",
+        "terminal_gate": "gate_4_executable_return",
+        "terminal_outcome": "REJECT"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/valuation_input/next_verification/trading_days",
+          "value": 121
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-PIT-EQUALITY-001",
+      "description": "首次可成交价格 available_at 与 knowledge_cutoff 精确相等，可被使用。",
+      "expected": {
+        "assertions": [
+          "/valuation_input/first_executable_price/available_at == /clock/knowledge_cutoff",
+          "/clock/knowledge_cutoff < /clock/decision_at"
+        ],
+        "decision_state": "TRADE_READY",
+        "terminal_gate": "gate_4_executable_return",
+        "terminal_outcome": "PASS"
+      },
+      "mutations": []
+    },
+    {
+      "case_id": "SYN-EVIDENCE-DUPLICATE-001",
+      "description": "第二条链是第一条权威原文的同主体转载，不构成独立证据。",
+      "expected": {
+        "decision_state": "ABSTAIN",
+        "event_state": "E4",
+        "reason_code": "insufficient_independent_evidence_chains",
+        "terminal_gate": "gate_1_authenticity",
+        "terminal_outcome": "ABSTAIN"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/evidence_chains/1/acquisition_chain_id",
+          "value": "SYN-ACQUISITION-SELLER-001"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence_chains/1/derived_from_source_document_id",
+          "value": "SYN-DOCUMENT-SELLER-001"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence_chains/1/publisher_responsibility_id",
+          "value": "SYN-PUBLISHER-SELLER-001"
+        },
+        {
+          "op": "replace",
+          "path": "/evidence_chains/1/source_document_id",
+          "value": "SYN-DOCUMENT-SELLER-001"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-E4-UNSIGNED-001",
+      "description": "商业线索明确但尚未签署或正式下达，只能停在 E3.5。",
+      "expected": {
+        "decision_state": "SHADOW_ONLY",
+        "event_state": "E3.5",
+        "terminal_gate": "gate_1_authenticity",
+        "terminal_outcome": "SHADOW_ONLY"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/commercial_event/contract_signed",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/evidence_chains/0/fact_ids/0",
+          "value": "SYN-FACT-CONTRACT-UNSIGNED-001"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-E4-NOT-EFFECTIVE-001",
+      "description": "实质性生效条件尚未完成，只能停在 E3.5。",
+      "expected": {
+        "decision_state": "SHADOW_ONLY",
+        "event_state": "E3.5",
+        "terminal_gate": "gate_1_authenticity",
+        "terminal_outcome": "SHADOW_ONLY"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/commercial_event/contract_effective",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/commercial_event/material_conditions_precedent_satisfied",
+          "value": false
+        },
+        {
+          "op": "replace",
+          "path": "/evidence_chains/0/fact_ids/1",
+          "value": "SYN-FACT-CONDITIONS-PENDING-001"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-E4-CANCELLABLE-001",
+      "description": "单方取消条款可将最低义务清零，只能停在 E3.5。",
+      "expected": {
+        "decision_state": "SHADOW_ONLY",
+        "event_state": "E3.5",
+        "terminal_gate": "gate_1_authenticity",
+        "terminal_outcome": "SHADOW_ONLY"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/commercial_event/unilateral_cancellation_can_zero_minimum",
+          "value": true
+        },
+        {
+          "op": "replace",
+          "path": "/evidence_chains/0/fact_ids/2",
+          "value": "SYN-FACT-MINIMUM-CANCELLABLE-001"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-E4-OWNERSHIP-UNKNOWN-001",
+      "description": "卖方到上市公司利润归属路径不可核验，不能可靠完成 Gate 1。",
+      "expected": {
+        "decision_state": "ABSTAIN",
+        "reason_code": "profit_attribution_path_unknown",
+        "terminal_gate": "gate_1_authenticity",
+        "terminal_outcome": "ABSTAIN"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/commercial_event/seller_to_listed_company_ownership_ratio",
+          "value": null
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G2-BELOW-DISPLAY-EQUAL-PRECISION-001",
+      "description": "利润重要性以超过 100 位有效数字精确落在 0.10 下方，即使六位展示为 0.100000 仍拒绝。",
+      "expected": {
+        "decision_state": "REJECT",
+        "derived": {
+          "ntm_incremental_parent_normalized_profit": "99999999.9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+          "profit_materiality_display_6dp": "0.100000",
+          "profit_materiality_raw": "0.0999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+        },
+        "terminal_gate": "gate_2_profit_materiality",
+        "terminal_outcome": "REJECT",
+        "threshold_comparison_uses": "raw_decimal"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profit_bridge_input/incremental_operating_expense/amount",
+          "value": "70000000.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001"
+        }
+      ]
+    },
+    {
+      "case_id": "SYN-G4-BELOW-DISPLAY-EQUAL-PRECISION-001",
+      "description": "净基准收益以超过 100 位有效数字精确落在 0.15 下方，即使六位展示为 0.150000 仍拒绝。",
+      "expected": {
+        "decision_state": "REJECT",
+        "derived": {
+          "net_base_remaining_return_display_6dp": "0.150000",
+          "net_base_remaining_return_raw": "0.1499999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999875"
+        },
+        "terminal_gate": "gate_4_executable_return",
+        "terminal_outcome": "REJECT",
+        "threshold_comparison_uses": "raw_decimal"
+      },
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/valuation_input/base_business_equity_value/amount",
+          "value": "8639999999.9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+        },
+        {
+          "op": "replace",
+          "path": "/valuation_input/downside_scenario_equity_value/amount",
+          "value": "7440000000"
+        }
+      ]
+    }
+  ],
+  "fixture_class": "invest_system_synthetic_strategy_boundary_matrix",
+  "fixture_matrix_schema_version": "0.1.0",
+  "not_a_published_release": true,
+  "not_strategy_evidence": true,
+  "rule_bundle_reference": {
+    "approval_id": "rule_approval_stage2b_minimum_order_contract_v0_1_0",
+    "approval_scope": "stage2b_synthetic_validation",
+    "bundle_id": "industrial_event_minimum_order_contract_slice",
+    "bundle_version": "0.1.0",
+    "canonical_hash_resolution": "trusted_approval_registry_at_test_time",
+    "rule_status_required": "approved",
+    "strategy_id": "industrial_bottleneck_event"
+  },
+  "synthetic": true,
+  "validation_only": true
+}

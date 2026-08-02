@@ -48,10 +48,44 @@ def build_manifest_from_complete_identity(
         strategy_id=identity["strategy_id"],
         strategy_version=identity["strategy_version"],
         code_commit=identity["code_commit"],
+        rule_bundle_id=identity["rule_bundle_id"],
         rule_bundle_version=identity["rule_bundle_version"],
+        rule_bundle_hash=make_digest(identity["rule_bundle_hash"]),
         rule_status=RuleStatus(identity["rule_status"]),
+        rule_approval_id=identity["rule_approval_id"],
+        rule_approval_record_hash=(
+            make_digest(identity["rule_approval_record_hash"])
+            if identity["rule_approval_record_hash"] is not None
+            else None
+        ),
+        rule_approval_scope=identity["rule_approval_scope"],
         config_hash=make_digest(identity["config_hash"]),
         strategy_input_ref=reference,
+        input_envelope_hash=make_digest(identity["input_envelope_hash"]),
+        strategy_case_envelope_hash=(
+            make_digest(identity["strategy_case_envelope_hash"])
+            if identity["strategy_case_envelope_hash"] is not None
+            else None
+        ),
+        strategy_case_input_hash=(
+            make_digest(identity["strategy_case_input_hash"])
+            if identity["strategy_case_input_hash"] is not None
+            else None
+        ),
+        synthetic_fixture_id=identity["synthetic_fixture_id"],
+        synthetic_fixture_version=identity["synthetic_fixture_version"],
+        synthetic_fixture_payload_hash=(
+            make_digest(identity["synthetic_fixture_payload_hash"])
+            if identity["synthetic_fixture_payload_hash"] is not None
+            else None
+        ),
+        input_path=identity["input_path"],
+        synthetic=identity["synthetic"],
+        validation_only=identity["validation_only"],
+        not_a_published_release=identity["not_a_published_release"],
+        not_strategy_evidence=identity["not_strategy_evidence"],
+        authorizes_positions=identity["authorizes_positions"],
+        authorizes_orders=identity["authorizes_orders"],
         artifact_consumption_receipt_hash=make_digest(
             identity["artifact_consumption_receipt_hash"]
         ),
@@ -68,8 +102,8 @@ def test_complete_fixed_identity_rebuilds_the_same_manifest_bytes_and_hash(
     repository_root: Path,
 ) -> None:
     fixture_root = repository_root / "tests" / "fixtures" / "synthetic"
-    json_path = fixture_root / "strategy_run_manifest_v0.1.0-draft.json"
-    hash_path = fixture_root / "strategy_run_manifest_v0.1.0-draft.sha256"
+    json_path = fixture_root / "strategy_run_manifest_v0.2.0-draft.json"
+    hash_path = fixture_root / "strategy_run_manifest_v0.2.0-draft.sha256"
     checked_in_bytes = json_path.read_bytes()
     expected_bytes = checked_in_bytes[:-1] if checked_in_bytes.endswith(b"\n") else checked_in_bytes
     expected_json = expected_bytes.decode("utf-8")

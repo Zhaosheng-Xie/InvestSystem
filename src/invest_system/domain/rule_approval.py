@@ -19,8 +19,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import StrEnum
 from types import MappingProxyType
+from typing import Any
 
-from ..canonical import JsonValue, freeze_json, normalize_utc
+from ..canonical import JsonValue, format_utc, freeze_json, normalize_utc
 from ..models import CanonicalModel, HashDigest, RuleStatus
 
 RULE_BUNDLE_DOCUMENT_SCHEMA_VERSION = "0.1.0-draft"
@@ -33,6 +34,31 @@ _SEMVER_RE = re.compile(
     r"(?:0|[1-9][0-9]*)"
     r"(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?"
     r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
+)
+
+_RULE_BUNDLE_KEYS = frozenset(
+    {
+        "schema_version",
+        "strategy_id",
+        "bundle_id",
+        "bundle_version",
+        "declared_status",
+        "rules",
+    }
+)
+_RULE_APPROVAL_KEYS = frozenset(
+    {
+        "approval_id",
+        "strategy_id",
+        "bundle_id",
+        "bundle_version",
+        "bundle_hash",
+        "approved_by",
+        "approved_at",
+        "approval_scope",
+        "approval_source_ref",
+        "schema_version",
+    }
 )
 
 
@@ -57,6 +83,44 @@ def _coerce_rule_status(value: RuleStatus | str) -> RuleStatus:
     except (TypeError, ValueError) as exc:
         allowed = ", ".join(repr(member.value) for member in RuleStatus)
         raise ValueError(f"declared_status must be one of: {allowed}") from exc
+
+
+def _strict_object(
+    value: Any,
+    *,
+    keys: frozenset[str],
+    field_name: str,
+) -> dict[str, Any]:
+    if not isinstance(value, Mapping):
+        raise TypeError(f"{field_name} must be a JSON object")
+    actual = set(value)
+    if actual != keys:
+        missing = sorted(keys - actual)
+        extra = sorted(actual - keys)
+        raise ValueError(f"{field_name} fields differ; missing={missing}, extra={extra}")
+    return dict(value)
+
+
+def _parse_hash(value: Any, *, field_name: str) -> HashDigest:
+    item = _strict_object(
+        value,
+        keys=frozenset({"algorithm", "value"}),
+        field_name=field_name,
+    )
+    return HashDigest(algorithm=item["algorithm"], value=item["value"])
+
+
+def _parse_canonical_utc(value: Any, *, field_name: str) -> datetime:
+    if not isinstance(value, str):
+        raise TypeError(f"{field_name} must be a canonical UTC timestamp string")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ValueError(f"{field_name} must be a canonical UTC timestamp") from exc
+    normalized = normalize_utc(parsed, field_name=field_name)
+    if format_utc(normalized) != value:
+        raise ValueError(f"{field_name} must use six fractional digits and Z")
+    return normalized
 
 
 class RuleApprovalError(ValueError):
@@ -247,8 +311,47 @@ class RuleApprovalRegistry:
         return ApprovedRuleCapability(_issuer=_CAPABILITY_ISSUER, approval=approval)
 
 
-# No business rule bundle has been approved yet.  Adding an entry is a separate,
-# reviewable governance change; a document's declared_status never mutates this.
+def rule_bundle_document_from_json_value(value: Any) -> RuleBundleDocument:
+    """Strictly reconstruct a complete rule bundle JSON object."""
+
+    item = _strict_object(value, keys=_RULE_BUNDLE_KEYS, field_name="rule bundle")
+    rules = item["rules"]
+    if not isinstance(rules, Mapping):
+        raise TypeError("rule bundle rules must be a JSON object")
+    return RuleBundleDocument(
+        schema_version=item["schema_version"],
+        strategy_id=item["strategy_id"],
+        bundle_id=item["bundle_id"],
+        bundle_version=item["bundle_version"],
+        declared_status=item["declared_status"],
+        rules=rules,
+    )
+
+
+def rule_approval_record_from_json_value(value: Any) -> RuleApprovalRecord:
+    """Strictly reconstruct one trusted approval registry record."""
+
+    item = _strict_object(value, keys=_RULE_APPROVAL_KEYS, field_name="rule approval")
+    if item["schema_version"] != RULE_APPROVAL_RECORD_SCHEMA_VERSION:
+        raise ValueError(
+            f"rule approval schema_version must be {RULE_APPROVAL_RECORD_SCHEMA_VERSION!r}"
+        )
+    return RuleApprovalRecord(
+        approval_id=item["approval_id"],
+        strategy_id=item["strategy_id"],
+        bundle_id=item["bundle_id"],
+        bundle_version=item["bundle_version"],
+        bundle_hash=_parse_hash(item["bundle_hash"], field_name="bundle_hash"),
+        approved_by=item["approved_by"],
+        approved_at=_parse_canonical_utc(item["approved_at"], field_name="approved_at"),
+        approval_scope=item["approval_scope"],
+        approval_source_ref=item["approval_source_ref"],
+    )
+
+
+# The generic default never grants implicit authority.  Strategy-specific,
+# versioned approval records are loaded explicitly and injected by the caller;
+# a document's declared_status alone never mutates this registry.
 CURRENT_RULE_APPROVAL_REGISTRY = RuleApprovalRegistry()
 
 

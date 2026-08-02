@@ -16,6 +16,8 @@ from invest_system.domain.rule_approval import (
     RuleApprovalScope,
     RuleBundleDocument,
     require_approved_rule_bundle,
+    rule_approval_record_from_json_value,
+    rule_bundle_document_from_json_value,
 )
 from invest_system.models import HashDigest, RuleStatus
 
@@ -215,3 +217,29 @@ def test_capability_constructor_rejects_non_registry_issuers() -> None:
         ApprovedRuleCapability(_issuer=object(), approval=approval)
 
     assert captured.value.code == "RULE_CAPABILITY_ISSUER_INVALID"
+
+
+def test_rule_artifact_json_parsers_round_trip_exact_models() -> None:
+    document = make_document()
+    approval = make_approval(document)
+
+    parsed_document = rule_bundle_document_from_json_value(document.to_json_value())
+    parsed_approval = rule_approval_record_from_json_value(approval.to_json_value())
+
+    assert parsed_document == document
+    assert parsed_approval == approval
+    assert RuleApprovalRegistry((parsed_approval,)).require(parsed_document).bundle_hash == (
+        document.bundle_hash()
+    )
+
+
+def test_rule_artifact_json_parsers_reject_unknown_fields_and_noncanonical_time() -> None:
+    document_value = make_document().to_json_value()
+    document_value["implicit_default"] = True
+    with pytest.raises(ValueError, match="fields differ"):
+        rule_bundle_document_from_json_value(document_value)
+
+    approval_value = make_approval(make_document()).to_json_value()
+    approval_value["approved_at"] = "2026-08-02T09:00:00Z"
+    with pytest.raises(ValueError, match="six fractional digits"):
+        rule_approval_record_from_json_value(approval_value)

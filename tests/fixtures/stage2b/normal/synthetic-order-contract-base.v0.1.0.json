@@ -1,0 +1,329 @@
+{
+  "case_input_schema_version": "0.1.0",
+  "clock": {
+    "contract_available_at": "2026-01-05T08:35:00.000000Z",
+    "contract_event_at": "2026-01-05T08:00:00.000000Z",
+    "contract_source_published_at": "2026-01-05T08:30:00.000000Z",
+    "decision_at": "2026-01-06T01:36:00.000000Z",
+    "first_executable_at": "2026-01-06T01:35:00.000000Z",
+    "knowledge_cutoff": "2026-01-06T01:35:00.000000Z",
+    "prior_expectation_available_at": "2025-12-31T08:00:00.000000Z"
+  },
+  "commercial_event": {
+    "binding_minimum_contract_amount": {
+      "amount": "1200000000",
+      "currency": "CNY"
+    },
+    "binding_minimum_obligation": true,
+    "binding_minimum_quantity": null,
+    "buyer_legal_entity_id": "SYN-BUYER-001",
+    "contract_currency": "CNY",
+    "contract_effective": true,
+    "contract_signed": true,
+    "industry_slice": "high_speed_optical_interconnect",
+    "material_conditions_precedent_satisfied": true,
+    "orders_required_for_any_purchase": false,
+    "product_scope": "synthetic_800g_optical_transceiver",
+    "profit_attribution_ratio": "1.0",
+    "return_or_acceptance_can_zero_minimum": false,
+    "security_id": "SYN-A-SHARE-001",
+    "seller_legal_entity_id": "SYN-SELLER-SUBSIDIARY-001",
+    "seller_to_listed_company_ownership_ratio": "1.0",
+    "subject_company_id": "SYN-LISTED-COMPANY-001",
+    "unilateral_cancellation_can_zero_minimum": false,
+    "unit_price": null
+  },
+  "evidence_chains": [
+    {
+      "acquisition_chain_id": "SYN-ACQUISITION-SELLER-001",
+      "authoritative_original": true,
+      "available_at": "2026-01-05T08:35:00.000000Z",
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "derived_from_source_document_id": null,
+      "evidence_chain_id": "SYN-EVIDENCE-CHAIN-SELLER-001",
+      "evidence_ids": [
+        "SYN-EVIDENCE-SELLER-001"
+      ],
+      "fact_ids": [
+        "SYN-FACT-CONTRACT-SIGNED-001",
+        "SYN-FACT-CONTRACT-EFFECTIVE-001",
+        "SYN-FACT-MINIMUM-AMOUNT-001",
+        "SYN-FACT-OWNERSHIP-001"
+      ],
+      "publisher_responsibility_id": "SYN-PUBLISHER-SELLER-001",
+      "source_document_id": "SYN-DOCUMENT-SELLER-001",
+      "supports": [
+        "contract_signed_or_formally_placed",
+        "contract_effective",
+        "binding_minimum_obligation",
+        "profit_attribution"
+      ]
+    },
+    {
+      "acquisition_chain_id": "SYN-ACQUISITION-BUYER-001",
+      "authoritative_original": false,
+      "available_at": "2026-01-05T08:34:00.000000Z",
+      "content_hash": {
+        "algorithm": "sha256",
+        "value": "2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "derived_from_source_document_id": null,
+      "evidence_chain_id": "SYN-EVIDENCE-CHAIN-BUYER-001",
+      "evidence_ids": [
+        "SYN-EVIDENCE-BUYER-001"
+      ],
+      "fact_ids": [
+        "SYN-FACT-BUYER-CONFIRMATION-001",
+        "SYN-FACT-BUYER-MINIMUM-AMOUNT-001"
+      ],
+      "publisher_responsibility_id": "SYN-PUBLISHER-BUYER-001",
+      "source_document_id": "SYN-DOCUMENT-BUYER-001",
+      "supports": [
+        "buyer_identity",
+        "binding_minimum_obligation"
+      ]
+    }
+  ],
+  "expectation_snapshot": {
+    "available_at": "2025-12-31T08:00:00.000000Z",
+    "basis": "explicit_public_statement",
+    "content_hash": {
+      "algorithm": "sha256",
+      "value": "3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "counterparty_scope": "SYN-BUYER-001",
+    "currency": "CNY",
+    "effective_period": "synthetic_ntm_2026",
+    "evidence_id": "SYN-EVIDENCE-EXPECTATION-001",
+    "fact_id": "SYN-FACT-EXPECTATION-001",
+    "material_conditions": "same_contract_scope",
+    "prior_expected_binding_minimum_amount": "0",
+    "product_scope": "synthetic_800g_optical_transceiver",
+    "publisher_responsibility_id": "SYN-PUBLISHER-EXPECTATION-001",
+    "source_document_id": "SYN-DOCUMENT-EXPECTATION-001"
+  },
+  "fixture_identity": {
+    "dataset_release_id": "synthetic_release_stage2b_optical_contract_001",
+    "fixture_id": "synthetic_fixture_stage2b_optical_contract_001",
+    "fixture_version": "0.1.0",
+    "input_id": "synthetic_input_stage2b_optical_contract_001",
+    "manifest_hash": {
+      "algorithm": "sha256",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "release_manifest_schema_version": "1.0.0",
+    "strategy_input_ref_schema_version": "1.0.0"
+  },
+  "profit_bridge_input": {
+    "counterfactual_ntm_normalized_parent_profit_base": {
+      "amount": "1000000000",
+      "classification": "Derived",
+      "currency": "CNY",
+      "source_fact_ids": [
+        "SYN-FACT-COUNTERFACTUAL-PROFIT-001"
+      ]
+    },
+    "counterfactual_ntm_normalized_parent_profit_downside": {
+      "amount": "800000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-DOWNSIDE-PROFIT-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "downside_counterfactual_parent_profit_differs_materially",
+      "scenario": "downside",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.2_profit_bridge"
+    },
+    "incremental_capex": {
+      "amount": "15000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-CAPEX-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "actual_incremental_capex_exceeds_assumption",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.2_profit_bridge"
+    },
+    "incremental_gross_margin_rate": {
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-GROSS-MARGIN-001",
+      "classification": "Assumption",
+      "falsifier": "actual_incremental_gross_margin_below_assumption",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.2_profit_bridge",
+      "value": "0.35"
+    },
+    "incremental_non_cash_items": {
+      "amount": "20000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-NON-CASH-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "actual_incremental_non_cash_items_differs_materially",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.2_profit_bridge"
+    },
+    "incremental_operating_expense": {
+      "amount": "30000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-OPEX-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "actual_incremental_operating_expense_exceeds_assumption",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.2_profit_bridge"
+    },
+    "incremental_tax_and_surcharges": {
+      "amount": "40000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-TAX-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "actual_incremental_tax_and_surcharges_exceeds_assumption",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.2_profit_bridge"
+    },
+    "incremental_working_capital": {
+      "amount": "25000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-WORKING-CAPITAL-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "actual_incremental_working_capital_exceeds_assumption",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.2_profit_bridge"
+    },
+    "minority_interest_deduction": {
+      "amount": "0",
+      "classification": "Fact",
+      "currency": "CNY",
+      "source_fact_ids": [
+        "SYN-FACT-OWNERSHIP-001"
+      ]
+    },
+    "ntm_recognizable_revenue": {
+      "amount": "600000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-NTM-REVENUE-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "actual_ntm_recognizable_revenue_below_assumption",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.2_profit_bridge"
+    }
+  },
+  "run_identity": {
+    "approval_id": "rule_approval_stage2b_minimum_order_contract_v0_1_0",
+    "approval_scope": "stage2b_synthetic_validation",
+    "audit_only_ids": {
+      "artifact_fetch_observation_id": "synthetic_fetch_stage2b_001",
+      "decision_id": "synthetic_decision_stage2b_001",
+      "release_admission_observation_id": "synthetic_admission_stage2b_001",
+      "release_status_observation_id": "synthetic_status_stage2b_001",
+      "run_id": "synthetic_run_stage2b_001"
+    },
+    "code_commit": "0123456789abcdef0123456789abcdef01234567",
+    "config_hash": {
+      "algorithm": "sha256",
+      "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "random_seed": 0,
+    "rule_bundle_id": "industrial_event_minimum_order_contract_slice",
+    "rule_bundle_version": "0.1.0",
+    "rule_status": "approved",
+    "run_mode": "research",
+    "runtime_environment_lock_hash": {
+      "algorithm": "sha256",
+      "value": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "strategy_id": "industrial_bottleneck_event",
+    "strategy_version": "0.1.0",
+    "validation_only": true
+  },
+  "synthetic_authority_markers": {
+    "authorizes_orders": false,
+    "authorizes_positions": false,
+    "not_a_published_release": true,
+    "not_strategy_evidence": true,
+    "provenance": "invest_system_synthetic",
+    "synthetic": true,
+    "validation_only": true
+  },
+  "valuation_input": {
+    "base_business_equity_value": {
+      "amount": "8900000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-BASE-VALUE-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "observable_base_business_value_differs_materially",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.4_valuation"
+    },
+    "downside_scenario_equity_value": {
+      "amount": "7400000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-DOWNSIDE-VALUE-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "observable_downside_equity_value_below_assumption",
+      "scenario": "downside",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.4_valuation"
+    },
+    "event_finite_life_incremental_fcf_present_value": {
+      "amount": "600000000",
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-EVENT-FCF-PV-001",
+      "classification": "Assumption",
+      "currency": "CNY",
+      "falsifier": "event_incremental_fcf_present_value_below_assumption",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.4_valuation"
+    },
+    "explicit_cost_rate": {
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-COST-001",
+      "classification": "Assumption",
+      "falsifier": "actual_explicit_cost_rate_exceeds_assumption",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.4_valuation",
+      "value": "0.0020"
+    },
+    "explicit_slippage_rate": {
+      "as_of": "2026-01-06T01:35:00.000000Z",
+      "assumption_id": "SYN-ASSUMPTION-SLIPPAGE-001",
+      "classification": "Assumption",
+      "falsifier": "actual_explicit_slippage_rate_exceeds_assumption",
+      "scenario": "base",
+      "source_reason": "approved_stage2b_synthetic_baseline:§7.4_valuation",
+      "value": "0.0030"
+    },
+    "first_executable_price": {
+      "amount": "8.00",
+      "available_at": "2026-01-06T01:35:00.000000Z",
+      "classification": "Fact",
+      "currency": "CNY",
+      "source_fact_ids": [
+        "SYN-FACT-FIRST-EXECUTABLE-PRICE-001"
+      ],
+      "unit": "CNY_per_share"
+    },
+    "fully_diluted_shares": {
+      "classification": "Fact",
+      "source_fact_ids": [
+        "SYN-FACT-DILUTED-SHARES-001"
+      ],
+      "unit": "share",
+      "value": "1000000000"
+    },
+    "next_verification": {
+      "falsifiers": [
+        "binding_minimum_obligation_effectively_cancelled",
+        "profit_attribution_path_invalidated"
+      ],
+      "trading_days": 60
+    }
+  }
+}

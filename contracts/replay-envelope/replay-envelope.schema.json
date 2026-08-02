@@ -1,17 +1,28 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.investsystem.local/replay-envelope/0.1.0-draft/replay-envelope.schema.json",
+  "$id": "https://schemas.investsystem.local/replay-envelope/0.2.0-draft/replay-envelope.schema.json",
   "title": "ReplayEnvelope (InvestSystem Draft)",
-  "description": "Self-excluding deterministic replay projection. Audit-only run, decision, transport, endpoint, observation, and persistence identities are outside this contract.",
+  "description": "Self-excluding deterministic replay projection for the Stage 2B synthetic research-validation boundary. Audit-only run, decision, transport, endpoint, observation, path, wall-clock, and persistence identities are outside this contract.",
   "x-owner": "InvestSystem",
   "x-contract-status": "draft",
-  "x-contract-version": "0.1.0-draft",
+  "x-contract-version": "0.2.0-draft",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "input_envelope_hash",
     "verified_input_hash",
+    "strategy_case_envelope_hash",
+    "strategy_case_input_hash",
+    "rule_bundle_id",
     "rule_bundle_hash",
+    "rule_approval_id",
+    "rule_approval_record_hash",
+    "rule_approval_scope",
+    "synthetic_fixture_id",
+    "synthetic_fixture_version",
+    "synthetic_fixture_registration_id",
+    "synthetic_fixture_registration_hash",
+    "synthetic_fixture_registry_snapshot_hash",
     "strategy_id",
     "strategy_version",
     "code_commit",
@@ -20,6 +31,7 @@
     "config_hash",
     "random_seed",
     "run_mode",
+    "validation_only",
     "runtime_environment_lock_hash",
     "evaluated_at",
     "semantic_output",
@@ -33,7 +45,40 @@
     "verified_input_hash": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
     },
+    "strategy_case_envelope_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "strategy_case_input_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "rule_bundle_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
     "rule_bundle_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "rule_approval_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "rule_approval_record_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "rule_approval_scope": {
+      "const": "stage2b_synthetic_validation"
+    },
+    "synthetic_fixture_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "synthetic_fixture_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "synthetic_fixture_registration_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "synthetic_fixture_registration_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "synthetic_fixture_registry_snapshot_hash": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
     },
     "strategy_id": {
@@ -50,14 +95,7 @@
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
     },
     "rule_status": {
-      "enum": [
-        "requirements_confirmed",
-        "hypothesis",
-        "draft",
-        "placeholder",
-        "TBD",
-        "approved"
-      ]
+      "const": "approved"
     },
     "config_hash": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
@@ -67,12 +105,10 @@
       "minimum": 0
     },
     "run_mode": {
-      "enum": [
-        "research",
-        "backtest",
-        "paper",
-        "shadow"
-      ]
+      "const": "research"
+    },
+    "validation_only": {
+      "const": true
     },
     "runtime_environment_lock_hash": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
@@ -90,7 +126,7 @@
       }
     },
     "schema_version": {
-      "const": "0.1.0-draft"
+      "const": "0.2.0-draft"
     },
     "canonical_profile_version": {
       "const": "investsystem-replay-v1"
@@ -108,7 +144,9 @@
           "release_admission_observation_id",
           "release_status_observation_id",
           "replay_hash",
-          "run_id"
+          "run_id",
+          "temporary_path",
+          "wall_clock"
         ]
       }
     },

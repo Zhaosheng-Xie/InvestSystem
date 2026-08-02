@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.investsystem.local/strategy-run-manifest/0.1.0-draft/strategy-run-manifest.schema.json",
-  "title": "StrategyRunManifest (InvestSystem Draft)",
-  "description": "InvestSystem-owned minimum run manifest from PRD v0.3. Fetch, provider-status, and local-admission observation identities are audit references and are not a replay-hash policy.",
+  "$id": "https://schemas.investsystem.local/strategy-run-manifest/0.2.0-draft/strategy-run-manifest.schema.json",
+  "title": "StrategyRunManifest (InvestSystem Draft v0.2)",
+  "description": "InvestSystem-owned run identity including exact rule approval, input provenance, synthetic fixture identity, and explicit authority boundary. Observation IDs remain audit-only.",
   "x-owner": "InvestSystem",
   "x-contract-status": "draft",
-  "x-contract-version": "0.1.0-draft",
+  "x-contract-version": "0.2.0-draft",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -15,10 +15,28 @@
     "strategy_id",
     "strategy_version",
     "code_commit",
+    "rule_bundle_id",
     "rule_bundle_version",
+    "rule_bundle_hash",
     "rule_status",
+    "rule_approval_id",
+    "rule_approval_record_hash",
+    "rule_approval_scope",
     "config_hash",
     "strategy_input_ref",
+    "input_envelope_hash",
+    "strategy_case_envelope_hash",
+    "strategy_case_input_hash",
+    "synthetic_fixture_id",
+    "synthetic_fixture_version",
+    "synthetic_fixture_payload_hash",
+    "input_path",
+    "synthetic",
+    "validation_only",
+    "not_a_published_release",
+    "not_strategy_evidence",
+    "authorizes_positions",
+    "authorizes_orders",
     "artifact_consumption_receipt_hash",
     "artifact_fetch_observation_id",
     "release_status_observation_id",
@@ -29,7 +47,7 @@
   ],
   "properties": {
     "strategy_run_manifest_schema_version": {
-      "const": "0.1.0-draft"
+      "const": "0.2.0-draft"
     },
     "run_id": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
@@ -47,8 +65,14 @@
       "type": "string",
       "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
     },
+    "rule_bundle_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
     "rule_bundle_version": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "rule_bundle_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
     },
     "rule_status": {
       "enum": [
@@ -60,11 +84,59 @@
         "approved"
       ]
     },
+    "rule_approval_id": {
+      "$ref": "#/$defs/nullableId"
+    },
+    "rule_approval_record_hash": {
+      "$ref": "#/$defs/nullableHash"
+    },
+    "rule_approval_scope": {
+      "$ref": "#/$defs/nullableText"
+    },
     "config_hash": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
     },
     "strategy_input_ref": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/strategyInputRef"
+    },
+    "input_envelope_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "strategy_case_envelope_hash": {
+      "$ref": "#/$defs/nullableHash"
+    },
+    "strategy_case_input_hash": {
+      "$ref": "#/$defs/nullableHash"
+    },
+    "synthetic_fixture_id": {
+      "$ref": "#/$defs/nullableId"
+    },
+    "synthetic_fixture_version": {
+      "$ref": "#/$defs/nullableVersion"
+    },
+    "synthetic_fixture_payload_hash": {
+      "$ref": "#/$defs/nullableHash"
+    },
+    "input_path": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "validation_only": {
+      "type": "boolean"
+    },
+    "not_a_published_release": {
+      "type": "boolean"
+    },
+    "not_strategy_evidence": {
+      "type": "boolean"
+    },
+    "authorizes_positions": {
+      "type": "boolean"
+    },
+    "authorizes_orders": {
+      "type": "boolean"
     },
     "artifact_consumption_receipt_hash": {
       "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
@@ -115,9 +187,192 @@
               "research",
               "shadow"
             ]
+          },
+          "rule_approval_id": {
+            "const": null
+          },
+          "rule_approval_record_hash": {
+            "const": null
+          },
+          "rule_approval_scope": {
+            "const": null
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "rule_status": {
+            "const": "approved"
+          }
+        },
+        "required": [
+          "rule_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "rule_approval_id": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+          },
+          "rule_approval_record_hash": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+          },
+          "rule_approval_scope": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "synthetic": {
+            "const": true
+          }
+        },
+        "required": [
+          "synthetic"
+        ]
+      },
+      "then": {
+        "properties": {
+          "synthetic_fixture_id": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+          },
+          "synthetic_fixture_version": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+          },
+          "synthetic_fixture_payload_hash": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+          },
+          "strategy_case_input_hash": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+          },
+          "strategy_case_envelope_hash": {
+            "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+          },
+          "not_a_published_release": {
+            "const": true
+          },
+          "not_strategy_evidence": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validation_only": {
+            "const": true
+          }
+        },
+        "required": [
+          "validation_only"
+        ]
+      },
+      "then": {
+        "properties": {
+          "run_mode": {
+            "const": "research"
+          },
+          "authorizes_positions": {
+            "const": false
+          },
+          "authorizes_orders": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "rule_approval_scope": {
+            "const": "stage2b_synthetic_validation"
+          }
+        },
+        "required": [
+          "rule_approval_scope"
+        ]
+      },
+      "then": {
+        "properties": {
+          "rule_status": {
+            "const": "approved"
+          },
+          "run_mode": {
+            "const": "research"
+          },
+          "input_path": {
+            "const": "synthetic_validation"
+          },
+          "synthetic": {
+            "const": true
+          },
+          "validation_only": {
+            "const": true
+          },
+          "not_a_published_release": {
+            "const": true
+          },
+          "not_strategy_evidence": {
+            "const": true
+          },
+          "authorizes_positions": {
+            "const": false
+          },
+          "authorizes_orders": {
+            "const": false
           }
         }
       }
     }
-  ]
+  ],
+  "$defs": {
+    "nullableId": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableVersion": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableHash": {
+      "anyOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableText": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
 }
