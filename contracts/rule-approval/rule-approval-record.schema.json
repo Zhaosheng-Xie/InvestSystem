@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/rule-approval/0.1.0-draft/rule-approval-record.schema.json",
+  "title": "RuleApprovalRecord (InvestSystem Draft)",
+  "description": "Owner approval binding one strategy, bundle ID, semantic version, complete canonical bundle hash, scope, and source record.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "approval_id",
+    "strategy_id",
+    "bundle_id",
+    "bundle_version",
+    "bundle_hash",
+    "approved_by",
+    "approved_at",
+    "approval_scope",
+    "approval_source_ref",
+    "schema_version"
+  ],
+  "properties": {
+    "approval_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "strategy_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "bundle_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "bundle_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "bundle_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "approved_by": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "approved_at": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+    },
+    "approval_scope": {
+      "enum": [
+        "stage2b_synthetic_validation"
+      ]
+    },
+    "approval_source_ref": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "schema_version": {
+      "const": "0.1.0-draft"
+    }
+  }
+}

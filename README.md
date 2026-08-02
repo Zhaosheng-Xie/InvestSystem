@@ -6,16 +6,18 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v1.0](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2A completed / Stage 2B not_started`。
+- [InvestSystem 实施计划 v1.1](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2A completed / Stage 2B in_progress`。Stage 2B 当前只推进不产生业务结论的 `2B-0`，最小规则包仍等待 owner 逐项批准。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 `0.1.0-draft` 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。这些只证明工程骨架可安装、可测试、可审计；KB Adapter、真实 Release 消费、E0—E7、四道门、利润桥、估值、组合、执行和 P&L 均尚未实现。
 
-Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)。仓库从 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定了 20 个官方文件，并完成 provider canonical、契约 catalog、官方 reference fixture 验证/窄投影，以及 InvestSystem 自有 SQLite v3 的 Receipt、append-only Observation、传递留存闭包、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。根 Receipt 只标识本次策略输入的制品，留存闭包另行固定实际依赖的 source Release、Manifest 快照与制品；调用方不能声明任意 pin 子集。真实 current-status authority 默认为空，且两种批准 transport 都会在 I/O 前显式失败关闭，因此官方 fixture 不能授权新 run。HTTP/export acquisition、完整 status-event 正文、认证 transport、原始响应留存和真实 authority 启用归入 Stage 3。Stage 2B 仍未启动，也没有策略能力。
+Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)。仓库从 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定了 20 个官方文件，并完成 provider canonical、契约 catalog、官方 reference fixture 验证/窄投影，以及 InvestSystem 自有 SQLite v3 的 Receipt、append-only Observation、传递留存闭包、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。根 Receipt 只标识本次策略输入的制品，留存闭包另行固定实际依赖的 source Release、Manifest 快照与制品；调用方不能声明任意 pin 子集。真实 current-status authority 默认为空，且两种批准 transport 都会在 I/O 前显式失败关闭，因此官方 fixture 不能授权新 run。HTTP/export acquisition、完整 status-event 正文、认证 transport、原始响应留存和真实 authority 启用归入 Stage 3。Stage 2A 本身没有交付任何策略能力。
+
+Stage 2B 已在独立 `codex/stage2b` 分支开工。[当前开发状态](docs/validation/stage2b-development-status.md)显示 `2B-0` 已交付 synthetic validation provenance、精确规则哈希批准边界和确定性 replay 契约，并起草待批准的最小订单/合同规则包；它不实现 E3.5/E4、四道门或任何 `TRADE_READY/REJECT/ABSTAIN` 业务语义。PRD 中仍标为 `hypothesis` 的阈值必须经 owner 明确批准后，才可进入 `2B-1`。
 
 ## 当前项目
 
-- [产业卡点及事件驱动系统](产业卡点及事件驱动系统/README.md)：PRD v0.3 已于 `2026-07-31` 批准，规则规格待编写，尚无策略实现。
+- [产业卡点及事件驱动系统](产业卡点及事件驱动系统/README.md)：PRD v0.3 已于 `2026-07-31` 批准；Stage 2B-0 已启动，最小规则规格正在形成但尚未获批，仍无策略实现。
   - 第一读物：[需求文档 v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md)
   - 研究裁决：[框架审计与研究结论 v0.1](产业卡点及事件驱动系统/02_研究/框架审计与研究结论_v0.1.md)
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md)：独立、延后的研究轨道，需求与规则尚未冻结；默认不向产业策略提供信号。

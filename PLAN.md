@@ -1,11 +1,11 @@
-# InvestSystem 实施计划（v1.0）
+# InvestSystem 实施计划（v1.1）
 
-> 计划版本：`v1.0`
+> 计划版本：`v1.1`
 > 基线日期：`2026-08-02`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 0—2A / completed；Stage 2B / not_started`
-> 当前成熟度：`offline_release_admission_kernel_completed / real_transport_not_implemented / strategy_not_implemented`
+> 当前阶段：`Stage 0—2A / completed；Stage 2B / in_progress（2B-0 completed；2B-1 awaiting owner approval）`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_approval_safe_contracts_completed / stage2b_rule_approval_pending / real_transport_not_implemented / strategy_not_implemented`
 > 生产边界：`仅研究、回测、shadow/paper；不得自动实盘`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
@@ -27,6 +27,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 - Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)：从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按 Git 对象原始字节引入 20 个官方文件，并完成 provider canonical、契约目录、官方 reference fixture 验证/窄投影、消费 Receipt/Observation、显式 Release 留存闭包，以及 SQLite v3 的 run-scoped 当前状态确认、默认拒绝 authority、receipt-derived atomic pin、legacy v2 quarantine 和审计留存。实现提交 `01073c1` 的 GitHub Actions run `30744115034` 在 Windows/Linux 均成功。
 - 当前仍没有可用的 KB HTTP/export acquisition、真实 Published Release 当前状态获取、E0—E7、四道门、利润桥、估值、组合/执行、P&L 或可运行策略；Stage 1/2A 的 InvestSystem 自有 draft 契约和固定官方 fixture 验证不得冒充 KB 真实 transport 或已实现业务能力。
 - [产业卡点及事件驱动系统 PRD v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md) 已于 `2026-07-31` 获用户批准并 `supersedes` v0.2；规则状态仍为 `rule_spec_pending`，因此需求生效不等于策略规则或实现生效。v0.2 只作历史追溯。
+- 用户于 `2026-08-02` 授权在独立 `codex/stage2b` 分支启动 Stage 2B。该授权允许推进非业务契约、批准锁、合成输入身份和重放边界，但不等于批准 PRD 中仍标为 `hypothesis` 的阈值；在最小规则包逐项获批前，不得实现或登记 `TRADE_READY` 正例，也不得把 Stage 2B 标为完成。
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md) 仅完成独立研究建档，需求、规则和实现尚未开始。
 - `原始文档/` 是同事提出的设想和材料基线；`归档/` 中的 HTML、截图和旧规格只供追溯，均不得冒充当前实现或验证证据。
 - 本计划建立时的 Git 基线为提交 `bf095f4787b045e6518d6d63217b46aebd5b5bd5`，分支为 `main`。
@@ -42,7 +43,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | Stage 0 | `completed` | 治理、边界和需求冻结 | 已于 `2026-07-31` 验收关闭 |
 | Stage 1 | `completed` | 工程与机器契约骨架 | 已于 `2026-07-31` 验收关闭 |
 | Stage 2A | `completed` | KB 公共契约离线验证、投影、消费持久化与准入内核 | 已于 `2026-08-02` 验收关闭 |
-| Stage 2B | `not_started` | 最小 approved 策略规格与合成纵向切片 | Stage 2A 消费/准入基线已完成；用户批准最小规则包 |
+| Stage 2B | `in_progress` | 最小 approved 策略规格与合成纵向切片 | `2B-0` 非业务契约已完成；`2B-1` 业务语义等待用户批准最小规则包 |
 | Stage 3 | `not_started` | KB 正式 Release 传输与策略端到端验收 | Stage 2A、Stage 2B；KB Stage 6A 已完成；固定的 HTTP/export/current-status 公共契约仍缺 |
 | Stage 4 | `not_started` | 完整产业事件规格与策略引擎 | Stage 2A、Stage 2B；规则在本阶段逐项批准 |
 | Stage 5 | `not_started` | 成交、组合与确定性回放 | Stage 4 |
@@ -67,7 +68,7 @@ Stage 2A + Stage 2B                                │
 题材系统：独立 deferred track（另行批准、另立阶段，不接在 Stage 8 后）
 ```
 
-Stage 0 与 Stage 1 已于 `2026-07-31` 关闭，Stage 2A 已于 `2026-08-02` 关闭；Stage 2B 仍为 `not_started`。Stage 2B 开工前仍须由用户批准最小合成场景和规则包。Stage 2B 完成后既可进入 Stage 4，也可进入 Stage 3：当前正式 `market-daily` Release 只能完成 Stage 3 的传输、校验和消费记录核验；Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 provider-neutral 策略、组合或执行引擎开发。
+Stage 0 与 Stage 1 已于 `2026-07-31` 关闭，Stage 2A 已于 `2026-08-02` 关闭；Stage 2B 已进入 `in_progress`，其中 2B-0 批准安全契约已形成，2B-1 仍等待用户批准最小合成场景和规则包。Stage 2B 完成后既可进入 Stage 4，也可进入 Stage 3：当前正式 `market-daily` Release 只能完成 Stage 3 的传输、校验和消费记录核验；Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 provider-neutral 策略、组合或执行引擎开发。
 
 ---
 
@@ -522,14 +523,21 @@ InvestSystem 合成策略 fixture
 
 ### Stage 2B：最小 approved 策略切片
 
-状态：`not_started`
+状态：`in_progress / 2B-0 completed；2B-1 awaiting_owner_rule_approval`
 
 目标：在已完成的 Stage 2A provider-neutral 消费/准入基线上，完全使用 InvestSystem 自有合成 fixture 实现第 6 节的最小订单/合同策略路径，不依赖 KB 服务或正式 Release。
 
 进入条件：
 
 - Stage 1 已完成。
-- 用户批准该窄切片所需的事件定义、四道门最小规则、输入字段和失败语义；未批准项不得以默认值补齐。
+- Stage 2A 已完成。
+- 用户已授权 Stage 2B 开工，因此可以建设不产生业务结论的 `2B-0` 契约和批准边界。
+- `2B-1` 进入条件仍是用户逐项批准该窄切片所需的合成场景、事件定义、四道门最小规则、输入字段和失败语义；未批准项不得以默认值补齐。
+
+子阶段边界：
+
+- `2B-0`：定义不可混淆的 synthetic validation provenance、规则 bundle 精确哈希批准锁、排除运行/传输偶然字段的确定性 replay envelope、provider-neutral 策略输入边界和 fail-closed 测试；规则文档保持 `draft_for_owner_approval`，不得产生 `TRADE_READY/REJECT/ABSTAIN` 业务判断。
+- `2B-1`：仅在规则包获批后实现 E3.5/`E4_public`、四道门、窄版利润桥/预期/估值、四类策略 golden 和对应 DecisionRecord；输入硬失败继续由策略调用前的 admission 层形成 `BLOCKED` 证据。
 
 工作内容：
 
@@ -852,7 +860,7 @@ InvestSystem 合成策略 fixture
 | Stage 0 | PLAN v0.4 用户批准；PRD v0.3 需求基线批准；ADR-0001；根/产业文档同步；工程栈、单输入、双传输面、SQLite、缓存和撤回政策冻结；remote 核查；`upstream` push 禁用且 dry-run 在联网前以 128 失败 | 无 | `completed` |
 | Stage 1 | [正式验收记录](docs/validation/stage1-acceptance.md)；实现提交 `f8d58f2`；安装前后环境基线；自有 `pyproject.toml`、可重复 hash lock、TOML；editable `--no-deps --no-build-isolation`；provider-neutral DTO 与 `0.1.0-draft` Schema；规范 JSON/哈希/时钟；构造级规则成熟度防线；SQLite 状态/准入、精确子集 pin、内容寻址缓存和独立审计重放；共享环境及全新锁定环境均为 `194 passed, 3 skipped`；GitHub Actions run `30636576903` 的 Windows/Linux 作业均成功 | 无 | `completed` |
 | Stage 2A | [正式验收记录](docs/validation/stage2a-acceptance.md)；实现提交 `01073c1`；固定 KB 提交 `58ed9c5` 的 20 个官方文件；provider canonical/catalog/reference fixture；Receipt/Observation/Retention Closure；SQLite v3 run-scoped confirmation、默认拒绝 authority、全闭包原子 pin、legacy quarantine、失败矩阵；GitHub Actions run `30744115034` 的 Windows/Linux 作业均成功 | 无；真实 HTTP/export/current-status transport 与 authority 启用属于 Stage 3，不是 Stage 2A 缺口 | `completed` |
-| Stage 2B | 研究材料和 PRD 草案 | approved 最小规则包、五类结果 golden matrix、Manifest、DecisionRecord、replay | `not_started` |
+| Stage 2B | PRD v0.3、Stage 2A 基线、`codex/stage2b` 开工授权；[2B-0 开发状态](docs/validation/stage2b-development-status.md)及待批准规则草案 | 用户批准最小规则包；`2B-1` 五类结果 golden matrix、Manifest、DecisionRecord、replay 与正式验收 | `in_progress` |
 | Stage 3 | Stage 2A 已完成；KB Stage 6A 已正式完成；`rel_10e257ad87734d7bb5cadc55e7b444e7` 可用于正式传输核验，但只有 `market-daily` 样本 | Stage 2B；锁定的公共 HTTP/export/current-status 契约；认证 transport、原始响应留存/重核、正式 Context Pack 受支持交付、两类 smoke、离线 replay与非阻塞 E2E | `not_started` |
 | Stage 4 | 规则占位和研究审计 | approved 规则包、引擎、测试 | `not_started` |
 | Stage 5 | 需求级边界 | 市场规则、组合、执行、P&L 回放 | `not_started` |
@@ -867,10 +875,11 @@ InvestSystem 合成策略 fixture
 
 Stage 0、Stage 1 与 Stage 2A 已完成。下一步执行顺序为：
 
-1. Stage 2B 开工前由用户批准最小合成订单/合同场景和 approved 规则包；不得用默认业务假设代替批准。
-2. Stage 2B 完成后可进入 Stage 4，在其中逐项批准并实现完整 P0 规则；Stage 4 完成后进入 Stage 5，均无需等待 KB 部署。
-3. Stage 3 继续保持 `not_started`，直到公共 HTTP/export/current-status 契约可被固定；届时先由认证 transport 核验现有正式 `market-daily` Release 并保留原始响应证据，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
-4. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
+1. 完成 Stage 2B-0 的 synthetic provenance、精确规则批准锁、replay 契约和待批准最小规则草案；这些能力不得产生业务结论。
+2. 由用户逐项批准最小合成订单/合同场景和规则包后进入 Stage 2B-1；不得用默认业务假设代替批准。
+3. Stage 2B 完成后可进入 Stage 4，在其中逐项批准并实现完整 P0 规则；Stage 4 完成后进入 Stage 5，均无需等待 KB 部署。
+4. Stage 3 继续保持 `not_started`，直到公共 HTTP/export/current-status 契约可被固定；届时先由认证 transport 核验现有正式 `market-daily` Release 并保留原始响应证据，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
+5. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
 
 ---
 
@@ -888,3 +897,4 @@ Stage 0、Stage 1 与 Stage 2A 已完成。下一步执行顺序为：
 | `v0.8` | 2026-07-31 | `active` | 在 `codex/stage2` 启动 Stage 2A，固定 KB 提交 `58ed9c5` 的 20 个官方公共契约/fixture 文件并登记 canonical、catalog、receipt/observation 和 reference fixture 在研进展；明确公共 HTTP envelope/export-package 契约、传输层、SQLite v2、持久 observation 和 receipt-derived atomic pin 仍缺失，Stage 2B 仍未启动。 |
 | `v0.9` | 2026-08-01 | `active` | 完成 Stage 2A 的 provider-neutral retention closure、官方 fixture 显式 Context→source 留存材料、Observation v0.2 与 SQLite v2 正式持久化/连续 provider status hash chain/receipt-derived atomic pin；明确 Manifest 语义哈希与 sealed 文档哈希分离并共同进入闭包、canonical aggregate/数据库 head 防回拨和真实持久化因果门、非空 v1 fail closed，且 HTTP/export transport、真实当前状态获取和策略能力仍未实现。 |
 | `v1.0` | 2026-08-02 | `active` | 以实现提交 `01073c1`、锁定环境 `396 passed, 4 skipped`、100 个失败矩阵测试 ID及 GitHub Actions run `30744115034` 的 Windows/Linux 成功证据关闭 Stage 2A；登记 SQLite v3 run-scoped confirmation、默认拒绝 authority、严格 canonical aggregate、全闭包原子 pin、legacy v2 quarantine 和 transport I/O 前失败关闭，并把真实 HTTP/export/current-status acquisition、认证 authority 和原始响应留存明确归入 Stage 3。 |
+| `v1.1` | 2026-08-02 | `active` | 按用户授权在 `codex/stage2b` 启动 Stage 2B，并拆分为 `2B-0` approval-safe 非业务契约与等待 owner 逐项批准规则的 `2B-1`；完成 synthetic provenance、精确 rule bundle approval、self-excluding replay、四份 draft Schema、隔离测试和待批准规则草案，且当前批准 registry 保持为空。明确“继续开发”不自动批准 `10%/15%/2x/120 日` 等 hypothesis，也不允许提前实现 `TRADE_READY` 业务正例。 |

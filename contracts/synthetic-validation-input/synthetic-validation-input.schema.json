@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/synthetic-validation-input/0.1.0-draft/synthetic-validation-input.schema.json",
+  "title": "SyntheticValidationInput (InvestSystem Draft)",
+  "description": "InvestSystem-owned validation-only provenance wrapper. It cannot represent a Published Release, strategy evidence, position authority, or order authority.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixture_id",
+    "fixture_version",
+    "fixture_payload_hash",
+    "verified_knowledge_input",
+    "schema_version",
+    "provenance",
+    "synthetic",
+    "validation_only",
+    "not_a_published_release",
+    "not_strategy_evidence",
+    "authorizes_positions",
+    "authorizes_orders"
+  ],
+  "properties": {
+    "fixture_id": {
+      "type": "string",
+      "pattern": "^synthetic_[A-Za-z0-9][A-Za-z0-9._:-]{0,117}$"
+    },
+    "fixture_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "fixture_payload_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "verified_knowledge_input": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.investsystem.local/verified-knowledge-input/0.1.0-draft/verified-knowledge-input.schema.json"
+        },
+        {
+          "properties": {
+            "input_id": {
+              "type": "string",
+              "pattern": "^synthetic_[A-Za-z0-9]"
+            },
+            "strategy_input_ref": {
+              "properties": {
+                "dataset_release_id": {
+                  "type": "string",
+                  "pattern": "^synthetic_release_[A-Za-z0-9]"
+                }
+              }
+            },
+            "facts": {
+              "items": {
+                "properties": {
+                  "metadata": {
+                    "required": [
+                      "synthetic",
+                      "not_a_published_release"
+                    ],
+                    "properties": {
+                      "synthetic": {
+                        "const": true
+                      },
+                      "not_a_published_release": {
+                        "const": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "provenance": {
+      "const": "invest_system_synthetic"
+    },
+    "synthetic": {
+      "const": true
+    },
+    "validation_only": {
+      "const": true
+    },
+    "not_a_published_release": {
+      "const": true
+    },
+    "not_strategy_evidence": {
+      "const": true
+    },
+    "authorizes_positions": {
+      "const": false
+    },
+    "authorizes_orders": {
+      "const": false
+    }
+  }
+}

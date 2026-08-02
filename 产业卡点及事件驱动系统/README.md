@@ -1,6 +1,6 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；规则规格待编写；Stage 1 工程骨架与 Stage 2A 离线消费/准入内核已验收；Stage 2B 未启动；尚无策略实现`
+项目状态：`PRD v0.3 approved；Stage 1 与 Stage 2A 已验收；Stage 2B-0 completed / Stage 2B-1 awaiting_owner_approval；尚无策略实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-02`
 市场范围：`中国 A 股`
 当前边界：`研究、回测、paper/shadow；不接自动实盘`
@@ -30,8 +30,14 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-02`
 5. [ADR-0001：KB/InvestSystem 边界及 Release 消费政策](../docs/adr/ADR-0001-kb-investsystem-boundary.md)
 6. [Stage 1 工程与机器契约骨架验收记录](../docs/validation/stage1-acceptance.md)
 7. [Stage 2A 离线 Release 消费与准入内核验收记录](../docs/validation/stage2a-acceptance.md)
+8. [最小订单合同纵向切片规则包 v0.1](03_规则与规格/最小订单合同纵向切片规则包_v0.1.md)
+   - 状态：`draft_for_owner_approval / 未生效、不可执行`；用于冻结 Stage 2B-1 的明确批准对象，不代表规则已经实现。
+9. [Stage 2B 当前开发状态](../docs/validation/stage2b-development-status.md)
+   - 状态：`in_progress`；只登记 2B-0 非业务契约和仍未实现的能力，不是正式验收。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空，HTTP/export 都在 I/O 前失败关闭；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实 acquisition/current status、认证 transport 和原始响应留存归入 Stage 3，策略语义属于 Stage 2B 以后。
+
+Stage 2B 已在 `codex/stage2b` 开工，`2B-0` 的批准安全契约和待批准规则草案已经形成。用户的开工授权不自动批准 PRD 中的 hypothesis；在最小合成场景和规则包逐项获批前，不实现业务 Gate、`TRADE_READY` 正例或非零仓位。
 
 ## 推荐研发顺序
 

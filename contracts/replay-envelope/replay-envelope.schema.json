@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/replay-envelope/0.1.0-draft/replay-envelope.schema.json",
+  "title": "ReplayEnvelope (InvestSystem Draft)",
+  "description": "Self-excluding deterministic replay projection. Audit-only run, decision, transport, endpoint, observation, and persistence identities are outside this contract.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "input_envelope_hash",
+    "verified_input_hash",
+    "rule_bundle_hash",
+    "strategy_id",
+    "strategy_version",
+    "code_commit",
+    "rule_bundle_version",
+    "rule_status",
+    "config_hash",
+    "random_seed",
+    "run_mode",
+    "runtime_environment_lock_hash",
+    "evaluated_at",
+    "semantic_output",
+    "schema_version",
+    "canonical_profile_version"
+  ],
+  "properties": {
+    "input_envelope_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "verified_input_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "rule_bundle_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "strategy_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "strategy_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "code_commit": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "rule_bundle_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "rule_status": {
+      "enum": [
+        "requirements_confirmed",
+        "hypothesis",
+        "draft",
+        "placeholder",
+        "TBD",
+        "approved"
+      ]
+    },
+    "config_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "random_seed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "run_mode": {
+      "enum": [
+        "research",
+        "backtest",
+        "paper",
+        "shadow"
+      ]
+    },
+    "runtime_environment_lock_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "evaluated_at": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+    },
+    "semantic_output": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/semanticKey"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/semanticValue"
+      }
+    },
+    "schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "canonical_profile_version": {
+      "const": "investsystem-replay-v1"
+    }
+  },
+  "$defs": {
+    "semanticKey": {
+      "not": {
+        "enum": [
+          "artifact_fetch_observation_id",
+          "decision_id",
+          "endpoint",
+          "observed_at",
+          "persisted_at",
+          "release_admission_observation_id",
+          "release_status_observation_id",
+          "replay_hash",
+          "run_id"
+        ]
+      }
+    },
+    "semanticValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/semanticValue"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/semanticKey"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/semanticValue"
+          }
+        }
+      ]
+    }
+  }
+}

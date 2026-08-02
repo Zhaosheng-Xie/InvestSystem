@@ -1,6 +1,8 @@
 # 实现
 
-需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架已经通过根级[正式验收](../../docs/validation/stage1-acceptance.md)，Stage 2A 的离线 Release 消费与准入内核也已通过[正式验收](../../docs/validation/stage2a-acceptance.md)。Stage 2B 仍未启动；首个纵向切片在已完成契约内核上推进策略轨，随后以正式 Release E2E 汇合：
+需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架已经通过根级[正式验收](../../docs/validation/stage1-acceptance.md)，Stage 2A 的离线 Release 消费与准入内核也已通过[正式验收](../../docs/validation/stage2a-acceptance.md)。Stage 2B 已启动，且不产生业务结论的 `2B-0` 已完成；最小规则包经 owner 明确批准后，才进入实现策略语义的 `2B-1`。首个纵向切片随后以正式 Release E2E 汇合：
+
+2B-0 的实际交付和未实现清单见根级 [Stage 2B 开发状态](../../docs/validation/stage2b-development-status.md)。
 
 - 策略轨：`合成策略 fixture → provider-neutral DTO → StrategyRunManifest → E3.5/E4 → 四道门 → 利润桥/预期/估值 → DecisionRecord + replay_hash`；
 - 已完成契约轨：`KB 官方 fixture → 离线 validator/projector → ArtifactConsumptionReceipt + Observations + ReleaseRetentionClosure → provider-neutral DTO`；真实只读 Adapter/transport 属于 Stage 3；

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -13,9 +14,14 @@ from referencing import Registry, Resource
 from invest_system import (
     DecisionRecord,
     GateResult,
+    ReplayEnvelope,
+    RuleApprovalRecord,
+    RuleApprovalScope,
+    RuleBundleDocument,
     RuleStatus,
     RunMode,
     StrategyRunManifest,
+    SyntheticValidationInput,
     VerifiedKnowledgeInput,
 )
 
@@ -29,6 +35,12 @@ SCHEMA_PATHS = {
         "contracts/strategy-run-manifest/strategy-run-manifest.schema.json"
     ),
     "decision_record": Path("contracts/decision-record/decision-record.schema.json"),
+    "synthetic_validation_input": Path(
+        "contracts/synthetic-validation-input/synthetic-validation-input.schema.json"
+    ),
+    "replay_envelope": Path("contracts/replay-envelope/replay-envelope.schema.json"),
+    "rule_bundle": Path("contracts/rule-bundle/rule-bundle.schema.json"),
+    "rule_approval_record": Path("contracts/rule-approval/rule-approval-record.schema.json"),
 }
 
 
@@ -114,6 +126,103 @@ def test_models_serialize_to_their_draft_schemas(
 
     for name, value in values.items():
         make_validator(name, schemas).validate(value)
+
+
+def test_stage2b0_models_serialize_to_their_draft_schemas(
+    repository_root: Path,
+    verified_knowledge_input: VerifiedKnowledgeInput,
+    strategy_run_manifest: StrategyRunManifest,
+) -> None:
+    schemas = load_schemas(repository_root)
+    synthetic_input = SyntheticValidationInput.from_verified_input(
+        fixture_id="synthetic_fixture_stage2b_contract_001",
+        fixture_version="0.1.0-draft",
+        verified_knowledge_input=verified_knowledge_input,
+    )
+    replay_rule_bundle = RuleBundleDocument(
+        schema_version="0.1.0-draft",
+        strategy_id=strategy_run_manifest.strategy_id,
+        bundle_id="synthetic_stage2b_replay_contract_boundary",
+        bundle_version=strategy_run_manifest.rule_bundle_version,
+        declared_status=strategy_run_manifest.rule_status,
+        rules={"business_semantics": False, "validation_only": True},
+    )
+    approved_rule_bundle = RuleBundleDocument(
+        schema_version="0.1.0-draft",
+        strategy_id="industrial_bottleneck_event",
+        bundle_id="synthetic_stage2b_approval_contract_boundary",
+        bundle_version="0.1.0",
+        declared_status=RuleStatus.APPROVED,
+        rules={"business_semantics": False, "validation_only": True},
+    )
+    approval = RuleApprovalRecord(
+        approval_id="synthetic_contract_approval_001",
+        strategy_id=approved_rule_bundle.strategy_id,
+        bundle_id=approved_rule_bundle.bundle_id,
+        bundle_version=approved_rule_bundle.bundle_version,
+        bundle_hash=approved_rule_bundle.bundle_hash(),
+        approved_by="repository_owner",
+        approved_at=datetime(2026, 8, 2, 9, tzinfo=UTC),
+        approval_scope=RuleApprovalScope.STAGE2B_SYNTHETIC_VALIDATION,
+        approval_source_ref="synthetic_contract_authorization_001",
+    )
+    replay = ReplayEnvelope.from_synthetic_validation(
+        manifest=strategy_run_manifest,
+        strategy_input=synthetic_input,
+        rule_bundle=replay_rule_bundle,
+        evaluated_at=strategy_run_manifest.created_at,
+        semantic_output={"business_semantics": False, "validation_only": True},
+    )
+    values = {
+        "synthetic_validation_input": synthetic_input.to_json_value(),
+        "replay_envelope": replay.to_json_value(),
+        "rule_bundle": approved_rule_bundle.to_json_value(),
+        "rule_approval_record": approval.to_json_value(),
+    }
+
+    for name, value in values.items():
+        make_validator(name, schemas).validate(value)
+
+
+def test_stage2b0_schemas_fail_closed_on_provenance_and_audit_drift(
+    repository_root: Path,
+    verified_knowledge_input: VerifiedKnowledgeInput,
+    strategy_run_manifest: StrategyRunManifest,
+) -> None:
+    schemas = load_schemas(repository_root)
+    synthetic_input = SyntheticValidationInput.from_verified_input(
+        fixture_id="synthetic_fixture_stage2b_contract_001",
+        fixture_version="0.1.0-draft",
+        verified_knowledge_input=verified_knowledge_input,
+    )
+    relabeled = synthetic_input.to_json_value()
+    relabeled["authorizes_positions"] = True
+    with pytest.raises(ValidationError):
+        make_validator("synthetic_validation_input", schemas).validate(relabeled)
+
+    replay_rule_bundle = RuleBundleDocument(
+        schema_version="0.1.0-draft",
+        strategy_id=strategy_run_manifest.strategy_id,
+        bundle_id="synthetic_stage2b_replay_contract_boundary",
+        bundle_version=strategy_run_manifest.rule_bundle_version,
+        declared_status=strategy_run_manifest.rule_status,
+        rules={"business_semantics": False},
+    )
+    replay = ReplayEnvelope.from_synthetic_validation(
+        manifest=strategy_run_manifest,
+        strategy_input=synthetic_input,
+        rule_bundle=replay_rule_bundle,
+        evaluated_at=strategy_run_manifest.created_at,
+        semantic_output={"validation_only": True},
+    ).to_json_value()
+    replay["run_id"] = "volatile_run_id"
+    with pytest.raises(ValidationError):
+        make_validator("replay_envelope", schemas).validate(replay)
+
+    replay.pop("run_id")
+    replay["semantic_output"] = {"nested": {"run_id": "volatile_run_id"}}
+    with pytest.raises(ValidationError):
+        make_validator("replay_envelope", schemas).validate(replay)
 
 
 @pytest.mark.parametrize(

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/rule-bundle/0.1.0-draft/rule-bundle.schema.json",
+  "title": "RuleBundleDocument (InvestSystem Draft)",
+  "description": "Canonical strategy rule content identity. A declared status never grants authority without an exact RuleApprovalRecord registry match.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "strategy_id",
+    "bundle_id",
+    "bundle_version",
+    "declared_status",
+    "rules"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "strategy_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "bundle_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "bundle_version": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/semanticVersion"
+    },
+    "declared_status": {
+      "enum": [
+        "requirements_confirmed",
+        "hypothesis",
+        "draft",
+        "placeholder",
+        "TBD",
+        "approved"
+      ]
+    },
+    "rules": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/jsonValue"
+      }
+    }
+  }
+}
