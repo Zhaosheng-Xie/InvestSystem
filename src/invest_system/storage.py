@@ -1,4 +1,4 @@
-"""InvestSystem-owned SQLite v2 state and immutable KB Release cache.
+"""InvestSystem-owned SQLite v3 state and immutable KB Release cache.
 
 The storage boundary accepts only provider-neutral, already validated
 InvestSystem contracts.  A receipt identifies the root Release payload while
@@ -19,9 +19,11 @@ import time
 from collections.abc import Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from enum import StrEnum
 from hashlib import sha256
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, cast
 from uuid import uuid4
 
@@ -38,14 +40,18 @@ from .consumption import (
     SchemaValidationResult,
     consumption_observation_from_canonical_bytes,
 )
-from .models import StrategyInputRef, StrategyRunManifest
+from .models import HashDigest, StrategyInputRef, StrategyRunManifest
 from .retention import (
     ArtifactPayload,
     ReleaseManifestPayload,
     ReleaseRetentionClosure,
 )
+from .status_confirmation import (
+    RunReleaseStatusConfirmation,
+    status_confirmation_from_canonical_bytes,
+)
 
-STORAGE_SCHEMA_VERSION = 2
+STORAGE_SCHEMA_VERSION = 3
 DEFAULT_CACHE_SOFT_LIMIT_BYTES = 20 * 1024**3
 STRATEGY_RUN_MANIFEST_CANONICAL_PROFILE_VERSION = "investsystem-canonical-json-v1"
 
@@ -81,6 +87,29 @@ class ImmutableMappingError(StorageError):
 class RunPurpose(StrEnum):
     NEW_RUN = "new_run"
     AUDIT_REPLAY = "audit_replay"
+
+
+@dataclass(frozen=True, slots=True)
+class CurrentStatusAuthorityPolicy:
+    """Trust and freshness limits for one status-confirmation authority contract."""
+
+    authority_id: str
+    authority_contract_hash: HashDigest
+    max_age: timedelta
+    max_clock_skew: timedelta = timedelta(0)
+
+    def __post_init__(self) -> None:
+        _require_id("authority_id", self.authority_id)
+        if not isinstance(self.authority_contract_hash, HashDigest):
+            raise TypeError("authority_contract_hash must be a HashDigest")
+        if not isinstance(self.max_age, timedelta):
+            raise TypeError("max_age must be a timedelta")
+        if self.max_age <= timedelta(0):
+            raise ValueError("max_age must be positive")
+        if not isinstance(self.max_clock_skew, timedelta):
+            raise TypeError("max_clock_skew must be a timedelta")
+        if self.max_clock_skew < timedelta(0):
+            raise ValueError("max_clock_skew must be non-negative")
 
 
 class CacheIssueKind(StrEnum):
@@ -397,6 +426,59 @@ _TABLE_SQL: dict[str, str] = {
         FOREIGN KEY(status_observation_id) REFERENCES release_status_observations(observation_id),
         FOREIGN KEY(admission_observation_id) REFERENCES release_admission_observations(observation_id)
     )""",
+    "run_release_status_confirmations": """CREATE TABLE run_release_status_confirmations (
+        confirmation_hash TEXT NOT NULL PRIMARY KEY CHECK(length(confirmation_hash) = 64 AND confirmation_hash NOT GLOB '*[^0-9a-f]*'),
+        confirmation_id TEXT NOT NULL UNIQUE,
+        schema_version TEXT NOT NULL,
+        run_id TEXT NOT NULL UNIQUE,
+        root_release_id TEXT NOT NULL,
+        receipt_hash TEXT NOT NULL,
+        closure_hash TEXT NOT NULL,
+        authority_id TEXT NOT NULL,
+        authority_contract_hash TEXT NOT NULL CHECK(length(authority_contract_hash) = 64 AND authority_contract_hash NOT GLOB '*[^0-9a-f]*'),
+        requested_at TEXT NOT NULL,
+        confirmed_at TEXT NOT NULL,
+        expires_at TEXT NOT NULL,
+        canonical_document BLOB NOT NULL,
+        canonical_document_hash TEXT NOT NULL CHECK(length(canonical_document_hash) = 64 AND canonical_document_hash NOT GLOB '*[^0-9a-f]*'),
+        persisted_at TEXT NOT NULL,
+        FOREIGN KEY(root_release_id) REFERENCES release_identities(release_id),
+        FOREIGN KEY(receipt_hash) REFERENCES receipts(receipt_hash),
+        FOREIGN KEY(closure_hash) REFERENCES retention_closures(closure_hash)
+    )""",
+    "run_release_status_confirmation_items": """CREATE TABLE run_release_status_confirmation_items (
+        confirmation_hash TEXT NOT NULL,
+        release_id TEXT NOT NULL,
+        input_ref_schema_version TEXT NOT NULL,
+        knowledge_cutoff TEXT NOT NULL,
+        manifest_schema_version TEXT NOT NULL,
+        manifest_hash TEXT NOT NULL CHECK(length(manifest_hash) = 64 AND manifest_hash NOT GLOB '*[^0-9a-f]*'),
+        status_observation_id TEXT NOT NULL,
+        status_event_id TEXT NOT NULL,
+        status_event_hash TEXT NOT NULL CHECK(length(status_event_hash) = 64 AND status_event_hash NOT GLOB '*[^0-9a-f]*'),
+        status_sequence INTEGER NOT NULL CHECK(status_sequence >= 1),
+        provider_snapshot_at TEXT NOT NULL,
+        checked_at TEXT NOT NULL,
+        response_bytes_hash TEXT NOT NULL CHECK(length(response_bytes_hash) = 64 AND response_bytes_hash NOT GLOB '*[^0-9a-f]*'),
+        PRIMARY KEY(confirmation_hash, release_id),
+        FOREIGN KEY(confirmation_hash) REFERENCES run_release_status_confirmations(confirmation_hash),
+        FOREIGN KEY(release_id) REFERENCES release_identities(release_id),
+        FOREIGN KEY(status_observation_id) REFERENCES release_status_observations(observation_id)
+    )""",
+    "strategy_run_confirmation_bindings": """CREATE TABLE strategy_run_confirmation_bindings (
+        run_id TEXT NOT NULL PRIMARY KEY,
+        confirmation_hash TEXT NOT NULL UNIQUE,
+        bound_at TEXT NOT NULL,
+        FOREIGN KEY(run_id) REFERENCES strategy_run_pins(run_id),
+        FOREIGN KEY(confirmation_hash) REFERENCES run_release_status_confirmations(confirmation_hash)
+    )""",
+    "legacy_v2_quarantined_run_pins": """CREATE TABLE legacy_v2_quarantined_run_pins (
+        run_id TEXT NOT NULL PRIMARY KEY,
+        source_schema_version INTEGER NOT NULL CHECK(source_schema_version = 2),
+        quarantined_at TEXT NOT NULL,
+        reason TEXT NOT NULL,
+        FOREIGN KEY(run_id) REFERENCES strategy_run_pins(run_id)
+    )""",
     "pin_releases": """CREATE TABLE pin_releases (
         run_id TEXT NOT NULL,
         release_id TEXT NOT NULL,
@@ -424,6 +506,8 @@ _INDEX_SQL: dict[str, str] = {
     "idx_observations_release_type_time": "CREATE INDEX idx_observations_release_type_time ON observations(release_id, observation_type, observed_at)",
     "idx_closure_artifacts_sha": "CREATE INDEX idx_closure_artifacts_sha ON closure_artifacts(sha256)",
     "idx_pin_artifacts_sha": "CREATE INDEX idx_pin_artifacts_sha ON pin_artifacts(sha256)",
+    "idx_status_confirmations_authority_confirmed": "CREATE INDEX idx_status_confirmations_authority_confirmed ON run_release_status_confirmations(authority_id, authority_contract_hash, confirmed_at)",
+    "idx_status_confirmation_items_observation": "CREATE INDEX idx_status_confirmation_items_observation ON run_release_status_confirmation_items(status_observation_id)",
 }
 
 # BEFORE INSERT conflict guards make append-only identities robust even when
@@ -471,6 +555,17 @@ _INSERT_CONFLICT_PREDICATES: dict[str, str] = {
         "AND current_admission_observation_id = NEW.current_admission_observation_id)"
     ),
     "strategy_run_pins": "run_id = NEW.run_id",
+    "run_release_status_confirmations": (
+        "confirmation_hash = NEW.confirmation_hash OR confirmation_id = NEW.confirmation_id "
+        "OR run_id = NEW.run_id"
+    ),
+    "run_release_status_confirmation_items": (
+        "confirmation_hash = NEW.confirmation_hash AND release_id = NEW.release_id"
+    ),
+    "strategy_run_confirmation_bindings": (
+        "run_id = NEW.run_id OR confirmation_hash = NEW.confirmation_hash"
+    ),
+    "legacy_v2_quarantined_run_pins": "run_id = NEW.run_id",
     "pin_releases": "run_id = NEW.run_id AND release_id = NEW.release_id",
     "pin_artifacts": (
         "run_id = NEW.run_id AND release_id = NEW.release_id AND artifact_id = NEW.artifact_id"
@@ -598,6 +693,27 @@ for _subtype_table, _parent_type in {
         _subtype_table, _parent_type
     )
 
+_V3_TABLE_NAMES = {
+    "run_release_status_confirmations",
+    "run_release_status_confirmation_items",
+    "strategy_run_confirmation_bindings",
+    "legacy_v2_quarantined_run_pins",
+}
+_V3_INDEX_NAMES = {
+    "idx_status_confirmations_authority_confirmed",
+    "idx_status_confirmation_items_observation",
+}
+# Exact inventories of the previously released v2 schema.  v3 changes only by
+# adding immutable confirmation/binding objects, so migration can preserve all
+# existing rows and prove that it is upgrading the schema we actually shipped.
+_V2_TABLE_SQL = {name: sql for name, sql in _TABLE_SQL.items() if name not in _V3_TABLE_NAMES}
+_V2_INDEX_SQL = {name: sql for name, sql in _INDEX_SQL.items() if name not in _V3_INDEX_NAMES}
+_V2_TRIGGER_SQL = {
+    name: sql
+    for name, sql in _TRIGGER_SQL.items()
+    if not any(name.endswith(table) for table in _V3_TABLE_NAMES)
+}
+
 _V1_TABLES = {
     "releases",
     "release_status_observations",
@@ -688,7 +804,7 @@ def _normalized_sql(value: str) -> str:
 
 
 class ReleaseCacheStore:
-    """Durable v2 receipt/observation/pin store with an immutable CAS."""
+    """Durable v3 receipt/observation/confirmation/pin store with an immutable CAS."""
 
     def __init__(
         self,
@@ -697,6 +813,7 @@ class ReleaseCacheStore:
         cache_root: Path,
         soft_limit_bytes: int = DEFAULT_CACHE_SOFT_LIMIT_BYTES,
         clock: Clock | None = None,
+        authority_policies: Iterable[CurrentStatusAuthorityPolicy] = (),
     ) -> None:
         if isinstance(soft_limit_bytes, bool) or not isinstance(soft_limit_bytes, int):
             raise TypeError("soft_limit_bytes must be an integer")
@@ -712,6 +829,17 @@ class ReleaseCacheStore:
         self.clock = clock or SystemClock()
         if not isinstance(self.clock, Clock):
             raise TypeError("clock must implement Clock")
+        policy_map: dict[tuple[str, str], CurrentStatusAuthorityPolicy] = {}
+        for policy in authority_policies:
+            if not isinstance(policy, CurrentStatusAuthorityPolicy):
+                raise TypeError(
+                    "authority_policies must contain CurrentStatusAuthorityPolicy values"
+                )
+            key = (policy.authority_id, policy.authority_contract_hash.value)
+            if key in policy_map:
+                raise ValueError("authority_policies contains a duplicate authority contract")
+            policy_map[key] = policy
+        self._authority_policies = MappingProxyType(policy_map)
         self.database_path.parent.mkdir(parents=True, exist_ok=True)
         self.cache_root.mkdir(parents=True, exist_ok=True)
         if _is_link_or_junction(self.database_path) or _is_link_or_junction(self.cache_root):
@@ -774,6 +902,8 @@ class ReleaseCacheStore:
                     self._create_schema(connection)
                 elif version == 1:
                     self._upgrade_empty_v1(connection, tables)
+                elif version == 2:
+                    self._upgrade_v2(connection)
                 elif version != STORAGE_SCHEMA_VERSION:
                     raise StorageSchemaError(f"unsupported SQLite user_version: {version}")
                 self._verify_schema(connection)
@@ -827,6 +957,16 @@ class ReleaseCacheStore:
             if version == 1:
                 cls._validate_empty_v1(connection, tables)
                 return
+            if version == 2:
+                cls._verify_schema_inventory(
+                    connection,
+                    version=2,
+                    table_sql=_V2_TABLE_SQL,
+                    index_sql=_V2_INDEX_SQL,
+                    trigger_sql=_V2_TRIGGER_SQL,
+                    label="storage v2",
+                )
+                return
             if version == STORAGE_SCHEMA_VERSION:
                 cls._verify_schema(connection)
                 return
@@ -868,6 +1008,32 @@ class ReleaseCacheStore:
             connection.execute(f'DROP TABLE "{table}"')
         cls._create_schema(connection)
 
+    def _upgrade_v2(self, connection: sqlite3.Connection) -> None:
+        self._verify_schema_inventory(
+            connection,
+            version=2,
+            table_sql=_V2_TABLE_SQL,
+            index_sql=_V2_INDEX_SQL,
+            trigger_sql=_V2_TRIGGER_SQL,
+            label="storage v2",
+        )
+        for name in _V3_TABLE_NAMES:
+            connection.execute(_TABLE_SQL[name])
+        for name in _V3_INDEX_NAMES:
+            connection.execute(_INDEX_SQL[name])
+        connection.execute(
+            """INSERT INTO legacy_v2_quarantined_run_pins (
+                   run_id, source_schema_version, quarantined_at, reason
+               )
+               SELECT run_id, 2, ?, 'v2 pin predates run-scoped status confirmation'
+               FROM strategy_run_pins""",
+            (self._now(),),
+        )
+        for name, sql in _TRIGGER_SQL.items():
+            if name not in _V2_TRIGGER_SQL:
+                connection.execute(sql)
+        connection.execute(f"PRAGMA user_version = {STORAGE_SCHEMA_VERSION}")
+
     @classmethod
     def _validate_empty_v1(cls, connection: sqlite3.Connection, tables: set[str]) -> None:
         if tables != _V1_TABLES:
@@ -903,11 +1069,31 @@ class ReleaseCacheStore:
 
     @classmethod
     def _verify_schema(cls, connection: sqlite3.Connection) -> None:
-        if int(connection.execute("PRAGMA user_version").fetchone()[0]) != STORAGE_SCHEMA_VERSION:
+        cls._verify_schema_inventory(
+            connection,
+            version=STORAGE_SCHEMA_VERSION,
+            table_sql=_TABLE_SQL,
+            index_sql=_INDEX_SQL,
+            trigger_sql=_TRIGGER_SQL,
+            label="storage v3",
+        )
+
+    @classmethod
+    def _verify_schema_inventory(
+        cls,
+        connection: sqlite3.Connection,
+        *,
+        version: int,
+        table_sql: dict[str, str],
+        index_sql: dict[str, str],
+        trigger_sql: dict[str, str],
+        label: str,
+    ) -> None:
+        if int(connection.execute("PRAGMA user_version").fetchone()[0]) != version:
             raise StorageSchemaError("SQLite user_version changed unexpectedly")
-        if cls._user_tables(connection) != set(_TABLE_SQL):
-            raise StorageSchemaError("SQLite table inventory does not match storage v2")
-        for name, expected in _TABLE_SQL.items():
+        if cls._user_tables(connection) != set(table_sql):
+            raise StorageSchemaError(f"SQLite table inventory does not match {label}")
+        for name, expected in table_sql.items():
             row = connection.execute(
                 "SELECT sql FROM sqlite_master WHERE type='table' AND name=?", (name,)
             ).fetchone()
@@ -919,22 +1105,22 @@ class ReleaseCacheStore:
                 "SELECT name, sql FROM sqlite_master WHERE type='index' AND sql IS NOT NULL"
             )
         }
-        if set(indexes) != set(_INDEX_SQL) or any(
+        if set(indexes) != set(index_sql) or any(
             _normalized_sql(indexes[name]) != _normalized_sql(sql)
-            for name, sql in _INDEX_SQL.items()
+            for name, sql in index_sql.items()
         ):
-            raise StorageSchemaError("SQLite index inventory does not match storage v2")
+            raise StorageSchemaError(f"SQLite index inventory does not match {label}")
         triggers = {
             str(row[0]): str(row[1])
             for row in connection.execute(
                 "SELECT name, sql FROM sqlite_master WHERE type='trigger'"
             )
         }
-        if set(triggers) != set(_TRIGGER_SQL) or any(
+        if set(triggers) != set(trigger_sql) or any(
             _normalized_sql(triggers[name]) != _normalized_sql(sql)
-            for name, sql in _TRIGGER_SQL.items()
+            for name, sql in trigger_sql.items()
         ):
-            raise StorageSchemaError("append-only trigger inventory does not match storage v2")
+            raise StorageSchemaError(f"append-only trigger inventory does not match {label}")
         quick = connection.execute("PRAGMA quick_check").fetchall()
         if [str(row[0]) for row in quick] != ["ok"]:
             raise StorageSchemaError("SQLite quick_check failed")
@@ -2522,8 +2708,274 @@ class ReleaseCacheStore:
         if persisted_artifacts != expected_artifacts:
             raise CacheIntegrityError("run artifact retention pins are inconsistent")
 
-    def pin_run(self, manifest: StrategyRunManifest) -> bool:
-        """Atomically admit and pin the full persisted receipt retention closure."""
+    def _verify_confirmation_aggregate(
+        self,
+        connection: sqlite3.Connection,
+        confirmation_hash: str,
+        *,
+        expected: RunReleaseStatusConfirmation | None = None,
+    ) -> sqlite3.Row:
+        """Rebuild an immutable confirmation from its canonical parent and projections."""
+
+        row = connection.execute(
+            """SELECT confirmation_hash, confirmation_id, schema_version, run_id,
+                      root_release_id, receipt_hash, closure_hash, authority_id,
+                      authority_contract_hash, requested_at, confirmed_at, expires_at,
+                      canonical_document, canonical_document_hash, persisted_at
+               FROM run_release_status_confirmations WHERE confirmation_hash=?""",
+            (confirmation_hash,),
+        ).fetchone()
+        if row is None:
+            raise CacheIntegrityError("run status confirmation is missing")
+        content = bytes(row["canonical_document"])
+        if sha256(content).hexdigest() != str(row["canonical_document_hash"]):
+            raise CacheIntegrityError("run status confirmation canonical document hash changed")
+        if expected is not None and content != expected.to_canonical_bytes():
+            raise ImmutableMappingError("run status confirmation identity was remapped")
+        try:
+            parsed = status_confirmation_from_canonical_bytes(content)
+            header = (
+                parsed.confirmation_hash.value,
+                parsed.confirmation_id,
+                parsed.schema_version,
+                parsed.run_id,
+                parsed.root_release_id,
+                parsed.receipt_hash.value,
+                parsed.closure_hash.value,
+                parsed.authority_id,
+                parsed.authority_contract_hash.value,
+                format_utc(parsed.requested_at),
+                format_utc(parsed.confirmed_at),
+                format_utc(parsed.expires_at),
+            )
+            if header != tuple(
+                row[field]
+                for field in (
+                    "confirmation_hash",
+                    "confirmation_id",
+                    "schema_version",
+                    "run_id",
+                    "root_release_id",
+                    "receipt_hash",
+                    "closure_hash",
+                    "authority_id",
+                    "authority_contract_hash",
+                    "requested_at",
+                    "confirmed_at",
+                    "expires_at",
+                )
+            ):
+                raise ValueError
+            projected_items = tuple(
+                (
+                    *self._input_ref_identity(item.strategy_input_ref),
+                    item.status_observation_id,
+                    item.status_event_id,
+                    item.status_event_hash.value,
+                    item.status_sequence,
+                    format_utc(item.provider_snapshot_at),
+                    format_utc(item.checked_at),
+                    item.response_bytes_hash.value,
+                )
+                for item in parsed.items
+            )
+        except (TypeError, ValueError) as exc:
+            raise CacheIntegrityError(
+                "run status confirmation canonical parent is inconsistent"
+            ) from exc
+        persisted_items = tuple(
+            tuple(item)
+            for item in connection.execute(
+                """SELECT release_id, input_ref_schema_version, knowledge_cutoff,
+                          manifest_schema_version, manifest_hash, status_observation_id,
+                          status_event_id, status_event_hash, status_sequence,
+                          provider_snapshot_at, checked_at, response_bytes_hash
+                   FROM run_release_status_confirmation_items
+                   WHERE confirmation_hash=? ORDER BY release_id""",
+                (confirmation_hash,),
+            )
+        )
+        if projected_items != persisted_items:
+            raise CacheIntegrityError(
+                "run status confirmation item index differs from canonical parent"
+            )
+        return cast(sqlite3.Row, row)
+
+    def _persist_confirmation(
+        self,
+        connection: sqlite3.Connection,
+        confirmation: RunReleaseStatusConfirmation,
+        *,
+        persisted_at: str,
+    ) -> None:
+        canonical = confirmation.to_canonical_bytes()
+        confirmation_hash = confirmation.confirmation_hash.value
+        conflict = connection.execute(
+            """SELECT confirmation_hash FROM run_release_status_confirmations
+               WHERE confirmation_hash=? OR confirmation_id=? OR run_id=?""",
+            (confirmation_hash, confirmation.confirmation_id, confirmation.run_id),
+        ).fetchone()
+        if conflict is not None:
+            if str(conflict["confirmation_hash"]) != confirmation_hash:
+                raise ImmutableMappingError("run status confirmation identity was remapped")
+            self._verify_confirmation_aggregate(
+                connection, confirmation_hash, expected=confirmation
+            )
+            return
+        connection.execute(
+            """INSERT INTO run_release_status_confirmations (
+                   confirmation_hash, confirmation_id, schema_version, run_id,
+                   root_release_id, receipt_hash, closure_hash, authority_id,
+                   authority_contract_hash, requested_at, confirmed_at, expires_at,
+                   canonical_document, canonical_document_hash, persisted_at
+               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                confirmation_hash,
+                confirmation.confirmation_id,
+                confirmation.schema_version,
+                confirmation.run_id,
+                confirmation.root_release_id,
+                confirmation.receipt_hash.value,
+                confirmation.closure_hash.value,
+                confirmation.authority_id,
+                confirmation.authority_contract_hash.value,
+                format_utc(confirmation.requested_at),
+                format_utc(confirmation.confirmed_at),
+                format_utc(confirmation.expires_at),
+                canonical,
+                sha256(canonical).hexdigest(),
+                persisted_at,
+            ),
+        )
+        for item in confirmation.items:
+            identity = self._input_ref_identity(item.strategy_input_ref)
+            connection.execute(
+                """INSERT INTO run_release_status_confirmation_items (
+                       confirmation_hash, release_id, input_ref_schema_version,
+                       knowledge_cutoff, manifest_schema_version, manifest_hash,
+                       status_observation_id, status_event_id, status_event_hash,
+                       status_sequence, provider_snapshot_at, checked_at,
+                       response_bytes_hash
+                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    confirmation_hash,
+                    *identity,
+                    item.status_observation_id,
+                    item.status_event_id,
+                    item.status_event_hash.value,
+                    item.status_sequence,
+                    format_utc(item.provider_snapshot_at),
+                    format_utc(item.checked_at),
+                    item.response_bytes_hash.value,
+                ),
+            )
+        self._verify_confirmation_aggregate(connection, confirmation_hash, expected=confirmation)
+
+    def _validate_confirmation_for_pin(
+        self,
+        connection: sqlite3.Connection,
+        *,
+        manifest: StrategyRunManifest,
+        confirmation: RunReleaseStatusConfirmation,
+        receipt_hash: str,
+        closure_hash: str,
+        closure_release_ids: tuple[str, ...],
+        pin_started: datetime,
+    ) -> dict[str, str]:
+        """Fail closed unless one trusted, fresh snapshot covers the exact closure."""
+
+        if confirmation.run_id != manifest.run_id:
+            raise ReleaseAccessError("status confirmation belongs to another run")
+        root_release_id = manifest.strategy_input_ref.dataset_release_id
+        if (
+            confirmation.root_release_id != root_release_id
+            or confirmation.receipt_hash.value != receipt_hash
+            or confirmation.closure_hash.value != closure_hash
+        ):
+            raise ReleaseAccessError(
+                "status confirmation does not bind the run Release/receipt/closure"
+            )
+        policy = self._authority_policies.get(
+            (confirmation.authority_id, confirmation.authority_contract_hash.value)
+        )
+        if policy is None:
+            raise ReleaseAccessError("status confirmation authority contract is not allowed")
+        if confirmation.confirmed_at > manifest.created_at:
+            raise ReleaseAccessError("run Manifest cannot predate its status confirmation")
+        if confirmation.confirmed_at > pin_started + policy.max_clock_skew:
+            raise ReleaseAccessError("status confirmation is ahead of the local clock")
+        if confirmation.expires_at <= pin_started:
+            raise ReleaseAccessError("status confirmation has expired")
+
+        items_by_release = {item.release_id: item for item in confirmation.items}
+        if set(items_by_release) != set(closure_release_ids):
+            raise ReleaseAccessError(
+                "status confirmation must cover the full retention closure exactly"
+            )
+        status_by_release: dict[str, str] = {}
+        for release_id in closure_release_ids:
+            item = items_by_release[release_id]
+            persisted_identity = connection.execute(
+                """SELECT release_id, input_ref_schema_version, knowledge_cutoff,
+                          manifest_schema_version, manifest_hash
+                   FROM release_identities WHERE release_id=?""",
+                (release_id,),
+            ).fetchone()
+            if persisted_identity is None or tuple(persisted_identity) != self._input_ref_identity(
+                item.strategy_input_ref
+            ):
+                raise ReleaseAccessError(
+                    "status confirmation Release identity differs from the persisted closure"
+                )
+            if item.checked_at > pin_started + policy.max_clock_skew:
+                raise ReleaseAccessError("status confirmation check is ahead of the local clock")
+            if item.provider_snapshot_at > pin_started + policy.max_clock_skew:
+                raise ReleaseAccessError("provider status snapshot is ahead of the local clock")
+            if item.provider_snapshot_at > item.checked_at + policy.max_clock_skew:
+                raise ReleaseAccessError(
+                    "provider status snapshot exceeds the permitted clock skew"
+                )
+            if pin_started - item.provider_snapshot_at > policy.max_age + policy.max_clock_skew:
+                raise ReleaseAccessError("provider status snapshot is stale")
+
+            heads = self._verify_release_observation_chains(connection, release_id)
+            current = self._require_current_published(connection, release_id)
+            current_observation_id = str(current["current_status_observation_id"])
+            if (
+                heads["current_status_observation_id"] != item.status_observation_id
+                or current_observation_id != item.status_observation_id
+            ):
+                raise ReleaseAccessError(
+                    "status confirmation is no longer the current provider status head"
+                )
+            document = self._verify_observation_aggregate(connection, item.status_observation_id)
+            if not (
+                document["schema_validation_result"] == SchemaValidationResult.PASSED.value
+                and document["status"] == ProviderReleaseStatus.PUBLISHED.value
+                and document["status_event_id"] == item.status_event_id
+                and self._json_sha256_value(document["status_event_hash"])
+                == item.status_event_hash.value
+                and document["status_sequence"] == item.status_sequence
+            ):
+                raise ReleaseAccessError(
+                    "status confirmation item does not match its passed published event"
+                )
+            recorded_at = datetime.fromisoformat(
+                str(document["status_recorded_at"]).replace("Z", "+00:00")
+            )
+            if recorded_at > item.provider_snapshot_at + policy.max_clock_skew:
+                raise ReleaseAccessError(
+                    "provider status event postdates the confirmed provider snapshot"
+                )
+            status_by_release[release_id] = current_observation_id
+        return status_by_release
+
+    def pin_run(
+        self,
+        manifest: StrategyRunManifest,
+        confirmation: RunReleaseStatusConfirmation | None = None,
+    ) -> bool:
+        """Atomically confirm current status, admit, and pin the full closure."""
 
         if not isinstance(manifest, StrategyRunManifest):
             raise TypeError("manifest must be a StrategyRunManifest")
@@ -2532,7 +2984,20 @@ class ReleaseCacheStore:
         root_release_id = input_ref.dataset_release_id
         receipt_hash = manifest.artifact_consumption_receipt_hash.value
         with self._write() as connection:
-            pin_started_at = self._now()
+            if (
+                connection.execute(
+                    "SELECT 1 FROM legacy_v2_quarantined_run_pins WHERE run_id=?",
+                    (manifest.run_id,),
+                ).fetchone()
+                is not None
+            ):
+                raise ReleaseAccessError("legacy v2 run pins are permanently audit-only")
+            if confirmation is None:
+                raise ReleaseAccessError("a run-scoped current-status confirmation is required")
+            if not isinstance(confirmation, RunReleaseStatusConfirmation):
+                raise TypeError("confirmation must be a RunReleaseStatusConfirmation")
+            pin_started = read_clock(self.clock, field_name="storage clock")
+            pin_started_at = format_utc(pin_started)
             manifest_created_at = format_utc(manifest.created_at)
             if manifest_created_at > pin_started_at:
                 raise ReleaseAccessError("run Manifest created_at cannot be in the future")
@@ -2567,6 +3032,57 @@ class ReleaseCacheStore:
                 raise ReleaseAccessError(
                     "run Manifest cannot predate persisted receipt/closure material"
                 )
+
+            # Exact retries do not admit a new run.  Validate their immutable
+            # historical binding and return before applying current freshness
+            # or publication policy, which may legitimately have changed.
+            existing_retry = connection.execute(
+                "SELECT * FROM strategy_run_pins WHERE run_id=?", (manifest.run_id,)
+            ).fetchone()
+            if existing_retry is not None:
+                expected_retry = {
+                    "root_release_id": root_release_id,
+                    "receipt_hash": receipt_hash,
+                    "closure_hash": closure_hash,
+                    "fetch_observation_id": manifest.artifact_fetch_observation_id,
+                    "status_observation_id": manifest.release_status_observation_id,
+                    "admission_observation_id": manifest.release_admission_observation_id,
+                    "run_manifest_hash": manifest_hash,
+                    "canonical_profile_version": (STRATEGY_RUN_MANIFEST_CANONICAL_PROFILE_VERSION),
+                }
+                if bytes(existing_retry["run_manifest_canonical"]) != canonical or any(
+                    existing_retry[key] != value for key, value in expected_retry.items()
+                ):
+                    raise ImmutableMappingError("run identifier was remapped")
+                retry_binding = connection.execute(
+                    """SELECT confirmation_hash FROM strategy_run_confirmation_bindings
+                       WHERE run_id=?""",
+                    (manifest.run_id,),
+                ).fetchone()
+                if retry_binding is None:
+                    raise ReleaseAccessError(
+                        "legacy v2 run pins are audit-only and cannot be reauthorized"
+                    )
+                if str(retry_binding["confirmation_hash"]) != confirmation.confirmation_hash.value:
+                    raise ImmutableMappingError("run confirmation binding was remapped")
+                retry_confirmation = self._verify_confirmation_aggregate(
+                    connection,
+                    confirmation.confirmation_hash.value,
+                    expected=confirmation,
+                )
+                if not (
+                    str(retry_confirmation["run_id"]) == manifest.run_id
+                    and str(retry_confirmation["root_release_id"]) == root_release_id
+                    and str(retry_confirmation["receipt_hash"]) == receipt_hash
+                    and str(retry_confirmation["closure_hash"]) == closure_hash
+                ):
+                    raise CacheIntegrityError(
+                        "run status confirmation binding differs from its pin"
+                    )
+                self._verify_persisted_pin_closure(
+                    connection, run_id=manifest.run_id, closure_hash=closure_hash
+                )
+                return False
 
             heads = self._verify_release_observation_chains(connection, root_release_id)
             self._assert_observation_head_is_tail(
@@ -2644,15 +3160,20 @@ class ReleaseCacheStore:
             )
             if not closure_release_ids:
                 raise CacheIntegrityError("run retention closure is empty")
-            pin_status_by_release: dict[str, str] = {}
+            pin_status_by_release = self._validate_confirmation_for_pin(
+                connection,
+                manifest=manifest,
+                confirmation=confirmation,
+                receipt_hash=receipt_hash,
+                closure_hash=closure_hash,
+                closure_release_ids=closure_release_ids,
+                pin_started=pin_started,
+            )
             for release_id in closure_release_ids:
-                if release_id != root_release_id:
-                    self._verify_release_observation_chains(connection, release_id)
-                current = self._require_current_published(connection, release_id)
-                pin_status_by_release[release_id] = str(current["current_status_observation_id"])
+                current_status_observation_id = pin_status_by_release[release_id]
                 observed = connection.execute(
                     "SELECT observed_at, persisted_at FROM observations WHERE observation_id=?",
-                    (current["current_status_observation_id"],),
+                    (current_status_observation_id,),
                 ).fetchone()
                 if observed is None or any(
                     str(observed[field]) > manifest_created_at
@@ -2681,64 +3202,7 @@ class ReleaseCacheStore:
                 )
             release_rows, artifact_rows = self._verify_pin_objects(connection, closure_hash)
 
-            existing = connection.execute(
-                "SELECT * FROM strategy_run_pins WHERE run_id=?", (manifest.run_id,)
-            ).fetchone()
-            expected_existing = {
-                "root_release_id": root_release_id,
-                "receipt_hash": receipt_hash,
-                "closure_hash": closure_hash,
-                "fetch_observation_id": manifest.artifact_fetch_observation_id,
-                "status_observation_id": manifest.release_status_observation_id,
-                "admission_observation_id": manifest.release_admission_observation_id,
-                "run_manifest_hash": manifest_hash,
-                "canonical_profile_version": STRATEGY_RUN_MANIFEST_CANONICAL_PROFILE_VERSION,
-            }
-            if existing is not None:
-                if bytes(existing["run_manifest_canonical"]) != canonical or any(
-                    existing[key] != value for key, value in expected_existing.items()
-                ):
-                    raise ImmutableMappingError("run identifier was remapped")
-                persisted_releases = tuple(
-                    (str(row[0]), str(row[1]), str(row[2]))
-                    for row in connection.execute(
-                        """SELECT release_id, manifest_sha256, status_observation_id
-                           FROM pin_releases WHERE run_id=? ORDER BY release_id""",
-                        (manifest.run_id,),
-                    )
-                )
-                persisted_artifacts = tuple(
-                    (str(row[0]), str(row[1]), str(row[2]), int(row[3]))
-                    for row in connection.execute(
-                        """SELECT release_id, artifact_id, sha256, size_bytes
-                           FROM pin_artifacts WHERE run_id=? ORDER BY release_id, artifact_id""",
-                        (manifest.run_id,),
-                    )
-                )
-                expected_releases = tuple(
-                    (
-                        str(row["release_id"]),
-                        str(row["sha256"]),
-                        pin_status_by_release[str(row["release_id"])],
-                    )
-                    for row in release_rows
-                )
-                expected_artifacts = tuple(
-                    (
-                        str(row["release_id"]),
-                        str(row["artifact_id"]),
-                        str(row["sha256"]),
-                        int(row["size_bytes"]),
-                    )
-                    for row in artifact_rows
-                )
-                if (
-                    persisted_releases != expected_releases
-                    or persisted_artifacts != expected_artifacts
-                ):
-                    raise CacheIntegrityError("existing run retention pins are incomplete")
-                return False
-
+            self._persist_confirmation(connection, confirmation, persisted_at=pin_started_at)
             connection.execute(
                 "INSERT INTO strategy_run_pins VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (
@@ -2776,6 +3240,12 @@ class ReleaseCacheStore:
                         row["size_bytes"],
                     ),
                 )
+            connection.execute(
+                """INSERT INTO strategy_run_confirmation_bindings (
+                       run_id, confirmation_hash, bound_at
+                   ) VALUES (?, ?, ?)""",
+                (manifest.run_id, confirmation.confirmation_hash.value, pin_started_at),
+            )
             return True
 
     @staticmethod
@@ -2844,6 +3314,39 @@ class ReleaseCacheStore:
                     or any(pin[key] != value for key, value in expected.items())
                 ):
                     raise ReleaseAccessError("source run is not this exact persisted pin")
+                quarantined = connection.execute(
+                    "SELECT 1 FROM legacy_v2_quarantined_run_pins WHERE run_id=?",
+                    (source_manifest.run_id,),
+                ).fetchone()
+                if quarantined is not None and access_purpose is RunPurpose.NEW_RUN:
+                    raise ReleaseAccessError("legacy v2 run pins are permanently audit-only")
+                binding = (
+                    None
+                    if quarantined is not None
+                    else connection.execute(
+                        """SELECT confirmation_hash FROM strategy_run_confirmation_bindings
+                           WHERE run_id=?""",
+                        (source_manifest.run_id,),
+                    ).fetchone()
+                )
+                if binding is None:
+                    if access_purpose is RunPurpose.NEW_RUN:
+                        raise ReleaseAccessError(
+                            "legacy v2 run pins are audit-only and cannot authorize ordinary access"
+                        )
+                else:
+                    confirmation_row = self._verify_confirmation_aggregate(
+                        connection, str(binding["confirmation_hash"])
+                    )
+                    if not (
+                        str(confirmation_row["run_id"]) == source_manifest.run_id
+                        and str(confirmation_row["root_release_id"]) == root_release_id
+                        and str(confirmation_row["receipt_hash"]) == str(pin["receipt_hash"])
+                        and str(confirmation_row["closure_hash"]) == str(pin["closure_hash"])
+                    ):
+                        raise CacheIntegrityError(
+                            "run status confirmation binding differs from its pin"
+                        )
                 receipt_closure = connection.execute(
                     "SELECT closure_hash FROM receipt_closures WHERE receipt_hash=?",
                     (pin["receipt_hash"],),

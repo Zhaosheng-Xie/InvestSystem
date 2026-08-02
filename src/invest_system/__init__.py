@@ -57,6 +57,12 @@ from .retention import (
     ReleaseRetentionNode,
     RetentionArtifact,
 )
+from .status_confirmation import (
+    RUN_RELEASE_STATUS_CONFIRMATION_SCHEMA_VERSION,
+    RunReleaseStatusConfirmation,
+    RunReleaseStatusConfirmationItem,
+    status_confirmation_from_canonical_bytes,
+)
 from .storage import (
     DEFAULT_CACHE_SOFT_LIMIT_BYTES,
     STORAGE_SCHEMA_VERSION,
@@ -69,6 +75,7 @@ from .storage import (
     CacheIssueKind,
     CacheQuotaReport,
     CacheScanIssue,
+    CurrentStatusAuthorityPolicy,
     ImmutableMappingError,
     ReleaseAccessContext,
     ReleaseAccessError,
@@ -97,6 +104,7 @@ __all__ = [
     "CachedArtifact",
     "Clock",
     "ConsumptionObservationType",
+    "CurrentStatusAuthorityPolicy",
     "DECISION_RECORD_SCHEMA_VERSION",
     "DEFAULT_CACHE_SOFT_LIMIT_BYTES",
     "DecisionRecord",
@@ -115,6 +123,7 @@ __all__ = [
     "PositionState",
     "ProviderReleaseStatus",
     "RELEASE_RETENTION_CLOSURE_SCHEMA_VERSION",
+    "RUN_RELEASE_STATUS_CONFIRMATION_SCHEMA_VERSION",
     "ReleaseAdmissionObservation",
     "ReleaseAdmissionStatus",
     "ReleaseManifestPayload",
@@ -123,6 +132,8 @@ __all__ = [
     "ReleaseStatusObservation",
     "RetentionArtifact",
     "RunMode",
+    "RunReleaseStatusConfirmation",
+    "RunReleaseStatusConfirmationItem",
     "RuleGovernanceError",
     "RuleStatus",
     "SchemaValidationResult",
@@ -151,5 +162,6 @@ __all__ = [
     "RunPurpose",
     "STRATEGY_RUN_MANIFEST_CANONICAL_PROFILE_VERSION",
     "to_json_value",
+    "status_confirmation_from_canonical_bytes",
     "validate_rule_maturity",
 ]

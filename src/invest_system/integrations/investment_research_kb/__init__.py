@@ -32,6 +32,13 @@ from .reference_fixture import (
     ValidatedRelease,
     verify_stage6_reference_fixture,
 )
+from .transport import (
+    KBTransportCapability,
+    KBTransportNotSupportedError,
+    TransportSupportStatus,
+    kb_transport_capabilities,
+    require_supported_kb_transport,
+)
 
 __all__ = [
     "CANONICALIZATION_PROFILE",
@@ -40,12 +47,15 @@ __all__ = [
     "ContractSnapshotError",
     "ContractValidationError",
     "KBContractCatalog",
+    "KBTransportCapability",
+    "KBTransportNotSupportedError",
     "ProviderCanonicalError",
     "ReferenceFixtureError",
     "ReferenceFixtureResult",
     "ReferenceValidationCode",
     "SnapshotIntegrityError",
     "StrictJsonError",
+    "TransportSupportStatus",
     "ValidatedArtifact",
     "ValidatedChange",
     "ValidatedRelease",
@@ -54,6 +64,8 @@ __all__ = [
     "load_kb_contract_snapshot",
     "load_strict_json_bytes",
     "manifest_sha256",
+    "kb_transport_capabilities",
+    "require_supported_kb_transport",
     "sealed_manifest_bytes",
     "verify_stage6_reference_fixture",
 ]

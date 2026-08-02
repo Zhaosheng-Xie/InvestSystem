@@ -8,6 +8,7 @@ from datetime import UTC, datetime, timedelta
 from hashlib import sha256
 from pathlib import Path
 from threading import Barrier
+from typing import Any
 
 import pytest
 
@@ -38,12 +39,15 @@ from invest_system import (
     RuleStatus,
     RunMode,
     RunPurpose,
+    RunReleaseStatusConfirmation,
+    RunReleaseStatusConfirmationItem,
     SchemaValidationResult,
     StorageSchemaError,
     StrategyInputRef,
     StrategyRunManifest,
     canonical_json_bytes,
 )
+from invest_system.storage import CurrentStatusAuthorityPolicy
 
 BASE = datetime(2026, 7, 31, 8, tzinfo=UTC)
 
@@ -54,6 +58,9 @@ def digest(content: bytes) -> str:
 
 def hash_value(value: str) -> HashDigest:
     return HashDigest(algorithm="sha256", value=value)
+
+
+AUTHORITY_CONTRACT_HASH = hash_value("9" * 64)
 
 
 def ref(release_id: str, character: str, *, cutoff_hours: int) -> StrategyInputRef:
@@ -265,6 +272,169 @@ class Scenario:
             runtime_environment_lock_hash=hash_value("2" * 64),
         )
 
+    def confirmation(self, manifest: StrategyRunManifest) -> RunReleaseStatusConfirmation:
+        """Build one synthetic authority snapshot from the persisted published tails."""
+
+        confirmed_at = min(manifest.created_at - timedelta(minutes=10), BASE + timedelta(hours=7))
+        refs = {
+            self.root_ref.dataset_release_id: self.root_ref,
+            self.source_ref.dataset_release_id: self.source_ref,
+        }
+        items: list[RunReleaseStatusConfirmationItem] = []
+        with sqlite3.connect(self.store.database_path) as connection:
+            connection.row_factory = sqlite3.Row
+            for release_id in sorted(refs):
+                row = connection.execute(
+                    """SELECT observation.observation_id, status.status_event_id,
+                              status.status_event_hash, status.status_sequence
+                       FROM release_status_observations AS status
+                       JOIN observations AS observation USING(observation_id)
+                       JOIN release_heads AS heads
+                         ON heads.current_status_observation_id=observation.observation_id
+                       WHERE heads.release_id=?
+                         AND status.validation_result='passed' AND status.status='published'""",
+                    (release_id,),
+                ).fetchone()
+                if row is None:
+                    row = connection.execute(
+                        """SELECT observation.observation_id, status.status_event_id,
+                                  status.status_event_hash, status.status_sequence
+                           FROM release_status_observations AS status
+                           JOIN observations AS observation USING(observation_id)
+                           WHERE observation.release_id=?
+                             AND status.validation_result='passed' AND status.status='published'
+                           ORDER BY observation.observed_at DESC LIMIT 1""",
+                        (release_id,),
+                    ).fetchone()
+                assert row is not None
+                response_digest = digest(
+                    f"{manifest.run_id}:{release_id}:{row['observation_id']}".encode()
+                )
+                items.append(
+                    RunReleaseStatusConfirmationItem(
+                        strategy_input_ref=refs[release_id],
+                        status_observation_id=str(row["observation_id"]),
+                        status_event_id=str(row["status_event_id"]),
+                        status_event_hash=hash_value(str(row["status_event_hash"])),
+                        status_sequence=int(row["status_sequence"]),
+                        provider_snapshot_at=confirmed_at,
+                        checked_at=confirmed_at,
+                        response_bytes_hash=hash_value(response_digest),
+                    )
+                )
+        return RunReleaseStatusConfirmation.create(
+            confirmation_id=f"confirmation-{manifest.run_id}",
+            run_id=manifest.run_id,
+            root_release_id=self.root_ref.dataset_release_id,
+            receipt_hash=manifest.artifact_consumption_receipt_hash,
+            closure_hash=self.closure.closure_hash,
+            authority_id="synthetic-status-authority",
+            authority_contract_hash=AUTHORITY_CONTRACT_HASH,
+            requested_at=confirmed_at - timedelta(minutes=10),
+            confirmed_at=confirmed_at,
+            expires_at=BASE + timedelta(hours=10),
+            items=items,
+        )
+
+    def pin(
+        self,
+        manifest: StrategyRunManifest,
+        confirmation: RunReleaseStatusConfirmation | None = None,
+    ) -> bool:
+        return self.store.pin_run(manifest, confirmation or self.confirmation(manifest))
+
+
+def rebuild_confirmation(
+    confirmation: RunReleaseStatusConfirmation, **changes: Any
+) -> RunReleaseStatusConfirmation:
+    values: dict[str, Any] = {
+        "confirmation_id": confirmation.confirmation_id,
+        "run_id": confirmation.run_id,
+        "root_release_id": confirmation.root_release_id,
+        "receipt_hash": confirmation.receipt_hash,
+        "closure_hash": confirmation.closure_hash,
+        "authority_id": confirmation.authority_id,
+        "authority_contract_hash": confirmation.authority_contract_hash,
+        "requested_at": confirmation.requested_at,
+        "confirmed_at": confirmation.confirmed_at,
+        "expires_at": confirmation.expires_at,
+        "items": confirmation.items,
+    }
+    values.update(changes)
+    return RunReleaseStatusConfirmation.create(**values)
+
+
+def inject_confirmation_binding(
+    database: Path,
+    confirmation: RunReleaseStatusConfirmation,
+) -> None:
+    """Simulate a direct SQLite client trying to revive a quarantined v2 pin."""
+
+    document = confirmation.to_json_value()
+    canonical = confirmation.to_canonical_bytes()
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            """INSERT INTO run_release_status_confirmations (
+                   confirmation_hash, confirmation_id, schema_version, run_id,
+                   root_release_id, receipt_hash, closure_hash, authority_id,
+                   authority_contract_hash, requested_at, confirmed_at, expires_at,
+                   canonical_document, canonical_document_hash, persisted_at
+               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                confirmation.confirmation_hash.value,
+                confirmation.confirmation_id,
+                confirmation.schema_version,
+                confirmation.run_id,
+                confirmation.root_release_id,
+                confirmation.receipt_hash.value,
+                confirmation.closure_hash.value,
+                confirmation.authority_id,
+                confirmation.authority_contract_hash.value,
+                document["requested_at"],
+                document["confirmed_at"],
+                document["expires_at"],
+                canonical,
+                digest(canonical),
+                document["confirmed_at"],
+            ),
+        )
+        for item, item_document in zip(confirmation.items, document["items"], strict=True):
+            input_ref = item_document["strategy_input_ref"]
+            connection.execute(
+                """INSERT INTO run_release_status_confirmation_items (
+                       confirmation_hash, release_id, input_ref_schema_version,
+                       knowledge_cutoff, manifest_schema_version, manifest_hash,
+                       status_observation_id, status_event_id, status_event_hash,
+                       status_sequence, provider_snapshot_at, checked_at,
+                       response_bytes_hash
+                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    confirmation.confirmation_hash.value,
+                    item.release_id,
+                    input_ref["schema_version"],
+                    input_ref["knowledge_cutoff"],
+                    input_ref["release_manifest_schema_version"],
+                    input_ref["manifest_hash"]["value"],
+                    item.status_observation_id,
+                    item.status_event_id,
+                    item.status_event_hash.value,
+                    item.status_sequence,
+                    item_document["provider_snapshot_at"],
+                    item_document["checked_at"],
+                    item.response_bytes_hash.value,
+                ),
+            )
+        connection.execute(
+            """INSERT INTO strategy_run_confirmation_bindings (
+                   run_id, confirmation_hash, bound_at
+               ) VALUES (?, ?, ?)""",
+            (
+                confirmation.run_id,
+                confirmation.confirmation_hash.value,
+                document["confirmed_at"],
+            ),
+        )
+
 
 @pytest.fixture
 def store(tmp_path: Path) -> ReleaseCacheStore:
@@ -273,6 +443,14 @@ def store(tmp_path: Path) -> ReleaseCacheStore:
         cache_root=tmp_path / "cache",
         soft_limit_bytes=1,
         clock=FixedClock(BASE + timedelta(hours=8)),
+        authority_policies=(
+            CurrentStatusAuthorityPolicy(
+                authority_id="synthetic-status-authority",
+                authority_contract_hash=AUTHORITY_CONTRACT_HASH,
+                max_age=timedelta(hours=24),
+                max_clock_skew=timedelta(minutes=1),
+            ),
+        ),
     )
 
 
@@ -281,16 +459,47 @@ def count(database: Path, table: str) -> int:
         return int(connection.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0])
 
 
+def test_new_pin_defaults_to_fail_closed_without_confirmation_or_authority(
+    tmp_path: Path,
+) -> None:
+    default_store = ReleaseCacheStore(
+        database_path=tmp_path / "state.sqlite3",
+        cache_root=tmp_path / "cache",
+        clock=FixedClock(BASE + timedelta(hours=8)),
+    )
+    scenario = Scenario(default_store)
+    manifest = scenario.ready()
+    with pytest.raises(ReleaseAccessError, match="confirmation is required"):
+        default_store.pin_run(manifest)
+    with pytest.raises(ReleaseAccessError, match="authority contract is not allowed"):
+        default_store.pin_run(manifest, scenario.confirmation(manifest))
+    assert count(default_store.database_path, "strategy_run_pins") == 0
+    assert count(default_store.database_path, "run_release_status_confirmations") == 0
+
+
+def test_authority_policy_registry_exposes_no_public_mutation_surface(
+    store: ReleaseCacheStore,
+) -> None:
+    assert not hasattr(store, "authority_policies")
+    policies: Any = store._authority_policies
+    with pytest.raises(TypeError):
+        policies[("injected", "0" * 64)] = next(iter(policies.values()))
+
+
 def test_formal_path_pins_full_closure_and_separates_normal_from_audit(
     store: ReleaseCacheStore,
 ) -> None:
     scenario = Scenario(store)
     manifest = scenario.ready()
 
-    assert store.pin_run(manifest) is True
-    assert store.pin_run(manifest) is False
+    confirmation = scenario.confirmation(manifest)
+    assert scenario.pin(manifest, confirmation) is True
+    assert scenario.pin(manifest, confirmation) is False
     assert count(store.database_path, "pin_releases") == 2
     assert count(store.database_path, "pin_artifacts") == 2
+    assert count(store.database_path, "run_release_status_confirmations") == 1
+    assert count(store.database_path, "run_release_status_confirmation_items") == 2
+    assert count(store.database_path, "strategy_run_confirmation_bindings") == 1
 
     root = store.read_artifact(
         artifact_id="shared-artifact",
@@ -316,6 +525,225 @@ def test_formal_path_pins_full_closure_and_separates_normal_from_audit(
         ),
     )
     assert audit.content == scenario.source_bytes
+
+
+def test_confirmation_rejects_missing_closure_item_expiry_and_wrong_run_binding(
+    store: ReleaseCacheStore,
+) -> None:
+    scenario = Scenario(store)
+    manifest = scenario.ready()
+    confirmation = scenario.confirmation(manifest)
+    root_item = next(
+        item
+        for item in confirmation.items
+        if item.release_id == scenario.root_ref.dataset_release_id
+    )
+
+    missing_source = rebuild_confirmation(
+        confirmation,
+        confirmation_id="confirmation-missing-source",
+        items=(root_item,),
+    )
+    with pytest.raises(ReleaseAccessError, match="full retention closure exactly"):
+        scenario.pin(manifest, missing_source)
+
+    expired = rebuild_confirmation(
+        confirmation,
+        confirmation_id="confirmation-expired",
+        expires_at=BASE + timedelta(hours=7, minutes=30),
+    )
+    with pytest.raises(ReleaseAccessError, match="expired"):
+        scenario.pin(manifest, expired)
+
+    wrong_run = rebuild_confirmation(
+        confirmation,
+        confirmation_id="confirmation-wrong-run",
+        run_id="another-run",
+    )
+    with pytest.raises(ReleaseAccessError, match="another run"):
+        scenario.pin(manifest, wrong_run)
+
+    assert count(store.database_path, "strategy_run_pins") == 0
+    assert count(store.database_path, "run_release_status_confirmations") == 0
+
+
+@pytest.mark.parametrize(
+    "mismatch",
+    ("event_id", "event_hash", "sequence", "input_identity"),
+)
+def test_confirmation_rejects_status_event_or_release_identity_mismatch(
+    store: ReleaseCacheStore,
+    mismatch: str,
+) -> None:
+    scenario = Scenario(store)
+    manifest = scenario.ready()
+    confirmation = scenario.confirmation(manifest)
+    root_item = next(
+        item
+        for item in confirmation.items
+        if item.release_id == scenario.root_ref.dataset_release_id
+    )
+    if mismatch == "event_id":
+        changed_item = replace(root_item, status_event_id="different-event")
+    elif mismatch == "event_hash":
+        changed_item = replace(root_item, status_event_hash=hash_value("8" * 64))
+    elif mismatch == "sequence":
+        changed_item = replace(root_item, status_sequence=root_item.status_sequence + 1)
+    else:
+        changed_item = replace(
+            root_item,
+            strategy_input_ref=replace(
+                root_item.strategy_input_ref,
+                manifest_hash=hash_value("8" * 64),
+            ),
+        )
+    changed = rebuild_confirmation(
+        confirmation,
+        confirmation_id=f"confirmation-mismatch-{mismatch}",
+        items=tuple(
+            changed_item if item.release_id == root_item.release_id else item
+            for item in confirmation.items
+        ),
+    )
+    expected = "identity differs" if mismatch == "input_identity" else "does not match"
+    with pytest.raises(ReleaseAccessError, match=expected):
+        scenario.pin(manifest, changed)
+    assert count(store.database_path, "strategy_run_pins") == 0
+
+
+def test_confirmation_rejects_an_extra_release_outside_the_closure(
+    store: ReleaseCacheStore,
+) -> None:
+    scenario = Scenario(store)
+    manifest = scenario.ready()
+    confirmation = scenario.confirmation(manifest)
+    root_item = next(
+        item
+        for item in confirmation.items
+        if item.release_id == scenario.root_ref.dataset_release_id
+    )
+    extra_item = replace(
+        root_item,
+        strategy_input_ref=ref("extra-release", "7", cutoff_hours=-2),
+        status_observation_id="extra-status-observation",
+        status_event_id="extra-status-event",
+        status_event_hash=hash_value("7" * 64),
+        response_bytes_hash=hash_value("6" * 64),
+    )
+    extra = rebuild_confirmation(
+        confirmation,
+        confirmation_id="confirmation-extra-release",
+        items=(*confirmation.items, extra_item),
+    )
+    with pytest.raises(ReleaseAccessError, match="full retention closure exactly"):
+        scenario.pin(manifest, extra)
+
+
+def test_confirmation_rejects_stale_provider_snapshot(tmp_path: Path) -> None:
+    stale_store = ReleaseCacheStore(
+        database_path=tmp_path / "state.sqlite3",
+        cache_root=tmp_path / "cache",
+        clock=FixedClock(BASE + timedelta(hours=8)),
+        authority_policies=(
+            CurrentStatusAuthorityPolicy(
+                authority_id="synthetic-status-authority",
+                authority_contract_hash=AUTHORITY_CONTRACT_HASH,
+                max_age=timedelta(minutes=30),
+                max_clock_skew=timedelta(minutes=1),
+            ),
+        ),
+    )
+    scenario = Scenario(stale_store)
+    manifest = scenario.ready()
+    with pytest.raises(ReleaseAccessError, match="snapshot is stale"):
+        scenario.pin(manifest)
+
+
+@pytest.mark.parametrize(
+    ("snapshot_delta", "expected"),
+    (
+        (timedelta(hours=1, minutes=2), "ahead of the local clock"),
+        (timedelta(minutes=2), "permitted clock skew"),
+    ),
+)
+def test_confirmation_rejects_provider_snapshot_clock_skew(
+    store: ReleaseCacheStore,
+    snapshot_delta: timedelta,
+    expected: str,
+) -> None:
+    scenario = Scenario(store)
+    manifest = scenario.ready()
+    confirmation = scenario.confirmation(manifest)
+    root_item = next(
+        item
+        for item in confirmation.items
+        if item.release_id == scenario.root_ref.dataset_release_id
+    )
+    changed_item = replace(
+        root_item,
+        provider_snapshot_at=root_item.checked_at + snapshot_delta,
+    )
+    changed = rebuild_confirmation(
+        confirmation,
+        confirmation_id=f"confirmation-skew-{int(snapshot_delta.total_seconds())}",
+        items=tuple(
+            changed_item if item.release_id == root_item.release_id else item
+            for item in confirmation.items
+        ),
+    )
+    with pytest.raises(ReleaseAccessError, match=expected):
+        scenario.pin(manifest, changed)
+
+
+def test_confirmation_rejects_event_after_provider_snapshot(
+    store: ReleaseCacheStore,
+) -> None:
+    scenario = Scenario(store)
+    manifest = scenario.ready()
+    confirmation = scenario.confirmation(manifest)
+    root_item = next(
+        item
+        for item in confirmation.items
+        if item.release_id == scenario.root_ref.dataset_release_id
+    )
+    changed_item = replace(
+        root_item,
+        provider_snapshot_at=BASE + timedelta(hours=1, minutes=30),
+    )
+    changed = rebuild_confirmation(
+        confirmation,
+        confirmation_id="confirmation-event-after-snapshot",
+        items=tuple(
+            changed_item if item.release_id == root_item.release_id else item
+            for item in confirmation.items
+        ),
+    )
+    with pytest.raises(ReleaseAccessError, match="event postdates"):
+        scenario.pin(manifest, changed)
+
+
+def test_confirmation_cannot_admit_after_a_new_withdrawal_event(
+    store: ReleaseCacheStore,
+) -> None:
+    scenario = Scenario(store)
+    manifest = scenario.ready()
+    confirmation = scenario.confirmation(manifest)
+    withdrawn = scenario.status(
+        scenario.source_ref,
+        "source-status-withdrawn-after-confirmation",
+        sequence=4,
+        status=ProviderReleaseStatus.WITHDRAWN,
+        supersedes="source-status-1",
+        observed_hours=7,
+        event_hash_character="8",
+        previous_event_hash_character="d",
+        recorded_hours=6,
+    )
+    store.append_observation(withdrawn)
+    with pytest.raises(ReleaseAccessError, match="not currently confirmed published"):
+        scenario.pin(manifest, confirmation)
+    assert count(store.database_path, "strategy_run_pins") == 0
+    assert count(store.database_path, "run_release_status_confirmations") == 0
 
 
 def test_record_verified_consumption_is_exact_idempotent_and_opaque_manifest_safe(
@@ -371,7 +799,7 @@ def test_pin_is_atomic_until_every_source_is_current_published(store: ReleaseCac
     store.append_observation(failed_source)
 
     with pytest.raises(ReleaseAccessError, match="not currently confirmed"):
-        store.pin_run(manifest)
+        scenario.pin(manifest)
     assert count(store.database_path, "strategy_run_pins") == 0
     assert count(store.database_path, "pin_artifacts") == 0
 
@@ -379,7 +807,8 @@ def test_pin_is_atomic_until_every_source_is_current_published(store: ReleaseCac
 def test_withdrawal_blocks_normal_access_but_preserves_audit(store: ReleaseCacheStore) -> None:
     scenario = Scenario(store)
     manifest = scenario.ready()
-    store.pin_run(manifest)
+    confirmation = scenario.confirmation(manifest)
+    scenario.pin(manifest, confirmation)
     withdrawn = scenario.status(
         scenario.root_ref,
         "root-status-withdrawn",
@@ -391,6 +820,7 @@ def test_withdrawal_blocks_normal_access_but_preserves_audit(store: ReleaseCache
         previous_event_hash_character="c",
     )
     store.append_observation(withdrawn)
+    assert scenario.pin(manifest, confirmation) is False
 
     with pytest.raises(ReleaseAccessError, match="lost current"):
         store.read_artifact(
@@ -424,7 +854,7 @@ def test_source_withdrawal_is_visible_in_source_audit_context(
 ) -> None:
     scenario = Scenario(store)
     manifest = scenario.ready()
-    store.pin_run(manifest)
+    scenario.pin(manifest)
     withdrawn = scenario.status(
         scenario.source_ref,
         "source-status-withdrawn",
@@ -525,7 +955,7 @@ def test_exact_latest_status_reobservation_recovers_after_unconfirmable(
         release_status_observation_id=reconfirmed.observation_id,
         release_admission_observation_id=admission.observation_id,
     )
-    assert store.pin_run(recovered_manifest)
+    assert scenario.pin(recovered_manifest)
     read = store.read_artifact(
         artifact_id="shared-artifact",
         purpose=RunPurpose.NEW_RUN,
@@ -589,11 +1019,11 @@ def test_observation_and_manifest_persistence_times_enforce_real_causality(
     scenario = Scenario(store)
     manifest = scenario.ready()
     with pytest.raises(ReleaseAccessError, match="predate persisted"):
-        store.pin_run(
-            replace(manifest, run_id="run-backdated", created_at=BASE + timedelta(hours=7))
-        )
+        backdated = replace(manifest, run_id="run-backdated", created_at=BASE + timedelta(hours=7))
+        scenario.pin(backdated)
     with pytest.raises(ReleaseAccessError, match="in the future"):
-        store.pin_run(replace(manifest, run_id="run-future", created_at=BASE + timedelta(hours=9)))
+        future = replace(manifest, run_id="run-future", created_at=BASE + timedelta(hours=9))
+        scenario.pin(future)
     future_observation = scenario.status(
         scenario.root_ref,
         "future-observation",
@@ -687,7 +1117,7 @@ def test_manifest_cannot_predate_required_observation(store: ReleaseCacheStore) 
     manifest = scenario.ready()
     too_early = replace(manifest, created_at=BASE + timedelta(hours=2, minutes=30))
     with pytest.raises(ReleaseAccessError, match="cannot predate"):
-        store.pin_run(too_early)
+        scenario.pin(too_early)
     assert count(store.database_path, "strategy_run_pins") == 0
 
 
@@ -830,7 +1260,7 @@ def test_forged_status_after_withdrawal_cannot_restore_release_access(
         )
 
     with pytest.raises(CacheIntegrityError, match="withdrawn provider status is terminal"):
-        store.pin_run(manifest)
+        scenario.pin(manifest)
     with pytest.raises(CacheIntegrityError, match="withdrawn provider status is terminal"):
         store.append_observation(forged)
 
@@ -896,7 +1326,7 @@ def test_canonical_observation_remains_authoritative_over_sqlite_projection(
         CacheIntegrityError,
         match="observation subtype differs from canonical parent",
     ):
-        store.pin_run(manifest)
+        scenario.pin(manifest)
     with pytest.raises(
         CacheIntegrityError,
         match="observation subtype differs from canonical parent",
@@ -975,7 +1405,7 @@ def test_non_contract_canonical_status_cannot_be_authorized_or_pinned(
     with pytest.raises(CacheIntegrityError, match="canonical parent is inconsistent"):
         store.append_observation(admission)
     with pytest.raises(CacheIntegrityError, match="canonical parent is inconsistent"):
-        store.pin_run(manifest)
+        scenario.pin(manifest)
 
 
 def test_canonical_receipt_rejects_appended_child_rows(store: ReleaseCacheStore) -> None:
@@ -992,7 +1422,7 @@ def test_canonical_receipt_rejects_appended_child_rows(store: ReleaseCacheStore)
             ),
         )
     with pytest.raises(CacheIntegrityError, match="Receipt artifact index"):
-        store.pin_run(manifest)
+        scenario.pin(manifest)
 
 
 def test_canonical_closure_rejects_self_consistent_appended_pin_rows(
@@ -1000,7 +1430,7 @@ def test_canonical_closure_rejects_self_consistent_appended_pin_rows(
 ) -> None:
     scenario = Scenario(store)
     manifest = scenario.ready()
-    store.pin_run(manifest)
+    scenario.pin(manifest)
     root_digest = digest(scenario.root_bytes)
     with sqlite3.connect(store.database_path) as connection:
         connection.execute(
@@ -1069,7 +1499,7 @@ def test_quota_reports_pinned_manifests_artifacts_orphans_and_corruption(
 ) -> None:
     scenario = Scenario(store)
     manifest = scenario.ready()
-    store.pin_run(manifest)
+    scenario.pin(manifest)
     orphan = store.cache_root / "orphan.bin"
     orphan.write_bytes(b"orphan")
     report = store.quota_report()
@@ -1188,7 +1618,7 @@ def test_every_read_revalidates_source_artifacts_and_manifests(
 ) -> None:
     scenario = Scenario(store)
     manifest = scenario.ready()
-    store.pin_run(manifest)
+    scenario.pin(manifest)
 
     source_manifest_digest = digest(scenario.source_manifest_bytes)
     source_manifest_path = (
@@ -1230,15 +1660,48 @@ def test_pin_failure_rolls_back_every_derived_pin_and_removes_subset_bypass(
                BEGIN SELECT RAISE(ABORT, 'injected pin failure'); END"""
         )
     with pytest.raises(sqlite3.IntegrityError, match="injected pin failure"):
-        store.pin_run(manifest)
+        scenario.pin(manifest)
     assert count(store.database_path, "strategy_run_pins") == 0
     assert count(store.database_path, "pin_releases") == 0
     assert count(store.database_path, "pin_artifacts") == 0
+    assert count(store.database_path, "run_release_status_confirmations") == 0
+    assert count(store.database_path, "run_release_status_confirmation_items") == 0
+    assert count(store.database_path, "strategy_run_confirmation_bindings") == 0
     assert count(store.database_path, "receipts") == 1
     assert count(store.database_path, "observations") == 8
 
 
-def test_concurrent_first_initialization_converges_on_one_verified_v2(
+def test_non_contract_confirmation_parent_cannot_authorize_pin_or_read(
+    store: ReleaseCacheStore,
+) -> None:
+    scenario = Scenario(store)
+    manifest = scenario.ready()
+    confirmation = scenario.confirmation(manifest)
+    scenario.pin(manifest, confirmation)
+
+    document = confirmation.to_json_value()
+    document["unexpected_contract_field"] = "injected"
+    forged = canonical_json_bytes(document)
+    with sqlite3.connect(store.database_path) as connection:
+        connection.execute("DROP TRIGGER prevent_update_run_release_status_confirmations")
+        connection.execute(
+            """UPDATE run_release_status_confirmations
+               SET canonical_document=?, canonical_document_hash=?
+               WHERE confirmation_hash=?""",
+            (forged, digest(forged), confirmation.confirmation_hash.value),
+        )
+
+    with pytest.raises(ImmutableMappingError, match="identity was remapped"):
+        store.pin_run(manifest, confirmation)
+    with pytest.raises(CacheIntegrityError, match="canonical parent is inconsistent"):
+        store.read_artifact(
+            artifact_id="shared-artifact",
+            purpose=RunPurpose.NEW_RUN,
+            source_manifest=manifest,
+        )
+
+
+def test_concurrent_first_initialization_converges_on_one_verified_v3(
     tmp_path: Path,
 ) -> None:
     worker_count = 24
@@ -1262,8 +1725,99 @@ def test_concurrent_first_initialization_converges_on_one_verified_v2(
 
         with ThreadPoolExecutor(max_workers=worker_count) as executor:
             versions = tuple(executor.map(initialize, range(worker_count)))
-        assert versions == (2,) * worker_count
-        assert ReleaseCacheStore(database_path=database, cache_root=cache).schema_version == 2
+        assert versions == (3,) * worker_count
+        assert ReleaseCacheStore(database_path=database, cache_root=cache).schema_version == 3
+
+
+def test_nonempty_v2_migrates_losslessly_as_audit_only(tmp_path: Path) -> None:
+    database = tmp_path / "state.sqlite3"
+    cache = tmp_path / "cache"
+    original = ReleaseCacheStore(
+        database_path=database,
+        cache_root=cache,
+        clock=FixedClock(BASE + timedelta(hours=8)),
+        authority_policies=(
+            CurrentStatusAuthorityPolicy(
+                authority_id="synthetic-status-authority",
+                authority_contract_hash=AUTHORITY_CONTRACT_HASH,
+                max_age=timedelta(hours=24),
+            ),
+        ),
+    )
+    scenario = Scenario(original)
+    manifest = scenario.ready()
+    confirmation = scenario.confirmation(manifest)
+    scenario.pin(manifest, confirmation)
+
+    # Reconstruct the exact shipped v2 inventory while retaining every v2 row.
+    # A v2 pin had no run-scoped confirmation/binding by definition.
+    with sqlite3.connect(database) as connection:
+        connection.execute("DROP TABLE legacy_v2_quarantined_run_pins")
+        connection.execute("DROP TABLE strategy_run_confirmation_bindings")
+        connection.execute("DROP TABLE run_release_status_confirmation_items")
+        connection.execute("DROP TABLE run_release_status_confirmations")
+        connection.execute("PRAGMA user_version=2")
+
+    upgraded = ReleaseCacheStore(
+        database_path=database,
+        cache_root=cache,
+        clock=FixedClock(BASE + timedelta(hours=8)),
+        authority_policies=(
+            CurrentStatusAuthorityPolicy(
+                authority_id="synthetic-status-authority",
+                authority_contract_hash=AUTHORITY_CONTRACT_HASH,
+                max_age=timedelta(hours=24),
+            ),
+        ),
+    )
+    assert upgraded.schema_version == 3
+    assert count(database, "strategy_run_pins") == 1
+    assert count(database, "strategy_run_confirmation_bindings") == 0
+    assert count(database, "legacy_v2_quarantined_run_pins") == 1
+
+    with sqlite3.connect(database) as connection:
+        quarantine = connection.execute(
+            """SELECT run_id, source_schema_version, quarantined_at, reason
+               FROM legacy_v2_quarantined_run_pins WHERE run_id=?""",
+            (manifest.run_id,),
+        ).fetchone()
+        assert quarantine is not None
+        with pytest.raises(sqlite3.IntegrityError, match="append-only"):
+            connection.execute(
+                "UPDATE legacy_v2_quarantined_run_pins SET reason='tampered' WHERE run_id=?",
+                (manifest.run_id,),
+            )
+        with pytest.raises(sqlite3.IntegrityError, match="append-only"):
+            connection.execute(
+                "DELETE FROM legacy_v2_quarantined_run_pins WHERE run_id=?",
+                (manifest.run_id,),
+            )
+        with pytest.raises(sqlite3.IntegrityError, match="immutable identity conflict"):
+            connection.execute(
+                """INSERT OR REPLACE INTO legacy_v2_quarantined_run_pins
+                   (run_id, source_schema_version, quarantined_at, reason)
+                   VALUES (?, ?, ?, ?)""",
+                quarantine,
+            )
+
+    inject_confirmation_binding(database, confirmation)
+    assert count(database, "strategy_run_confirmation_bindings") == 1
+
+    with pytest.raises(ReleaseAccessError, match="audit-only"):
+        upgraded.pin_run(manifest, confirmation)
+    with pytest.raises(ReleaseAccessError, match="audit-only"):
+        upgraded.read_artifact(
+            artifact_id="shared-artifact",
+            purpose=RunPurpose.NEW_RUN,
+            source_manifest=manifest,
+        )
+    audit = upgraded.read_artifact(
+        artifact_id="shared-artifact",
+        purpose=RunPurpose.AUDIT_REPLAY,
+        source_manifest=manifest,
+        audit_request=AuditReplayRequest(manifest.run_id, digest(manifest.to_canonical_bytes())),
+    )
+    assert audit.content == scenario.root_bytes
 
 
 _V1_DDL = (
@@ -1298,7 +1852,7 @@ def test_empty_known_v1_upgrades_but_nonempty_v1_is_preserved(tmp_path: Path) ->
     empty = tmp_path / "empty.sqlite3"
     make_v1(empty)
     upgraded = ReleaseCacheStore(database_path=empty, cache_root=tmp_path / "empty-cache")
-    assert upgraded.schema_version == 2
+    assert upgraded.schema_version == 3
 
     nonempty = tmp_path / "nonempty.sqlite3"
     make_v1(nonempty, nonempty=True)
@@ -1310,7 +1864,7 @@ def test_empty_known_v1_upgrades_but_nonempty_v1_is_preserved(tmp_path: Path) ->
         assert connection.execute("SELECT COUNT(*) FROM cache_objects").fetchone()[0] == 1
 
 
-def test_unknown_empty_v1_and_tampered_v2_fail_closed(tmp_path: Path) -> None:
+def test_unknown_empty_v1_and_tampered_v3_fail_closed(tmp_path: Path) -> None:
     unknown = tmp_path / "unknown.sqlite3"
     with sqlite3.connect(unknown) as connection:
         connection.execute("CREATE TABLE unexpected (value TEXT)")
@@ -1332,16 +1886,16 @@ def test_unknown_empty_v1_and_tampered_v2_fail_closed(tmp_path: Path) -> None:
             == 1
         )
 
-    view_v2 = tmp_path / "view-v2.sqlite3"
-    view_cache = tmp_path / "view-v2-cache"
-    ReleaseCacheStore(database_path=view_v2, cache_root=view_cache)
-    with sqlite3.connect(view_v2) as connection:
+    view_v3 = tmp_path / "view-v3.sqlite3"
+    view_cache = tmp_path / "view-v3-cache"
+    ReleaseCacheStore(database_path=view_v3, cache_root=view_cache)
+    with sqlite3.connect(view_v3) as connection:
         connection.execute("CREATE VIEW unexpected_view AS SELECT 1 AS value")
     with pytest.raises(StorageSchemaError, match="view inventory"):
-        ReleaseCacheStore(database_path=view_v2, cache_root=view_cache)
+        ReleaseCacheStore(database_path=view_v3, cache_root=view_cache)
 
-    database = tmp_path / "v2.sqlite3"
-    cache = tmp_path / "v2-cache"
+    database = tmp_path / "v3.sqlite3"
+    cache = tmp_path / "v3-cache"
     ReleaseCacheStore(database_path=database, cache_root=cache)
     with sqlite3.connect(database) as connection:
         connection.execute("DROP TRIGGER prevent_delete_release_heads")

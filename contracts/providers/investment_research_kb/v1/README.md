@@ -27,6 +27,26 @@ KB 工作树、Python 包、SQLite、`raw/`、`staging/` 或发布目录。
 在正式公共契约发布前必须 fail closed 为 `not_supported`，不得复制 KB 内部 API 或采用
 KB 当前未提交文件。
 
+这个边界已经通过
+`invest_system.integrations.investment_research_kb.require_supported_kb_transport`
+成为可执行能力门。当前两个批准入口 `read_only_http_api` 与 `immutable_export` 都会在任何
+网络、文件或认证 I/O 发生前，以稳定 blocker code 拒绝；支持矩阵与代码测试保持一致。
+后续只能在显式固定相应公共传输契约后，把某个入口提升为 `supported`。
+
+职责层次固定为：
+
+```text
+acquire（Stage 3，当前不支持）
+→ validate（Stage 2A）
+→ project（Stage 2A）
+→ persist / observe / admit / pin（Stage 2A 内核；真实新 run 仍需受信 current-status authority）
+```
+
+固定 reference fixture 中的 `current_status` 和 `change.status_event` 只是互相绑定的摘要，
+不包含重算 `release-status-event.v1` self hash 所需的完整事件正文。因此本切片只验证摘要
+一致性，并明确不把它当作真实当前状态证明。不得为这些摘要发明新的哈希规则；完整事件链、
+可信 provider `snapshot_at` 及其响应字节只能由后续正式 HTTP/export 契约交付。
+
 KB 的 `irkb-jsonl-v1` 与 InvestSystem 自有 canonical JSON profile 不同：前者要求 NFC，
 并允许有限 JSON number。两套 canonicalizer 必须隔离，不能为了通过 provider vector 而
 放宽 StrategyRunManifest、DecisionRecord 或 receipt 的无浮点约束。

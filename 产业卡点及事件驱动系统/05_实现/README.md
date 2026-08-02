@@ -9,7 +9,7 @@
 
 完整策略、TargetPortfolio 和 paper 成交回放在后续阶段开发，可与正式 Release E2E 并行；正式历史验证须在两支都完成后开始。
 
-Stage 2A 当前已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按原始字节引入 20 个官方文件，并完成 provider canonical、契约 catalog、消费 receipt/observation 模型、官方 reference fixture 验证/窄投影，以及 SQLite v2 的正式 Receipt/Observation 持久化、传递 source Release 留存闭包和 receipt-derived atomic pin。固定提交尚无锁定的公共 HTTP envelope/OpenAPI 或不可变 export-package 契约，因此 HTTP/export transport 和真实当前状态获取仍未实现。Stage 2A 不得在传输契约、完整失败矩阵和阶段验收完成前标记为 `completed`。
+Stage 2A 当前已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按原始字节引入 20 个官方文件，并完成 provider canonical、契约 catalog、消费 receipt/observation 模型、官方 reference fixture 验证/窄投影，以及 SQLite v3 的正式 Receipt/Observation 持久化、传递 source Release 留存闭包、run-scoped 当前状态确认和 receipt-derived atomic pin。固定提交尚无锁定的公共 HTTP envelope/OpenAPI、不可变 export-package 或完整 status-event 正文契约，因此两个真实 transport authority 默认禁用并在 I/O 前失败关闭。Stage 2A 只以离线验证/投影/持久化/准入内核为完成范围；真实 acquisition、鉴权、重试、当前状态查询和 authority 启用进入 Stage 3。Stage 2A 在完整失败矩阵、隔离 CI 和阶段验收完成前仍不得标记为 `completed`。
 
 根级采用 `src/` 包布局、GitHub Actions 和规范 JSON。本地实现使用工作站级 `E:\Conda\envs\Data_Analysis`（Python 3.12）作为共享开发解释器，但 InvestSystem 必须独立维护 `pyproject.toml`、`requirements-build.in`、带哈希的 runtime/dev lock、TOML 配置、`var/cache/kb-releases/`、`var/state/invest_system.sqlite3` 和运行目录。项目只以 editable `--no-deps --no-build-isolation` 注册；缺包安装前后保存环境基线并运行 `pip check`，不得未经确认改变既有共享包。CI 和可复现验收必须从 InvestSystem lock 创建干净环境。
 
@@ -33,8 +33,9 @@ Stage 2A 本轮在该骨架上新增：
 - `ReleaseRetentionClosure` 机器契约，显式保存根 Release 到 source Release 的传递依赖，不从 fixture 中“出现过的全部 Release”猜测闭包；
 - 完整 sealed Manifest 文档快照、物理文档哈希/大小与 provider 的 self-excluding `manifest_hash` 分开保存，并共同进入闭包身份；
 - 三类 Observation 的完整 canonical bytes、从 sequence 1 开始的连续 provider status previous-hash 链、线性 `supersedes` 与不可回拨当前 head；
-- `pin_run(manifest)` 只从持久 Receipt/闭包推导 root、source Manifest 和制品 pin，并在同一事务中重核当前状态、准入和缓存字节；
+- `pin_run(manifest, confirmation)` 只从持久 Receipt/闭包推导 root、source Manifest 和制品 pin，并要求受信、未过期、run-scoped 的确认精确覆盖全部闭包 Release；默认 authority 集合为空，所以未固定真实传输契约时所有新 run 失败关闭；
 - Receipt/closure canonical aggregate、关系索引、CAS 字节与 `persisted_at <= run.created_at <= pin clock` 在 pin/read 时重核；撤回或无法确认后阻止新 pin 和普通读取，既有完整闭包只供显式 `audit_replay`。
+- 非空 SQLite v2 无损迁移时为全部旧 pin 写入不可变 quarantine；直接注入 confirmation/binding 也不能把旧 run 恢复为普通运行。
 
 缓存和状态层的行为边界见根级 [存储与 Release 缓存说明](../../docs/storage-and-cache.md)。这些能力仍不包含 HTTP/export transport、真实 Release 当前状态获取或任何策略规则语义。
 

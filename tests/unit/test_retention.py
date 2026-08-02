@@ -6,7 +6,7 @@ from dataclasses import FrozenInstanceError, replace
 from datetime import UTC, datetime, timedelta
 from hashlib import sha256
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import pytest
 from jsonschema import Draft202012Validator
@@ -407,7 +407,7 @@ def test_byte_payloads_reject_invalid_ids_and_non_bytes() -> None:
     with pytest.raises(TypeError, match="content must be bytes"):
         ReleaseManifestPayload(
             release_id="release_001",
-            content=bytearray(b"manifest"),  # type: ignore[arg-type]
+            content=cast(bytes, bytearray(b"manifest")),
         )
 
 

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/run-release-status-confirmation/0.1.0-draft/run-release-status-confirmation.schema.json",
+  "title": "RunReleaseStatusConfirmation (InvestSystem Draft)",
+  "description": "InvestSystem-owned provider-neutral identity for a run-scoped, authority-verified snapshot of the root Release and every retained source Release status.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "x-canonical-profile": "investsystem-canonical-json-v1",
+  "x-semantic-invariants": [
+    "items must be sorted by exact Release ID, contain no duplicate Release ID, and contain root_release_id",
+    "storage admission must require items to equal the complete persisted retention closure Release set with no missing or additional Release",
+    "every checked_at must fall between requested_at and confirmed_at inclusive; comparison of provider_snapshot_at with the consumer clock is storage clock-skew policy",
+    "requested_at must be less than or equal to confirmed_at, which must be strictly earlier than expires_at",
+    "authority trust, authority contract allowlisting, maximum age, clock skew, and correspondence with persisted status event chains are storage admission policy",
+    "confirmation_hash is sha256 over the canonical object containing every field except confirmation_hash itself"
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "confirmation_id",
+    "run_id",
+    "root_release_id",
+    "receipt_hash",
+    "closure_hash",
+    "authority_id",
+    "authority_contract_hash",
+    "requested_at",
+    "confirmed_at",
+    "expires_at",
+    "items",
+    "confirmation_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "confirmation_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "run_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "root_release_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/exactReleaseId"
+    },
+    "receipt_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "closure_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "authority_id": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+    },
+    "authority_contract_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    },
+    "requested_at": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+    },
+    "confirmed_at": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+    },
+    "expires_at": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/runReleaseStatusConfirmationItem"
+      }
+    },
+    "confirmation_hash": {
+      "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+    }
+  },
+  "$defs": {
+    "runReleaseStatusConfirmationItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "strategy_input_ref",
+        "status_observation_id",
+        "status_event_id",
+        "status_event_hash",
+        "status_sequence",
+        "provider_snapshot_at",
+        "checked_at",
+        "response_bytes_hash"
+      ],
+      "properties": {
+        "strategy_input_ref": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/strategyInputRef"
+        },
+        "status_observation_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"
+        },
+        "status_event_id": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/providerOpaqueId"
+        },
+        "status_event_hash": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+        },
+        "status_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9223372036854775807
+        },
+        "provider_snapshot_at": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+        },
+        "checked_at": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/utcTimestamp"
+        },
+        "response_bytes_hash": {
+          "$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/sha256Digest"
+        }
+      }
+    }
+  }
+}
