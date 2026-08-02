@@ -121,7 +121,7 @@ def _parse_hash(value: Any, *, field_name: str) -> HashDigest:
     return HashDigest(algorithm=item["algorithm"], value=item["value"])
 
 
-def _parse_count(value: Any, *, field_name: str) -> int:
+def _parse_count(value: object, *, field_name: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value < 0:
         raise ValueError(f"{field_name} must be a non-negative integer")
     return value
