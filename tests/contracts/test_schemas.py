@@ -33,7 +33,10 @@ from invest_system.domain.synthetic_fixture import (
     SyntheticFixtureRegistration,
     SyntheticFixtureRegistry,
 )
-from invest_system.strategies.industrial_event import run_stage2b_research_validation
+from invest_system.strategies.industrial_event import (
+    run_stage2b_research_validation,
+    stage4_rule_inventory_from_json_value,
+)
 from stage2b_support import (
     STAGE2B_GOLDEN_PATH,
     fixture_capability_for,
@@ -58,6 +61,9 @@ SCHEMA_PATHS = {
     "replay_envelope": Path("contracts/replay-envelope/replay-envelope.schema.json"),
     "rule_bundle": Path("contracts/rule-bundle/rule-bundle.schema.json"),
     "rule_approval_record": Path("contracts/rule-approval/rule-approval-record.schema.json"),
+    "stage4_rule_inventory": Path(
+        "contracts/stage4-rule-inventory/stage4-rule-inventory.schema.json"
+    ),
 }
 
 
@@ -313,6 +319,34 @@ def test_checked_in_stage2b_rule_artifacts_validate_against_contracts(
     for schema_name, filename in artifacts.items():
         value = json.loads((artifact_directory / filename).read_text(encoding="utf-8"))
         make_validator(schema_name, schemas).validate(value)
+
+
+def test_checked_in_stage4_rule_inventory_validates_but_grants_no_authority(
+    repository_root: Path,
+) -> None:
+    schemas = load_schemas(repository_root)
+    path = (
+        repository_root
+        / "产业卡点及事件驱动系统"
+        / "03_规则与规格"
+        / "机器制品"
+        / "industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json"
+    )
+    value = json.loads(path.read_text(encoding="utf-8"))
+    make_validator("stage4_rule_inventory", schemas).validate(value)
+    inventory = stage4_rule_inventory_from_json_value(value)
+
+    assert inventory.to_json_value() == value
+    assert inventory.unapproved_requirement_ids
+
+
+def test_rule_approval_scope_schema_matches_authoritative_model(
+    repository_root: Path,
+) -> None:
+    schemas = load_schemas(repository_root)
+    expected = {scope.value for scope in RuleApprovalScope}
+
+    assert set(schemas["rule_approval_record"]["properties"]["approval_scope"]["enum"]) == expected
 
 
 def test_stage2b0_schemas_fail_closed_on_provenance_and_audit_drift(

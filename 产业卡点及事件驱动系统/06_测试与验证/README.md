@@ -36,3 +36,15 @@ Stage 2B 的[正式验收记录](../../docs/validation/stage2b-acceptance.md)固
 
 这些证据只适用于匿名合成 `research` validation。历史回测、paper、shadow、live、仓位、订单及策略有效性仍没有授权或验证结论。
 
+## Stage 4 当前测试边界
+
+Stage 4 的 4A rule-governance 测试只验证：
+
+- 14 项 Stage-4-owned P0 requirement 完整且不重复；
+- 未批准项不能声明 approval ID 或 runtime machine rule；
+- 完整 capability 要求每项正例、反例、边界例和 `ABSTAIN` 测试引用；
+- Stage 2B scope、inventory hash 漂移、权限漂移、rule-module 缺失和默认空 registry 均失败关闭；
+- 当前 checked-in inventory 全部为 `draft` 且零 backtest/paper/shadow/live/仓位/订单权限。
+
+这些是治理边界测试，不证明任何完整 Stage 4 业务规则已经实现。
+

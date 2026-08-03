@@ -1,4 +1,4 @@
-"""Research-only Stage 2B industrial-event domain kernel."""
+"""Industrial-event strategy domain with fail-closed staged authority."""
 
 from .admission import (
     STAGE2B_RUN_FAILURE_AUDIT_SCHEMA_VERSION,
@@ -54,6 +54,17 @@ from .runner import (
     Stage2BResearchValidationResult,
     run_stage2b_research_validation,
 )
+from .stage4_governance import (
+    STAGE4_APPROVAL_SCOPE,
+    STAGE4_REQUIRED_RULE_IDS,
+    STAGE4_RULE_INVENTORY_SCHEMA_VERSION,
+    STAGE4_STRATEGY_ID,
+    Stage4RuleInventory,
+    Stage4RuleInventoryItem,
+    Stage4RuleReadinessError,
+    require_stage4_rule_capability,
+    stage4_rule_inventory_from_json_value,
+)
 
 __all__ = [
     "CASE_MATERIAL_HASH_PREDICATE",
@@ -69,6 +80,10 @@ __all__ = [
     "INDUSTRIAL_EVENT_CASE_SEMANTIC_SCHEMA_VERSION",
     "STAGE2B_NON_TRADE_DECLARATION",
     "STAGE2B_RUN_FAILURE_AUDIT_SCHEMA_VERSION",
+    "STAGE4_APPROVAL_SCOPE",
+    "STAGE4_REQUIRED_RULE_IDS",
+    "STAGE4_RULE_INVENTORY_SCHEMA_VERSION",
+    "STAGE4_STRATEGY_ID",
     "ApprovedIndustrialEventRules",
     "CommercialEventInput",
     "ContractExpectationTerms",
@@ -92,6 +107,9 @@ __all__ = [
     "Stage2BResearchValidationError",
     "Stage2BResearchValidationResult",
     "Stage2BRunFailureAudit",
+    "Stage4RuleInventory",
+    "Stage4RuleInventoryItem",
+    "Stage4RuleReadinessError",
     "ValuationInput",
     "decimal_to_canonical_text",
     "decimal_to_display_text",
@@ -100,4 +118,6 @@ __all__ = [
     "resolve_contract_effectiveness",
     "resolve_economic_closure",
     "run_stage2b_research_validation",
+    "require_stage4_rule_capability",
+    "stage4_rule_inventory_from_json_value",
 ]

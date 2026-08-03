@@ -44,7 +44,8 @@
     },
     "approval_scope": {
       "enum": [
-        "stage2b_synthetic_validation"
+        "stage2b_synthetic_validation",
+        "stage4_synthetic_research_validation"
       ]
     },
     "approval_source_ref": {

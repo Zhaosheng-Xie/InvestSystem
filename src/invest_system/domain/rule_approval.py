@@ -135,6 +135,7 @@ class RuleApprovalScope(StrEnum):
     """Capabilities an owner approval may grant in the current contract."""
 
     STAGE2B_SYNTHETIC_VALIDATION = "stage2b_synthetic_validation"
+    STAGE4_SYNTHETIC_RESEARCH_VALIDATION = "stage4_synthetic_research_validation"
 
 
 @dataclass(frozen=True, slots=True)

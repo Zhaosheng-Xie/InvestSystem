@@ -8,6 +8,12 @@ Stage 2B 已完成并通过[正式验收](../../docs/validation/stage2b-acceptan
 - [机器 rule bundle](机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.rule-bundle.json)：完整确定语义和授权边界的 canonical 运行制品；Markdown binding 只供追踪，运行时不得解析 Markdown。
 - [RuleApprovalRecord](机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.approval.json)：精确绑定 strategy、bundle、version、hash、批准人、时间、scope 和来源记录。
 
+Stage 4 已启动规则治理，但尚未批准业务规则：
+
+- [Stage 4 完整 P0 规则清单与批准包 v0.1](Stage4完整P0规则清单与批准包_v0.1.md)：`draft_for_owner_review`；
+- [Stage 4 P0 machine inventory](机器制品/industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json)：14 项完整清单，当前全部为 `draft`；
+- `stage4_synthetic_research_validation` 是独立 scope，Stage 2B capability 不能复用；当前没有 Stage 4 approval record 或 runtime capability。
+
 1. `KB输入引用与失败关闭规格_v0.1.md`
 2. `StrategyRunManifest与决策审计规格_v0.1.md`
 3. `E3.5_E4状态机与阻断规则_v0.1.md`

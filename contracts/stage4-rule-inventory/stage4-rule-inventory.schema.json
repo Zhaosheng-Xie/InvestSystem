@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.investsystem.local/stage4-rule-inventory/0.1.0-draft/stage4-rule-inventory.schema.json",
+  "title": "Stage4RuleInventory (InvestSystem Draft)",
+  "description": "Complete Stage-4-owned P0 rule readiness inventory. This document records readiness and zero authority; it is not a rule approval.",
+  "x-owner": "InvestSystem",
+  "x-contract-status": "draft",
+  "x-contract-version": "0.1.0-draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "strategy_id",
+    "approval_scope",
+    "items",
+    "authorizes_backtest",
+    "authorizes_paper",
+    "authorizes_shadow",
+    "authorizes_live",
+    "authorizes_positions",
+    "authorizes_orders"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1.0-draft"},
+    "strategy_id": {"const": "industrial_bottleneck_event"},
+    "approval_scope": {"const": "stage4_synthetic_research_validation"},
+    "items": {
+      "type": "array",
+      "minItems": 14,
+      "maxItems": 14,
+      "items": {"$ref": "#/$defs/inventoryItem"},
+      "allOf": [
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-CTX-001"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-CTX-002"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-IND-001"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-IND-002"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-EVT-001"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-EVT-002"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-EVT-003"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-EVT-004"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-GATE-001"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-GATE-002"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-GATE-003"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-GATE-004"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-GATE-005"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      },
+      {
+        "contains": {
+          "type": "object",
+          "properties": {"requirement_id": {"const": "FR-EXIT-001"}},
+          "required": ["requirement_id"]
+        },
+        "minContains": 1,
+        "maxContains": 1
+      }
+      ]
+    },
+    "authorizes_backtest": {"const": false},
+    "authorizes_paper": {"const": false},
+    "authorizes_shadow": {"const": false},
+    "authorizes_live": {"const": false},
+    "authorizes_positions": {"const": false},
+    "authorizes_orders": {"const": false}
+  },
+  "$defs": {
+    "testRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "inventoryItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement_id",
+        "status",
+        "specification_ref",
+        "approval_id",
+        "machine_rule_ref",
+        "positive_test_refs",
+        "negative_test_refs",
+        "boundary_test_refs",
+        "abstain_test_refs"
+      ],
+      "properties": {
+        "requirement_id": {"enum": ["FR-CTX-001","FR-CTX-002","FR-IND-001","FR-IND-002","FR-EVT-001","FR-EVT-002","FR-EVT-003","FR-EVT-004","FR-GATE-001","FR-GATE-002","FR-GATE-003","FR-GATE-004","FR-GATE-005","FR-EXIT-001"]},
+        "status": {
+          "enum": [
+            "requirements_confirmed",
+            "hypothesis",
+            "draft",
+            "placeholder",
+            "TBD",
+            "approved"
+          ]
+        },
+        "specification_ref": {"type": "string", "minLength": 1},
+        "approval_id": {
+          "anyOf": [
+            {"$ref": "https://schemas.investsystem.local/common/0.1.0-draft/common-defs.schema.json#/$defs/id"},
+            {"type": "null"}
+          ]
+        },
+        "machine_rule_ref": {
+          "anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]
+        },
+        "positive_test_refs": {"$ref": "#/$defs/testRefs"},
+        "negative_test_refs": {"$ref": "#/$defs/testRefs"},
+        "boundary_test_refs": {"$ref": "#/$defs/testRefs"},
+        "abstain_test_refs": {"$ref": "#/$defs/testRefs"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "approved"}}, "required": ["status"]},
+          "then": {
+            "properties": {
+              "approval_id": {"type": "string"},
+              "machine_rule_ref": {"type": "string"},
+              "positive_test_refs": {"minItems": 1},
+              "negative_test_refs": {"minItems": 1},
+              "boundary_test_refs": {"minItems": 1},
+              "abstain_test_refs": {"minItems": 1}
+            }
+          },
+          "else": {
+            "properties": {
+              "approval_id": {"type": "null"},
+              "machine_rule_ref": {"type": "null"}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

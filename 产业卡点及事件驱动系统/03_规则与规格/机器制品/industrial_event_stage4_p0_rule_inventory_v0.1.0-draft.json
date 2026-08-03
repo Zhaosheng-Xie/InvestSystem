@@ -1,0 +1,167 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "approval_scope": "stage4_synthetic_research_validation",
+  "items": [
+    {
+      "requirement_id": "FR-CTX-001",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-ctx-001",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-CTX-002",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-ctx-002",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-IND-001",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-ind-001",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-IND-002",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-ind-002",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-EVT-001",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-evt-001",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-EVT-002",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-evt-002",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-EVT-003",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-evt-003",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-EVT-004",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-evt-004",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-GATE-001",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-gate-001",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-GATE-002",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-gate-002",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-GATE-003",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-gate-003",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-GATE-004",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-gate-004",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-GATE-005",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-gate-005",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    },
+    {
+      "requirement_id": "FR-EXIT-001",
+      "status": "draft",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-exit-001",
+      "approval_id": null,
+      "machine_rule_ref": null,
+      "positive_test_refs": [],
+      "negative_test_refs": [],
+      "boundary_test_refs": [],
+      "abstain_test_refs": []
+    }
+  ],
+  "authorizes_backtest": false,
+  "authorizes_paper": false,
+  "authorizes_shadow": false,
+  "authorizes_live": false,
+  "authorizes_positions": false,
+  "authorizes_orders": false
+}

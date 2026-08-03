@@ -1,12 +1,12 @@
-# InvestSystem 实施计划（v1.2）
+# InvestSystem 实施计划（v1.3）
 
-> 计划版本：`v1.2`
-> 基线日期：`2026-08-02`
+> 计划版本：`v1.3`
+> 基线日期：`2026-08-03`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 0—2B / completed；Stage 3 与 Stage 4 / not_started`
-> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / real_transport_not_implemented / full_strategy_not_implemented`
-> 当前授权边界：`Stage 2B 仅匿名合成 research validation；不授权 backtest、paper、shadow、live、仓位或订单`
+> 当前阶段：`Stage 0—2B / completed；Stage 3 / deferred by owner；Stage 4 / in_progress`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage4_rule_governance_in_progress / real_transport_not_implemented / full_strategy_not_implemented`
+> 当前授权边界：`Stage 2B 仅匿名合成 research validation；Stage 4 只获开发授权、尚无 runtime capability；不授权 backtest、paper、shadow、live、仓位或订单`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
 
@@ -44,8 +44,8 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | Stage 1 | `completed` | 工程与机器契约骨架 | 已于 `2026-07-31` 验收关闭 |
 | Stage 2A | `completed` | KB 公共契约离线验证、投影、消费持久化与准入内核 | 已于 `2026-08-02` 验收关闭 |
 | Stage 2B | `completed` | 最小 approved 策略规格与合成纵向切片 | 已于 `2026-08-02` 通过正式验收；只授权 synthetic research validation |
-| Stage 3 | `not_started` | KB 正式 Release 传输与策略端到端验收 | Stage 2A、Stage 2B 已完成；KB Stage 6A 已完成；固定的 HTTP/export/current-status 公共契约仍缺 |
-| Stage 4 | `not_started` | 完整产业事件规格与策略引擎 | Stage 2A、Stage 2B 已完成；完整规则须在本阶段逐项批准 |
+| Stage 3 | `deferred` | KB 正式 Release 传输与策略端到端验收 | owner 于 `2026-08-03` 决定本轮跳过；完成门保留，Stage 6 前仍须补齐 |
+| Stage 4 | `in_progress` | 完整产业事件规格与策略引擎 | `4A rule governance` 已启动；完整 14 项 P0 规则仍须逐项批准 |
 | Stage 5 | `not_started` | 成交、组合与确定性回放 | Stage 4 |
 | Stage 6 | `not_started` | 历史验证与冠军挑战 | Stage 3、Stage 5 |
 | Stage 7 | `not_started` | 前瞻 shadow/paper 运行 | Stage 6、人工批准 |
@@ -68,7 +68,7 @@ Stage 2A + Stage 2B                                │
 题材系统：独立 deferred track（另行批准、另立阶段，不接在 Stage 8 后）
 ```
 
-Stage 0 与 Stage 1 已于 `2026-07-31` 关闭，Stage 2A 与 Stage 2B 已于 `2026-08-02` 关闭。现在可独立进入 Stage 3 或 Stage 4：当前正式 `market-daily` Release 只能完成 Stage 3 的传输、校验和消费记录核验；Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 InvestSystem 内部完整策略、组合或执行引擎的后续开发，InvestSystem 的开发也不反向影响 KB。
+Stage 0 与 Stage 1 已于 `2026-07-31` 关闭，Stage 2A 与 Stage 2B 已于 `2026-08-02` 关闭。owner 于 `2026-08-03` 决定本轮跳过 Stage 3 并直接启动 Stage 4；Stage 3 因此为 `deferred`，不是 `completed`。当前正式 `market-daily` Release 仍只能完成 Stage 3 的传输、校验和消费记录核验，Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。因此 KB 的数据部署节奏不阻塞 InvestSystem 内部完整策略、组合或执行引擎的后续开发，InvestSystem 的开发也不反向影响 KB。
 
 ---
 
@@ -560,7 +560,9 @@ InvestSystem 合成策略 fixture
 
 ### Stage 3：KB 正式 Release 端到端验收
 
-状态：`not_started`
+状态：`deferred / owner decision 2026-08-03`
+
+延后记录：owner 明确要求本轮跳过 Stage 3、直接推进 Stage 4。Stage 3 的工作、证据和 Stage 6 汇合门全部保留；不得把 `deferred` 表述为已完成或用本地 KB 输入替代。
 
 目标：在 Stage 2A 与 Stage 2B 汇合后，以独立只读消费者身份分别完成 KB Stage 6A 正式发布面的传输核验，以及正式 Context Pack 进入同一策略入口的真实 smoke；两类证据不得相互替代。
 
@@ -598,7 +600,9 @@ InvestSystem 合成策略 fixture
 
 ### Stage 4：产业事件完整规格与确定性引擎
 
-状态：`not_started`
+状态：`in_progress / 4A rule governance started 2026-08-03`
+
+启动记录：Stage 2 进入门经[复核](docs/validation/stage2-reentry-audit.md)通过，owner 决定跳过 Stage 3 并启动 Stage 4。首个 4A 切片建立[完整 P0 规则清单与批准包](产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md)、14 项机器 inventory、专属 `stage4_synthetic_research_validation` scope 和 fail-closed capability 完成门。该 scope 当前没有 approval record，通用 registry 仍为空。
 
 目标：在规则逐项获批后，实现产业卡点及事件驱动系统的完整确定性规则引擎。
 
@@ -861,8 +865,8 @@ InvestSystem 合成策略 fixture
 | Stage 1 | [正式验收记录](docs/validation/stage1-acceptance.md)；实现提交 `f8d58f2`；安装前后环境基线；自有 `pyproject.toml`、可重复 hash lock、TOML；editable `--no-deps --no-build-isolation`；provider-neutral DTO 与 `0.1.0-draft` Schema；规范 JSON/哈希/时钟；构造级规则成熟度防线；SQLite 状态/准入、精确子集 pin、内容寻址缓存和独立审计重放；共享环境及全新锁定环境均为 `194 passed, 3 skipped`；GitHub Actions run `30636576903` 的 Windows/Linux 作业均成功 | 无 | `completed` |
 | Stage 2A | [正式验收记录](docs/validation/stage2a-acceptance.md)；实现提交 `01073c1`；固定 KB 提交 `58ed9c5` 的 20 个官方文件；provider canonical/catalog/reference fixture；Receipt/Observation/Retention Closure；SQLite v3 run-scoped confirmation、默认拒绝 authority、全闭包原子 pin、legacy quarantine、失败矩阵；GitHub Actions run `30744115034` 的 Windows/Linux 作业均成功 | 无；真实 HTTP/export/current-status transport 与 authority 启用属于 Stage 3，不是 Stage 2A 缺口 | `completed` |
 | Stage 2B | [正式验收记录](docs/validation/stage2b-acceptance.md)；实现提交 `d5d6003`；22 项 approved 规则；24+10 fixture registry；E3.5/E4、四道门、利润桥/预期/估值、Manifest、DecisionRecord、Replay；`617 passed, 4 skipped`；两轮审阅 `P0=0 / P1=0` | 无；真实 transport、完整策略和 durable DecisionRecord 持久化不在本阶段完成范围 | `completed` |
-| Stage 3 | Stage 2A、Stage 2B 已完成；KB Stage 6A 已正式完成；`rel_10e257ad87734d7bb5cadc55e7b444e7` 可用于正式传输核验，但只有 `market-daily` 样本 | 锁定的公共 HTTP/export/current-status 契约；认证 transport、原始响应留存/重核、正式 Context Pack 受支持交付、两类 smoke、离线 replay与非阻塞 E2E | `not_started` |
-| Stage 4 | 规则占位和研究审计 | approved 规则包、引擎、测试 | `not_started` |
+| Stage 3 | Stage 2A、Stage 2B 已完成；KB Stage 6A 已正式完成；`rel_10e257ad87734d7bb5cadc55e7b444e7` 可用于正式传输核验，但只有 `market-daily` 样本 | owner 本轮跳过；锁定的公共 HTTP/export/current-status 契约、认证 transport、原始响应留存/重核、正式 Context Pack、两类 smoke、离线 replay 与非阻塞 E2E 均仍缺 | `deferred` |
+| Stage 4 | [Stage 2 进入复核](docs/validation/stage2-reentry-audit.md)；[4A 开发状态](docs/validation/stage4-development-status.md)；14 项 P0 draft inventory、专属 scope 与 fail-closed readiness boundary | owner 逐项批准、完整 machine bundle、每项四类测试、完整策略引擎与 replay 验收 | `in_progress` |
 | Stage 5 | 需求级边界 | 市场规则、组合、执行、P&L 回放 | `not_started` |
 | Stage 6 | 研究方法要求 | 预注册、正式历史验证和报告 | `not_started` |
 | Stage 7 | 运行目录占位 | 冻结版本、前瞻台账、paper 对账 | `not_started` |
@@ -875,8 +879,8 @@ InvestSystem 合成策略 fixture
 
 Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为：
 
-1. Stage 3 保持 `not_started`，直到公共 HTTP/export/current-status 契约可被固定；届时先由认证 transport 核验现有正式 `market-daily` Release 并保留原始响应证据，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
-2. Stage 4 可立即独立启动，在其中逐项批准并实现完整 P0 产业事件规则；不得把 Stage 2B 的窄 scope 或合成参数外推为完整规则。
+1. Stage 3 按 owner 决定保持 `deferred`；未来恢复时仍须固定公共 HTTP/export/current-status 契约，先由认证 transport 核验现有正式 `market-daily` Release 并保留原始响应证据，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
+2. Stage 4 已启动 4A rule governance；下一步按 4A-1 至 4A-4 逐项批准并实现 14 项 P0 产业事件规则，不得把 Stage 2B 的窄 scope 或合成参数外推为完整规则。
 3. Stage 4 完成后进入 Stage 5，建设组合、成交、确定性回放和经批准的 durable 运行记录；该开发不等待 KB 部署。
 4. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
 5. backtest、paper、shadow 或 live 均须到对应后续阶段另行批准；Stage 2B 完成不授予这些模式。
@@ -899,3 +903,4 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 | `v1.0` | 2026-08-02 | `active` | 以实现提交 `01073c1`、锁定环境 `396 passed, 4 skipped`、100 个失败矩阵测试 ID及 GitHub Actions run `30744115034` 的 Windows/Linux 成功证据关闭 Stage 2A；登记 SQLite v3 run-scoped confirmation、默认拒绝 authority、严格 canonical aggregate、全闭包原子 pin、legacy v2 quarantine 和 transport I/O 前失败关闭，并把真实 HTTP/export/current-status acquisition、认证 authority 和原始响应留存明确归入 Stage 3。 |
 | `v1.1` | 2026-08-02 | `active` | 按用户授权在 `codex/stage2b` 启动 Stage 2B，并拆分为 `2B-0` approval-safe 非业务契约与等待 owner 逐项批准规则的 `2B-1`；完成 synthetic provenance、精确 rule bundle approval、self-excluding replay、四份 draft Schema、隔离测试和待批准规则草案，且当前批准 registry 保持为空。明确“继续开发”不自动批准 `10%/15%/2x/120 日` 等 hypothesis，也不允许提前实现 `TRADE_READY` 业务正例。 |
 | `v1.2` | 2026-08-02 | `active` | 记录 owner 对最小规则包 22/22 项的 scope-limited 批准，并以实现提交 `d5d6003`、24 个正常与 10 个失败注入 fixture、精确 registry pin、typed runner、pre-engine fail-closed、完整 DecisionRecord/Replay、`617 passed, 4 skipped` 及两轮 `P0=0 / P1=0` 审阅关闭 Stage 2B。明确 Stage 3 与 Stage 4 可独立启动，同时继续禁止从合成 `TRADE_READY/SHADOW_ONLY` 推导 backtest、paper、shadow、live、仓位或订单权限。 |
+| `v1.3` | 2026-08-03 | `active` | 按 owner 决定复核 Stage 2 后跳过 Stage 3、直接启动 Stage 4。Stage 3 标记为 `deferred` 而非完成；Stage 4 进入 `4A rule governance`，建立 14 项 P0 draft inventory、专属 synthetic research-validation scope、精确 inventory/bundle/approval 完成门和零交易权限边界。完整规则、引擎、backtest、paper、shadow、live、仓位及订单仍未获批准。 |
