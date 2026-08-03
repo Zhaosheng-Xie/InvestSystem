@@ -38,7 +38,7 @@ Stage 2B 的[正式验收记录](../../docs/validation/stage2b-acceptance.md)固
 
 ## Stage 4 当前测试边界
 
-Stage 4 的 4A governance、4A-1/4A-2 合成执行和 4A-2 draft 谱系测试验证：
+Stage 4 的 4A governance、4A-1/4A-2 合成执行、4A-2 draft 谱系和 4A-3 draft 治理测试验证：
 
 - 14 项 Stage-4-owned P0 requirement 完整且不重复；
 - 未批准项不能声明 approval ID 或 runtime machine rule；
@@ -50,6 +50,7 @@ Stage 4 的 4A governance、4A-1/4A-2 合成执行和 4A-2 draft 谱系测试验
 - 4A-2 原 draft 精确绑定文字规格、canonical bundle/rules hash 和 16 项 `pending` owner 决策并保持不变；
 - 新 approved bundle/approval record 精确绑定 owner 对全部 16 项的 scope-limited 批准；默认 registry、伪造 approval、语义漂移、错误 scope 与权限漂移均失败关闭；
 - `FR-EVT-001—004` 各自具有正例、反例、边界例和 `ABSTAIN`，覆盖事件护照、E3.5/E4、终态、重复观测、显式降级、规则迁移、主体/PIT、知识依赖 DAG 与人工覆盖批准。
+- 4A-3 draft 精确绑定文字规格、canonical bundle/rules hash、已批准 4A-1/4A-2 bundle 和 20 项 `pending` 决策；默认/伪造 registry、自声明批准、阈值漂移和越界包含 4A-4 规则均失败关闭；当前没有 4A-3 approval record 或 Gate evaluator。
 
-这些测试只证明 4A-1 与 4A-2 能在各自精确批准的合成 research-validation scope 内执行；不证明完整 Stage 4、历史有效性或任何交易能力已经实现。
+这些测试只证明 4A-1 与 4A-2 能在各自精确批准的合成 research-validation scope 内执行，并证明 4A-3 仍是一份不可执行的确定 draft；不证明 4A-3 业务语义已批准、完整 Stage 4、历史有效性或任何交易能力已经实现。
 
