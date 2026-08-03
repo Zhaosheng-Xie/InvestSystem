@@ -121,14 +121,14 @@ def _registry(
     return RuleApprovalRegistry((approval,))
 
 
-def test_checked_in_stage4_inventory_has_approved_4a1_and_ten_unapproved_rules(
+def test_checked_in_stage4_inventory_has_approved_4a1_4a2_and_six_unapproved_rules(
     repository_root: Path,
 ) -> None:
     value = json.loads((repository_root / INVENTORY_PATH).read_text(encoding="utf-8"))
     inventory = stage4_rule_inventory_from_json_value(value)
 
     assert inventory.to_json_value() == value
-    assert inventory.unapproved_requirement_ids == STAGE4_REQUIRED_RULE_IDS[4:]
+    assert inventory.unapproved_requirement_ids == STAGE4_REQUIRED_RULE_IDS[8:]
     assert inventory.approval_scope is RuleApprovalScope.STAGE4_SYNTHETIC_RESEARCH_VALIDATION
     assert inventory.authorizes_backtest is False
     assert inventory.authorizes_paper is False
@@ -146,7 +146,11 @@ def test_checked_in_stage4_inventory_has_approved_4a1_and_ten_unapproved_rules(
         assert rule_item.status is RuleStatus.APPROVED
         assert rule_item.approval_id == "rule_approval_stage4_4a1_context_industry_v0_1_0"
         assert rule_item.machine_rule_ref is not None
-    for rule_item in inventory.items[4:]:
+    for rule_item in inventory.items[4:8]:
+        assert rule_item.status is RuleStatus.APPROVED
+        assert rule_item.approval_id == "rule_approval_stage4_4a2_event_semantics_v0_1_0"
+        assert rule_item.machine_rule_ref is not None
+    for rule_item in inventory.items[8:]:
         assert rule_item.status is RuleStatus.DRAFT
         assert rule_item.approval_id is None
         assert rule_item.machine_rule_ref is None

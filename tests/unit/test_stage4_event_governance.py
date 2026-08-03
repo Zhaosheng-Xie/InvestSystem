@@ -34,7 +34,7 @@ INVENTORY_PATH = Path(
     "产业卡点及事件驱动系统/03_规则与规格/机器制品/"
     "industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json"
 )
-EXPECTED_INVENTORY_SHA256 = "f5a114d61b8afffca79df7cb2607287102ec9970507e193bf2c135a3c021865b"
+EXPECTED_INVENTORY_SHA256 = "84c2247cebcf2f13bc2db917f9154a896d94ce4c39b08d0e3a439c4d607cb187"
 
 
 def _document(repository_root: Path) -> RuleBundleDocument:
@@ -71,7 +71,7 @@ def test_4a2_draft_has_zero_runtime_or_trading_authority(repository_root: Path) 
     assert proposal.authorizes_orders is False
 
 
-def test_4a2_rules_remain_unapproved_in_complete_stage4_inventory(
+def test_approved_4a2_rules_are_tracked_without_full_stage4_capability(
     repository_root: Path,
 ) -> None:
     value = json.loads((repository_root / INVENTORY_PATH).read_text(encoding="utf-8"))
@@ -79,14 +79,14 @@ def test_4a2_rules_remain_unapproved_in_complete_stage4_inventory(
     by_id = {item.requirement_id: item for item in inventory.items}
 
     assert canonical_sha256(value) == EXPECTED_INVENTORY_SHA256
-    assert len(inventory.unapproved_requirement_ids) == 10
+    assert len(inventory.unapproved_requirement_ids) == 6
     for requirement_id in STAGE4_4A2_REQUIREMENT_IDS:
         item = by_id[requirement_id]
-        assert item.status is RuleStatus.DRAFT
-        assert item.approval_id is None
-        assert item.machine_rule_ref is None
-        assert item.specification_ref == (
-            f"{STAGE4_4A2_DRAFT_SPECIFICATION_PATH}#{requirement_id.lower()}"
+        assert item.status is RuleStatus.APPROVED
+        assert item.approval_id == "rule_approval_stage4_4a2_event_semantics_v0_1_0"
+        assert item.machine_rule_ref is not None
+        assert item.specification_ref.endswith(
+            f"Stage4_4A2事件状态与审计分层批准记录_v0.1.md#{requirement_id.lower()}"
         )
 
 
@@ -148,10 +148,14 @@ def test_4a2_cannot_self_declare_approved(repository_root: Path) -> None:
     assert exc_info.value.code == "STAGE4_4A2_DRAFT_STATUS_UNSUPPORTED"
 
 
-def test_4a2_has_no_checked_in_approval_record(repository_root: Path) -> None:
+def test_4a2_draft_has_no_approval_record_but_approved_version_is_separate(
+    repository_root: Path,
+) -> None:
     machine_directory = (repository_root / DRAFT_BUNDLE_PATH).parent
 
     assert not (
         machine_directory / "industrial_event_stage4_4a2_event_semantics_v0.1.0-draft.approval.json"
     ).exists()
-    assert not list(machine_directory.glob("industrial_event_stage4_4a2*.approval.json"))
+    assert [
+        path.name for path in machine_directory.glob("industrial_event_stage4_4a2*.approval.json")
+    ] == ["industrial_event_stage4_4a2_event_semantics_v0.1.0.approval.json"]

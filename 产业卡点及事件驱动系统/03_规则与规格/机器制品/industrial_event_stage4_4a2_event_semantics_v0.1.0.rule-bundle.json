@@ -1,0 +1,172 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage4_4a2_event_semantics",
+  "bundle_version": "0.1.0",
+  "declared_status": "approved",
+  "rules": {
+    "authorization_boundary": {
+      "approval_scope": "stage4_synthetic_research_validation",
+      "allowed_run_modes": ["research"],
+      "synthetic_only": true,
+      "validation_only": true,
+      "not_a_published_release": true,
+      "not_strategy_evidence": true,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_positions": false,
+      "authorizes_orders": false
+    },
+    "batch": {
+      "batch_id": "4A-2",
+      "requirement_ids": ["FR-EVT-001", "FR-EVT-002", "FR-EVT-003", "FR-EVT-004"],
+      "owner_approval_items": 16,
+      "owner_approval_items_approved": 16,
+      "partial_stage4_approval_only": true,
+      "authorizes_complete_stage4_capability": false
+    },
+    "shared_semantics": {
+      "claim_states": ["confirmed", "refuted", "unknown", "conflicted"],
+      "outcome_precedence": ["BLOCKED", "REJECT", "ABSTAIN", "PASS"],
+      "evaluation_order": ["FR-EVT-004", "FR-EVT-003", "FR-EVT-002", "FR-EVT-001"],
+      "blocked_short_circuits_downstream": true,
+      "unknown_is_not_false_or_zero": true,
+      "conflicted_majority_vote_forbidden": true,
+      "score_compensation_forbidden": true,
+      "event_decision_position_state_separation": true,
+      "minimum_independent_public_chains_for_gate_readiness": 2
+    },
+    "rule_modules": {
+      "FR-EVT-001": {
+        "requirement_id": "FR-EVT-001",
+        "machine_rule_ref": "industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EVT-001",
+        "state_order": ["E0", "E1", "E2", "E3", "E3.5", "E4", "E5", "E6", "E7"],
+        "state_passports": {
+          "E0": {"aggregation": "confirmed", "claims": ["public_industry_demand_or_technology_narrative"]},
+          "E1": {"aggregation": "OR", "claims": ["research_and_development", "sample", "standard", "technical_feasibility"]},
+          "E2": {"aggregation": "OR", "claims": ["customer_test", "certification", "design_in", "supplier_qualification"]},
+          "E3": {"aggregation": "OR", "claims": ["bidding", "procurement_intent", "framework", "expected_share", "commercial_negotiation"]},
+          "E3.5": {"aggregation": "AND", "claims": ["strong_commercial_clue", "E4_REJECT_OR_ABSTAIN"], "blocked_e4_produces_no_event_state": true},
+          "E4": {"aggregation": "STRICT_AND", "claims": ["FR-EVT-002:E4_public_PASS"]},
+          "E5": {"aggregation": "E4_AND_FULFILMENT_OR", "claims": ["delivery", "acceptance", "verifiable_performance_progress"]},
+          "E6": {"aggregation": "E5_AND_STRICT_AND", "claims": ["revenue_validation", "incremental_profit_validation", "cash_collection_validation"]},
+          "E7": {"aggregation": "PREREQUISITE_AND_TERMINAL_OR", "terminal_prerequisites": {"repeat_or_scale": "E6", "cycle_matured": "E6", "contract_terminated": "E4", "thesis_completed": "E0_AND_EXPLICIT_CLOSURE"}}
+        },
+        "state_selection": {
+          "outputs": ["attained_states", "highest_nonterminal_state", "terminal_type"],
+          "compressed_forward_transition_requires_all_intermediate_passports": true,
+          "missing_intermediate_passport_outcome": "ABSTAIN",
+          "E3_5_and_E4_mutually_exclusive_at_current_highest_state": true
+        },
+        "revision_policy": {
+          "logical_event_id_stable": true,
+          "event_snapshot_id_new_per_revision": true,
+          "revision_monotonic": true,
+          "canonical_content_duplicate_creates_observation_only": true,
+          "same_lineage_does_not_increase_independence": true,
+          "append_only_supersedes": true,
+          "explicit_superseding_refutation_may_downgrade": true,
+          "missing_unrecoverable_or_conflicted_cannot_silently_downgrade_or_retain": true,
+          "last_confirmed_audit_reference_required_on_abstain": true
+        },
+        "rule_migration": {
+          "in_place_mutation_forbidden": true,
+          "fixed_input_replay_required": true,
+          "from_and_to_bundle_hashes_required": true,
+          "replay_hash_required": true,
+          "unreplayable_outcome": "BLOCKED"
+        }
+      },
+      "FR-EVT-002": {
+        "requirement_id": "FR-EVT-002",
+        "machine_rule_ref": "industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EVT-002",
+        "strict_and_claims": ["authorized_public_evidence", "listed_company_ownership_path", "signed_or_formally_ordered", "effective_or_conditions_satisfied", "binding_minimum_obligation", "minimum_not_zeroable"],
+        "outcomes": {
+          "pit_authorization_identity_audit_or_capability_failure": "BLOCKED",
+          "any_explicit_refutation": "REJECT",
+          "any_unknown_or_conflicted": "ABSTAIN",
+          "all_confirmed_and_authoritative_original": "PASS"
+        },
+        "authoritative_original_must_directly_support": ["signed_or_formally_ordered", "effective_or_conditions_satisfied", "binding_minimum_obligation"],
+        "candidate_event_or_title_or_keyword_cannot_upgrade": true,
+        "strong_clue_without_strict_closure_maps_to": "E3.5",
+        "one_authoritative_original_establishes_e4_candidate": true,
+        "independent_gate_evidence_ready": {
+          "minimum_independent_public_chains": 2,
+          "minimum_authoritative_original_chains": 1,
+          "different_responsible_publishers_required": true,
+          "different_acquisition_lineages_required": true,
+          "does_not_change_event_state": true
+        },
+        "confidentiality": {
+          "minimum_quantity_or_non_cancelable_obligation_known_but_amount_or_price_unknown": "E4_PASS_ECONOMIC_QUANTIFICATION_UNKNOWN",
+          "future_profit_gate_outcome": "ABSTAIN",
+          "minimum_obligation_unknown": "E4_ABSTAIN",
+          "industry_asp_imputation_forbidden": true
+        }
+      },
+      "FR-EVT-003": {
+        "requirement_id": "FR-EVT-003",
+        "machine_rule_ref": "industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EVT-003",
+        "party_roles": {
+          "listed_company": "required_confirmed",
+          "economic_beneficiary": "required_confirmed",
+          "seller_supplier": "required_confirmed",
+          "customer_buyer": "legally_confidential_unknown_allowed",
+          "procurement_actor": "required_when_applicable_or_explicit_not_applicable"
+        },
+        "party_link_fields": ["legal_entity_id", "role", "direct_or_indirect", "ownership_or_transaction_relation", "supporting_fact_ids", "conflicting_fact_ids", "lineage_group_ids", "valid_time"],
+        "name_similarity_auto_merge_forbidden": true,
+        "unresolved_seller_listed_company_conflict_outcome": "ABSTAIN",
+        "confidential_buyer_does_not_automatically_reject_e4": true,
+        "confidential_buyer_forces_cross_party_corroboration_ready_false": true,
+        "earliest_legal_public_fact": {
+          "eligible_requires_authorized_public_reviewed": true,
+          "available_at_lte_knowledge_cutoff": true,
+          "selection_key": ["available_at", "fact_id"],
+          "future_nonpublic_mnpi_unclear_authority_or_missing_provider_available_at": "BLOCKED",
+          "declared_selection_mismatch": "BLOCKED",
+          "provider_available_at_is_authoritative": true,
+          "same_lineage_republication_cannot_advance_pit": true
+        }
+      },
+      "FR-EVT-004": {
+        "requirement_id": "FR-EVT-004",
+        "machine_rule_ref": "industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EVT-004",
+        "layers": {
+          "Fact": {"required_fields": ["provider_fact_id", "subject", "predicate", "value_ref", "available_at", "evidence_ids", "input_ref"], "strategy_creation_or_mutation_forbidden": true},
+          "Assumption": {"required_fields": ["assumption_id", "as_of", "scenario_id", "rationale", "dependency_refs", "observable_falsification_condition"], "may_not_impersonate_fact": true},
+          "Derived": {"required_fields": ["derived_id", "formula_id", "formula_version", "dependency_ids", "scenario_id", "calculation_input_hash", "result_hash", "as_of"], "judgment_dependency_forbidden": true, "non_deterministic_or_hidden_defaults_forbidden": true},
+          "Judgment": {"required_fields": ["judgment_id", "rule_id", "rule_version", "rule_hash", "outcome", "reason_codes", "fact_assumption_derived_refs", "as_of"], "provider_fact_writeback_forbidden": true, "direct_order_generation_forbidden": true}
+        },
+        "dependency_policy": {
+          "ids_globally_unique_within_run": true,
+          "Assumption_may_depend_on": ["Fact", "Assumption"],
+          "Derived_may_depend_on": ["Fact", "Assumption", "Derived"],
+          "Judgment_may_reference": ["Fact", "Assumption", "Derived"],
+          "derived_graph_must_be_acyclic": true,
+          "cycle_missing_dependency_cross_run_implicit_ref_or_judgment_dependency": "BLOCKED"
+        },
+        "time_policy": {"derived_as_of_not_before_dependencies": true, "judgment_as_of_not_before_dependencies": true},
+        "lineage_policy": {"creator_version_input_ref_and_canonical_hash_required": true, "append_only_supersedes": true, "in_place_overwrite_forbidden": true},
+        "manual_override_requires_new_judgment_and_approval_reference": true,
+        "writeback_to_kb": false,
+        "authorizes_positions": false,
+        "authorizes_orders": false
+      }
+    },
+    "approved_source_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层规则包_v0.1.md",
+      "hash": {"algorithm": "sha256", "value": "673e7b65425cfda19561b3e3ac97ffd624e9d9770fa2d8dc80f458a4fd23468f"},
+      "approved_items": 16
+    },
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层批准记录_v0.1.md",
+      "hash": {"algorithm": "sha256", "value": "ae4434dfcaa11f6c49244d5675ebc875b743367230db9b09b7997b8e1510f0ee"},
+      "traceability_only": true
+    },
+    "runtime_must_not_parse_markdown": true
+  }
+}

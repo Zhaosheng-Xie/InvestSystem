@@ -1,12 +1,12 @@
 # Stage 4 完整 P0 规则清单与批准包 v0.1
 
-文档状态：`partially_approved / 4A-1 completed`
+文档状态：`partially_approved / 4A-1 and 4A-2 completed`
 
 阶段：`Stage 4 / 4A rule governance`
 
 目标批准范围：`stage4_synthetic_research_validation`
 
-当前授权：`4A-1 exact partial approval only`
+当前授权：`4A-1 and 4A-2 exact partial approvals only`
 
 当前运行权限：`research development only；不授权 backtest、paper、shadow、live、仓位或订单`
 
@@ -22,6 +22,7 @@ Stage 3 已按 owner 决定暂缓；Stage 4 继续只使用 provider-neutral、�
 |---|---:|
 | `research` 合成规则开发 | 允许 |
 | 4A-1 局部规则 capability | 已签发，仅精确合成 research validation |
+| 4A-2 局部规则 capability | 已签发，仅精确合成 research validation |
 | 完整 Stage 4 规则 capability | 未签发 |
 | `backtest` | 不授权 |
 | `paper` | 不授权 |
@@ -62,10 +63,10 @@ Stage 4 包含产业上下文、产业/可投资卡点、E0—E7、四道门的�
 | `FR-CTX-002` | 历史产业上下文版本与禁止后见回填 | `approved` | 4A-1 |
 | `FR-IND-001` | 产业卡点判定 | `approved` | 4A-1 |
 | `FR-IND-002` | technical / qualified / profit beneficiary 映射 | `approved` | 4A-1 |
-| `FR-EVT-001` | E0—E7 / E3.5 状态转换与迁移 | `draft` | 4A-2 |
-| `FR-EVT-002` | 完整 `E4_public` 独立判定 | `draft` | 4A-2 |
-| `FR-EVT-003` | 供应商、客户和采购端事实关联 | `draft` | 4A-2 |
-| `FR-EVT-004` | Fact / Assumption / Derived / Judgment 分层 | `draft` | 4A-2 |
+| `FR-EVT-001` | E0—E7 / E3.5 状态转换与迁移 | `approved` | 4A-2 |
+| `FR-EVT-002` | 完整 `E4_public` 独立判定 | `approved` | 4A-2 |
+| `FR-EVT-003` | 供应商、客户和采购端事实关联 | `approved` | 4A-2 |
+| `FR-EVT-004` | Fact / Assumption / Derived / Judgment 分层 | `approved` | 4A-2 |
 | `FR-GATE-001` | 四道门 AND、短路和三值语义 | `draft` | 4A-3 |
 | `FR-GATE-002` | 反事实 NTM 标准化利润分母 | `draft` | 4A-3 |
 | `FR-GATE-003` | 基准/下行/上行/压力情景 | `draft` | 4A-3 |
@@ -75,7 +76,7 @@ Stage 4 包含产业上下文、产业/可投资卡点、E0—E7、四道门的�
 
 ## 6. 逐项规则状态
 
-4A-1 四项的精确语义已由 [4A-1 规则包](Stage4_4A1上下文与产业映射规则包_v0.1.md)及其 canonical machine bundle supersede 下列早期审阅提示，并已获得 scope-limited owner approval。4A-2 至 4A-4 仍待批准。
+4A-1 四项的精确语义已由 [4A-1 规则包](Stage4_4A1上下文与产业映射规则包_v0.1.md)及其 canonical machine bundle supersede 下列早期审阅提示，并已获得 scope-limited owner approval。4A-2 四项的精确语义已由[原 draft 规则包](Stage4_4A2事件状态与审计分层规则包_v0.1.md)、[批准记录](Stage4_4A2事件状态与审计分层批准记录_v0.1.md)及其 approved canonical machine bundle 固定。4A-3 与 4A-4 仍待批准。
 
 ### FR-CTX-001
 
