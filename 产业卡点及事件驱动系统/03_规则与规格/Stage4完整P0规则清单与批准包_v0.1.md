@@ -1,12 +1,12 @@
 # Stage 4 完整 P0 规则清单与批准包 v0.1
 
-文档状态：`draft_for_owner_review`
+文档状态：`partially_approved / 4A-1 completed`
 
 阶段：`Stage 4 / 4A rule governance`
 
 目标批准范围：`stage4_synthetic_research_validation`
 
-当前授权：`none`
+当前授权：`4A-1 exact partial approval only`
 
 当前运行权限：`research development only；不授权 backtest、paper、shadow、live、仓位或订单`
 
@@ -21,7 +21,8 @@ Stage 3 已按 owner 决定暂缓；Stage 4 继续只使用 provider-neutral、�
 | 能力 | 当前值 |
 |---|---:|
 | `research` 合成规则开发 | 允许 |
-| Stage 4 规则 capability | 未签发 |
+| 4A-1 局部规则 capability | 已签发，仅精确合成 research validation |
+| 完整 Stage 4 规则 capability | 未签发 |
 | `backtest` | 不授权 |
 | `paper` | 不授权 |
 | `shadow` | 不授权 |
@@ -57,10 +58,10 @@ Stage 4 包含产业上下文、产业/可投资卡点、E0—E7、四道门的�
 
 | ID | 规则域 | 当前状态 | 建议批准批次 |
 |---|---|---|---|
-| `FR-CTX-001` | 固定输入上的 `IndustryContextView` 准入 | `draft` | 4A-1 |
-| `FR-CTX-002` | 历史产业上下文版本与禁止后见回填 | `draft` | 4A-1 |
-| `FR-IND-001` | 产业卡点判定 | `draft` | 4A-1 |
-| `FR-IND-002` | technical / qualified / profit beneficiary 映射 | `draft` | 4A-1 |
+| `FR-CTX-001` | 固定输入上的 `IndustryContextView` 准入 | `approved` | 4A-1 |
+| `FR-CTX-002` | 历史产业上下文版本与禁止后见回填 | `approved` | 4A-1 |
+| `FR-IND-001` | 产业卡点判定 | `approved` | 4A-1 |
+| `FR-IND-002` | technical / qualified / profit beneficiary 映射 | `approved` | 4A-1 |
 | `FR-EVT-001` | E0—E7 / E3.5 状态转换与迁移 | `draft` | 4A-2 |
 | `FR-EVT-002` | 完整 `E4_public` 独立判定 | `draft` | 4A-2 |
 | `FR-EVT-003` | 供应商、客户和采购端事实关联 | `draft` | 4A-2 |
@@ -72,7 +73,9 @@ Stage 4 包含产业上下文、产业/可投资卡点、E0—E7、四道门的�
 | `FR-GATE-005` | 基础业务与事件增量 FCF 估值 | `draft` | 4A-4 |
 | `FR-EXIT-001` | 证据/风险/时间/价值退出判断 | `draft` | 4A-4 |
 
-## 6. 待 owner 审阅的逐项规则
+## 6. 逐项规则状态
+
+4A-1 四项的精确语义已由 [4A-1 规则包](Stage4_4A1上下文与产业映射规则包_v0.1.md)及其 canonical machine bundle supersede 下列早期审阅提示，并已获得 scope-limited owner approval。4A-2 至 4A-4 仍待批准。
 
 ### FR-CTX-001
 

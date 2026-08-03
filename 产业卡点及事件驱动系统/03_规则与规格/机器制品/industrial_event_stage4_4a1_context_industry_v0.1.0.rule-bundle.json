@@ -1,0 +1,156 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage4_4a1_context_industry",
+  "bundle_version": "0.1.0",
+  "declared_status": "approved",
+  "rules": {
+    "authorization_boundary": {
+      "approval_scope": "stage4_synthetic_research_validation",
+      "allowed_run_modes": [
+        "research"
+      ],
+      "synthetic_only": true,
+      "validation_only": true,
+      "not_a_published_release": true,
+      "not_strategy_evidence": true,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_positions": false,
+      "authorizes_orders": false
+    },
+    "batch": {
+      "batch_id": "4A-1",
+      "requirement_ids": [
+        "FR-CTX-001",
+        "FR-CTX-002",
+        "FR-IND-001",
+        "FR-IND-002"
+      ],
+      "partial_stage4_approval_only": true,
+      "authorizes_complete_stage4_capability": false
+    },
+    "shared_semantics": {
+      "claim_states": [
+        "confirmed",
+        "refuted",
+        "unknown",
+        "conflicted"
+      ],
+      "outcome_precedence": [
+        "BLOCKED",
+        "REJECT",
+        "ABSTAIN",
+        "PASS"
+      ],
+      "evaluation_order": [
+        "FR-CTX-002",
+        "FR-CTX-001",
+        "FR-IND-001",
+        "FR-IND-002"
+      ],
+      "short_circuit_on_non_pass": true,
+      "unknown_is_not_false_or_zero": true,
+      "imputation_forbidden": true,
+      "minimum_independent_evidence_groups": 2
+    },
+    "rule_modules": {
+      "FR-CTX-001": {
+        "requirement_id": "FR-CTX-001",
+        "machine_rule_ref": "industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-CTX-001",
+        "required_coverage_areas": [
+          "product_technology_terms",
+          "value_chain_relations",
+          "demand_procurement_deployment",
+          "commercialization_cycles",
+          "capacity_yield_leadtime_price_cost_inventory",
+          "competition_switching_new_supply",
+          "profit_pool_ownership_path",
+          "historical_stage_counterexamples_conflicts",
+          "source_time_version_confidence_review",
+          "company_identity_exclusion_review_trigger"
+        ],
+        "missing_required_coverage_outcome": "BLOCKED",
+        "not_preregistered_outcome": "REJECT",
+        "unknown_or_conflicted_outcome": "ABSTAIN",
+        "all_confirmed_and_preregistered_outcome": "PASS",
+        "pass_disposition": "decision_pool",
+        "non_pass_disposition": "research_quarantine",
+        "refuted_coverage_state_forbidden": true
+      },
+      "FR-CTX-002": {
+        "requirement_id": "FR-CTX-002",
+        "machine_rule_ref": "industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-CTX-002",
+        "required_temporal_bindings": [
+          "industry_stage",
+          "company_label",
+          "supply_chain_relation"
+        ],
+        "required_relations": [
+          "context_pack_available_at <= knowledge_cutoff <= decision_at",
+          "as_of <= knowledge_cutoff",
+          "binding.available_at <= knowledge_cutoff",
+          "binding.valid_from <= as_of < binding.valid_to"
+        ],
+        "valid_to_null_means_open_ended": true,
+        "validity_interval": "left_closed_right_open",
+        "missing_or_invalid_or_future_outcome": "BLOCKED",
+        "unknown_or_conflicted_outcome": "ABSTAIN",
+        "all_confirmed_and_time_valid_outcome": "PASS",
+        "latest_or_hindsight_backfill_forbidden": true
+      },
+      "FR-IND-001": {
+        "requirement_id": "FR-IND-001",
+        "machine_rule_ref": "industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-IND-001",
+        "core_claims": [
+          "verifiable_demand",
+          "slow_supply_response",
+          "constrained_substitution",
+          "persistence_to_next_window"
+        ],
+        "required_falsification_claim": "dissolution_signals_identified",
+        "core_refuted_outcome": "REJECT",
+        "unknown_or_conflicted_outcome": "ABSTAIN",
+        "falsification_claim_refuted_outcome": "ABSTAIN",
+        "insufficient_independent_evidence_outcome": "ABSTAIN",
+        "all_confirmed_with_minimum_evidence_outcome": "PASS",
+        "aggregation": "strict_and_without_score_compensation"
+      },
+      "FR-IND-002": {
+        "requirement_id": "FR-IND-002",
+        "machine_rule_ref": "industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-IND-002",
+        "tiers": [
+          "none",
+          "technical_link",
+          "qualified_supplier",
+          "profit_beneficiary"
+        ],
+        "profit_claims": [
+          "market_share",
+          "realized_price",
+          "incremental_gross_profit",
+          "cash_collection",
+          "ownership_path"
+        ],
+        "prerequisite_inconsistency_outcome": "BLOCKED",
+        "refuted_prerequisite_or_profit_claim_outcome": "REJECT",
+        "unknown_or_conflicted_outcome": "ABSTAIN",
+        "insufficient_independent_profit_evidence_outcome": "ABSTAIN",
+        "profit_beneficiary_requires_all_profit_claims_confirmed": true,
+        "only_profit_beneficiary_may_enter_four_gates": true,
+        "four_gate_eligibility_is_not_trade_authority": true
+      }
+    },
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A1上下文与产业映射规则包_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "fe7080b2ea38d16108662f9edf23ac3295661ae1141aa854d275fce73e021c07"
+      },
+      "traceability_only": true
+    },
+    "runtime_must_not_parse_markdown": true
+  }
+}

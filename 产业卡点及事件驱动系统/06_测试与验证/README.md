@@ -38,13 +38,15 @@ Stage 2B 的[正式验收记录](../../docs/validation/stage2b-acceptance.md)固
 
 ## Stage 4 当前测试边界
 
-Stage 4 的 4A rule-governance 测试只验证：
+Stage 4 的 4A governance 与 4A-1 合成执行测试验证：
 
 - 14 项 Stage-4-owned P0 requirement 完整且不重复；
 - 未批准项不能声明 approval ID 或 runtime machine rule；
 - 完整 capability 要求每项正例、反例、边界例和 `ABSTAIN` 测试引用；
 - Stage 2B scope、inventory hash 漂移、权限漂移、rule-module 缺失和默认空 registry 均失败关闭；
-- 当前 checked-in inventory 全部为 `draft` 且零 backtest/paper/shadow/live/仓位/订单权限。
+- 4A-1 的 `FR-CTX-001/002`、`FR-IND-001/002` 各自具有正例、反例、边界例和 `ABSTAIN`；
+- PIT/历史半开区间、十域覆盖、至少两个独立证据组、晋级前置条件和跨规则短路均为确定性语义；
+- 当前 inventory 前 4 项为 `approved`、其余 10 项为 `draft`，且零 backtest/paper/shadow/live/仓位/订单权限。
 
-这些是治理边界测试，不证明任何完整 Stage 4 业务规则已经实现。
+这些测试只证明 4A-1 在精确批准的合成 research-validation scope 内可执行，不证明完整 Stage 4、历史有效性或交易能力已经实现。
 

@@ -1,9 +1,9 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3 deferred；Stage 4 rule governance in progress；完整策略未实现`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3 deferred；Stage 4/4A-1 completed、4A-2 next；完整策略未实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-03`
 市场范围：`中国 A 股`
-当前已授权边界：`Stage 2B 匿名合成 research validation only；Stage 4 仅开发授权、无 runtime capability；不授权 backtest/paper/shadow/live、仓位或订单`
+当前已授权边界：`Stage 2B 与 Stage 4/4A-1 均仅匿名合成 research validation；完整 Stage 4 runtime capability 关闭；不授权 backtest/paper/shadow/live、仓位或订单`
 
 ## 系统一句话定义
 
@@ -37,13 +37,15 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-03`
 10. [Stage 2 进入 Stage 4 复核](../docs/validation/stage2-reentry-audit.md)
     - 状态：`passed_for_stage4_entry`；Stage 3 按 owner 决定延后，不冒充完成。
 11. [Stage 4 完整 P0 规则清单与批准包 v0.1](03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md)
-    - 状态：`draft_for_owner_review`；14 项 P0 规则尚无 Stage 4 runtime capability。
+    - 状态：`partially_approved`；4A-1 四项已批准并实现，其余 10 项仍为 `draft`，完整 Stage 4 runtime capability 关闭。
+12. [Stage 4 / 4A-1 上下文与产业映射规则包 v0.1](03_规则与规格/Stage4_4A1上下文与产业映射规则包_v0.1.md)
+    - 状态：`approved / implemented for stage4_synthetic_research_validation only`；覆盖上下文准入、历史防回填、产业卡点和公司受益晋级。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空，HTTP/export 都在 I/O 前失败关闭；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实 acquisition/current status、认证 transport 和原始响应留存归入 Stage 3，策略语义属于 Stage 2B 以后。
 
 Stage 2B 已完成并验收：精确批准规则、可信 fixture registry、E3.5/E4、四道门、利润桥、预期/估值、四类正常结果、pre-engine `BLOCKED`、DecisionRecord 和 replay 均有实现与测试。合成 `TRADE_READY` 与 `SHADOW_ONLY` 始终保持 `FLAT`、零权重、无 approver 且无仓位/订单权限；本批准不得推导为任何真实仓位或其他运行模式授权。
 
-Stage 4 已在 `codex/stage4` 启动 4A rule governance。专属 `stage4_synthetic_research_validation` scope、14 项 P0 draft inventory 和完整性/精确批准完成门已建立；scope 的存在不等于批准，通用 registry 仍为空。Stage 2B capability、真实 KB 输入、backtest/paper/shadow/live、仓位和订单均不能进入 Stage 4 当前切片。
+Stage 4 已在 `codex/stage4` 完成 4A-1：专属 `stage4_synthetic_research_validation` scope、14 项 P0 inventory、4A-1 精确 machine bundle/approval 和失败关闭 evaluator 已建立。通用 registry 仍为空；只有显式注入的精确批准可运行 4A-1。Stage 2B capability、真实 KB 输入、backtest/paper/shadow/live、仓位和订单均不能进入该切片，剩余十条未批准规则不能获得完整 capability。
 
 ## 推荐研发顺序
 
