@@ -8,12 +8,13 @@ Stage 2B 已完成并通过[正式验收](../../docs/validation/stage2b-acceptan
 - [机器 rule bundle](机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.rule-bundle.json)：完整确定语义和授权边界的 canonical 运行制品；Markdown binding 只供追踪，运行时不得解析 Markdown。
 - [RuleApprovalRecord](机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.approval.json)：精确绑定 strategy、bundle、version、hash、批准人、时间、scope 和来源记录。
 
-Stage 4 已完成首个规则批次，完整 capability 仍关闭：
+Stage 4 已完成首个执行批次并形成第二批待批准提案，完整 capability 仍关闭：
 
 - [Stage 4 完整 P0 规则清单与批准包 v0.1](Stage4完整P0规则清单与批准包_v0.1.md)：`partially_approved / 4A-1 completed`；
 - [4A-1 上下文与产业映射规则包](Stage4_4A1上下文与产业映射规则包_v0.1.md)：四条规则已绑定精确 [machine bundle](机器制品/industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json) 和 [approval record](机器制品/industrial_event_stage4_4a1_context_industry_v0.1.0.approval.json)；
+- [4A-2 事件状态与审计分层规则包](Stage4_4A2事件状态与审计分层规则包_v0.1.md)：`draft_for_owner_approval`，含 16 项待确认决策；[draft machine proposal](机器制品/industrial_event_stage4_4a2_event_semantics_v0.1.0-draft.rule-bundle.json)只固定待审语义和零权限，不是 runtime rule bundle；
 - [Stage 4 P0 machine inventory](机器制品/industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json)：14 项完整清单，前 4 项 `approved`，其余 10 项 `draft`；
-- `stage4_synthetic_research_validation` 是独立 scope，Stage 2B capability 不能复用；4A-1 只允许局部合成验证，不能签发完整 Stage 4 runtime capability。
+- `stage4_synthetic_research_validation` 是独立 scope，Stage 2B capability 不能复用；4A-1 只允许局部合成验证，4A-2 当前没有 capability 或 evaluator，二者均不能签发完整 Stage 4 runtime capability。
 
 1. `KB输入引用与失败关闭规格_v0.1.md`
 2. `StrategyRunManifest与决策审计规格_v0.1.md`

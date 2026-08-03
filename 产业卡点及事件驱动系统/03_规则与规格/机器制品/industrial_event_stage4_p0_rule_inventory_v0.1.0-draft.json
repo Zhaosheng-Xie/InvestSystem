@@ -50,7 +50,7 @@
     {
       "requirement_id": "FR-EVT-001",
       "status": "draft",
-      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-evt-001",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层规则包_v0.1.md#fr-evt-001",
       "approval_id": null,
       "machine_rule_ref": null,
       "positive_test_refs": [],
@@ -61,7 +61,7 @@
     {
       "requirement_id": "FR-EVT-002",
       "status": "draft",
-      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-evt-002",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层规则包_v0.1.md#fr-evt-002",
       "approval_id": null,
       "machine_rule_ref": null,
       "positive_test_refs": [],
@@ -72,7 +72,7 @@
     {
       "requirement_id": "FR-EVT-003",
       "status": "draft",
-      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-evt-003",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层规则包_v0.1.md#fr-evt-003",
       "approval_id": null,
       "machine_rule_ref": null,
       "positive_test_refs": [],
@@ -83,7 +83,7 @@
     {
       "requirement_id": "FR-EVT-004",
       "status": "draft",
-      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md#fr-evt-004",
+      "specification_ref": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层规则包_v0.1.md#fr-evt-004",
       "approval_id": null,
       "machine_rule_ref": null,
       "positive_test_refs": [],

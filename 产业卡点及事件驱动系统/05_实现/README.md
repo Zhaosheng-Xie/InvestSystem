@@ -1,10 +1,10 @@
 # 实现
 
-需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架、Stage 2A 的离线 Release 消费与准入内核，以及 Stage 2B 的最小合成策略纵向切片均已通过根级正式验收。owner 于 `2026-08-03` 决定跳过 Stage 3 并启动 Stage 4；Stage 3 保持 `deferred`。Stage 4 的 4A-1 已实现上下文、历史语义、产业卡点与受益公司映射；该批准严格限于匿名合成 `research` validation，不授权 backtest、paper、shadow、live、仓位或订单。
+需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架、Stage 2A 的离线 Release 消费与准入内核，以及 Stage 2B 的最小合成策略纵向切片均已通过根级正式验收。owner 于 `2026-08-03` 决定跳过 Stage 3 并启动 Stage 4；Stage 3 保持 `deferred`。Stage 4 的 4A-1 已实现上下文、历史语义、产业卡点与受益公司映射；4A-2 目前只固定待批准规格、draft machine proposal 和治理校验，没有事件 evaluator。当前批准严格限于 4A-1 匿名合成 `research` validation，不授权 backtest、paper、shadow、live、仓位或订单。
 
 Stage 2B 的实际交付、验证锚点和未授权范围见根级 [Stage 2B 正式验收记录](../../docs/validation/stage2b-acceptance.md)。
 
-Stage 4 当前交付见[开发状态](../../docs/validation/stage4-development-status.md)：完整 14 项 P0 inventory 中前 4 项已批准，`stage4_context_industry.py` 只接受精确 4A-1 machine bundle 和 owner approval capability，并以 `FR-CTX-002 → FR-CTX-001 → FR-IND-001 → FR-IND-002` 失败关闭短路。其余 10 项仍为 `draft`；只有 14 项全部批准、四类测试齐全、inventory hash 与完整 machine bundle 精确绑定且零交易权限未漂移时，`require_stage4_rule_capability` 才可能签发完整 capability。
+Stage 4 当前交付见[开发状态](../../docs/validation/stage4-development-status.md)：完整 14 项 P0 inventory 中前 4 项已批准，`stage4_context_industry.py` 只接受精确 4A-1 machine bundle 和 owner approval capability，并以 `FR-CTX-002 → FR-CTX-001 → FR-IND-001 → FR-IND-002` 失败关闭短路。`stage4_event_governance.py` 只校验 4A-2 draft 的精确 hash、16 项 pending 决策和零权限，刻意不提供 evaluator 或 capability issuer。其余 10 项仍为 `draft`；只有 14 项全部批准、四类测试齐全、inventory hash 与完整 machine bundle 精确绑定且零交易权限未漂移时，`require_stage4_rule_capability` 才可能签发完整 capability。
 
 Stage 2B runner 只能从精确 canonical [machine rule bundle](../03_规则与规格/机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.rule-bundle.json) 与对应 [RuleApprovalRecord](../03_规则与规格/机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.approval.json) 获取 capability；Markdown 只供审阅与追踪，运行时不得解析。strategy/bundle/version/hash/scope、SyntheticValidationInput flags、四类输入 hash、fixture registry pin 或 `run_mode=research` 任一不匹配都必须在 evaluator 前失败关闭。`SHADOW_ONLY` 是合成结果标签，不构成 shadow 运行授权。
 
