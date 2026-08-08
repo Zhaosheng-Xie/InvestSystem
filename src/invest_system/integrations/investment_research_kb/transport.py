@@ -1,10 +1,8 @@
 """Fail-closed capability boundary for KB delivery transports.
 
-Stage 2A deliberately does not guess an HTTP envelope or an immutable export
-package format.  Both approved delivery surfaces remain unavailable until the
-provider publishes a versioned public contract that InvestSystem can pin and
-verify.  Callers can inspect this capability registry, but they cannot acquire
-provider data through this module yet.
+The Stage 2A no-argument boundary remains unsupported.  Stage 3 support exists
+only when the caller supplies a completely verified Stage 6B transport catalog;
+there is no ambient path discovery or process-global enable switch.
 """
 
 from __future__ import annotations
@@ -14,6 +12,8 @@ from enum import StrEnum
 from typing import Final
 
 from invest_system.consumption import DeliveryTransport
+
+from .transport_contracts import KBTransportContractCatalog
 
 
 class TransportSupportStatus(StrEnum):
@@ -76,21 +76,47 @@ _TRANSPORT_CAPABILITIES: Final[tuple[KBTransportCapability, ...]] = (
     ),
 )
 
+_VERIFIED_TRANSPORT_CAPABILITIES: Final[tuple[KBTransportCapability, ...]] = (
+    KBTransportCapability(
+        transport=DeliveryTransport.READ_ONLY_HTTP_API,
+        status=TransportSupportStatus.SUPPORTED,
+        blocker=None,
+        planned_stage="Stage 3A",
+    ),
+    KBTransportCapability(
+        transport=DeliveryTransport.IMMUTABLE_EXPORT,
+        status=TransportSupportStatus.SUPPORTED,
+        blocker=None,
+        planned_stage="Stage 3A",
+    ),
+)
 
-def kb_transport_capabilities() -> tuple[KBTransportCapability, ...]:
-    """Return the immutable capability registry in stable enum order."""
 
-    return _TRANSPORT_CAPABILITIES
+def kb_transport_capabilities(
+    *,
+    contract_catalog: KBTransportContractCatalog | None = None,
+) -> tuple[KBTransportCapability, ...]:
+    """Return support only for an explicitly verified Stage 6B catalog."""
+
+    if contract_catalog is None:
+        return _TRANSPORT_CAPABILITIES
+    if not isinstance(contract_catalog, KBTransportContractCatalog):
+        raise TypeError("contract_catalog must be a KBTransportContractCatalog")
+    contract_catalog.assert_integrity()
+    return _VERIFIED_TRANSPORT_CAPABILITIES
 
 
 def require_supported_kb_transport(
     transport: DeliveryTransport,
+    *,
+    contract_catalog: KBTransportContractCatalog | None = None,
 ) -> KBTransportCapability:
     """Return support metadata or fail before any transport I/O is attempted."""
 
     if not isinstance(transport, DeliveryTransport):
         raise TypeError("transport must be a DeliveryTransport")
-    capability = next(item for item in _TRANSPORT_CAPABILITIES if item.transport is transport)
+    capabilities = kb_transport_capabilities(contract_catalog=contract_catalog)
+    capability = next(item for item in capabilities if item.transport is transport)
     if capability.status is not TransportSupportStatus.SUPPORTED:
         raise KBTransportNotSupportedError(capability)
     return capability

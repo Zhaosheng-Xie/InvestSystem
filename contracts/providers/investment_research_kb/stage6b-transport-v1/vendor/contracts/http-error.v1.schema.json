@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:http-error:v1",
+  "title": "Public HTTP Error Envelope v1",
+  "description": "The stable JSON error response used by versioned public HTTP endpoints.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "error"
+  ],
+  "properties": {
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message",
+        "request_id"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-z][a-z0-9_.-]*$"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "request_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "details": true
+      }
+    }
+  }
+}

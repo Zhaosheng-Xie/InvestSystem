@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:immutable-export-package:v1",
+  "title": "Immutable Release Export Package v1",
+  "description": "A transport-neutral manifest for a closed set of exact Release bytes. The package manifest hash is SHA-256 over canonical JSON with package_manifest_hash omitted.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "package_id",
+    "created_at",
+    "canonicalization_profile",
+    "release",
+    "files",
+    "package_manifest_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "package_id": {
+      "type": "string",
+      "pattern": "^pkg_[0-9a-f]{32}$"
+    },
+    "created_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "canonicalization_profile": {
+      "const": "irkb-jsonl-v1"
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "release_id",
+        "release_schema_version",
+        "knowledge_cutoff",
+        "manifest_hash",
+        "status_event_hash",
+        "status_sequence"
+      ],
+      "properties": {
+        "release_id": {
+          "$ref": "#/$defs/releaseId"
+        },
+        "release_schema_version": {
+          "const": "1.0.0"
+        },
+        "knowledge_cutoff": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "manifest_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "status_event_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "status_sequence": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "$ref": "#/$defs/file"
+      }
+    },
+    "package_manifest_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "releaseId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "not": {
+        "const": "latest"
+      }
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "artifact_id",
+        "path",
+        "media_type",
+        "size_bytes",
+        "sha256"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "dataset_release",
+            "release_manifest",
+            "release_status_events",
+            "artifact",
+            "schema"
+          ]
+        },
+        "artifact_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$",
+          "not": {
+            "pattern": "(?:^|/)\\.{1,2}(?:/|$)"
+          }
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "enum": [
+                  "artifact",
+                  "schema"
+                ]
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "then": {
+            "properties": {
+              "artifact_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "artifact_id": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

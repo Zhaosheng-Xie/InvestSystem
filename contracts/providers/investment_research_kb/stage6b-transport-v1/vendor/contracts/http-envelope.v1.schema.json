@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:http-envelope:v1",
+  "title": "Public HTTP Success Envelope v1",
+  "description": "The stable outer success envelope. The operation-specific data schema is fixed by openapi.v1.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "meta",
+    "data"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "api_version",
+        "schema_version",
+        "generated_at",
+        "as_of",
+        "knowledge_cutoff",
+        "release_id",
+        "next_cursor"
+      ],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "api_version": {
+          "const": "v1"
+        },
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "as_of": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "knowledge_cutoff": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "release_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[a-z0-9][a-z0-9_-]*$",
+              "not": {
+                "const": "latest"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "next_cursor": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "data": true
+  }
+}

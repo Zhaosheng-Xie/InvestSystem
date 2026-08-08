@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "source_commit": "2c84277ef463b5dd9a3fda3f2976a30cade53af5",
+  "capabilities": [
+    {
+      "transport": "read_only_http_api",
+      "contract_status": "supported",
+      "validation_scope": "offline_fixture_and_loopback_protocol",
+      "authority_status": "requires_authenticated_provider_service"
+    },
+    {
+      "transport": "immutable_export",
+      "contract_status": "supported",
+      "validation_scope": "offline_fixture",
+      "authority_status": "requires_authenticated_delivery_receipt_or_signature"
+    }
+  ]
+}

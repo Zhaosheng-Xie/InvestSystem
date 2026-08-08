@@ -34,6 +34,10 @@ from invest_system import (
     VerifiedFact,
     VerifiedKnowledgeInput,
 )
+from invest_system.integrations.investment_research_kb import (
+    KBTransportContractCatalog,
+    load_kb_transport_contract_snapshot,
+)
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SYNTHETIC_FIXTURE_PATH = (
@@ -43,6 +47,14 @@ SYNTHETIC_FIXTURE_PATH = (
     / "synthetic"
     / "verified_knowledge_input_v0.1.0-draft.json"
 )
+KB_TRANSPORT_SNAPSHOT_ROOT = (
+    REPOSITORY_ROOT / "contracts" / "providers" / "investment_research_kb" / "stage6b-transport-v1"
+)
+
+
+@pytest.fixture(scope="session")
+def kb_transport_catalog() -> KBTransportContractCatalog:
+    return load_kb_transport_contract_snapshot(KB_TRANSPORT_SNAPSHOT_ROOT)
 
 
 def parse_utc(value: str) -> datetime:

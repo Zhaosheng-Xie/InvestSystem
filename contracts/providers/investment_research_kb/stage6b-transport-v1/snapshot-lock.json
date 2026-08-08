@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "provider": "InvestmentResearchKB",
+  "source_repository": "https://github.com/Zhaosheng-Xie/InvestmentResearchKB",
+  "source_commit": "2c84277ef463b5dd9a3fda3f2976a30cade53af5",
+  "source_commit_tree": "dba8ed9dbdde7908e7f654ed5fd0216304d6a084",
+  "source_contracts_tree": "b61293d7ff5038d5ae2c3bd7c3ab6c8c9767fc52",
+  "retrieval_method": "git_object",
+  "canonicalization_profile": "irkb-jsonl-v1",
+  "vendor_root": "vendor",
+  "selection": "complete Stage 6B public transport contract set",
+  "base_snapshot": {
+    "path": "../v1/snapshot-lock.json",
+    "source_commit": "58ed9c5cb5302e3e719f1696bed83a03c5d6313b",
+    "sha256": "4bd79d0e3032a3eeb7824a1b956282e5495dd52a01db81df8bf36b03a2d49092"
+  },
+  "files": [
+    {
+      "path": "contracts/fixtures/contract-locks.stage6b-transport.v1.json",
+      "git_blob": "7e0ee3405cf615937ad726be7ab563b666cd8cea",
+      "size_bytes": 2943,
+      "sha256": "96a8ba7c00fa07646750ba71914ff5c41ab1a6ac946d1b55fbd8e8b4dfce1aeb"
+    },
+    {
+      "path": "contracts/fixtures/stage6b-public-transport.v1.json",
+      "git_blob": "2ee201a334ee2f8b3a4e80618bac9b39499d26f6",
+      "size_bytes": 15345,
+      "sha256": "aab3a7b8a570abd2929fb08f41752207842ef4ccb3429238e2013e5e854da3be"
+    },
+    {
+      "path": "contracts/http-envelope.v1.schema.json",
+      "git_blob": "3ad2f1c351b6e5920b3daf30711e02c14549c4ed",
+      "size_bytes": 2159,
+      "sha256": "c77740abc038643bf7a7a4dbf6100f26f9ea7dec1ca05478c32f3173331576f2"
+    },
+    {
+      "path": "contracts/http-error.v1.schema.json",
+      "git_blob": "9d6d4edce5d0013235ee8b801916cb6d190ef7fb",
+      "size_bytes": 1107,
+      "sha256": "c164b84ab4f741263f66fba8ff20b8bc2147fbe7544bb41f978027ac48381a59"
+    },
+    {
+      "path": "contracts/immutable-export-package.v1.schema.json",
+      "git_blob": "4b18f2100e99f289c628975729cecfdf0d3fb4f7",
+      "size_bytes": 4478,
+      "sha256": "edd8d26caf0d70ae53ed8e3320231e73859a447b414c1e5202a3bac2cb5e41e7"
+    },
+    {
+      "path": "contracts/openapi.v1.json",
+      "git_blob": "748662ad71ae7fbc764875beec8ba154975f9a3f",
+      "size_bytes": 230442,
+      "sha256": "4478144dcdae8b156bd75ccc4393f1b0336c3ea2a632f11179bd8150d414ac39"
+    },
+    {
+      "path": "contracts/release-status-history.v1.schema.json",
+      "git_blob": "1e04ea5d520784c8df5e2de8674cd2cb0e80b21d",
+      "size_bytes": 1075,
+      "sha256": "c33fe57520202859e1a086b63c1f7444b0ab2639cb475177cb40e37f176eef32"
+    }
+  ]
+}

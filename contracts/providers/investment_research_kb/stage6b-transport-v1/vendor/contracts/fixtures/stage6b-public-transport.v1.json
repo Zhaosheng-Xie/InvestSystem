@@ -1,0 +1,419 @@
+{
+  "schema_version": "1.0.0",
+  "purpose": "Language-neutral public transport fixture with no production or licensed data.",
+  "reconstruction": {
+    "canonical_json": "UTF-8, sorted object keys, compact separators, no ASCII escaping, followed by one LF",
+    "canonical_jsonl": "Each listed record as canonical JSON followed by one LF"
+  },
+  "http_examples": {
+    "release_status_success": {
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/dataset-releases/rel_stage6b_transport_fixture/status",
+        "required_scope": "research:read"
+      },
+      "response": {
+        "meta": {
+          "request_id": "req-stage6b-fixture",
+          "api_version": "v1",
+          "schema_version": "1.0.0",
+          "generated_at": "2026-08-01T00:04:00.000000Z",
+          "as_of": null,
+          "knowledge_cutoff": "2026-08-01T00:00:00.000000Z",
+          "release_id": "rel_stage6b_transport_fixture",
+          "next_cursor": null
+        },
+        "data": {
+          "schema_version": "1.0.0",
+          "release_id": "rel_stage6b_transport_fixture",
+          "current_status_event": {
+            "schema_version": "1.0.0",
+            "event_id": "evt_stage6b_transport_published",
+            "release_id": "rel_stage6b_transport_fixture",
+            "sequence": 3,
+            "status": "published",
+            "reason_code": null,
+            "recorded_at": "2026-08-01T00:02:00.000000Z",
+            "authority": {
+              "type": "human",
+              "principal_id": "github:fixture-owner"
+            },
+            "previous_event_hash": {
+              "algorithm": "sha256",
+              "value": "c4d40042de4e9aafd02df652c11dec1d2b6c5bbf0876922b69922105c2119532"
+            },
+            "event_hash": {
+              "algorithm": "sha256",
+              "value": "7ebc2bccf08bb02539f94b381071603287e64063f6a9bc1a4f4e08267498706e"
+            }
+          },
+          "events": [
+            {
+              "schema_version": "1.0.0",
+              "event_id": "evt_stage6b_transport_building",
+              "release_id": "rel_stage6b_transport_fixture",
+              "sequence": 1,
+              "status": "building",
+              "reason_code": null,
+              "recorded_at": "2026-08-01T00:00:00.000000Z",
+              "authority": {
+                "type": "system",
+                "principal_id": "fixture-builder"
+              },
+              "previous_event_hash": null,
+              "event_hash": {
+                "algorithm": "sha256",
+                "value": "a9cf927299a4ef6e93138b17525734fc7888b6f17110aa0f8e2120f8e687d52f"
+              }
+            },
+            {
+              "schema_version": "1.0.0",
+              "event_id": "evt_stage6b_transport_validated",
+              "release_id": "rel_stage6b_transport_fixture",
+              "sequence": 2,
+              "status": "validated",
+              "reason_code": null,
+              "recorded_at": "2026-08-01T00:01:30.000000Z",
+              "authority": {
+                "type": "system",
+                "principal_id": "fixture-validator"
+              },
+              "previous_event_hash": {
+                "algorithm": "sha256",
+                "value": "a9cf927299a4ef6e93138b17525734fc7888b6f17110aa0f8e2120f8e687d52f"
+              },
+              "event_hash": {
+                "algorithm": "sha256",
+                "value": "c4d40042de4e9aafd02df652c11dec1d2b6c5bbf0876922b69922105c2119532"
+              }
+            },
+            {
+              "schema_version": "1.0.0",
+              "event_id": "evt_stage6b_transport_published",
+              "release_id": "rel_stage6b_transport_fixture",
+              "sequence": 3,
+              "status": "published",
+              "reason_code": null,
+              "recorded_at": "2026-08-01T00:02:00.000000Z",
+              "authority": {
+                "type": "human",
+                "principal_id": "github:fixture-owner"
+              },
+              "previous_event_hash": {
+                "algorithm": "sha256",
+                "value": "c4d40042de4e9aafd02df652c11dec1d2b6c5bbf0876922b69922105c2119532"
+              },
+              "event_hash": {
+                "algorithm": "sha256",
+                "value": "7ebc2bccf08bb02539f94b381071603287e64063f6a9bc1a4f4e08267498706e"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "withdrawn_artifact_error": {
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/dataset-releases/rel_stage6b_transport_fixture/artifacts/stage6b-transport-fixture-v1",
+        "required_scope": "export:read"
+      },
+      "status_code": 410,
+      "response": {
+        "error": {
+          "code": "artifact_download_withdrawn",
+          "message": "Dataset release has been withdrawn",
+          "request_id": "req-stage6b-withdrawn",
+          "details": {
+            "release_id": "rel_stage6b_transport_fixture",
+            "artifact_id": "stage6b-transport-fixture-v1"
+          }
+        }
+      }
+    }
+  },
+  "immutable_export_example": {
+    "package_manifest": {
+      "schema_version": "1.0.0",
+      "package_id": "pkg_0123456789abcdef0123456789abcdef",
+      "created_at": "2026-08-01T00:03:00.000000Z",
+      "canonicalization_profile": "irkb-jsonl-v1",
+      "release": {
+        "release_id": "rel_stage6b_transport_fixture",
+        "release_schema_version": "1.0.0",
+        "knowledge_cutoff": "2026-08-01T00:00:00.000000Z",
+        "manifest_hash": {
+          "algorithm": "sha256",
+          "value": "60491fb384a40f310c72b8cd744c99fbfbbe9c29236851a9b43c9d57cb0b3550"
+        },
+        "status_event_hash": {
+          "algorithm": "sha256",
+          "value": "7ebc2bccf08bb02539f94b381071603287e64063f6a9bc1a4f4e08267498706e"
+        },
+        "status_sequence": 3
+      },
+      "files": [
+        {
+          "role": "artifact",
+          "artifact_id": "stage6b-transport-fixture-v1",
+          "path": "artifacts/stage6b-transport-fixture.v1.json",
+          "media_type": "application/json",
+          "size_bytes": 62,
+          "sha256": {
+            "algorithm": "sha256",
+            "value": "93492740c470e2ce1a640dcfe9540bcfd342775f6845847946cdb5fd190866a3"
+          }
+        },
+        {
+          "role": "release_manifest",
+          "artifact_id": null,
+          "path": "metadata/manifest.json",
+          "media_type": "application/json",
+          "size_bytes": 2425,
+          "sha256": {
+            "algorithm": "sha256",
+            "value": "2de35d4c8e235db0d2edd98595fcf6949fb0253ed1549bd3eee351ad7f450b83"
+          }
+        },
+        {
+          "role": "dataset_release",
+          "artifact_id": null,
+          "path": "metadata/release.json",
+          "media_type": "application/json",
+          "size_bytes": 593,
+          "sha256": {
+            "algorithm": "sha256",
+            "value": "cbf0519b930c8def3457a25ddce02dbe8424f89df53fb92e39e200b5d7e63870"
+          }
+        },
+        {
+          "role": "release_status_events",
+          "artifact_id": null,
+          "path": "metadata/status-events.jsonl",
+          "media_type": "application/x-ndjson",
+          "size_bytes": 1435,
+          "sha256": {
+            "algorithm": "sha256",
+            "value": "293b4cc977c12931167d71ffdd0fb28476a26f7d40785c6fa7f2aa0daa3f3a34"
+          }
+        }
+      ],
+      "package_manifest_hash": {
+        "algorithm": "sha256",
+        "value": "7c0447a608de8c1b8d1c4fde8c810da675b96dce0521ac9b101af567280d9d70"
+      }
+    },
+    "file_sources": [
+      {
+        "path": "metadata/release.json",
+        "content_kind": "canonical-json",
+        "value": {
+          "schema_version": "1.0.0",
+          "release_id": "rel_stage6b_transport_fixture",
+          "created_at": "2026-08-01T00:01:00.000000Z",
+          "knowledge_cutoff": "2026-08-01T00:00:00.000000Z",
+          "supersedes_release_id": null,
+          "manifest_ref": {
+            "schema_version": "1.0.0",
+            "hash": {
+              "algorithm": "sha256",
+              "value": "60491fb384a40f310c72b8cd744c99fbfbbe9c29236851a9b43c9d57cb0b3550"
+            }
+          },
+          "current_status": {
+            "status": "published",
+            "sequence": 3,
+            "event_id": "evt_stage6b_transport_published",
+            "event_hash": {
+              "algorithm": "sha256",
+              "value": "7ebc2bccf08bb02539f94b381071603287e64063f6a9bc1a4f4e08267498706e"
+            },
+            "recorded_at": "2026-08-01T00:02:00.000000Z"
+          }
+        }
+      },
+      {
+        "path": "metadata/manifest.json",
+        "content_kind": "canonical-json",
+        "value": {
+          "schema_version": "1.0.0",
+          "release_id": "rel_stage6b_transport_fixture",
+          "created_at": "2026-08-01T00:01:00.000000Z",
+          "knowledge_cutoff": "2026-08-01T00:00:00.000000Z",
+          "supersedes_release_id": null,
+          "time_semantics_version": "1.0.0",
+          "canonicalization_profile": "irkb-jsonl-v1",
+          "code": {
+            "repository": "investment-research-kb-stage6b-fixture",
+            "commit": "0000000000000000000000000000000000000000",
+            "dirty": false
+          },
+          "inputs": {
+            "source_snapshots": [
+              {
+                "snapshot_id": "snap_stage6b_transport_fixture",
+                "provider": "synthetic",
+                "dataset": "stage6b_transport_fixture",
+                "schema_hash": {
+                  "algorithm": "sha256",
+                  "value": "5555555555555555555555555555555555555555555555555555555555555555"
+                },
+                "content_hash": {
+                  "algorithm": "sha256",
+                  "value": "6666666666666666666666666666666666666666666666666666666666666666"
+                }
+              }
+            ],
+            "document_versions": [],
+            "configs": [
+              {
+                "config_id": "stage6b-public-transport-fixture",
+                "version": "1",
+                "content_hash": {
+                  "algorithm": "sha256",
+                  "value": "1111111111111111111111111111111111111111111111111111111111111111"
+                }
+              }
+            ],
+            "normalizers": [],
+            "parsers": [
+              {
+                "parser_id": "stage6b-transport-fixture-parser",
+                "version": "1",
+                "content_hash": {
+                  "algorithm": "sha256",
+                  "value": "7777777777777777777777777777777777777777777777777777777777777777"
+                }
+              }
+            ],
+            "availability_policies": [
+              {
+                "policy_id": "fixture-availability",
+                "version": "1",
+                "content_hash": {
+                  "algorithm": "sha256",
+                  "value": "4444444444444444444444444444444444444444444444444444444444444444"
+                }
+              }
+            ],
+            "review_policy": null,
+            "authorization_policy": {
+              "policy_id": "synthetic-contract-fixture",
+              "version": "1",
+              "content_hash": {
+                "algorithm": "sha256",
+                "value": "2222222222222222222222222222222222222222222222222222222222222222"
+              }
+            }
+          },
+          "release_items": [
+            {
+              "artifact_id": "stage6b-transport-fixture-v1",
+              "item_type": "dataset",
+              "logical_path": "artifacts/stage6b-transport-fixture.v1.json",
+              "media_type": "application/json",
+              "format": "json",
+              "record_schema_id": "urn:investment-research-kb:fixture:stage6b-transport-record:v1",
+              "record_schema_version": "1.0.0",
+              "record_schema_hash": {
+                "algorithm": "sha256",
+                "value": "3333333333333333333333333333333333333333333333333333333333333333"
+              },
+              "sort_keys": [
+                "fixture_id"
+              ],
+              "record_count": 1,
+              "size_bytes": 62,
+              "artifact_hash": {
+                "algorithm": "sha256",
+                "value": "93492740c470e2ce1a640dcfe9540bcfd342775f6845847946cdb5fd190866a3"
+              },
+              "logical_content_hash": {
+                "algorithm": "sha256",
+                "value": "93492740c470e2ce1a640dcfe9540bcfd342775f6845847946cdb5fd190866a3"
+              }
+            }
+          ],
+          "manifest_hash": {
+            "algorithm": "sha256",
+            "value": "60491fb384a40f310c72b8cd744c99fbfbbe9c29236851a9b43c9d57cb0b3550"
+          }
+        }
+      },
+      {
+        "path": "metadata/status-events.jsonl",
+        "content_kind": "canonical-jsonl",
+        "records": [
+          {
+            "schema_version": "1.0.0",
+            "event_id": "evt_stage6b_transport_building",
+            "release_id": "rel_stage6b_transport_fixture",
+            "sequence": 1,
+            "status": "building",
+            "reason_code": null,
+            "recorded_at": "2026-08-01T00:00:00.000000Z",
+            "authority": {
+              "type": "system",
+              "principal_id": "fixture-builder"
+            },
+            "previous_event_hash": null,
+            "event_hash": {
+              "algorithm": "sha256",
+              "value": "a9cf927299a4ef6e93138b17525734fc7888b6f17110aa0f8e2120f8e687d52f"
+            }
+          },
+          {
+            "schema_version": "1.0.0",
+            "event_id": "evt_stage6b_transport_validated",
+            "release_id": "rel_stage6b_transport_fixture",
+            "sequence": 2,
+            "status": "validated",
+            "reason_code": null,
+            "recorded_at": "2026-08-01T00:01:30.000000Z",
+            "authority": {
+              "type": "system",
+              "principal_id": "fixture-validator"
+            },
+            "previous_event_hash": {
+              "algorithm": "sha256",
+              "value": "a9cf927299a4ef6e93138b17525734fc7888b6f17110aa0f8e2120f8e687d52f"
+            },
+            "event_hash": {
+              "algorithm": "sha256",
+              "value": "c4d40042de4e9aafd02df652c11dec1d2b6c5bbf0876922b69922105c2119532"
+            }
+          },
+          {
+            "schema_version": "1.0.0",
+            "event_id": "evt_stage6b_transport_published",
+            "release_id": "rel_stage6b_transport_fixture",
+            "sequence": 3,
+            "status": "published",
+            "reason_code": null,
+            "recorded_at": "2026-08-01T00:02:00.000000Z",
+            "authority": {
+              "type": "human",
+              "principal_id": "github:fixture-owner"
+            },
+            "previous_event_hash": {
+              "algorithm": "sha256",
+              "value": "c4d40042de4e9aafd02df652c11dec1d2b6c5bbf0876922b69922105c2119532"
+            },
+            "event_hash": {
+              "algorithm": "sha256",
+              "value": "7ebc2bccf08bb02539f94b381071603287e64063f6a9bc1a4f4e08267498706e"
+            }
+          }
+        ]
+      },
+      {
+        "path": "artifacts/stage6b-transport-fixture.v1.json",
+        "content_kind": "canonical-json",
+        "value": {
+          "fixture_id": "stage6b-public-transport",
+          "value": "synthetic"
+        }
+      }
+    ]
+  }
+}

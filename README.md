@@ -6,16 +6,16 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v1.9](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 deferred by owner / Stage 4 in progress`。Stage 3 的完成门仍保留并在正式历史验证前补齐；Stage 4 的 4A-1—4A-3 已在各自精确批准的合成 research-validation scope 内实现，4A-4 已形成零权限待批准草案，完整策略仍未实现。
+- [InvestSystem 实施计划 v2.0](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 in progress / Stage 4 in progress`。Stage 3A 已固定 KB `2c84277` 公共传输契约并完成 Client/export 官方 fixture 离线验收；3B 等待独立 KB RC 服务和只读凭据，3C tcloud 与 3D 正式 Context Pack 尚未开始。Stage 4 的 4A-1—4A-3 已在各自精确批准的合成 research-validation scope 内实现，4A-4 仍是零权限待批准草案，完整策略仍未实现。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。
 
-Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)。仓库从 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定了 20 个官方文件，并完成 provider canonical、契约 catalog、官方 reference fixture 验证/窄投影，以及 InvestSystem 自有 SQLite v3 的 Receipt、append-only Observation、传递留存闭包、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。根 Receipt 只标识本次策略输入的制品，留存闭包另行固定实际依赖的 source Release、Manifest 快照与制品；调用方不能声明任意 pin 子集。真实 current-status authority 默认为空，且两种批准 transport 都会在 I/O 前显式失败关闭，因此官方 fixture 不能授权新 run。HTTP/export acquisition、完整 status-event 正文、认证 transport、原始响应留存和真实 authority 启用归入 Stage 3。Stage 2A 本身没有交付任何策略能力。
+Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)。仓库从 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定了 20 个官方文件，并完成 provider canonical、契约 catalog、官方 reference fixture 验证/窄投影，以及 InvestSystem 自有 SQLite v3 的 Receipt、append-only Observation、传递留存闭包、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。根 Receipt 只标识本次策略输入的制品，留存闭包另行固定实际依赖的 source Release、Manifest 快照与制品；调用方不能声明任意 pin 子集。Stage 2A 的无参数 transport 门仍在 I/O 前显式失败关闭；Stage 3A 只有在调用方提供完整验证的 `2c84277` 扩展 catalog 时才启用协议实现。真实 current-status authority 仍为空，官方 fixture 不能授权新 run。认证 acquisition、CAS/Observation 持久化和真实 authority 启用归入 Stage 3B—3D。Stage 2A 本身没有交付任何策略能力。
 
 Stage 2B 已通过[正式验收](docs/validation/stage2b-acceptance.md)：最小订单/合同规则包 22 项、精确批准 capability、24 个正常策略向量、10 个 admission failure 向量、E3.5/E4、四道门、窄版利润桥/预期/估值、完整 DecisionRecord 和确定性 replay 已形成。它只授权匿名合成 `research` validation；不授权 backtest、paper、shadow、live、仓位、组合、订单或资金部署，也不证明策略有效。
 
-Stage 2 进入 Stage 4 的[复核](docs/validation/stage2-reentry-audit.md)已通过。owner 于 `2026-08-03` 决定本轮跳过 Stage 3、启动 Stage 4；Stage 3 标为 `deferred` 而非完成。Stage 4 当前处于 [4A rule governance](docs/validation/stage4-development-status.md)：14 项 P0 inventory 中 4A-1—4A-3 共十一项已批准并实现局部 evaluator；4A-4 的 `FR-GATE-004/005` 与 `FR-EXIT-001` 已收敛为二十四项待批准决定和零权限 draft machine proposal，但仍全部为 `draft`。因此 Gate 3—4、退出、完整决策与完整 Stage 4 runtime capability 继续关闭。
+Stage 2 进入 Stage 4 的[复核](docs/validation/stage2-reentry-audit.md)已通过。owner 于 `2026-08-08` 恢复 Stage 3；[Stage 3A 离线传输消费者验收](docs/validation/stage3a-acceptance.md)已完成，但认证跨仓 HTTP、tcloud、正式 Context Pack 和 run authority 尚未通过。Stage 4 当前处于 [4A rule governance](docs/validation/stage4-development-status.md)：14 项 P0 inventory 中 4A-1—4A-3 共十一项已批准并实现局部 evaluator；4A-4 的 `FR-GATE-004/005` 与 `FR-EXIT-001` 已收敛为二十四项待批准决定和零权限 draft machine proposal，但仍全部为 `draft`。因此 Gate 3—4、退出、完整决策与完整 Stage 4 runtime capability 继续关闭。
 
 ## 当前项目
 
