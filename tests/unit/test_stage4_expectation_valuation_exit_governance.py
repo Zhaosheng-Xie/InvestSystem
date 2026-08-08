@@ -165,7 +165,7 @@ def test_4a4_draft_has_no_draft_approval_but_approved_version_is_separate(
     from invest_system.strategies import industrial_event
 
     assert hasattr(industrial_event, "evaluate_stage4_expectation_valuation_exit")
-    assert not hasattr(industrial_event, "evaluate_complete_stage4")
+    assert hasattr(industrial_event, "evaluate_complete_stage4")
 
 
 def test_4a4_draft_contains_only_stage4_owned_rule_modules(repository_root: Path) -> None:

@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v2.2](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 in progress / Stage 4 in progress`。Stage 3A 已完成离线 Client/export 验收；Stage 3B 已把传输快照重固定到 KB `aab36fe`，并通过独立进程、只读凭据的正式本机 HTTP 验收。3C tcloud 与 3D 正式 Context Pack 策略 smoke 尚未开始，所有 3B 输出仍为 `authority_eligible=false`。Stage 4 的 4A-1—4A-4 已在各自精确批准的合成 research-validation scope 内实现；14 项 P0 规则全为 `approved`，但 4B 完整集成仍是零权限待批准草案，完整策略尚未实现。
+- [InvestSystem 实施计划 v2.3](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 in progress / Stage 4 completed_with_scope_limits`。Stage 3A 已完成离线 Client/export 验收；Stage 3B 已把传输快照重固定到 KB `aab36fe`，并通过独立进程、只读凭据的正式本机 HTTP 验收。3C tcloud 与 3D 正式 Context Pack 策略 smoke 尚未开始，所有 3B 输出仍为 `authority_eligible=false`。Stage 4 的 14 项 P0 规则、4A-1—4A-4 局部 evaluator 和独立 4B 完整编排 capability 均已精确批准并通过匿名合成验收；完整生产策略尚未实现。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。
@@ -15,11 +15,11 @@ Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)。仓库
 
 Stage 2B 已通过[正式验收](docs/validation/stage2b-acceptance.md)：最小订单/合同规则包 22 项、精确批准 capability、24 个正常策略向量、10 个 admission failure 向量、E3.5/E4、四道门、窄版利润桥/预期/估值、完整 DecisionRecord 和确定性 replay 已形成。它只授权匿名合成 `research` validation；不授权 backtest、paper、shadow、live、仓位、组合、订单或资金部署，也不证明策略有效。
 
-Stage 2 进入 Stage 4 的[复核](docs/validation/stage2-reentry-audit.md)已通过。owner 于 `2026-08-08` 恢复 Stage 3；[Stage 3A 离线传输消费者验收](docs/validation/stage3a-acceptance.md)和[Stage 3B 正式跨仓只读 HTTP 验收](docs/validation/stage3b-http-acceptance.md)均已完成，但 tcloud、正式 Context Pack 策略 smoke 和 run authority 尚未通过。Stage 4 当前状态见[开发记录](docs/validation/stage4-development-status.md)：4A-1—4A-4 的 14 项 P0 规则均已批准并实现局部 evaluator；4B 已把完整编排、身份一致性、结论优先级和 replay 收敛为 16 项待批准决定与零权限 draft machine proposal。因此局部 Gate 3—4 和退出可做合成验证，完整 Stage 4 runtime capability 仍关闭。
+Stage 2 进入 Stage 4 的[复核](docs/validation/stage2-reentry-audit.md)已通过。owner 于 `2026-08-08` 恢复 Stage 3；[Stage 3A 离线传输消费者验收](docs/validation/stage3a-acceptance.md)和[Stage 3B 正式跨仓只读 HTTP 验收](docs/validation/stage3b-http-acceptance.md)均已完成，但 tcloud、正式 Context Pack 策略 smoke 和 run authority 尚未通过。Stage 4 已通过[4B 完整合成验收](docs/validation/stage4-4b-acceptance.md)：完整输入从原始 typed case 重新运行 4A-1—4A-4，固定五层 capability 身份、统一 Gate/退出视图与 deterministic replay。该能力只适用于匿名合成 research validation，不读取真实 KB Release，也不授权 backtest、paper、shadow、live、仓位、组合、成交、P&L 或订单。
 
 ## 当前项目
 
-- [产业卡点及事件驱动系统](产业卡点及事件驱动系统/README.md)：PRD v0.3 已于 `2026-07-31` 批准；Stage 2B 最小合成 research-validation 切片已验收，Stage 4 规则治理已启动，完整产业策略仍未实现。
+- [产业卡点及事件驱动系统](产业卡点及事件驱动系统/README.md)：PRD v0.3 已于 `2026-07-31` 批准；Stage 2B 最小切片与 Stage 4 完整合成 research-validation 引擎均已验收，完整生产策略仍未实现。
   - 第一读物：[需求文档 v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md)
   - 研究裁决：[框架审计与研究结论 v0.1](产业卡点及事件驱动系统/02_研究/框架审计与研究结论_v0.1.md)
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md)：独立、延后的研究轨道，需求与规则尚未冻结；默认不向产业策略提供信号。

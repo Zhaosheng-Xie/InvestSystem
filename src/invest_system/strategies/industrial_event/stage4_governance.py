@@ -15,7 +15,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
-from invest_system.canonical import JsonValue, freeze_json
+from invest_system.canonical import JsonValue, canonical_sha256, freeze_json
 from invest_system.domain.rule_approval import (
     CURRENT_RULE_APPROVAL_REGISTRY,
     ApprovedRuleCapability,
@@ -28,6 +28,19 @@ from invest_system.models import CanonicalModel, HashDigest, RuleStatus
 STAGE4_RULE_INVENTORY_SCHEMA_VERSION = "0.1.0-draft"
 STAGE4_STRATEGY_ID = "industrial_bottleneck_event"
 STAGE4_APPROVAL_SCOPE = RuleApprovalScope.STAGE4_SYNTHETIC_RESEARCH_VALIDATION
+STAGE4_COMPLETE_RULE_BUNDLE_ID = "industrial_event_stage4_4b_complete_engine_integration"
+STAGE4_COMPLETE_RULE_BUNDLE_VERSION = "0.1.0"
+STAGE4_COMPLETE_RULE_APPROVAL_ID = "rule_approval_stage4_4b_complete_engine_integration_v0_1_0"
+STAGE4_COMPLETE_RULE_BUNDLE_SHA256 = (
+    "ba8886cf85beef084c2a2d3b83446b499c7786fbc3f0e56066fb8cedc8e27e77"
+)
+STAGE4_COMPLETE_RULES_SHA256 = "3477d237523ce84239ca1363ad1c8d2e467528ec90acb0034193aeb320740019"
+STAGE4_COMPLETE_RULE_APPROVAL_RECORD_SHA256 = (
+    "d809394ef00beab2053795779878025fb1b3b0cd2a49da76302e500ef7f4b2fe"
+)
+STAGE4_COMPLETE_INVENTORY_SHA256 = (
+    "fc07b10bb17d91b3447504fe7f5b2e346023fd98bb14da991e1a1dd85381bf53"
+)
 
 # Stage 4 owns strategy semantics.  Transport belongs to Stage 3, while
 # executable-price mechanics, risk budgets, portfolio, orders, and P&L belong
@@ -83,16 +96,31 @@ _AUTHORIZATION_KEYS = frozenset(
         "synthetic_only",
         "validation_only",
         "not_a_published_release",
+        "complete_stage4_synthetic_capability_issued",
+        "authorizes_kb_current_status",
         "authorizes_backtest",
         "authorizes_paper",
         "authorizes_shadow",
         "authorizes_live",
         "authorizes_positions",
+        "authorizes_portfolio",
+        "authorizes_execution",
+        "authorizes_pnl",
         "authorizes_orders",
     }
 )
 _INVENTORY_BINDING_KEYS = frozenset({"schema_version", "inventory_hash", "requirement_ids"})
-_RULE_DOCUMENT_KEYS = frozenset({"authorization_boundary", "stage4_rule_inventory", "rule_modules"})
+_RULE_DOCUMENT_KEYS = frozenset(
+    {
+        "authorization_boundary",
+        "stage4_rule_inventory",
+        "approved_batch_bindings",
+        "complete_engine_integration",
+        "rule_modules",
+        "approval_source_binding",
+        "document_binding",
+    }
+)
 
 
 def _strict_mapping(
@@ -318,11 +346,16 @@ def _validate_stage4_rule_document(
             "synthetic_only": True,
             "validation_only": True,
             "not_a_published_release": True,
+            "complete_stage4_synthetic_capability_issued": True,
+            "authorizes_kb_current_status": False,
             "authorizes_backtest": False,
             "authorizes_paper": False,
             "authorizes_shadow": False,
             "authorizes_live": False,
             "authorizes_positions": False,
+            "authorizes_portfolio": False,
+            "authorizes_execution": False,
+            "authorizes_pnl": False,
             "authorizes_orders": False,
         },
         path="$.stage4_authorization_boundary",
@@ -346,7 +379,13 @@ def _validate_stage4_rule_document(
             "STAGE4_INVENTORY_SCHEMA_MISMATCH",
             "the rule bundle binds an unsupported inventory schema",
         )
-    expected_hash = inventory.inventory_hash().to_json_value()
+    inventory_hash = inventory.inventory_hash()
+    expected_hash = inventory_hash.to_json_value()
+    if inventory_hash.value != STAGE4_COMPLETE_INVENTORY_SHA256:
+        raise Stage4RuleReadinessError(
+            "STAGE4_CHECKED_IN_INVENTORY_HASH_UNSUPPORTED",
+            "the complete capability requires the exact approved P0 inventory",
+        )
     if binding["inventory_hash"] != expected_hash:
         raise Stage4RuleReadinessError(
             "STAGE4_INVENTORY_HASH_MISMATCH",
@@ -390,6 +429,23 @@ def _validate_stage4_rule_document(
                 f"rule module {requirement_id} does not bind the inventory machine rule",
             )
 
+    for field_name in (
+        "approved_batch_bindings",
+        "complete_engine_integration",
+        "approval_source_binding",
+        "document_binding",
+    ):
+        if not isinstance(rules[field_name], Mapping) or not rules[field_name]:
+            raise Stage4RuleReadinessError(
+                "STAGE4_COMPLETE_INTEGRATION_CONTRACT_MISSING",
+                f"{field_name} must contain the approved complete-engine contract",
+            )
+    if canonical_sha256(document.rules) != STAGE4_COMPLETE_RULES_SHA256:
+        raise Stage4RuleReadinessError(
+            "STAGE4_COMPLETE_RULES_HASH_UNSUPPORTED",
+            "the complete-engine machine semantics differ from the owner-approved version",
+        )
+
 
 def require_stage4_rule_capability(
     document: RuleBundleDocument,
@@ -413,4 +469,26 @@ def require_stage4_rule_capability(
             "Stage 2B or another scope cannot authorize Stage 4",
         )
     _validate_stage4_rule_document(document, inventory)
+    expected_identity = (
+        STAGE4_STRATEGY_ID,
+        STAGE4_COMPLETE_RULE_BUNDLE_ID,
+        STAGE4_COMPLETE_RULE_BUNDLE_VERSION,
+    )
+    if (document.strategy_id, document.bundle_id, document.bundle_version) != expected_identity:
+        raise Stage4RuleReadinessError(
+            "STAGE4_COMPLETE_RULE_IDENTITY_UNSUPPORTED",
+            "only the exact approved 4B bundle can issue complete Stage 4 capability",
+        )
+    if document.bundle_hash().value != STAGE4_COMPLETE_RULE_BUNDLE_SHA256:
+        raise Stage4RuleReadinessError(
+            "STAGE4_COMPLETE_RULE_BUNDLE_HASH_UNSUPPORTED",
+            "the complete Stage 4 bundle hash differs from the approved version",
+        )
+    if capability.approval_id != STAGE4_COMPLETE_RULE_APPROVAL_ID or (
+        capability.approval_record_hash.value != STAGE4_COMPLETE_RULE_APPROVAL_RECORD_SHA256
+    ):
+        raise Stage4RuleReadinessError(
+            "STAGE4_COMPLETE_RULE_APPROVAL_UNSUPPORTED",
+            "the complete capability requires the exact owner approval record",
+        )
     return capability

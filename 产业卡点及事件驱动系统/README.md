@@ -1,9 +1,9 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3/3A—3B completed、3C—3D not_started；Stage 4/4A-1—4A-4 completed、4B draft_for_owner_approval；完整策略未实现`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3/3A—3B completed、3C—3D not_started；Stage 4 completed_with_scope_limits；完整生产策略未实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-08`
 市场范围：`中国 A 股`
-当前已授权边界：`Stage 2B 与 Stage 4/4A-1—4A-4 均仅在各自精确批准范围内进行匿名合成 research validation；4B 仍是零权限待批准草案；完整 Stage 4 capability 关闭；不授权 backtest/paper/shadow/live、仓位或订单`
+当前已授权边界：`Stage 2B 与 Stage 4/4B 均仅在各自精确批准范围内进行匿名合成 research validation；不签发 KB current-status authority 或正式 StrategyRunManifest；不授权 backtest/paper/shadow/live、仓位、组合、成交、P&L 或订单`
 
 ## 系统一句话定义
 
@@ -37,7 +37,7 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-08`
 10. [Stage 2 进入 Stage 4 复核](../docs/validation/stage2-reentry-audit.md)
     - 状态：`passed_for_stage4_entry`；这是 Stage 4 开工证据，Stage 3 后续已恢复并完成 3A—3B。
 11. [Stage 4 完整 P0 规则清单与批准包 v0.1](03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md)
-    - 状态：`all_14_p0_rules_approved`；4A-1—4A-4 均已批准并实现局部 evaluator，完整 Stage 4 runtime capability 仍关闭。
+    - 状态：`all_14_p0_rules_approved`；4A-1—4A-4 均已批准并实现局部 evaluator，完整编排另由精确 4B capability 授权。
 12. [Stage 4 / 4A-1 上下文与产业映射规则包 v0.1](03_规则与规格/Stage4_4A1上下文与产业映射规则包_v0.1.md)
     - 状态：`approved / implemented for stage4_synthetic_research_validation only`；覆盖上下文准入、历史防回填、产业卡点和公司受益晋级。
 13. [Stage 4 / 4A-2 事件状态与审计分层规则包 v0.1](03_规则与规格/Stage4_4A2事件状态与审计分层规则包_v0.1.md)
@@ -53,15 +53,19 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-08`
 18. [Stage 4 / 4A-4 市场预期、估值与退出批准记录 v0.1](03_规则与规格/Stage4_4A4市场预期估值与退出批准记录_v0.1.md)
     - 状态：`approved / implemented for stage4_synthetic_research_validation only`；24 项全部批准，覆盖 Gate 3—4、估值和退出，不授权完整 Stage 4 或任何交易能力。
 19. [Stage 4 / 4B 完整引擎集成与合成验收规则包 v0.1](03_规则与规格/Stage4_4B完整引擎集成与合成验收规则包_v0.1.md)
-    - 状态：`draft_for_owner_approval`；16 项全部待确认，配套 machine proposal 为空运行模式、无 approval record、无完整编排器且零权限。
-20. [Stage 4 / 4A-4 合成研究验收记录](../docs/validation/stage4-4a4-acceptance.md)
+    - 原提案状态：`draft_for_owner_approval`；其原始字节和 draft machine proposal 保留用于批准谱系。
+20. [Stage 4 / 4B 完整引擎集成与合成验收批准记录 v0.1](03_规则与规格/Stage4_4B完整引擎集成与合成验收批准记录_v0.1.md)
+    - 状态：`approved / implemented for stage4_synthetic_research_validation only`；16 项全部批准，完整编排和 replay 已实现，不授权任何真实/交易能力。
+21. [Stage 4 / 4A-4 合成研究验收记录](../docs/validation/stage4-4a4-acceptance.md)
     - 状态：`completed_with_scope_limits`；只证明 4A-4 局部规则与治理实现通过，不证明完整策略或收益有效。
+22. [Stage 4 / 4B 完整引擎集成与合成验收记录](../docs/validation/stage4-4b-acceptance.md)
+    - 状态：`completed_with_scope_limits`；只证明完整匿名合成 research-validation 引擎可失败关闭和重放，不证明历史有效性或任何真实交易能力。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空，HTTP/export 都在 I/O 前失败关闭；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实 acquisition/current status、认证 transport 和原始响应留存归入 Stage 3，策略语义属于 Stage 2B 以后。
 
 Stage 2B 已完成并验收：精确批准规则、可信 fixture registry、E3.5/E4、四道门、利润桥、预期/估值、四类正常结果、pre-engine `BLOCKED`、DecisionRecord 和 replay 均有实现与测试。合成 `TRADE_READY` 与 `SHADOW_ONLY` 始终保持 `FLAT`、零权重、无 approver 且无仓位/订单权限；本批准不得推导为任何真实仓位或其他运行模式授权。
 
-Stage 4 已在 `codex/stage4a4` 完成 4A-1—4A-4：专属 `stage4_synthetic_research_validation` scope、全 approved 的 14 项 P0 inventory、四个批次各自的精确 machine bundle/approval 和失败关闭 evaluator 已建立；原 draft proposal 均作为不可变谱系保留。4A-4 只实现局部 Gate 3、合成研究 Gate 4 和四类退出判断，明确把真实首次可成交价、市场规则、持仓账本和订单留在 Stage 5。4B 完整集成草案现等待 owner 对 16 项决定的明确批准；Stage 2B capability、真实 KB 输入、backtest/paper/shadow/live、仓位和订单均不能进入该切片，完整 capability 继续关闭。
+Stage 4 已在 `codex/stage4b` 完成 scope-limited 结仓：14 项 P0 inventory、四个局部批次和独立 4B machine bundle/approval 均精确批准；完整编排器从原始 typed case 重新运行 4A-1—4A-4，禁止注入局部 PASS，并输出统一 Gate/退出视图、局部结果 hash 和 deterministic replay。原 draft proposal 均作为不可变谱系保留。Stage 2B capability、真实 KB 输入、backtest/paper/shadow/live、仓位、组合、成交、P&L 和订单均不能进入该切片；真实首次可成交价、市场规则、交易日历、风险预算和账户账本仍属于待另行授权的 Stage 5。
 
 ## 推荐研发顺序
 

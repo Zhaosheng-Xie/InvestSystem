@@ -1,0 +1,15 @@
+{
+  "approval_id": "rule_approval_stage4_4b_complete_engine_integration_v0_1_0",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage4_4b_complete_engine_integration",
+  "bundle_version": "0.1.0",
+  "bundle_hash": {
+    "algorithm": "sha256",
+    "value": "ba8886cf85beef084c2a2d3b83446b499c7786fbc3f0e56066fb8cedc8e27e77"
+  },
+  "approved_by": "repository_owner",
+  "approved_at": "2026-08-08T13:41:56.188447Z",
+  "approval_scope": "stage4_synthetic_research_validation",
+  "approval_source_ref": "codex_thread_019fb33f_123d_7500_8b38_cb9bd6e820b8_owner_approval_4b_20260808",
+  "schema_version": "0.1.0-draft"
+}

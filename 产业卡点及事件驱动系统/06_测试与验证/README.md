@@ -38,7 +38,7 @@ Stage 2B 的[正式验收记录](../../docs/validation/stage2b-acceptance.md)固
 
 ## Stage 4 当前测试边界
 
-Stage 4 的 4A governance、4A-1—4A-4 合成执行、既有 draft 谱系和 4B draft-only 治理测试验证：
+Stage 4 的 4A governance、4A-1—4A-4 局部合成执行、既有 draft 谱系和 4B 完整合成编排测试验证：
 
 - 14 项 Stage-4-owned P0 requirement 完整且不重复；
 - 未批准项不能声明 approval ID 或 runtime machine rule；
@@ -46,7 +46,7 @@ Stage 4 的 4A governance、4A-1—4A-4 合成执行、既有 draft 谱系和 4B
 - Stage 2B scope、inventory hash 漂移、权限漂移、rule-module 缺失和默认空 registry 均失败关闭；
 - 4A-1 的 `FR-CTX-001/002`、`FR-IND-001/002` 各自具有正例、反例、边界例和 `ABSTAIN`；
 - PIT/历史半开区间、十域覆盖、至少两个独立证据组、晋级前置条件和跨规则短路均为确定性语义；
-- 当前 inventory 的 14 项均为 `approved`，且零 backtest/paper/shadow/live/仓位/订单权限；完整 capability 仍须独立 approved 4B bundle；
+- 当前 inventory 的 14 项、四个局部批次和独立 4B bundle 均为精确 `approved`，且零 backtest/paper/shadow/live/仓位/组合/成交/P&L/订单权限；
 - 4A-2 原 draft 精确绑定文字规格、canonical bundle/rules hash 和 16 项 `pending` owner 决策并保持不变；
 - 新 approved bundle/approval record 精确绑定 owner 对全部 16 项的 scope-limited 批准；默认 registry、伪造 approval、语义漂移、错误 scope 与权限漂移均失败关闭；
 - `FR-EVT-001—004` 各自具有正例、反例、边界例和 `ABSTAIN`，覆盖事件护照、E3.5/E4、终态、重复观测、显式降级、规则迁移、主体/PIT、知识依赖 DAG 与人工覆盖批准。
@@ -56,7 +56,10 @@ Stage 4 的 4A governance、4A-1—4A-4 合成执行、既有 draft 谱系和 4B
 - 4A-4 原 draft 精确绑定文字规格、三批上游 hash 和 24 项 `pending` 决策并保持不可执行；approved artifacts 精确绑定 owner 批准，默认/伪造 registry、语义和权限漂移均失败关闭；
 - `FR-GATE-004/005` 覆盖公开预期与市场定价区间、基础/事件 FCF 分离、防重复计价、合成价格、`0.15/2.00/120` 边界、零 downside loss、PIT 和 deterministic replay；
 - `FR-EXIT-001` 覆盖六类 evidence exit、risk/time/value 等号边界、unknown/confirmed 优先级、E5/E6 重新承保、无持仓和跨规则/估值 holding 防伪；退出输入自身失败不改写 Gate 结果；
-- 4B draft machine proposal 精确绑定完整 inventory 与四批 approved hash，16 项决定全为 `pending`、运行模式为空、无 approval record/完整编排器且所有真实/交易权限为 false。
+- 4B 原 draft machine proposal 精确绑定完整 inventory 与四批 approved hash，16 项决定全为 `pending`、运行模式为空且保持不变；
+- approved 4B artifacts 精确绑定 owner 对 16 项的 scope-limited 批准；五层 capability 任一身份、hash、scope 或权限漂移均失败关闭；
+- `Stage4CompleteSyntheticCase` 没有局部结果注入字段；完整编排从原始输入重跑四批，固定单 case/cutoff/公司/节点/事件/主体/经济口径与 E4 时间；
+- 完整验收覆盖四门 PASS、`0.10/0.15/2.00/120` 等号边界、各层失败短路、`ABSTAIN/SHADOW_ONLY`、退出隔离、跨批增量利润/FCF 绑定、防伪和 deterministic replay。
 
-这些测试只证明 4A-1—4A-4 能在各自精确批准的合成 research-validation scope 内执行，并证明 4B 草案不能提前获得能力；不证明完整 Stage 4、历史有效性或任何交易能力已经实现。
+这些测试只证明 4A-1—4A-4 和完整 4B 能在各自精确批准的匿名合成 research-validation scope 内执行；不证明历史有效性、正式 KB 策略 smoke、生产运行或任何交易能力已经实现。
 

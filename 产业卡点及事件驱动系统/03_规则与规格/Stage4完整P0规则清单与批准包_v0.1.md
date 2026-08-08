@@ -78,7 +78,7 @@ Stage 4 包含产业上下文、产业/可投资卡点、E0—E7、四道门的�
 
 ## 6. 逐项规则状态
 
-4A-1 四项的精确语义已由 [4A-1 规则包](Stage4_4A1上下文与产业映射规则包_v0.1.md)及其 canonical machine bundle 固定。4A-2 四项由[原 draft 规则包](Stage4_4A2事件状态与审计分层规则包_v0.1.md)、[批准记录](Stage4_4A2事件状态与审计分层批准记录_v0.1.md)及其 approved canonical machine bundle 固定。4A-3 三项由[原 draft 规则包](Stage4_4A3四道门利润分母与情景规则包_v0.1.md)、[批准记录](Stage4_4A3四道门利润分母与情景批准记录_v0.1.md)及其 approved canonical machine bundle 固定。4A-4 三项由[原 draft 规则包](Stage4_4A4市场预期估值与退出规则包_v0.1.md)、[批准记录](Stage4_4A4市场预期估值与退出批准记录_v0.1.md)及其 approved canonical machine bundle 固定，并已实现局部 evaluator。14 项 inventory 现均为 `approved`；但完整引擎的组合顺序、输入身份、结论优先级和 replay 合同仍须按[4B 待批准包](Stage4_4B完整引擎集成与合成验收规则包_v0.1.md)单独批准，所以完整 Stage 4 capability 继续关闭。
+4A-1 四项的精确语义已由 [4A-1 规则包](Stage4_4A1上下文与产业映射规则包_v0.1.md)及其 canonical machine bundle 固定。4A-2 四项由[原 draft 规则包](Stage4_4A2事件状态与审计分层规则包_v0.1.md)、[批准记录](Stage4_4A2事件状态与审计分层批准记录_v0.1.md)及其 approved canonical machine bundle 固定。4A-3 三项由[原 draft 规则包](Stage4_4A3四道门利润分母与情景规则包_v0.1.md)、[批准记录](Stage4_4A3四道门利润分母与情景批准记录_v0.1.md)及其 approved canonical machine bundle 固定。4A-4 三项由[原 draft 规则包](Stage4_4A4市场预期估值与退出规则包_v0.1.md)、[批准记录](Stage4_4A4市场预期估值与退出批准记录_v0.1.md)及其 approved canonical machine bundle 固定，并已实现局部 evaluator。14 项 inventory 现均为 `approved`；完整引擎的组合顺序、输入身份、结论优先级和 replay 合同另由[4B 规则包](Stage4_4B完整引擎集成与合成验收规则包_v0.1.md)、[批准记录](Stage4_4B完整引擎集成与合成验收批准记录_v0.1.md)及独立 approved machine bundle 固定。完整 4B capability 只允许匿名合成 research validation，不授予任何真实或交易权限。
 
 ### FR-CTX-001
 

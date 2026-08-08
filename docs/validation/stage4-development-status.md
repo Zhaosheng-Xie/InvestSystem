@@ -2,19 +2,19 @@
 
 > 状态日期：`2026-08-08`
 >
-> 分支：`codex/stage4a4`
+> 分支：`codex/stage4b`
 >
-> 阶段状态：`in_progress / 4A-1—4A-4 completed；4B draft_for_owner_approval`
+> 阶段状态：`completed_with_scope_limits / 4A-1—4A-4 and 4B accepted`
 >
 > Stage 3：`in_progress / 3A—3B completed；3C—3D not_started`
 >
-> 当前授权：`4A-1—4A-4 exact local synthetic research-validation capabilities；完整 Stage 4 capability 仍关闭；4B 为零权限待批准草案`
+> 当前授权：`4A-1—4A-4 exact local capabilities + exact 4B complete synthetic research-validation capability；全部真实/交易权限关闭`
 
 ## 1. 当前结论
 
-Stage 2 进入门已通过[复核](stage2-reentry-audit.md)。Stage 3A—3B 已完成，3C—3D 与 Stage 4 可在严格边界下继续独立推进。owner 已分别批准 4A-1、4A-2 第 8 节全部 16 项、4A-3 第 9 节全部 20 项和 4A-4 第 10 节全部 24 项；各批批准均严格限于 `stage4_synthetic_research_validation`，不授权 backtest、paper、shadow、live、仓位或订单。
+Stage 2 进入门已通过[复核](stage2-reentry-audit.md)。Stage 3A—3B 已完成，3C—3D 与 Stage 4 按严格边界独立推进。owner 已分别批准 4A-1、4A-2 第 8 节全部 16 项、4A-3 第 9 节全部 20 项、4A-4 第 10 节全部 24 项和 4B 第 9 节全部 16 项；各批批准均严格限于 `stage4_synthetic_research_validation`，不授权 backtest、paper、shadow、live、仓位、组合、成交、P&L 或订单。
 
-4A-1—4A-4 均已形成独立的精确 machine bundle、approval record、局部 evaluator 和四类业务测试，14 项 P0 inventory 已全部 `approved`。这只证明四个局部批次各自在精确批准范围内可验证，不自动批准它们的完整编排。完整 Stage 4 capability 仍失败关闭；[4B 完整引擎集成与合成验收包](../../产业卡点及事件驱动系统/03_规则与规格/Stage4_4B完整引擎集成与合成验收规则包_v0.1.md)现为 16 项全 `pending` 的零权限草案。
+4A-1—4A-4 均已形成独立的精确 machine bundle、approval record、局部 evaluator 和四类业务测试，14 项 P0 inventory 已全部 `approved`。4B 另以独立 approved bundle/approval 固定四批身份和完整 inventory，并从原始 typed case 完成单一编排、统一 Gate/退出视图和 deterministic replay。[4B 正式验收](stage4-4b-acceptance.md)已通过，Stage 4 因此按 scope-limited 合成研究引擎结仓；这不表示正式 KB 输入、生产运行或交易能力已实现。
 
 ## 2. 治理基线
 
@@ -72,28 +72,29 @@ Stage 2 进入门已通过[复核](stage2-reentry-audit.md)。Stage 3A—3B 已�
 - `FR-EXIT-001`：evidence/risk/time/value 四类退出与重新承保只形成策略判断；已实现六类证据触发、等号风险/时间/价值边界和 unknown/confirmed 优先级；
 - `stage4_expectation_valuation_exit.py` 只接受精确 approved capability 和 4A-1—4A-3 上游身份，所有输出均为匿名合成 validation，真实价格、KB 内部读取或跨版本 holding 失败关闭，全部交易权限恒为 false。
 
-## 7. 4B 当前草案
+## 7. 4B 已完成内容
 
-- [4B 完整引擎集成与合成验收规则包](../../产业卡点及事件驱动系统/03_规则与规格/Stage4_4B完整引擎集成与合成验收规则包_v0.1.md)精确绑定四个 approved batch 和完整 inventory；
-- draft machine proposal 固定单一 case/截止时间、禁止注入局部 PASS、`4A-1 → 4A-2 → 4A-3 → 4A-4 → 退出汇总`、统一结论优先级和 replay 合同；
-- 16 项 approval item 全部为 `pending`，运行模式为空，`authorizes_complete_stage4_capability=false`；没有 4B approval record、完整编排器或完整 capability。
+- 原[4B 完整引擎集成与合成验收规则包](../../产业卡点及事件驱动系统/03_规则与规格/Stage4_4B完整引擎集成与合成验收规则包_v0.1.md)和 draft machine proposal 保持原字节与零权限状态；
+- 新[批准记录](../../产业卡点及事件驱动系统/03_规则与规格/Stage4_4B完整引擎集成与合成验收批准记录_v0.1.md)、approved machine bundle 和 approval record 精确绑定 16 项批准、四个 approved batch 与完整 inventory；
+- `stage4_complete_engine.py` 固定单一 case/cutoff/身份/经济口径，禁止注入局部 PASS，执行 `4A-1 → 4A-2 → 4A-3 → 4A-4 → 退出汇总`，并保存五层 capability、四个局部结果 hash、统一结论和 replay；
+- complete capability 只在匿名合成 `research` validation 中签发，不携带 KB current-status authority 或正式 `StrategyRunManifest`。
 
 ## 8. 当前明确不能做
 
-- 不能运行完整 Stage 4 策略引擎；4A-4 的 Gate 3—4 或退出结果仍只是局部研究结论；
-- 不能把 Stage 2B 或任一 4A 局部 capability 相互复用或外推为完整 Stage 4；
-- 不能把 4B draft proposal 作为完整规则 bundle 加载，也不能在 owner 批准前实现完整编排器；
+- 不能把 4B 合成研究 capability 表述为完整生产策略、历史有效性或可交易结论；
+- 不能把 Stage 2B 或任一 4A 局部 capability 相互复用或替代精确 4B capability；
+- 不能把 4B draft proposal 作为完整规则 bundle 加载；
 - 不能读取 KB 工作树、SQLite、raw、staging 或本地活动库补齐 Stage 3C—3D；
-- 不能进入 backtest、paper、shadow、live、仓位、组合或订单。
+- 不能进入 backtest、paper、shadow、live、仓位、组合、成交、P&L 或订单。
 
 ## 9. 下一完成门
 
-下一步由 owner 审阅 4B 第 9 节十六项并明确批准、修改或拒绝。只有全部获批后才能另行生成 approved 4B artifacts、完整编排器和合成 golden/replay 验收；4B 获批也只可能签发 `stage4_synthetic_research_validation` capability，不会开启任何真实运行或交易权限。
+Stage 4 完成门已通过。后续独立路径为：KB 提供条件后完成 Stage 3C—3D；若 owner 希望推进真实市场规则、账户/组合/执行或 durable 运行状态，则须另行批准 Stage 5 精确规则包。4B 不会自动开启这些工作。
 
 ## 10. 当前验证
 
-- 4A-4 approved evaluator 与 Stage 4 governance 定向测试覆盖精确 artifact/hash、Gate 3—4、四类退出、短路、边界、`ABSTAIN`、防伪和 replay；
-- 4B draft-only 治理测试覆盖精确 inventory、四批 hash、16 项 pending、零权限、文档绑定、无 approval record 和无完整编排器；
-- 全仓 pytest、Ruff lint/format、mypy、compileall 和 `git diff --check` 的本提交结果记录在[4A-4 验收报告](stage4-4a4-acceptance.md)；
+- 4A-1—4A-4 全部局部 evaluator 回归保持通过；
+- 4B 治理和完整引擎测试覆盖精确 artifact/hash、五层 capability、单一 case/cutoff/经济口径、局部 PASS 防注入、统一结论、退出隔离、边界、`ABSTAIN/SHADOW_ONLY`、防伪和 replay；
+- 全仓 pytest、Ruff lint/format、mypy、compileall 和 `git diff --check` 的本提交结果记录在[4B 验收报告](stage4-4b-acceptance.md)；
 - `pip check` 仍只报告共享环境安装前已登记的 OpenCV/NumPy 冲突；本阶段未安装、升级、降级或卸载任何包；
 - 4 个 skip 仍仅来自本地 Windows symlink/junction 权限，不是 Stage 4 逻辑跳过。

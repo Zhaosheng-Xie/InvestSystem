@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
-from datetime import UTC, datetime
+from datetime import datetime
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
@@ -19,14 +19,14 @@ from invest_system import (
 from invest_system.strategies.industrial_event import (
     STAGE4_APPROVAL_SCOPE,
     STAGE4_REQUIRED_RULE_IDS,
-    STAGE4_RULE_INVENTORY_SCHEMA_VERSION,
-    STAGE4_STRATEGY_ID,
     Stage4RuleInventory,
     Stage4RuleInventoryItem,
     Stage4RuleReadinessError,
     require_stage4_rule_capability,
     stage4_rule_inventory_from_json_value,
 )
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 INVENTORY_PATH = Path(
     "产业卡点及事件驱动系统/03_规则与规格/机器制品/"
@@ -38,6 +38,12 @@ COMPLETE_INTEGRATION_DRAFT_PATH = Path(
 )
 COMPLETE_INTEGRATION_SPEC_PATH = Path(
     "产业卡点及事件驱动系统/03_规则与规格/Stage4_4B完整引擎集成与合成验收规则包_v0.1.md"
+)
+COMPLETE_INTEGRATION_APPROVED_PATH = COMPLETE_INTEGRATION_DRAFT_PATH.with_name(
+    "industrial_event_stage4_4b_complete_engine_integration_v0.1.0.rule-bundle.json"
+)
+COMPLETE_INTEGRATION_APPROVAL_PATH = COMPLETE_INTEGRATION_DRAFT_PATH.with_name(
+    "industrial_event_stage4_4b_complete_engine_integration_v0.1.0.approval.json"
 )
 
 
@@ -56,27 +62,9 @@ def _approved_item(requirement_id: str) -> Stage4RuleInventoryItem:
 
 
 def _approved_inventory() -> Stage4RuleInventory:
-    return Stage4RuleInventory(
-        items=tuple(_approved_item(requirement_id) for requirement_id in STAGE4_REQUIRED_RULE_IDS)
+    return stage4_rule_inventory_from_json_value(
+        json.loads((REPOSITORY_ROOT / INVENTORY_PATH).read_text(encoding="utf-8"))
     )
-
-
-def _authorization_boundary(**overrides: Any) -> dict[str, Any]:
-    boundary: dict[str, Any] = {
-        "approval_scope": STAGE4_APPROVAL_SCOPE.value,
-        "allowed_run_modes": ["research"],
-        "synthetic_only": True,
-        "validation_only": True,
-        "not_a_published_release": True,
-        "authorizes_backtest": False,
-        "authorizes_paper": False,
-        "authorizes_shadow": False,
-        "authorizes_live": False,
-        "authorizes_positions": False,
-        "authorizes_orders": False,
-    }
-    boundary.update(overrides)
-    return boundary
 
 
 def _document(
@@ -85,28 +73,30 @@ def _document(
     boundary_overrides: dict[str, Any] | None = None,
     inventory_hash: dict[str, str] | None = None,
 ) -> RuleBundleDocument:
+    del inventory
+    original_value = json.loads(
+        (REPOSITORY_ROOT / COMPLETE_INTEGRATION_APPROVED_PATH).read_text(encoding="utf-8")
+    )
+    original = RuleBundleDocument(
+        schema_version=original_value["schema_version"],
+        strategy_id=original_value["strategy_id"],
+        bundle_id=original_value["bundle_id"],
+        bundle_version=original_value["bundle_version"],
+        declared_status=RuleStatus(original_value["declared_status"]),
+        rules=original_value["rules"],
+    )
+    value = original.to_json_value()
+    if boundary_overrides:
+        value["rules"]["authorization_boundary"].update(boundary_overrides)
+    if inventory_hash is not None:
+        value["rules"]["stage4_rule_inventory"]["inventory_hash"] = inventory_hash
     return RuleBundleDocument(
-        schema_version="0.1.0-draft",
-        strategy_id=STAGE4_STRATEGY_ID,
-        bundle_id="synthetic_stage4_governance_test_bundle",
-        bundle_version="0.1.0",
-        declared_status=RuleStatus.APPROVED,
-        rules={
-            "authorization_boundary": _authorization_boundary(**(boundary_overrides or {})),
-            "stage4_rule_inventory": {
-                "schema_version": STAGE4_RULE_INVENTORY_SCHEMA_VERSION,
-                "inventory_hash": inventory_hash or inventory.inventory_hash().to_json_value(),
-                "requirement_ids": STAGE4_REQUIRED_RULE_IDS,
-            },
-            "rule_modules": {
-                requirement_id: {
-                    "requirement_id": requirement_id,
-                    "machine_rule_ref": f"machine:{requirement_id}",
-                    "synthetic_test_semantics_only": True,
-                }
-                for requirement_id in STAGE4_REQUIRED_RULE_IDS
-            },
-        },
+        schema_version=original.schema_version,
+        strategy_id=original.strategy_id,
+        bundle_id=original.bundle_id,
+        bundle_version=original.bundle_version,
+        declared_status=original.declared_status,
+        rules=value["rules"],
     )
 
 
@@ -115,16 +105,19 @@ def _registry(
     *,
     scope: RuleApprovalScope = STAGE4_APPROVAL_SCOPE,
 ) -> RuleApprovalRegistry:
+    approval_value = json.loads(
+        (REPOSITORY_ROOT / COMPLETE_INTEGRATION_APPROVAL_PATH).read_text(encoding="utf-8")
+    )
     approval = RuleApprovalRecord(
-        approval_id="synthetic_stage4_governance_test_approval",
-        strategy_id=document.strategy_id,
-        bundle_id=document.bundle_id,
-        bundle_version=document.bundle_version,
+        approval_id=approval_value["approval_id"],
+        strategy_id=approval_value["strategy_id"],
+        bundle_id=approval_value["bundle_id"],
+        bundle_version=approval_value["bundle_version"],
         bundle_hash=document.bundle_hash(),
-        approved_by="repository_owner",
-        approved_at=datetime(2026, 8, 3, 8, tzinfo=UTC),
+        approved_by=approval_value["approved_by"],
+        approved_at=datetime.fromisoformat(approval_value["approved_at"].replace("Z", "+00:00")),
         approval_scope=scope,
-        approval_source_ref="synthetic_stage4_governance_test_source",
+        approval_source_ref=approval_value["approval_source_ref"],
     )
     return RuleApprovalRegistry((approval,))
 
@@ -217,15 +210,11 @@ def test_complete_stage4_integration_remains_an_exact_zero_authority_draft(
 
     specification = (repository_root / COMPLETE_INTEGRATION_SPEC_PATH).read_bytes()
     assert sha256(specification).hexdigest() == rules["document_binding"]["hash"]["value"]
-    assert not (
+    assert (
         repository_root / "src/invest_system/strategies/industrial_event/stage4_complete_engine.py"
     ).exists()
-    assert not (
-        repository_root
-        / COMPLETE_INTEGRATION_DRAFT_PATH.with_name(
-            "industrial_event_stage4_4b_complete_engine_integration_v0.1.0.approval.json"
-        )
-    ).exists()
+    assert (repository_root / COMPLETE_INTEGRATION_APPROVED_PATH).is_file()
+    assert (repository_root / COMPLETE_INTEGRATION_APPROVAL_PATH).is_file()
 
 
 def test_inventory_requires_exact_stage4_owned_requirement_set() -> None:

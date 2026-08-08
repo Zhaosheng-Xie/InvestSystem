@@ -1,0 +1,220 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage4_4b_complete_engine_integration",
+  "bundle_version": "0.1.0",
+  "declared_status": "approved",
+  "rules": {
+    "authorization_boundary": {
+      "approval_scope": "stage4_synthetic_research_validation",
+      "allowed_run_modes": ["research"],
+      "synthetic_only": true,
+      "validation_only": true,
+      "not_a_published_release": true,
+      "complete_stage4_synthetic_capability_issued": true,
+      "authorizes_kb_current_status": false,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_positions": false,
+      "authorizes_portfolio": false,
+      "authorizes_execution": false,
+      "authorizes_pnl": false,
+      "authorizes_orders": false
+    },
+    "stage4_rule_inventory": {
+      "schema_version": "0.1.0-draft",
+      "inventory_hash": {
+        "algorithm": "sha256",
+        "value": "fc07b10bb17d91b3447504fe7f5b2e346023fd98bb14da991e1a1dd85381bf53"
+      },
+      "requirement_ids": [
+        "FR-CTX-001",
+        "FR-CTX-002",
+        "FR-IND-001",
+        "FR-IND-002",
+        "FR-EVT-001",
+        "FR-EVT-002",
+        "FR-EVT-003",
+        "FR-EVT-004",
+        "FR-GATE-001",
+        "FR-GATE-002",
+        "FR-GATE-003",
+        "FR-GATE-004",
+        "FR-GATE-005",
+        "FR-EXIT-001"
+      ]
+    },
+    "approved_batch_bindings": {
+      "4A-1": {
+        "bundle_id": "industrial_event_stage4_4a1_context_industry",
+        "bundle_version": "0.1.0",
+        "bundle_hash": "5224e8e6d600b8f613d6dfaf4dd486d6caafdcf5fe3d8d3db29af2f25462a32d",
+        "rules_hash": "2e16e87585bccc1df735e33feed4b72e3160d7bb1c415320bed31ee01c1d264a",
+        "approval_id": "rule_approval_stage4_4a1_context_industry_v0_1_0",
+        "approval_record_hash": "84d47caa4b8226dd4e9c4dee31645214938e7321e25e93f368bf1ecc167b5e1a"
+      },
+      "4A-2": {
+        "bundle_id": "industrial_event_stage4_4a2_event_semantics",
+        "bundle_version": "0.1.0",
+        "bundle_hash": "9f9f5cf843347a1918a894be1151c0ef720bd6318daa1077657e97e9324d6560",
+        "rules_hash": "574dd4273c60081b099cf2c2427a2f264521f57ff16aa70b5ce1138ea9e8f228",
+        "approval_id": "rule_approval_stage4_4a2_event_semantics_v0_1_0",
+        "approval_record_hash": "57c5147ab93c7cf547f72347a7550f951c9ca2ad0cf97cb0755148bfa0d155ac"
+      },
+      "4A-3": {
+        "bundle_id": "industrial_event_stage4_4a3_gate_profit_scenarios",
+        "bundle_version": "0.1.0",
+        "bundle_hash": "e6936e9c236fd7ed3a67eb8c5e01cb02d23d8fa20c8fcd7a3ccbd615220619b2",
+        "rules_hash": "146c8c497f529a0b7c675882522f4928877c96093449b5e0245fb6cfb71a05f0",
+        "approval_id": "rule_approval_stage4_4a3_gate_profit_scenarios_v0_1_0",
+        "approval_record_hash": "786944b9263a7571632dbc5a2c92dcb1deb1431f8946f113ee883495dac5281a"
+      },
+      "4A-4": {
+        "bundle_id": "industrial_event_stage4_4a4_expectation_valuation_exit",
+        "bundle_version": "0.1.0",
+        "bundle_hash": "6ad34d6534b646eb0eb4fcab73c9da13e0738af0d3ae0d296143a48129ee1762",
+        "rules_hash": "d1d2e03d78f0a78c63e073916da87f9177bb2e7151bd1d4d9ec959cd865545e2",
+        "approval_id": "rule_approval_stage4_4a4_expectation_valuation_exit_v0_1_0",
+        "approval_record_hash": "8b75674537a9b8939cd259e2efb5a46752282714f19b23e181d9509ae09b919e"
+      }
+    },
+    "complete_engine_integration": {
+      "batch_id": "4B",
+      "approved_decision_ids": [
+        "4B-01",
+        "4B-02",
+        "4B-03",
+        "4B-04",
+        "4B-05",
+        "4B-06",
+        "4B-07",
+        "4B-08",
+        "4B-09",
+        "4B-10",
+        "4B-11",
+        "4B-12",
+        "4B-13",
+        "4B-14",
+        "4B-15",
+        "4B-16"
+      ],
+      "input_contract": {
+        "type": "Stage4CompleteSyntheticCase",
+        "single_case_id": true,
+        "single_knowledge_cutoff": true,
+        "single_input_version_chain": true,
+        "required_identity_bindings": [
+          "company_id",
+          "industry_node_id",
+          "logical_event_id",
+          "subject_scope",
+          "currency",
+          "unit",
+          "effective_period",
+          "e4_first_public_at"
+        ],
+        "caller_supplied_partial_results_forbidden": true,
+        "preflight_identity_failure": "BLOCKED_before_local_evaluation",
+        "canonical_input_hash_required": true
+      },
+      "execution": {
+        "order": [
+          "validate_exact_complete_and_local_capabilities",
+          "validate_complete_input_identity_and_authority",
+          "evaluate_4A-1_context_industry",
+          "evaluate_4A-2_event_semantics",
+          "construct_and_evaluate_4A-3_gate_case",
+          "construct_and_evaluate_4A-4_case",
+          "aggregate_exit_independently",
+          "emit_complete_result_and_replay_hash"
+        ],
+        "context_and_event_are_independent_prerequisites": true,
+        "unassessed_rules_explicit_not_evaluated": true,
+        "default_pass_or_score_compensation_forbidden": true,
+        "4A-4_gate3_and_gate4_replace_display_placeholders_only": true,
+        "local_results_immutable": true
+      },
+      "outcome_aggregation": {
+        "precedence": ["BLOCKED", "REJECT", "ABSTAIN", "SHADOW_ONLY", "PASS"],
+        "trade_ready_requires_gate1_through_gate4_all_pass": true,
+        "shadow_only_is_fragile_profit_research_label_only": true,
+        "exit_aggregation_independent_from_entry_gates": true,
+        "exit_failure_may_not_rewrite_gate_results": true,
+        "exit_candidate_is_research_label_only": true
+      },
+      "result_contract": {
+        "complete_capability_identity_required": true,
+        "four_local_capability_identities_required": true,
+        "four_local_results_and_hashes_required_after_preflight": true,
+        "preflight_blocked_local_results_are_null": true,
+        "unified_gate_view_required": true,
+        "position_state": "FLAT",
+        "target_weight": null,
+        "approved_weight": null,
+        "actual_weight": null,
+        "approver": null,
+        "order_intent": null
+      },
+      "deterministic_replay": {
+        "bind_complete_bundle_approval_and_inventory": true,
+        "bind_four_local_bundle_rules_and_approvals": true,
+        "bind_input_hash_and_four_local_result_hashes": true,
+        "bind_unified_result_excluding_replay_hash_itself": true,
+        "material_rule_fact_assumption_price_valuation_window_or_holding_change_changes_hash": true,
+        "runtime_clock_process_path_and_mapping_order_excluded": true
+      },
+      "synthetic_acceptance": {
+        "required_classes": [
+          "positive",
+          "negative",
+          "boundary",
+          "abstain",
+          "tamper_and_identity",
+          "deterministic_replay",
+          "local_evaluator_regression"
+        ],
+        "all_fourteen_requirements_traceable": true
+      },
+      "cross_repository_and_runtime_boundary": {
+        "real_kb_release_forbidden": true,
+        "kb_current_status_authority_forbidden": true,
+        "kb_internal_path_package_or_database_access_forbidden": true,
+        "strategy_writeback_to_kb": false,
+        "real_market_position_account_or_order_state_forbidden": true,
+        "formal_strategy_run_manifest_forbidden": true,
+        "runtime_markdown_parsing_forbidden": true
+      }
+    },
+    "rule_modules": {
+      "FR-CTX-001": {"requirement_id": "FR-CTX-001", "source_batch_id": "4A-1", "machine_rule_ref": "industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-CTX-001"},
+      "FR-CTX-002": {"requirement_id": "FR-CTX-002", "source_batch_id": "4A-1", "machine_rule_ref": "industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-CTX-002"},
+      "FR-IND-001": {"requirement_id": "FR-IND-001", "source_batch_id": "4A-1", "machine_rule_ref": "industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-IND-001"},
+      "FR-IND-002": {"requirement_id": "FR-IND-002", "source_batch_id": "4A-1", "machine_rule_ref": "industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-IND-002"},
+      "FR-EVT-001": {"requirement_id": "FR-EVT-001", "source_batch_id": "4A-2", "machine_rule_ref": "industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EVT-001"},
+      "FR-EVT-002": {"requirement_id": "FR-EVT-002", "source_batch_id": "4A-2", "machine_rule_ref": "industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EVT-002"},
+      "FR-EVT-003": {"requirement_id": "FR-EVT-003", "source_batch_id": "4A-2", "machine_rule_ref": "industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EVT-003"},
+      "FR-EVT-004": {"requirement_id": "FR-EVT-004", "source_batch_id": "4A-2", "machine_rule_ref": "industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EVT-004"},
+      "FR-GATE-001": {"requirement_id": "FR-GATE-001", "source_batch_id": "4A-3", "machine_rule_ref": "industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-001"},
+      "FR-GATE-002": {"requirement_id": "FR-GATE-002", "source_batch_id": "4A-3", "machine_rule_ref": "industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-002"},
+      "FR-GATE-003": {"requirement_id": "FR-GATE-003", "source_batch_id": "4A-3", "machine_rule_ref": "industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-003"},
+      "FR-GATE-004": {"requirement_id": "FR-GATE-004", "source_batch_id": "4A-4", "machine_rule_ref": "industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-004"},
+      "FR-GATE-005": {"requirement_id": "FR-GATE-005", "source_batch_id": "4A-4", "machine_rule_ref": "industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-005"},
+      "FR-EXIT-001": {"requirement_id": "FR-EXIT-001", "source_batch_id": "4A-4", "machine_rule_ref": "industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EXIT-001"}
+    },
+    "approval_source_binding": {
+      "specification_path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4B完整引擎集成与合成验收规则包_v0.1.md",
+      "specification_hash": {"algorithm": "sha256", "value": "d5c1ab50d76ea5d9444adcc92da24313b5ce5b51080c2e9258a5484a9417ca8d"},
+      "draft_proposal_path": "产业卡点及事件驱动系统/03_规则与规格/机器制品/industrial_event_stage4_4b_complete_engine_integration_v0.1.0-draft.rule-bundle.json",
+      "draft_bundle_hash": {"algorithm": "sha256", "value": "2b845a6c4df0dc7e28779b0117409cd39b390cc304fb7bc54f9062c44697b44c"},
+      "draft_rules_hash": {"algorithm": "sha256", "value": "1c7e8cb5acd89187e527a11be8f50baf77307b29561bf3a7fdc95bb32f3e1df9"},
+      "traceability_only": true
+    },
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4B完整引擎集成与合成验收批准记录_v0.1.md",
+      "hash": {"algorithm": "sha256", "value": "36a2d7722ee99af4c0fe90f16de0fdc978c39aadb6a7703661887dba0296964e"},
+      "traceability_only": true
+    }
+  }
+}
