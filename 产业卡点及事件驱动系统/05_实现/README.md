@@ -2,7 +2,7 @@
 
 需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架、Stage 2A 的离线 Release 消费与准入内核，以及 Stage 2B 的最小合成策略纵向切片均已通过根级正式验收。owner 于 `2026-08-08` 恢复 Stage 3：3A 已完成 HTTP Client、immutable export 和官方 fixture 离线验收；3B 已重固定 KB `aab36fe` 公共传输契约，并通过独立 KB RC 进程与只读凭据的本机 HTTP 兼容验收，但尚无真实 run authority。Stage 4 的 4A-1 已实现上下文、历史语义、产业卡点与受益公司映射；4A-2 已实现事件状态、E4、主体/PIT 与审计分层；4A-3 已实现 Gate 1—2、利润分母和四情景；4A-4 已实现 Gate 3—4、估值和退出；4B 已实现从四批原始输入重新计算的完整合成编排。当前批准仍不授权 backtest、paper、shadow、live、仓位、组合、成交、P&L 或订单。
 
-Stage 5A 当前只有[精确待批准规则包](../03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)和零权限 draft machine proposal。尚未创建 MarketRuleSet evaluator、首次可成交引擎、组合风险模块、PositionLedger、P&L、SQLite 表或 migration；四十项 owner 决定全部批准前不得提前实现，草案中的候选阈值也不得进入代码或配置默认值。
+Stage 5A 的[精确规则包](../03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)四十项已全部批准，原 draft 保持不变，另建 approved bundle、approval record 和 `stage5_governance.py` 精确 capability verifier。尚未创建 MarketRuleSet evaluator、首次可成交引擎、fill、组合风险模块、PositionLedger、P&L、replay、SQLite 表或 migration；这些属于后续 Stage 5B—5D，不能由治理 capability 冒充。
 
 Stage 2B 的实际交付、验证锚点和未授权范围见根级 [Stage 2B 正式验收记录](../../docs/validation/stage2b-acceptance.md)。
 

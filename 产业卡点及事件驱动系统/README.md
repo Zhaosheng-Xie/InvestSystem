@@ -61,7 +61,11 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-08`
 22. [Stage 4 / 4B 完整引擎集成与合成验收记录](../docs/validation/stage4-4b-acceptance.md)
     - 状态：`completed_with_scope_limits`；只证明完整匿名合成 research-validation 引擎可失败关闭和重放，不证明历史有效性或任何真实交易能力。
 23. [Stage 5 / 5A 成交、组合、账本与确定性回放精确规则包 v0.1](03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)
-    - 状态：`draft_for_owner_approval`；四十项决定和 [draft machine proposal](03_规则与规格/机器制品/industrial_event_stage5_5a_execution_portfolio_ledger_replay_v0.1.0-draft.rule-bundle.json) 全部 pending，运行模式为空，不存在 approval record、capability、evaluator 或账本实现。
+    - 原提案状态：`draft_for_owner_approval`；原始字节和 [draft machine proposal](03_规则与规格/机器制品/industrial_event_stage5_5a_execution_portfolio_ledger_replay_v0.1.0-draft.rule-bundle.json) 保持不变，用于批准谱系。
+24. [Stage 5 / 5A 成交、组合、账本与确定性回放批准记录 v0.1](03_规则与规格/Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)
+    - 状态：`approved for stage5_synthetic_execution_validation only`；四十项全部批准，已形成独立 approved bundle、approval record 和治理 verifier，但没有 Stage 5B—5D 业务 evaluator 或任何真实/交易权限。
+25. [Stage 5 / 5A 规则治理批准验收记录](../docs/validation/stage5-5a-governance-acceptance.md)
+    - 状态：`completed_with_scope_limits / governance_only`；证明精确批准谱系和失败关闭 capability guard，不证明成交、组合、账本、P&L 或 replay 已实现。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空，HTTP/export 都在 I/O 前失败关闭；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实 acquisition/current status、认证 transport 和原始响应留存归入 Stage 3，策略语义属于 Stage 2B 以后。
 
@@ -69,7 +73,7 @@ Stage 2B 已完成并验收：精确批准规则、可信 fixture registry、E3.
 
 Stage 4 已在 `codex/stage4b` 完成 scope-limited 结仓：14 项 P0 inventory、四个局部批次和独立 4B machine bundle/approval 均精确批准；完整编排器从原始 typed case 重新运行 4A-1—4A-4，禁止注入局部 PASS，并输出统一 Gate/退出视图、局部结果 hash 和 deterministic replay。原 draft proposal 均作为不可变谱系保留。Stage 2B capability、真实 KB 输入、backtest/paper/shadow/live、仓位、组合、成交、P&L 和订单均不能进入该切片；真实首次可成交价、市场规则、交易日历、风险预算和账户账本仍属于待另行授权的 Stage 5。
 
-Stage 5 已进入 5A rule-governance：精确草案区分 `ENTER/ADD` 与 `REDUCE/EXIT`，提出历史有效市场规则、首次可成交、费用/冲击、容量、风险预算、五层仓位、append-only 双分录账本、公司行动、P&L 和 replay 的合成验证语义。该草案本身零权限，不得提前实现或外推到 backtest、paper、shadow、live、真实账户/仓位/订单。
+Stage 5A rule governance 已完成精确批准登记：四十项规则区分 `ENTER/ADD` 与 `REDUCE/EXIT`，固定历史有效市场规则、首次可成交、费用/冲击、容量、风险预算、五层仓位、append-only 双分录账本、公司行动、P&L 和 replay 的合成验证语义。当前 capability 只证明精确规则获准用于未来匿名合成 `research` 验证，不证明相应业务 evaluator 已实现，也不得外推到 backtest、paper、shadow、live、真实账户/仓位/订单。
 
 ## 推荐研发顺序
 

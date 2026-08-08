@@ -65,7 +65,9 @@ Stage 4 的 4A governance、4A-1—4A-4 局部合成执行、既有 draft 谱系
 
 ## Stage 5A 当前测试边界
 
-[Stage 5A 精确规则包](../03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)和配套 draft machine proposal 目前只用于 owner 审阅。四十项决定均为 `pending`，不存在 approved capability 或业务 evaluator，因此当前不得新增会计算首次可成交、仓位、fill、账本或 P&L 的 golden 结果。
+[Stage 5A 精确规则包](../03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)四十项已获 owner 批准。原 draft machine proposal 保持 40 项 `pending`、运行模式为空和零权限；独立 approved bundle、approval record 与治理 verifier 精确固定批准谱系和 `stage5_synthetic_execution_validation` scope。
 
-当前只允许做静态提案核验：Markdown 物理 hash、draft JSON 可解析、文档 binding 一致、40 项 ID 完整不重复且均 pending、运行模式为空、无 approval record，并确认 backtest/paper/shadow/live/真实账户/仓位/订单/券商/KB 写权限全部为 false。第 11 节成交、组合、账本、公司行动、P&L 与 replay 测试矩阵必须等 owner 批准并另建 approved artifacts 后才能实现。
+当前 Stage 5A 专项只验证治理，不验证业务结果：规格/draft/批准文档/approved bundle/approval record 的精确 hash；40 项 ID 顺序与批准状态；Stage 4B 上游 pin；draft 不可签发 capability；错误 scope、批准记录漂移、规则漂移、上游漂移和权限扩张均失败关闭；backtest/paper/shadow/live/真实账户/仓位/订单/券商/KB 写权限全部为 false。第 11 节成交、组合、账本、公司行动、P&L 与 replay golden matrix 必须在 Stage 5B—5D 实现后另行验收。
+
+正式结果见[Stage 5A 规则治理批准验收记录](../../docs/validation/stage5-5a-governance-acceptance.md)。
 

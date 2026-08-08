@@ -23,11 +23,13 @@ Stage 4 已完成四个局部执行批次和独立 4B 完整合成编排：
 - [4B 批准记录](Stage4_4B完整引擎集成与合成验收批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage4_4b_complete_engine_integration_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage4_4b_complete_engine_integration_v0.1.0.approval.json)：精确固定全部 16 项批准、四批上游身份、完整 inventory 与零真实/交易权限；
 - `stage4_synthetic_research_validation` 是独立 scope，Stage 2B capability 不能复用；只有精确 4B capability 可编排完整匿名合成 Stage 4，四个局部 capability 不能替代它。
 
-Stage 5 当前只启动 5A 规则治理：
+Stage 5A 规则治理已完成 owner 批准登记：
 
-- [Stage 5 / 5A 成交、组合、账本与确定性回放精确规则包](Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)：`draft_for_owner_approval`；四十项决定覆盖历史有效市场规则、首次可成交、容量/成本、风险组合、五层仓位、双分录账本、公司行动、P&L 与 replay；
+- [Stage 5 / 5A 成交、组合、账本与确定性回放精确规则包](Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)：原 `draft_for_owner_approval` 规格保持不可变；四十项决定覆盖历史有效市场规则、首次可成交、容量/成本、风险组合、五层仓位、双分录账本、公司行动、P&L 与 replay；
 - [5A draft machine proposal](机器制品/industrial_event_stage5_5a_execution_portfolio_ledger_replay_v0.1.0-draft.rule-bundle.json)：只用于固定提案身份和 owner 审阅谱系；40 项均 `pending`，运行模式为空，全部真实/交易权限为 false；
-- 当前没有 5A approval record、approved machine bundle、runtime capability、evaluator、数据库 migration 或合成/历史成交结果；不得从 Stage 4B capability 或本草案推导 Stage 5 能力。
+- [5A 批准记录](Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage5_5a_execution_portfolio_ledger_replay_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage5_5a_execution_portfolio_ledger_replay_v0.1.0.approval.json)：精确固定全部 40 项批准、Stage 4B 上游身份和零真实/交易权限；
+- [5A 规则治理验收](../../docs/validation/stage5-5a-governance-acceptance.md)：验证精确 hash、scope、40 项身份、上游 pin、权限边界及篡改失败关闭；
+- 当前只有 5A 治理 capability verifier；MarketRuleSet、首次可成交、fill、组合风险、PositionLedger、P&L、replay、数据库 migration 和合成/历史结果仍未实现。Stage 4B capability 或原 draft 均不能替代精确 5A capability。
 
 1. `KB输入引用与失败关闭规格_v0.1.md`
 2. `StrategyRunManifest与决策审计规格_v0.1.md`

@@ -1,0 +1,15 @@
+{
+  "approval_id": "rule_approval_stage5_5a_execution_portfolio_ledger_replay_v0_1_0",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage5_5a_execution_portfolio_ledger_replay",
+  "bundle_version": "0.1.0",
+  "bundle_hash": {
+    "algorithm": "sha256",
+    "value": "c69bc7170b608bc6f3e2dd4119e08b13d4f10f03730be115dbc191b47544eeb7"
+  },
+  "approved_by": "repository_owner",
+  "approved_at": "2026-08-08T14:51:10.437340Z",
+  "approval_scope": "stage5_synthetic_execution_validation",
+  "approval_source_ref": "codex_thread_019fb33f_123d_7500_8b38_cb9bd6e820b8_owner_approval_stage5_5a_20260808",
+  "schema_version": "0.1.0-draft"
+}
