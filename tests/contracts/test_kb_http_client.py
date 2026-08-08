@@ -93,6 +93,33 @@ def _official_values(
     return release, manifest, status
 
 
+def _context_pack_build(manifest: dict[str, Any]) -> dict[str, Any]:
+    digest = {"algorithm": "sha256", "value": "0" * 64}
+    return {
+        "context_pack_id": "ctx_stage3b_contract_test",
+        "pack_key": "industrial-event/test",
+        "version": "1.0.0",
+        "supersedes_context_pack_id": None,
+        "source_release": {
+            "release_id": manifest["release_id"],
+            "knowledge_cutoff": manifest["knowledge_cutoff"],
+            "manifest_hash": manifest["manifest_hash"],
+        },
+        "compiler": {
+            "compiler_id": "context-pack-compiler",
+            "version": "1",
+            "code_path": (
+                "investment_research_kb.application.context_packs:"
+                "ContextPackService.compile_from_release"
+            ),
+        },
+        "config_files": [
+            {"path": f"config/stage3b-{index}.json", "content_hash": digest} for index in range(7)
+        ],
+        "company_identities": [],
+    }
+
+
 def test_official_status_fixture_is_accepted_without_authority_escalation(
     kb_transport_catalog: KBTransportContractCatalog,
 ) -> None:
@@ -111,6 +138,34 @@ def test_official_status_fixture_is_accepted_without_authority_escalation(
     )
     assert executor.requests[0].headers["Authorization"] == ("Bearer offline-fixture-secret")
     assert "offline-fixture-secret" not in repr(client)
+
+
+def test_manifest_context_pack_build_is_validated_by_pinned_openapi(
+    kb_transport_catalog: KBTransportContractCatalog,
+) -> None:
+    _, manifest, _ = _official_values(kb_transport_catalog)
+    manifest = copy.deepcopy(manifest)
+    manifest["context_pack_build"] = _context_pack_build(manifest)
+    executor = QueueExecutor([_response(200, _envelope(manifest, request_id="req-manifest"))])
+
+    result = _client(kb_transport_catalog, executor).get_manifest(manifest["release_id"])
+
+    assert result.data["context_pack_build"]["context_pack_id"] == ("ctx_stage3b_contract_test")
+    assert result.authority_eligible is False
+
+
+def test_manifest_context_pack_build_unknown_field_fails_closed(
+    kb_transport_catalog: KBTransportContractCatalog,
+) -> None:
+    _, manifest, _ = _official_values(kb_transport_catalog)
+    manifest = copy.deepcopy(manifest)
+    build = _context_pack_build(manifest)
+    build["uncontracted_field"] = True
+    manifest["context_pack_build"] = build
+    executor = QueueExecutor([_response(200, _envelope(manifest, request_id="req-manifest"))])
+
+    with pytest.raises(KBHTTPContractError, match="pinned contract"):
+        _client(kb_transport_catalog, executor).get_manifest(manifest["release_id"])
 
 
 def test_latest_is_rejected_before_executor_io(

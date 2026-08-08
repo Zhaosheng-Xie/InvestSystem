@@ -1,11 +1,11 @@
-# InvestSystem 实施计划（v2.0）
+# InvestSystem 实施计划（v2.1）
 
-> 计划版本：`v2.0`
+> 计划版本：`v2.1`
 > 基线日期：`2026-08-08`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 0—2B / completed；Stage 3 / in_progress（3A completed，3B waiting_for_kb_rc_service）；Stage 4 / in_progress`
-> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3a_pinned_transport_contract_and_offline_clients_completed / authenticated_real_transport_not_yet_validated / stage4_4a1_context_industry_synthetic_validation_implemented / stage4_4a2_event_semantics_synthetic_validation_implemented / stage4_4a3_gate_profit_scenarios_synthetic_validation_implemented / stage4_4a4_expectation_valuation_exit_draft_formed / stage4_rule_governance_in_progress / full_strategy_not_implemented`
+> 当前阶段：`Stage 0—2B / completed；Stage 3 / in_progress（3A—3B completed，3C—3D not_started）；Stage 4 / in_progress`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3a_pinned_transport_contract_and_offline_clients_completed / stage3b_independent_loopback_http_rc_accepted_without_authority / stage4_4a1_context_industry_synthetic_validation_implemented / stage4_4a2_event_semantics_synthetic_validation_implemented / stage4_4a3_gate_profit_scenarios_synthetic_validation_implemented / stage4_4a4_expectation_valuation_exit_draft_formed / stage4_rule_governance_in_progress / full_strategy_not_implemented`
 > 当前授权边界：`Stage 2B 与 Stage 4/4A-1—4A-3 均只允许各自精确批准范围内的匿名合成 research validation；4A-4 仍是零权限待批准草案，Gate 3—4、退出和完整 Stage 4 capability 仍关闭；不授权 backtest、paper、shadow、live、仓位或订单`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
@@ -25,7 +25,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 - 仓库的需求、研究、规则占位、原始材料和历史归档仍是业务内容主体；这些文档不等于实现。
 - `2026-07-31` Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装/依赖锁/TOML、InvestSystem 自有 draft Schema、provider-neutral DTO、规范序列化、强制规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成 fixture、自动测试和 Windows/Linux CI 均已形成并验证。
 - Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)：从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按 Git 对象原始字节引入 20 个官方文件，并完成 provider canonical、契约目录、官方 reference fixture 验证/窄投影、消费 Receipt/Observation、显式 Release 留存闭包，以及 SQLite v3 的 run-scoped 当前状态确认、默认拒绝 authority、receipt-derived atomic pin、legacy v2 quarantine 和审计留存。实现提交 `01073c1` 的 GitHub Actions run `30744115034` 在 Windows/Linux 均成功。
-- Stage 3A 已固定 KB RC 契约提交 `2c84277ef463b5dd9a3fda3f2976a30cade53af5` 的完整 Stage 6B 传输契约，形成只读 HTTP Client、不可变导出包验证器和官方 fixture 离线验收。它证明消费者契约兼容，不证明已连接认证 KB 服务，也不签发新 run authority。当前仍没有真实 Published Release 当前状态确认、完整产业策略集成、组合/执行、P&L 或任何真实运行模式。
+- Stage 3A 已在 KB RC 契约提交 `2c84277ef463b5dd9a3fda3f2976a30cade53af5` 完成只读 HTTP Client、不可变导出包验证器和官方 fixture 离线验收。Stage 3B 随后把完整 Stage 6B transport snapshot 重固定到 `aab36fe229104779b50ec71e2dc37a9fad81d285`，并通过独立 KB RC 进程、短期只读凭据的真实本机 HTTP 兼容验收。它没有签发 `RunReleaseStatusConfirmation`，所有输出仍为 `authority_eligible=false`；tcloud、正式 Context Pack 策略 smoke、完整产业策略集成、组合/执行、P&L 和任何真实运行模式仍不存在。
 - [产业卡点及事件驱动系统 PRD v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md) 已于 `2026-07-31` 获用户批准并 `supersedes` v0.2；首个最小订单/合同规则包已在 `stage2b_synthetic_validation` scope 内批准并实现，PRD 的其余完整规则仍须在 Stage 4 逐项批准。v0.2 只作历史追溯。
 - 用户于 `2026-08-02` 批准《最小订单合同纵向切片规则包 v0.1》全部 22 项，仅授权 Stage 2B 匿名合成 `research` validation。实现提交 `d5d6003` 和[正式验收](docs/validation/stage2b-acceptance.md)已关闭 Stage 2B；该批准不授权 backtest、paper、shadow、live、仓位或订单。
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md) 仅完成独立研究建档，需求、规则和实现尚未开始。
@@ -44,7 +44,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | Stage 1 | `completed` | 工程与机器契约骨架 | 已于 `2026-07-31` 验收关闭 |
 | Stage 2A | `completed` | KB 公共契约离线验证、投影、消费持久化与准入内核 | 已于 `2026-08-02` 验收关闭 |
 | Stage 2B | `completed` | 最小 approved 策略规格与合成纵向切片 | 已于 `2026-08-02` 通过正式验收；只授权 synthetic research validation |
-| Stage 3 | `in_progress` | KB 正式 Release 传输与策略端到端验收 | owner 于 `2026-08-08` 恢复；3A 已完成，3B 等待独立 KB RC 服务与只读凭据 |
+| Stage 3 | `in_progress` | KB 正式 Release 传输与策略端到端验收 | 3A 离线与 3B 独立本机 HTTP 已完成；3C tcloud、3D 正式 Context Pack 策略 smoke 未开始 |
 | Stage 4 | `in_progress` | 完整产业事件规格与策略引擎 | `4A-1—4A-3` 共十一项已批准并实现；`4A-4` 二十四项精确草案待 owner 批准 |
 | Stage 5 | `not_started` | 成交、组合与确定性回放 | Stage 4 |
 | Stage 6 | `not_started` | 历史验证与冠军挑战 | Stage 3、Stage 5 |
@@ -68,7 +68,7 @@ Stage 2A + Stage 2B                                │
 题材系统：独立 deferred track（另行批准、另立阶段，不接在 Stage 8 后）
 ```
 
-Stage 0 与 Stage 1 已于 `2026-07-31` 关闭，Stage 2A 与 Stage 2B 已于 `2026-08-02` 关闭。owner 曾于 `2026-08-03` 延后 Stage 3，并于 `2026-08-08` 按“固定 `2c84277` → Client → 官方 fixture 离线验收 → 独立进程本机 HTTP 联调 → tcloud → 正式 Context Pack smoke”的顺序恢复。Stage 3A 已完成；Stage 3B 不得使用当前脏 KB 工作树或同进程内部客户端替代，须等待独立 KB RC 服务和只读凭据。当前正式 `market-daily` Release 仍只能完成传输、校验和消费记录核验，Stage 3 的策略 smoke 与完成门仍需一个通过正式发布面交付的精确 Context Pack Release。Stage 4—5 不等待这份数据交付，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。
+Stage 0 与 Stage 1 已于 `2026-07-31` 关闭，Stage 2A 与 Stage 2B 已于 `2026-08-02` 关闭。owner 曾于 `2026-08-03` 延后 Stage 3，并于 `2026-08-08` 按“固定公共契约 → Client → 官方 fixture 离线验收 → 独立进程本机 HTTP 联调 → tcloud → 正式 Context Pack smoke”的顺序恢复。Stage 3A 已完成；Stage 3B 已使用 KB 精确提交 `aab36fe`、独立 RC 进程和只读凭据通过，且没有借用 KB 工作树、内部包、数据库、mock 或 TestClient。该 RC Release 虽包含 Context Pack 制品，但本轮仅验证 transport compatibility，没有执行 provider-neutral 映射、策略 smoke 或 authority 持久化，因此不构成 3D。Stage 4—5 不等待 3C—3D，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。
 
 ---
 
@@ -560,16 +560,16 @@ InvestSystem 合成策略 fixture
 
 ### Stage 3：KB 正式 Release 端到端验收
 
-状态：`in_progress / 3A completed；3B waiting_for_kb_rc_service；3C—3D not_started`
+状态：`in_progress / 3A—3B completed；3C—3D not_started`
 
-恢复记录：owner 于 `2026-08-08` 要求按 `KB 2c84277 → IS 3A 离线 Client/fixture → 3B 本机独立 HTTP → 3C tcloud → 3D 正式 Context Pack` 顺序恢复验证。Stage 3A 的完成不等于 Stage 3 完成；不得用本地 KB 输入、脏工作树、同进程 TestClient 或 IS 自建 mock 冒充 3B—3D。
+恢复记录：owner 于 `2026-08-08` 要求按 `KB 固定提交 → IS 3A 离线 Client/fixture → 3B 本机独立 HTTP → 3C tcloud → 3D 正式 Context Pack` 顺序恢复验证。3B 已在同日按 KB `aab36fe229104779b50ec71e2dc37a9fad81d285` 通过；3A—3B 的完成不等于 Stage 3 完成。不得用本地 KB 输入、脏工作树、同进程 TestClient 或 IS 自建 mock 冒充 3C—3D。
 
 目标：在 Stage 2A 与 Stage 2B 汇合后，以独立只读消费者身份分别完成 KB Stage 6A 正式发布面的传输核验，以及正式 Context Pack 进入同一策略入口的真实 smoke；两类证据不得相互替代。
 
 分段状态：
 
 - **3A / completed**：固定 KB RC 提交 `2c84277ef463b5dd9a3fda3f2976a30cade53af5` 的七个 Stage 6B 公共传输文件，并以独立扩展快照绑定未改写的 Stage 2A 核心快照。实现 exact-Release 只读 HTTP Client、无重试的有界标准库 executor、完整状态哈希链、Release/Manifest/status 闭合、Manifest 期望约束下的 artifact 下载，以及内存/ZIP 不可变导出包验证。官方合成 fixture 和失败注入离线通过；所有输出固定 `authority_eligible=false`。
-- **3B / waiting_for_kb_rc_service**：代码和 operator smoke 入口已准备；当前进程未获得独立 KB RC base URL、`research:read`/`export:read` 凭据或已发布精确 Release，因此尚未执行跨仓 HTTP 联调。联调只能调用独立进程的公共 API，不能读取 KB 源码、数据库、`published/` 或工作树。
+- **3B / completed**：按机器交接清单将 transport snapshot 重固定到 KB `aab36fe229104779b50ec71e2dc37a9fad81d285`，并让 OpenAPI operation response Schema 成为 HTTP Manifest 新字段的精确校验面。IS 自己运行 operator smoke，通过独立 `127.0.0.1:18080` KB RC 进程和 `research:read`/`export:read` 短期凭据获取 exact Release、Manifest、完整状态历史与 Context Pack artifact；响应和制品哈希全部闭合。Token 未输出且执行后清除，结果固定 `authority_eligible=false`，没有签发 `RunReleaseStatusConfirmation`，也没有写 CAS/Observation。证据见 [Stage 3B 正式跨仓只读 HTTP 验收](docs/validation/stage3b-http-acceptance.md)。
 - **3C / not_started**：3B 通过后，才以相同 Client、相同固定契约和新的短期只读凭据连接真实 tcloud；不因本机通过自动信任 tcloud authority。
 - **3D / not_started**：KB 通过正式发布面提供精确 Context Pack Release 后，才映射 provider-neutral 输入并运行只读策略 smoke；允许且预期材料不足时 `ABSTAIN`。
 
@@ -579,7 +579,7 @@ InvestSystem 合成策略 fixture
 - KB Stage 6A 已于 `2026-07-30` 正式完成，provider 基线 `58ed9c5`、验收记录 `6ea33c4`、快照边界澄清 `1d6b823`、正式 Schema/lock、API—Release 一致性证据和撤回能力可供审计；该条件已经满足。KB 是否已有第二台机器快照副本属于其后续灾备门，不是 InvestSystem 的进入条件。
 - InvestSystem 通过显式依赖更新提交/变更集固定所需正式基线；不得自动跟随 KB 分支、Tag 或最新 Release。
 - KB 已发布且 InvestSystem 已固定 HTTP envelope/OpenAPI、immutable export package 与 current-status response/event 的公共 Schema、lock 和官方 fixture；该契约进入条件已由 Stage 3A 满足。没有显式验证的扩展 catalog 时，Stage 2A 的无参数 transport 门继续在 I/O 前 `not_supported`。
-- 正式传输核验可使用 `rel_10e257ad87734d7bb5cadc55e7b444e7`；Stage 3 的策略 smoke 和完成门还要求一个包含所需 Context Pack 的精确 Published Release。该制品当前未在公网 Stage 6A 数据集中交付，须由 KB 通过版本化只读 API 或授权的不可变导出包正式提供后再固定，InvestSystem 不得直接读取 KB 本地活动库或工作树代替交付。
+- Stage 3B 已以 RC Release `rel_fc8be9b554aa414ca8ad5a14aaec69d9` 验证本机 HTTP transport，并下载精确 Context Pack artifact `ctx_cb6b42a9e8acb4b5f81773a2d95e50f4`。这仅证明交付协议与字节兼容；Stage 3 的策略 smoke 和完成门仍要求在 3D 显式固定正式交付身份、完成 provider-neutral 映射和同一策略入口 smoke。InvestSystem 不得直接读取 KB 本地活动库或工作树代替该步骤。
 
 工作内容：
 
@@ -603,7 +603,7 @@ InvestSystem 合成策略 fixture
 
 验收证据：KB Stage 6A 正式完成引用、显式依赖更新提交/变更集、固定版本清单、`market-daily` 正式传输报告、`ArtifactConsumptionReceipt`、Fetch/Status/AdmissionObservations、Context Pack StrategyRunManifest、正式策略 smoke 报告、失败用例、离线 replay 和非阻塞 E2E 记录。
 
-Stage 3A 已形成的证据见 [Stage 3A 离线传输消费者验收](docs/validation/stage3a-acceptance.md)。它只关闭 3A，不满足本节完整完成门。
+Stage 3A 与 3B 的证据分别见 [Stage 3A 离线传输消费者验收](docs/validation/stage3a-acceptance.md)和 [Stage 3B 正式跨仓只读 HTTP 验收](docs/validation/stage3b-http-acceptance.md)。它们只关闭 3A—3B，不满足本节完整完成门。
 
 明确不做：不把策略状态写回 KB，不静默兼容未知版本，不要求正式输入给出通过结论，不以 E2E 成功证明策略有效。
 

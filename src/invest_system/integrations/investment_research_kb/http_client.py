@@ -22,8 +22,10 @@ from .transport_contracts import (
     KBTransportContractCatalog,
 )
 
-_DATASET_RELEASE_ID = "urn:investment-research-kb:contract:dataset-release:v1"
-_RELEASE_MANIFEST_ID = "urn:investment-research-kb:contract:release-manifest:v1"
+_RELEASE_OPENAPI_PATH = "/api/v1/dataset-releases/{release_id}"
+_MANIFEST_OPENAPI_PATH = "/api/v1/dataset-releases/{release_id}/manifest"
+_STATUS_OPENAPI_PATH = "/api/v1/dataset-releases/{release_id}/status"
+_ARTIFACT_OPENAPI_PATH = "/api/v1/dataset-releases/{release_id}/artifacts/{artifact_id}"
 _RELEASE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,127}$")
 _ARTIFACT_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$")
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -296,13 +298,23 @@ class KBReadOnlyHTTPClient:
             raise KBHTTPTransportError("KB HTTP response exceeded the configured byte limit")
         return response
 
-    def _error(self, response: KBHTTPRawResponse) -> KBHTTPResponseError:
+    def _error(
+        self,
+        response: KBHTTPRawResponse,
+        *,
+        openapi_path: str,
+    ) -> KBHTTPResponseError:
         try:
             headers = _lower_headers(response.headers)
             content_type = headers.get("content-type", "").split(";", 1)[0].strip().lower()
             if content_type != "application/json":
                 raise KBHTTPContractError("KB error response Content-Type is not application/json")
             payload = load_strict_json_bytes(response.body, source="KB HTTP error")
+            self._catalog.validate_openapi_json_response(
+                openapi_path,
+                response.status_code,
+                payload,
+            )
             self._catalog.validate_instance(HTTP_ERROR_ID, payload)
             error = payload["error"]
             return KBHTTPResponseError(
@@ -319,23 +331,23 @@ class KBReadOnlyHTTPClient:
         self,
         *,
         path: str,
+        openapi_path: str,
         release_id: str,
         operation: str,
-        data_contract_id: str,
     ) -> VerifiedHTTPDocument:
         response = self._request(path, max_bytes=self._max_json_bytes)
         if response.status_code != 200:
-            raise self._error(response)
+            raise self._error(response, openapi_path=openapi_path)
         headers = _lower_headers(response.headers)
         content_type = headers.get("content-type", "").split(";", 1)[0].strip().lower()
         if content_type != "application/json":
             raise KBHTTPContractError("KB success response Content-Type is not application/json")
         try:
             payload = load_strict_json_bytes(response.body, source=operation)
+            self._catalog.validate_openapi_json_response(openapi_path, 200, payload)
             self._catalog.validate_instance(HTTP_ENVELOPE_ID, payload)
             if not isinstance(payload, dict) or not isinstance(payload.get("data"), dict):
                 raise KBHTTPContractError("KB success data must be an object")
-            self._catalog.validate_instance(data_contract_id, payload["data"])
         except (ContractValidationError, ValueError) as exc:
             if isinstance(exc, KBHTTPContractError):
                 raise
@@ -364,9 +376,9 @@ class KBReadOnlyHTTPClient:
         path = f"/api/v1/dataset-releases/{quote(exact, safe='')}"
         return self._json_document(
             path=path,
+            openapi_path=_RELEASE_OPENAPI_PATH,
             release_id=exact,
             operation="get_dataset_release",
-            data_contract_id=_DATASET_RELEASE_ID,
         )
 
     def get_manifest(self, release_id: str) -> VerifiedHTTPDocument:
@@ -374,9 +386,9 @@ class KBReadOnlyHTTPClient:
         path = f"/api/v1/dataset-releases/{quote(exact, safe='')}/manifest"
         return self._json_document(
             path=path,
+            openapi_path=_MANIFEST_OPENAPI_PATH,
             release_id=exact,
             operation="get_dataset_release_manifest",
-            data_contract_id=_RELEASE_MANIFEST_ID,
         )
 
     def get_status_history(self, release_id: str) -> VerifiedHTTPDocument:
@@ -384,10 +396,16 @@ class KBReadOnlyHTTPClient:
         path = f"/api/v1/dataset-releases/{quote(exact, safe='')}/status"
         document = self._json_document(
             path=path,
+            openapi_path=_STATUS_OPENAPI_PATH,
             release_id=exact,
             operation="get_dataset_release_status_history",
-            data_contract_id=RELEASE_STATUS_HISTORY_ID,
         )
+        try:
+            self._catalog.validate_instance(RELEASE_STATUS_HISTORY_ID, document.data)
+        except ContractValidationError as exc:
+            raise KBHTTPContractError(
+                "KB get_dataset_release_status_history response violates the pinned contract"
+            ) from exc
         _verify_status_chain(document.data, exact)
         return document
 
@@ -442,7 +460,7 @@ class KBReadOnlyHTTPClient:
         )
         response = self._request(path, max_bytes=self._max_artifact_bytes)
         if response.status_code != 200:
-            raise self._error(response)
+            raise self._error(response, openapi_path=_ARTIFACT_OPENAPI_PATH)
         headers = _lower_headers(response.headers)
         try:
             content_length = int(headers["content-length"])

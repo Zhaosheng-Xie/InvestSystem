@@ -1118,6 +1118,213 @@
         "title": "ContextPack",
         "type": "object"
       },
+      "ContextPackBuild": {
+        "additionalProperties": false,
+        "properties": {
+          "company_identities": {
+            "items": {
+              "$ref": "#/components/schemas/ContextPackBuildCompanyIdentity"
+            },
+            "title": "Company Identities",
+            "type": "array"
+          },
+          "compiler": {
+            "$ref": "#/components/schemas/ContextPackBuildCompiler"
+          },
+          "config_files": {
+            "items": {
+              "$ref": "#/components/schemas/ContextPackBuildConfigFile"
+            },
+            "maxItems": 7,
+            "minItems": 7,
+            "title": "Config Files",
+            "type": "array"
+          },
+          "context_pack_id": {
+            "maxLength": 256,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+            "title": "Context Pack Id",
+            "type": "string"
+          },
+          "pack_key": {
+            "maxLength": 256,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+            "title": "Pack Key",
+            "type": "string"
+          },
+          "source_release": {
+            "$ref": "#/components/schemas/ContextPackBuildSourceRelease"
+          },
+          "supersedes_context_pack_id": {
+            "anyOf": [
+              {
+                "maxLength": 256,
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supersedes Context Pack Id"
+          },
+          "version": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "context_pack_id",
+          "pack_key",
+          "version",
+          "supersedes_context_pack_id",
+          "source_release",
+          "compiler",
+          "config_files",
+          "company_identities"
+        ],
+        "title": "ContextPackBuild",
+        "type": "object"
+      },
+      "ContextPackBuildCompanyIdentity": {
+        "additionalProperties": false,
+        "properties": {
+          "company_id": {
+            "maxLength": 256,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+            "title": "Company Id",
+            "type": "string"
+          },
+          "country": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Country",
+            "type": "string"
+          },
+          "legal_name": {
+            "anyOf": [
+              {
+                "maxLength": 512,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Legal Name"
+          },
+          "short_name": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Short Name",
+            "type": "string"
+          },
+          "ts_code": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts Code"
+          }
+        },
+        "required": [
+          "company_id",
+          "legal_name",
+          "short_name",
+          "country",
+          "ts_code"
+        ],
+        "title": "ContextPackBuildCompanyIdentity",
+        "type": "object"
+      },
+      "ContextPackBuildCompiler": {
+        "additionalProperties": false,
+        "properties": {
+          "code_path": {
+            "const": "investment_research_kb.application.context_packs:ContextPackService.compile_from_release",
+            "title": "Code Path",
+            "type": "string"
+          },
+          "compiler_id": {
+            "const": "context-pack-compiler",
+            "title": "Compiler Id",
+            "type": "string"
+          },
+          "version": {
+            "const": "1",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "compiler_id",
+          "version",
+          "code_path"
+        ],
+        "title": "ContextPackBuildCompiler",
+        "type": "object"
+      },
+      "ContextPackBuildConfigFile": {
+        "additionalProperties": false,
+        "properties": {
+          "content_hash": {
+            "$ref": "#/components/schemas/HashReference"
+          },
+          "path": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9._-]+)*$",
+            "title": "Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "content_hash"
+        ],
+        "title": "ContextPackBuildConfigFile",
+        "type": "object"
+      },
+      "ContextPackBuildSourceRelease": {
+        "additionalProperties": false,
+        "properties": {
+          "knowledge_cutoff": {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+            "title": "Knowledge Cutoff",
+            "type": "string"
+          },
+          "manifest_hash": {
+            "$ref": "#/components/schemas/HashReference"
+          },
+          "release_id": {
+            "maxLength": 128,
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$",
+            "title": "Release Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "release_id",
+          "knowledge_cutoff",
+          "manifest_hash"
+        ],
+        "title": "ContextPackBuildSourceRelease",
+        "type": "object"
+      },
       "ContextSource": {
         "additionalProperties": false,
         "properties": {
@@ -4135,6 +4342,16 @@
           },
           "code": {
             "$ref": "#/components/schemas/CodeReference"
+          },
+          "context_pack_build": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ContextPackBuild"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "created_at": {
             "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",

@@ -30,11 +30,11 @@ from .contracts import (
 )
 from .provider_canonical import CANONICALIZATION_PROFILE, canonical_json_bytes
 
-TRANSPORT_SOURCE_COMMIT = "2c84277ef463b5dd9a3fda3f2976a30cade53af5"
-TRANSPORT_SOURCE_COMMIT_TREE = "dba8ed9dbdde7908e7f654ed5fd0216304d6a084"
-TRANSPORT_SOURCE_CONTRACTS_TREE = "b61293d7ff5038d5ae2c3bd7c3ab6c8c9767fc52"
+TRANSPORT_SOURCE_COMMIT = "aab36fe229104779b50ec71e2dc37a9fad81d285"
+TRANSPORT_SOURCE_COMMIT_TREE = "ab64c1cab45eb646ee767e25a50fb78ef3cc57c8"
+TRANSPORT_SOURCE_CONTRACTS_TREE = "ff106b15c815e5d34a2675827485d2b5576e3f7b"
 TRANSPORT_SCHEMA_VERSION = "1.0.0"
-TRANSPORT_SNAPSHOT_LOCK_SHA256 = "b9e5657fc88cd635a44f2870a4b3891117612f1669cf6d54a61528a10aaa5f78"
+TRANSPORT_SNAPSHOT_LOCK_SHA256 = "02e0505f727552f7632eee807fedd27e6ce6d8dbde05f4482e99641f42b91169"
 
 HTTP_ENVELOPE_ID = "urn:investment-research-kb:contract:http-envelope:v1"
 HTTP_ERROR_ID = "urn:investment-research-kb:contract:http-error:v1"
@@ -265,6 +265,45 @@ class KBTransportContractCatalog:
         except (ValidationError, Unresolvable) as exc:
             raise ContractValidationError(
                 f"instance does not satisfy transport contract {contract_id}"
+            ) from exc
+
+    def validate_openapi_json_response(
+        self,
+        path_template: str,
+        status_code: int,
+        instance: object,
+    ) -> None:
+        """Validate one response against the exact pinned OpenAPI operation schema."""
+
+        if path_template not in _EXPECTED_OPERATIONS:
+            raise ContractValidationError("OpenAPI response path is not an approved operation")
+        paths = _object(self._openapi.get("paths"), field="OpenAPI paths")
+        path_item = _object(paths.get(path_template), field="OpenAPI path")
+        operation = _object(path_item.get("get"), field="OpenAPI GET operation")
+        responses = _object(operation.get("responses"), field="OpenAPI responses")
+        response = _object(responses.get(str(status_code)), field="OpenAPI response")
+        content = _object(response.get("content"), field="OpenAPI response content")
+        media_type = _object(
+            content.get("application/json"),
+            field="OpenAPI application/json response",
+        )
+        response_schema = _object(media_type.get("schema"), field="OpenAPI response schema")
+        components = _object(self._openapi.get("components"), field="OpenAPI components")
+        schema = {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            **deepcopy(response_schema),
+            "components": deepcopy(components),
+        }
+        try:
+            Draft202012Validator.check_schema(schema)
+            Draft202012Validator(
+                schema,
+                registry=self._registry,
+                format_checker=FormatChecker(),
+            ).validate(instance)
+        except (SchemaError, ValidationError, Unresolvable) as exc:
+            raise ContractValidationError(
+                f"instance does not satisfy pinned OpenAPI response {path_template} {status_code}"
             ) from exc
 
 

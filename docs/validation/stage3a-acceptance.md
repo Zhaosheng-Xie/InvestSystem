@@ -5,6 +5,10 @@
 > 范围：固定公共字节、只读 Client、官方 fixture 离线验证
 > 不包含：跨仓 HTTP、tcloud、正式 Context Pack、run authority、策略结论或交易权限
 
+> 后续状态：本记录保留 Stage 3A 当时的固定身份。当前 transport snapshot 已在 Stage 3B
+> 重固定到 KB `aab36fe229104779b50ec71e2dc37a9fad81d285`；见
+> [Stage 3B 正式跨仓只读 HTTP 验收](stage3b-http-acceptance.md)。
+
 ## 1. 结论
 
 InvestSystem 已按 Git 对象固定 KB RC 提交

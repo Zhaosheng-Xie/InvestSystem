@@ -75,11 +75,11 @@
       "document_version": "3.1.0",
       "canonical_sha256": {
         "algorithm": "sha256",
-        "value": "46b42d0a620760094cb59fdd6d1236d287f722ab05007cd5d07da42f8306a52f"
+        "value": "1dc729b82c4d010fecb6f5c2e1711f475c8978a776d7ac0132558e6c8c90f01b"
       },
       "file_sha256": {
         "algorithm": "sha256",
-        "value": "4478144dcdae8b156bd75ccc4393f1b0336c3ea2a632f11179bd8150d414ac39"
+        "value": "864f7fd590f4d356afa49e5cf12d8ace279c2aacf5749e273c9d4566b9623c64"
       }
     }
   ]

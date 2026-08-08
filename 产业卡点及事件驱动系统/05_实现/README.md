@@ -1,23 +1,25 @@
 # 实现
 
-需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架、Stage 2A 的离线 Release 消费与准入内核，以及 Stage 2B 的最小合成策略纵向切片均已通过根级正式验收。owner 于 `2026-08-08` 恢复 Stage 3：3A 已固定 KB `2c84277` 公共传输契约并完成 HTTP Client、immutable export 和官方 fixture 离线验收；3B 正等待独立 KB RC 服务与只读凭据，尚无真实 authority。Stage 4 的 4A-1 已实现上下文、历史语义、产业卡点与受益公司映射；4A-2 已实现事件状态、E4、主体/PIT 与审计分层；4A-3 已实现 Gate 1—2、利润分母和四情景的局部研究 evaluator。当前批准不授权 backtest、paper、shadow、live、仓位或订单。
+需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架、Stage 2A 的离线 Release 消费与准入内核，以及 Stage 2B 的最小合成策略纵向切片均已通过根级正式验收。owner 于 `2026-08-08` 恢复 Stage 3：3A 已完成 HTTP Client、immutable export 和官方 fixture 离线验收；3B 已重固定 KB `aab36fe` 公共传输契约，并通过独立 KB RC 进程与只读凭据的本机 HTTP 兼容验收，但尚无真实 run authority。Stage 4 的 4A-1 已实现上下文、历史语义、产业卡点与受益公司映射；4A-2 已实现事件状态、E4、主体/PIT 与审计分层；4A-3 已实现 Gate 1—2、利润分母和四情景的局部研究 evaluator。当前批准不授权 backtest、paper、shadow、live、仓位或订单。
 
 Stage 2B 的实际交付、验证锚点和未授权范围见根级 [Stage 2B 正式验收记录](../../docs/validation/stage2b-acceptance.md)。
 
 Stage 3A 的固定字节、Client/export 能力、失败语义和后续联调门见根级 [Stage 3A 离线传输消费者验收](../../docs/validation/stage3a-acceptance.md)。合成 transport fixture 固定 `authority_eligible=false`，不能为新 run 提供当前状态权威。
+
+Stage 3B 的精确重固定、独立进程 HTTP 输出和脱敏验证证据见根级 [Stage 3B 正式跨仓只读 HTTP 验收](../../docs/validation/stage3b-http-acceptance.md)。该验收只关闭本机 RC transport compatibility；不代替 tcloud、Context Pack 策略 smoke、CAS/Observation 持久化或 run-scoped authority。
 
 Stage 4 当前交付见[开发状态](../../docs/validation/stage4-development-status.md)：完整 14 项 P0 inventory 中前十一项已批准。`stage4_context_industry.py`、`stage4_event_semantics.py` 与 `stage4_gate_profit_scenarios.py` 分别只接受精确 4A-1/4A-2/4A-3 approved bundle/approval capability；draft governance 模块继续固定原提案谱系。4A-3 evaluator 按 Gate 1 → 情景验证 → Gate 2 执行，Gate 3—4 固定 `not_evaluated`，不产生完整决策或交易权限。其余三项仍为 `draft`；只有 14 项全部批准、四类测试齐全、inventory hash 与完整 machine bundle 精确绑定且零交易权限未漂移时，`require_stage4_rule_capability` 才可能签发完整 capability。
 
 Stage 2B runner 只能从精确 canonical [machine rule bundle](../03_规则与规格/机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.rule-bundle.json) 与对应 [RuleApprovalRecord](../03_规则与规格/机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.approval.json) 获取 capability；Markdown 只供审阅与追踪，运行时不得解析。strategy/bundle/version/hash/scope、SyntheticValidationInput flags、四类输入 hash、fixture registry pin 或 `run_mode=research` 任一不匹配都必须在 evaluator 前失败关闭。`SHADOW_ONLY` 是合成结果标签，不构成 shadow 运行授权。
 
 - 已完成的最小策略轨：`合成策略 fixture → provider-neutral DTO → StrategyRunManifest → E3.5/E4 → 四道门 → 利润桥/预期/估值 → DecisionRecord + replay_hash`；
-- 已完成契约轨：`KB 官方 fixture → 离线 validator/projector → ArtifactConsumptionReceipt + Observations + ReleaseRetentionClosure → provider-neutral DTO`；Stage 3A 已完成只读 Client/export 的离线契约能力，认证服务 authority、CAS/Observation 持久化和真实 acquisition 仍属于 3B—3D；
+- 已完成契约轨：`KB 官方 fixture → 离线 validator/projector → ArtifactConsumptionReceipt + Observations + ReleaseRetentionClosure → provider-neutral DTO`；Stage 3A 已完成只读 Client/export 的离线契约能力，Stage 3B 已完成独立进程本机 HTTP 兼容验收；CAS/Observation 持久化、正式 acquisition 和真实 authority 仍未完成；
 - 正式传输核验：`精确 market-daily Published Release → Manifest/制品/状态/权限/Receipt 验证`，不生成订单/合同策略结论；
 - 汇合：`精确 Context Pack Published Release → 同一策略入口 → 真实只读 smoke（允许 ABSTAIN）`。
 
 完整策略、TargetPortfolio 和 paper 成交回放在后续阶段开发，可与正式 Release E2E 并行；正式历史验证须在两支都完成后开始。
 
-Stage 2A 已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按原始字节引入 20 个官方文件，并验收 provider canonical、契约 catalog、消费 Receipt/Observation、官方 reference fixture 验证/窄投影，以及 SQLite v3 的正式持久化、传递 source Release 留存闭包、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。该历史提交没有公共 transport 契约，所以 Stage 2A 无参数能力门继续在 I/O 前失败关闭。Stage 3A 另以 `2c84277` 扩展快照启用 HTTP/export 协议实现，但所有离线结果仍无 authority；认证 acquisition、CAS/Observation 持久化、当前状态权威和正式 smoke 进入 3B—3D。
+Stage 2A 已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按原始字节引入 20 个官方文件，并验收 provider canonical、契约 catalog、消费 Receipt/Observation、官方 reference fixture 验证/窄投影，以及 SQLite v3 的正式持久化、传递 source Release 留存闭包、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。该历史提交没有公共 transport 契约，所以 Stage 2A 无参数能力门继续在 I/O 前失败关闭。Stage 3A 曾以 `2c84277` 扩展快照启用 HTTP/export 协议实现，Stage 3B 已将其重固定到 `aab36fe` 并完成独立本机 HTTP 兼容验收；所有结果仍无 authority，认证 acquisition 持久化、当前状态权威和正式策略 smoke 仍在后续 3C—3D 范围。
 
 根级采用 `src/` 包布局、GitHub Actions 和规范 JSON。本地实现使用工作站级 `E:\Conda\envs\Data_Analysis`（Python 3.12）作为共享开发解释器，但 InvestSystem 必须独立维护 `pyproject.toml`、`requirements-build.in`、带哈希的 runtime/dev lock、TOML 配置、`var/cache/kb-releases/`、`var/state/invest_system.sqlite3` 和运行目录。项目只以 editable `--no-deps --no-build-isolation` 注册；缺包安装前后保存环境基线并运行 `pip check`，不得未经确认改变既有共享包。CI 和可复现验收必须从 InvestSystem lock 创建干净环境。
 

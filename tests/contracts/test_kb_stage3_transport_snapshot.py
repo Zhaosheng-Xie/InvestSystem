@@ -23,7 +23,7 @@ def test_stage6b_transport_snapshot_extends_the_unchanged_stage2a_base(
     kb_transport_catalog: KBTransportContractCatalog,
 ) -> None:
     assert kb_transport_catalog.source_commit == TRANSPORT_SOURCE_COMMIT
-    assert kb_transport_catalog.source_commit == ("2c84277ef463b5dd9a3fda3f2976a30cade53af5")
+    assert kb_transport_catalog.source_commit == ("aab36fe229104779b50ec71e2dc37a9fad81d285")
     assert kb_transport_catalog.snapshot_lock_sha256 == TRANSPORT_SNAPSHOT_LOCK_SHA256
     assert kb_transport_catalog.base_catalog.source_commit == (
         "58ed9c5cb5302e3e719f1696bed83a03c5d6313b"
