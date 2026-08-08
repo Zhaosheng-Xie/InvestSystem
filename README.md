@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v2.3](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 in progress / Stage 4 completed_with_scope_limits`。Stage 3A 已完成离线 Client/export 验收；Stage 3B 已把传输快照重固定到 KB `aab36fe`，并通过独立进程、只读凭据的正式本机 HTTP 验收。3C tcloud 与 3D 正式 Context Pack 策略 smoke 尚未开始，所有 3B 输出仍为 `authority_eligible=false`。Stage 4 的 14 项 P0 规则、4A-1—4A-4 局部 evaluator 和独立 4B 完整编排 capability 均已精确批准并通过匿名合成验收；完整生产策略尚未实现。
+- [InvestSystem 实施计划 v2.4](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 in progress / Stage 4 completed_with_scope_limits / Stage 5A proposal only`。Stage 3A 已完成离线 Client/export 验收；Stage 3B 已把传输快照重固定到 KB `aab36fe`，并通过独立进程、只读凭据的正式本机 HTTP 验收。3C tcloud 与 3D 正式 Context Pack 策略 smoke 尚未开始，所有 3B 输出仍为 `authority_eligible=false`。Stage 4 的 14 项 P0 规则、4A-1—4A-4 局部 evaluator 和独立 4B 完整编排 capability 均已精确批准并通过匿名合成验收；Stage 5A 目前只有四十项待批准规则和零权限 draft machine proposal，完整生产策略尚未实现。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。
@@ -16,6 +16,8 @@ Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)。仓库
 Stage 2B 已通过[正式验收](docs/validation/stage2b-acceptance.md)：最小订单/合同规则包 22 项、精确批准 capability、24 个正常策略向量、10 个 admission failure 向量、E3.5/E4、四道门、窄版利润桥/预期/估值、完整 DecisionRecord 和确定性 replay 已形成。它只授权匿名合成 `research` validation；不授权 backtest、paper、shadow、live、仓位、组合、订单或资金部署，也不证明策略有效。
 
 Stage 2 进入 Stage 4 的[复核](docs/validation/stage2-reentry-audit.md)已通过。owner 于 `2026-08-08` 恢复 Stage 3；[Stage 3A 离线传输消费者验收](docs/validation/stage3a-acceptance.md)和[Stage 3B 正式跨仓只读 HTTP 验收](docs/validation/stage3b-http-acceptance.md)均已完成，但 tcloud、正式 Context Pack 策略 smoke 和 run authority 尚未通过。Stage 4 已通过[4B 完整合成验收](docs/validation/stage4-4b-acceptance.md)：完整输入从原始 typed case 重新运行 4A-1—4A-4，固定五层 capability 身份、统一 Gate/退出视图与 deterministic replay。该能力只适用于匿名合成 research validation，不读取真实 KB Release，也不授权 backtest、paper、shadow、live、仓位、组合、成交、P&L 或订单。
+
+Stage 5A 已形成[成交、组合、账本与确定性回放精确规则包](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)及零权限 draft machine proposal。四十项 owner 决策当前全部 `pending`；没有 approval record、runtime capability、evaluator、账本数据库或运行模式，不授权 backtest、paper、shadow、live、真实仓位/账户/订单或券商接入。
 
 ## 当前项目
 

@@ -63,3 +63,9 @@ Stage 4 的 4A governance、4A-1—4A-4 局部合成执行、既有 draft 谱系
 
 这些测试只证明 4A-1—4A-4 和完整 4B 能在各自精确批准的匿名合成 research-validation scope 内执行；不证明历史有效性、正式 KB 策略 smoke、生产运行或任何交易能力已经实现。
 
+## Stage 5A 当前测试边界
+
+[Stage 5A 精确规则包](../03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)和配套 draft machine proposal 目前只用于 owner 审阅。四十项决定均为 `pending`，不存在 approved capability 或业务 evaluator，因此当前不得新增会计算首次可成交、仓位、fill、账本或 P&L 的 golden 结果。
+
+当前只允许做静态提案核验：Markdown 物理 hash、draft JSON 可解析、文档 binding 一致、40 项 ID 完整不重复且均 pending、运行模式为空、无 approval record，并确认 backtest/paper/shadow/live/真实账户/仓位/订单/券商/KB 写权限全部为 false。第 11 节成交、组合、账本、公司行动、P&L 与 replay 测试矩阵必须等 owner 批准并另建 approved artifacts 后才能实现。
+
