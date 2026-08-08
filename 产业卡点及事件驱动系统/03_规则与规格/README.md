@@ -16,6 +16,7 @@ Stage 4 已完成前三个执行批次；完整 capability 仍关闭：
 - [4A-2 批准记录](Stage4_4A2事件状态与审计分层批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage4_4a2_event_semantics_v0.1.0.approval.json)：精确固定全部 16 项批准及零交易权限；
 - [4A-3 四道门、利润分母与情景规则包](Stage4_4A3四道门利润分母与情景规则包_v0.1.md)及 [draft machine proposal](机器制品/industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0-draft.rule-bundle.json)：作为获批前的不可变提案保留；
 - [4A-3 批准记录](Stage4_4A3四道门利润分母与情景批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.approval.json)：精确固定全部 20 项批准、4A-1/4A-2 上游身份和零交易权限；
+- [4A-4 市场预期、估值与退出规则包](Stage4_4A4市场预期估值与退出规则包_v0.1.md)及 [draft machine proposal](机器制品/industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0-draft.rule-bundle.json)：二十四项全部 `pending`，只允许结构/hash/上游依赖/零权限治理校验；没有 approval record、业务 evaluator 或 runtime capability；
 - [Stage 4 P0 machine inventory](机器制品/industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json)：14 项完整清单，前十一项 `approved`，其余三项 `draft`；
 - `stage4_synthetic_research_validation` 是独立 scope，Stage 2B capability 不能复用；4A-1—4A-3 只允许各自的局部合成验证，均不能签发完整 Stage 4 runtime capability。
 

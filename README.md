@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v1.8](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 deferred by owner / Stage 4 in progress`。Stage 3 的完成门仍保留并在正式历史验证前补齐；Stage 4 的 4A-1—4A-3 已在各自精确批准的合成 research-validation scope 内实现，完整策略仍未实现。
+- [InvestSystem 实施计划 v1.9](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 deferred by owner / Stage 4 in progress`。Stage 3 的完成门仍保留并在正式历史验证前补齐；Stage 4 的 4A-1—4A-3 已在各自精确批准的合成 research-validation scope 内实现，4A-4 已形成零权限待批准草案，完整策略仍未实现。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。
@@ -15,7 +15,7 @@ Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)。仓库
 
 Stage 2B 已通过[正式验收](docs/validation/stage2b-acceptance.md)：最小订单/合同规则包 22 项、精确批准 capability、24 个正常策略向量、10 个 admission failure 向量、E3.5/E4、四道门、窄版利润桥/预期/估值、完整 DecisionRecord 和确定性 replay 已形成。它只授权匿名合成 `research` validation；不授权 backtest、paper、shadow、live、仓位、组合、订单或资金部署，也不证明策略有效。
 
-Stage 2 进入 Stage 4 的[复核](docs/validation/stage2-reentry-audit.md)已通过。owner 于 `2026-08-03` 决定本轮跳过 Stage 3、启动 Stage 4；Stage 3 标为 `deferred` 而非完成。Stage 4 当前处于 [4A rule governance](docs/validation/stage4-development-status.md)：14 项 P0 inventory 中 4A-1—4A-3 共十一项已批准并实现局部 evaluator；4A-3 只完成 Gate 1—2，4A-4 的 `FR-GATE-004/005` 与 `FR-EXIT-001` 仍未批准。因此 Gate 3—4、完整决策与完整 Stage 4 runtime capability 继续关闭。
+Stage 2 进入 Stage 4 的[复核](docs/validation/stage2-reentry-audit.md)已通过。owner 于 `2026-08-03` 决定本轮跳过 Stage 3、启动 Stage 4；Stage 3 标为 `deferred` 而非完成。Stage 4 当前处于 [4A rule governance](docs/validation/stage4-development-status.md)：14 项 P0 inventory 中 4A-1—4A-3 共十一项已批准并实现局部 evaluator；4A-4 的 `FR-GATE-004/005` 与 `FR-EXIT-001` 已收敛为二十四项待批准决定和零权限 draft machine proposal，但仍全部为 `draft`。因此 Gate 3—4、退出、完整决策与完整 Stage 4 runtime capability 继续关闭。
 
 ## 当前项目
 

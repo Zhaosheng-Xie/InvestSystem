@@ -1,6 +1,6 @@
 # Stage 4 完整 P0 规则清单与批准包 v0.1
 
-文档状态：`partially_approved / 4A-1 through 4A-3 completed`
+文档状态：`partially_approved / 4A-1 through 4A-3 completed / 4A-4 draft formed`
 
 阶段：`Stage 4 / 4A rule governance`
 
@@ -77,7 +77,7 @@ Stage 4 包含产业上下文、产业/可投资卡点、E0—E7、四道门的�
 
 ## 6. 逐项规则状态
 
-4A-1 四项的精确语义已由 [4A-1 规则包](Stage4_4A1上下文与产业映射规则包_v0.1.md)及其 canonical machine bundle supersede 下列早期审阅提示，并已获得 scope-limited owner approval。4A-2 四项的精确语义已由[原 draft 规则包](Stage4_4A2事件状态与审计分层规则包_v0.1.md)、[批准记录](Stage4_4A2事件状态与审计分层批准记录_v0.1.md)及其 approved canonical machine bundle 固定。4A-3 三项的精确语义已由[原 draft 规则包](Stage4_4A3四道门利润分母与情景规则包_v0.1.md)、[批准记录](Stage4_4A3四道门利润分母与情景批准记录_v0.1.md)及其 approved canonical machine bundle 固定。4A-4 三项仍待批准。
+4A-1 四项的精确语义已由 [4A-1 规则包](Stage4_4A1上下文与产业映射规则包_v0.1.md)及其 canonical machine bundle supersede 下列早期审阅提示，并已获得 scope-limited owner approval。4A-2 四项的精确语义已由[原 draft 规则包](Stage4_4A2事件状态与审计分层规则包_v0.1.md)、[批准记录](Stage4_4A2事件状态与审计分层批准记录_v0.1.md)及其 approved canonical machine bundle 固定。4A-3 三项的精确语义已由[原 draft 规则包](Stage4_4A3四道门利润分母与情景规则包_v0.1.md)、[批准记录](Stage4_4A3四道门利润分母与情景批准记录_v0.1.md)及其 approved canonical machine bundle 固定。4A-4 三项已由[市场预期、估值与退出规则包](Stage4_4A4市场预期估值与退出规则包_v0.1.md)收敛为二十四项待批准决定，并绑定零权限 draft machine proposal；三项 inventory 状态仍为 `draft`，没有 approval record、evaluator 或 capability。
 
 ### FR-CTX-001
 

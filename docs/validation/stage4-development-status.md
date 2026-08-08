@@ -4,17 +4,17 @@
 >
 > 分支：`codex/stage4`
 >
-> 阶段状态：`in_progress / 4A-1 completed；4A-2 completed；4A-3 completed；4A-4 next`
+> 阶段状态：`in_progress / 4A-1 completed；4A-2 completed；4A-3 completed；4A-4 draft_for_owner_approval`
 >
 > Stage 3：`deferred by owner / not completed`
 >
-> 当前授权：`4A-1—4A-3 exact synthetic research-validation capabilities；Gate 3—4 与完整 Stage 4 runtime capability 仍关闭`
+> 当前授权：`4A-1—4A-3 exact synthetic research-validation capabilities；4A-4 零权限草案；Gate 3—4、退出与完整 Stage 4 runtime capability 仍关闭`
 
 ## 1. 当前结论
 
 Stage 2 进入门已通过[复核](stage2-reentry-audit.md)，Stage 4 可以在不等待 Stage 3 或 KB 部署的前提下开发。owner 已分别批准 4A-1、4A-2 第 8 节全部 16 项和 4A-3 第 9 节全部 20 项；各批批准均严格限于 `stage4_synthetic_research_validation`，不授权 backtest、paper、shadow、live、仓位或订单。
 
-4A-1—4A-3 均已形成独立的精确 machine bundle、approval record、局部 evaluator 和四类业务测试。4A-3 原 owner-review draft 与零权限 proposal 继续作为不可变谱系保留。14 项 P0 inventory 当前十一项 `approved`、三项 `draft`，因此完整 Stage 4 capability 仍必须失败关闭。
+4A-1—4A-3 均已形成独立的精确 machine bundle、approval record、局部 evaluator 和四类业务测试。4A-4 已形成二十四项 owner-review 决策、文字规格和零权限 draft proposal；它没有 approval record、业务 evaluator 或 capability。14 项 P0 inventory 当前十一项 `approved`、三项 `draft`，因此完整 Stage 4 capability 仍必须失败关闭。
 
 ## 2. 治理基线
 
@@ -60,25 +60,35 @@ Stage 2 进入门已通过[复核](stage2-reentry-audit.md)，Stage 4 可以在�
 - `FR-GATE-003`：base/downside/upside/stress 四情景、十四项显式 driver、PIT/外汇/哈希/版本防线、压力一致性与可选概率校准；
 - `stage4_gate_profit_scenarios.py` 只接受精确 approved capability，执行顺序为 Gate 1 → 情景验证 → Gate 2，所有交易权限恒为 false。
 
-## 6. 当前明确不能做
+## 6. 4A-4 当前草案
+
+- [4A-4 市场预期、估值与退出文字规格](../../产业卡点及事件驱动系统/03_规则与规格/Stage4_4A4市场预期估值与退出规则包_v0.1.md)，文档 SHA-256：`7f2f1238ff5d9bae1c7a96b212b87dd56a04ac8a9013715e46d2b6cc9d864a62`；
+- draft canonical machine bundle SHA-256：`2d6ebeafeb93fd0d799ab31c1a93e88639e7979fc6416179a18158a9a4450055`，rules SHA-256：`5692fae5ab76c233d2f3d3ff3c0e23002062a179426de843c46d5439c09d543c`；
+- `FR-GATE-004` 提案：分离公开经济预期与市场价格反推；E4 前价格/成交量是 PIT 上下文，但无校准阈值前不能单独制造分类或 PASS；
+- `FR-GATE-005` 提案：基础业务与 E4 有限期增量 FCF 分开、组件唯一归属、防重复计价；Stage 4 只接受明确非真实可成交价的合成价格假设；
+- `FR-EXIT-001` 提案：evidence/risk/time/value 四类退出与重新承保只形成策略判断；真实交易日计数、风险预算和持仓快照由 Stage 5 契约提供；
+- 二十四项 approval item 全部为 `pending`，运行模式为空；没有 approval record、业务 evaluator、完整 Stage 4 capability 或任何交易权限。
+
+## 7. 当前明确不能做
 
 - 不能运行完整 Stage 4 策略引擎；4A-3 的 Gate 2 通过只产生 `gate2_research_qualified` 局部结论；
 - 不能把 Stage 2B 或任一 4A 局部 capability 相互复用或外推为完整 Stage 4；
-- 不能实现 4A-4 中尚未批准的预期、估值、退出或完整决策语义；
+- 不能把 4A-4 draft proposal 作为业务规则加载，也不能实现其中尚未批准的预期、估值、退出或完整决策语义；
 - 不能读取 KB 工作树、SQLite、raw、staging 或本地活动库补齐 Stage 3；
 - 不能进入 backtest、paper、shadow、live、仓位、组合或订单。
 
-## 7. 下一完成门
+## 8. 下一完成门
 
-下一步以同样的先规格、后逐项批准流程完成 4A-4 的 `FR-GATE-004/005` 与 `FR-EXIT-001`。只有 14 项全部完成、完整 machine bundle 与完整合成 replay 验收通过后，完整 Stage 4 capability 才可能签发。
+下一步由 owner 审阅 4A-4 第 10 节二十四项并明确批准、修改或拒绝。只有全部获批后才能另行生成 approved artifacts 和 evaluator；只有 14 项全部完成、完整 machine bundle 与完整合成 replay 验收通过后，完整 Stage 4 capability 才可能签发。
 
-## 8. 当前验证
+## 9. 当前验证
 
 - `FR-EVT-001—004` 4A-2 定向业务测试：`32 passed`；
 - 4A-3 approved evaluator 定向测试：`28 passed`；
-- Stage 4 governance、4A-1—4A-3 approved evaluator 与 draft 谱系定向测试：`117 passed`；
-- 全仓 pytest：`736 passed, 4 skipped`；
-- Ruff lint、format、mypy（70 个源文件）、compileall、`git diff --check`：通过；
-- wheel 构建通过，并确认同时包含 `stage4_gate_governance.py` 与 `stage4_gate_profit_scenarios.py`；
+- Stage 4 governance、4A-1—4A-3 approved evaluator 与既有 draft 谱系定向测试：`117 passed`；
+- 4A-4 draft-only 治理定向测试：`10 passed`，覆盖精确 artifact/hash、二十四项 pending、零权限、伪造 approval、语义漂移、无 approval record/evaluator、Stage 5 隔离和三批上游绑定；
+- 全仓 pytest：`746 passed, 4 skipped`；
+- Ruff lint、format、mypy（72 个源文件）、compileall、`git diff --check`：通过；
+- wheel 构建通过，并确认包含 `stage4_expectation_valuation_exit_governance.py`；
 - `pip check` 仍只报告共享环境安装前已登记的 OpenCV/NumPy 冲突；本阶段未安装、升级、降级或卸载任何包；
 - 4 个 skip 仍仅来自本地 Windows symlink/junction 权限，不是 Stage 4 逻辑跳过。
