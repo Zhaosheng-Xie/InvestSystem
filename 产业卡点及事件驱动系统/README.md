@@ -1,9 +1,9 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3/3A—3B completed、3C—3D not_started；Stage 4 completed_with_scope_limits；Stage 5A draft_for_owner_approval only；完整生产策略未实现`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3/3A—3B completed、3C—3D not_started；Stage 4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B completed_with_scope_limits；完整生产策略未实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-08`
 市场范围：`中国 A 股`
-当前已授权边界：`Stage 2B 与 Stage 4/4B 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 5A 只有零权限待批准草案；不签发 KB current-status authority 或正式 StrategyRunManifest；不授权 backtest/paper/shadow/live、真实仓位、真实账户、真实订单或券商接入`
+当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A/5B 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 5B synthetic intent/fill 不是交易授权；不签发 KB current-status authority 或正式 StrategyRunManifest；不授权 backtest/paper/shadow/live、真实仓位、真实账户、真实订单或券商接入`
 
 ## 系统一句话定义
 
@@ -66,6 +66,8 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-08`
     - 状态：`approved for stage5_synthetic_execution_validation only`；四十项全部批准，已形成独立 approved bundle、approval record 和治理 verifier，但没有 Stage 5B—5D 业务 evaluator 或任何真实/交易权限。
 25. [Stage 5 / 5A 规则治理批准验收记录](../docs/validation/stage5-5a-governance-acceptance.md)
     - 状态：`completed_with_scope_limits / governance_only`；证明精确批准谱系和失败关闭 capability guard，不证明成交、组合、账本、P&L 或 replay 已实现。
+26. [Stage 5 / 5B 历史市场规则与合成成交验收记录](../docs/validation/stage5-5b-market-execution-acceptance.md)
+    - 状态：`completed_with_scope_limits`；已实现历史规则、日历、首次可成交、成本/冲击、当前价 Gate 重算及 deterministic synthetic fill，但不含组合、账本、P&L、持久化或真实交易权限。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空，HTTP/export 都在 I/O 前失败关闭；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实 acquisition/current status、认证 transport 和原始响应留存归入 Stage 3，策略语义属于 Stage 2B 以后。
 
@@ -74,6 +76,8 @@ Stage 2B 已完成并验收：精确批准规则、可信 fixture registry、E3.
 Stage 4 已在 `codex/stage4b` 完成 scope-limited 结仓：14 项 P0 inventory、四个局部批次和独立 4B machine bundle/approval 均精确批准；完整编排器从原始 typed case 重新运行 4A-1—4A-4，禁止注入局部 PASS，并输出统一 Gate/退出视图、局部结果 hash 和 deterministic replay。原 draft proposal 均作为不可变谱系保留。Stage 2B capability、真实 KB 输入、backtest/paper/shadow/live、仓位、组合、成交、P&L 和订单均不能进入该切片；真实首次可成交价、市场规则、交易日历、风险预算和账户账本仍属于待另行授权的 Stage 5。
 
 Stage 5A rule governance 已完成精确批准登记：四十项规则区分 `ENTER/ADD` 与 `REDUCE/EXIT`，固定历史有效市场规则、首次可成交、费用/冲击、容量、风险预算、五层仓位、append-only 双分录账本、公司行动、P&L 和 replay 的合成验证语义。当前 capability 只证明精确规则获准用于未来匿名合成 `research` 验证，不证明相应业务 evaluator 已实现，也不得外推到 backtest、paper、shadow、live、真实账户/仓位/订单。
+
+Stage 5B 已完成市场与成交纵向切片：从同一运行的原始 Stage 4 case/result/replay 出发，按历史时点选择内容寻址规则、交易日历、成本表和冲击曲线，确定首个可成交窗口，重跑当前价 Gate 3/4，并生成内存内 deterministic synthetic fill。组合风险、现金与可卖量、双分录账本、公司行动、P&L、SQLite 和 durable replay 仍属于 5C—5D。
 
 ## 推荐研发顺序
 

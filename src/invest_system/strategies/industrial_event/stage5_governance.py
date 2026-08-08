@@ -9,6 +9,8 @@ broker adapter, or real-account integration.
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import dataclass
+from decimal import Decimal
 from typing import Any
 
 from invest_system.canonical import canonical_sha256
@@ -19,6 +21,7 @@ from invest_system.domain.rule_approval import (
     RuleApprovalScope,
     RuleBundleDocument,
 )
+from invest_system.models import HashDigest
 
 STAGE5_STRATEGY_ID = "industrial_bottleneck_event"
 STAGE5_APPROVAL_SCOPE = RuleApprovalScope.STAGE5_SYNTHETIC_EXECUTION_VALIDATION
@@ -57,6 +60,115 @@ class Stage5RuleCompatibilityError(ValueError):
     def __init__(self, code: str, message: str) -> None:
         super().__init__(f"{code}: {message}")
         self.code = code
+
+
+_STAGE5_MARKET_RULE_ISSUER = object()
+
+
+@dataclass(frozen=True, slots=True, init=False)
+class ApprovedStage5MarketExecutionRules:
+    """Unforgeable typed view of the approved Stage 5B market semantics."""
+
+    bundle_hash: HashDigest
+    approval_record_hash: HashDigest
+    approval_id: str
+    maximum_participation_rate: Decimal
+    entry_attempt_days: int
+    order_time_in_force: str
+    minimum_net_base_remaining_return: Decimal
+    minimum_reward_to_downside: Decimal
+    event_order: tuple[str, ...]
+
+    def __init__(
+        self,
+        *,
+        _issuer: object,
+        bundle_hash: HashDigest,
+        approval_record_hash: HashDigest,
+        approval_id: str,
+    ) -> None:
+        if _issuer is not _STAGE5_MARKET_RULE_ISSUER:
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_MARKET_RULE_ISSUER_INVALID",
+                "Stage 5B typed rules require the exact approved Stage 5A capability",
+            )
+        object.__setattr__(self, "bundle_hash", bundle_hash)
+        object.__setattr__(self, "approval_record_hash", approval_record_hash)
+        object.__setattr__(self, "approval_id", approval_id)
+        object.__setattr__(self, "maximum_participation_rate", Decimal("0.05"))
+        object.__setattr__(self, "entry_attempt_days", 3)
+        object.__setattr__(self, "order_time_in_force", "DAY")
+        object.__setattr__(self, "minimum_net_base_remaining_return", Decimal("0.15"))
+        object.__setattr__(self, "minimum_reward_to_downside", Decimal("2.00"))
+        object.__setattr__(
+            self,
+            "event_order",
+            ("event_time", "event_type_priority", "stable_event_id"),
+        )
+
+    @classmethod
+    def from_approved_bundle(
+        cls,
+        document: RuleBundleDocument,
+        capability: ApprovedRuleCapability,
+    ) -> ApprovedStage5MarketExecutionRules:
+        """Bind the exact approved bundle to executable Stage 5B constants."""
+
+        if capability.bundle_hash != document.bundle_hash():
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_CAPABILITY_BUNDLE_MISMATCH",
+                "capability and Stage 5A bundle identities differ",
+            )
+        if capability.approval_scope is not STAGE5_APPROVAL_SCOPE:
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_APPROVAL_SCOPE_MISMATCH",
+                "only Stage 5 synthetic execution validation is approved",
+            )
+        if (
+            document.bundle_hash().value != STAGE5_5A_RULE_BUNDLE_SHA256
+            or canonical_sha256(document.rules) != STAGE5_5A_RULES_SHA256
+            or capability.approval_id != STAGE5_5A_RULE_APPROVAL_ID
+            or capability.approval_record_hash.value != STAGE5_5A_RULE_APPROVAL_RECORD_SHA256
+        ):
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_MARKET_RULE_IDENTITY_UNSUPPORTED",
+                "Stage 5B requires the exact owner-approved Stage 5A identities",
+            )
+        market = _mapping(
+            _mapping(document.rules.get("rule_modules"), field_name="rule_modules").get(
+                "market_rules_and_executable_price"
+            ),
+            field_name="market_rules_and_executable_price",
+        )
+        fill = _mapping(
+            _mapping(document.rules.get("rule_modules"), field_name="rule_modules").get(
+                "capacity_cost_and_fill"
+            ),
+            field_name="capacity_cost_and_fill",
+        )
+        impact = _mapping(fill.get("impact_curve"), field_name="impact_curve")
+        if (
+            market.get("entry_attempt_days") != 3
+            or market.get("gate3_and_gate4_rerun_each_attempt") is not True
+            or market.get("daily_low_precision_vwap", {}).get("formula") != "turnover/volume"
+            or fill.get("synthetic_maximum_participation_rate") != "0.05"
+            or fill.get("participation_comparison") != "lte"
+            or impact.get("interpolation") != "linear"
+            or impact.get("extrapolation") != "forbidden"
+            or fill.get("order_time_in_force") != "DAY"
+            or tuple(fill.get("event_order", ()))
+            != ("event_time", "event_type_priority", "stable_event_id")
+        ):
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_MARKET_MACHINE_SEMANTICS_UNSUPPORTED",
+                "approved Stage 5B market semantics differ from the implemented slice",
+            )
+        return cls(
+            _issuer=_STAGE5_MARKET_RULE_ISSUER,
+            bundle_hash=capability.bundle_hash,
+            approval_record_hash=capability.approval_record_hash,
+            approval_id=capability.approval_id,
+        )
 
 
 def _mapping(value: Any, *, field_name: str) -> Mapping[str, Any]:

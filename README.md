@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v2.5](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 in progress / Stage 4 completed_with_scope_limits / Stage 5A governance approved`。Stage 3A—3B 已完成，3C tcloud 与 3D 正式 Context Pack 策略 smoke 尚未开始。Stage 4 的 14 项 P0 规则和 4B 完整编排已通过匿名合成验收；Stage 5A 四十项规则现已精确批准并由独立 bundle、approval record 和 fail-closed capability verifier 固定，但 Stage 5B—5D 业务 evaluator 尚未实现，完整生产策略仍不存在。
+- [InvestSystem 实施计划 v2.6](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 in progress / Stage 4 completed_with_scope_limits / Stage 5B completed_with_scope_limits`。Stage 3A—3B 已完成，3C tcloud 与 3D 正式 Context Pack 策略 smoke 尚未开始。Stage 4 的 14 项 P0 规则和 4B 完整编排已通过匿名合成验收；Stage 5A 四十项规则已精确批准，Stage 5B 已实现历史市场规则、交易日历、首次可成交、成本/冲击和确定性 synthetic fill，但 Stage 5C—5D 组合、账本、P&L 与 durable replay 尚未实现，完整生产策略仍不存在。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。
@@ -17,7 +17,7 @@ Stage 2B 已通过[正式验收](docs/validation/stage2b-acceptance.md)：最小
 
 Stage 2 进入 Stage 4 的[复核](docs/validation/stage2-reentry-audit.md)已通过。owner 于 `2026-08-08` 恢复 Stage 3；[Stage 3A 离线传输消费者验收](docs/validation/stage3a-acceptance.md)和[Stage 3B 正式跨仓只读 HTTP 验收](docs/validation/stage3b-http-acceptance.md)均已完成，但 tcloud、正式 Context Pack 策略 smoke 和 run authority 尚未通过。Stage 4 已通过[4B 完整合成验收](docs/validation/stage4-4b-acceptance.md)：完整输入从原始 typed case 重新运行 4A-1—4A-4，固定五层 capability 身份、统一 Gate/退出视图与 deterministic replay。该能力只适用于匿名合成 research validation，不读取真实 KB Release，也不授权 backtest、paper、shadow、live、仓位、组合、成交、P&L 或订单。
 
-Stage 5A 的[成交、组合、账本与确定性回放精确规则包](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)四十项已获 owner 批准；原零权限 draft 保持不变，另建[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、approved machine bundle 和 approval record，并通过[Stage 5A 治理验收](docs/validation/stage5-5a-governance-acceptance.md)。当前只实现精确 capability verifier，没有首次可成交、fill、组合、账本、P&L、replay evaluator、数据库表或 migration；批准不授权 backtest、paper、shadow、live、真实仓位/账户/订单或券商接入。
+Stage 5A 的[成交、组合、账本与确定性回放精确规则包](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)四十项已获 owner 批准；原零权限 draft 保持不变，另建[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、approved machine bundle 和 approval record，并通过[Stage 5A 治理验收](docs/validation/stage5-5a-governance-acceptance.md)。[Stage 5B 验收](docs/validation/stage5-5b-market-execution-acceptance.md)进一步实现历史有效 `MarketRuleSet`、交易日历、首次可成交、固定点成本/冲击、可成交价 Gate 重算和确定性 synthetic fill；它仍不含组合、账户账本、公司行动、P&L、SQLite migration 或真实订单权限。
 
 ## 当前项目
 
