@@ -1,0 +1,269 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage4_4a3_gate_profit_scenarios",
+  "bundle_version": "0.1.0",
+  "declared_status": "approved",
+  "rules": {
+    "authorization_boundary": {
+      "approval_scope": "stage4_synthetic_research_validation",
+      "allowed_run_modes": ["research"],
+      "synthetic_only": true,
+      "validation_only": true,
+      "not_a_published_release": true,
+      "not_strategy_evidence": true,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_positions": false,
+      "authorizes_orders": false
+    },
+    "batch": {
+      "batch_id": "4A-3",
+      "requirement_ids": ["FR-GATE-001", "FR-GATE-002", "FR-GATE-003"],
+      "owner_approval_items": 20,
+      "owner_approval_items_approved": 20,
+      "partial_stage4_approval_only": true,
+      "authorizes_complete_stage4_capability": false
+    },
+    "approved_upstream_dependencies": {
+      "4A-1": {
+        "bundle_id": "industrial_event_stage4_4a1_context_industry",
+        "bundle_version": "0.1.0",
+        "bundle_hash": "5224e8e6d600b8f613d6dfaf4dd486d6caafdcf5fe3d8d3db29af2f25462a32d"
+      },
+      "4A-2": {
+        "bundle_id": "industrial_event_stage4_4a2_event_semantics",
+        "bundle_version": "0.1.0",
+        "bundle_hash": "9f9f5cf843347a1918a894be1151c0ef720bd6318daa1077657e97e9324d6560"
+      }
+    },
+    "shared_semantics": {
+      "decimal_arithmetic": "fixed_point_only",
+      "evaluation_order": ["FR-GATE-001", "FR-GATE-003", "FR-GATE-002"],
+      "gate_evaluation_states": ["evaluated", "not_evaluated"],
+      "gate_outcomes": ["PASS", "REJECT", "ABSTAIN", "BLOCKED", "SHADOW_ONLY"],
+      "outcome_precedence": ["BLOCKED", "REJECT", "ABSTAIN", "SHADOW_ONLY", "PASS"],
+      "first_non_pass_gate_short_circuits": true,
+      "missing_is_not_false": true,
+      "not_evaluated_is_not_an_outcome": true,
+      "score_compensation_forbidden": true,
+      "shadow_only_is_a_research_label_not_run_authority": true,
+      "gate3_gate4_and_full_decision_forbidden_in_4a3": true
+    },
+    "rule_modules": {
+      "FR-GATE-001": {
+        "requirement_id": "FR-GATE-001",
+        "machine_rule_ref": "industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-001",
+        "fixed_order": [
+          "governance_and_capability",
+          "4A-1:profit_beneficiary_and_four_gate_eligible",
+          "4A-2:audit_party_e4_event_state",
+          "gate_1_authenticity",
+          "gate_2_profit_and_cash_materiality",
+          "gate_3_expectation_gap_4A-4",
+          "gate_4_value_and_executable_return_4A-4",
+          "full_stage4_decision"
+        ],
+        "gate_1_mapping": {
+          "governance_capability_hash_pit_or_audit_structure_failure": "BLOCKED",
+          "not_profit_beneficiary_or_e4_explicitly_refuted": "REJECT",
+          "current_state_e3_5_without_hard_failure": "SHADOW_ONLY",
+          "critical_upstream_unknown_conflicted_or_unrecoverable": "ABSTAIN",
+          "pass_requires": [
+            "4A-1:profit_beneficiary",
+            "4A-1:four_gate_eligible",
+            "4A-2:audit_PASS",
+            "4A-2:party_PASS",
+            "4A-2:e4_PASS",
+            "4A-2:event_state_PASS_and_E4_attained",
+            "4A-2:independent_gate_evidence_ready"
+          ],
+          "minimum_independent_public_chains": 2,
+          "minimum_authoritative_original_chains": 1,
+          "different_responsible_publishers": true,
+          "different_acquisition_lineages": true
+        },
+        "short_circuit": {
+          "gate_2_entry": "gate_1_PASS_only",
+          "not_evaluated_outcome": null,
+          "short_circuit_reason_required": true,
+          "reject_not_downgraded_by_later_not_evaluated": true
+        },
+        "partial_completion": {
+          "gate2_pass_output": "gate2_research_qualified",
+          "remaining_gate_ids": ["FR-GATE-004", "FR-GATE-005"],
+          "gate_3_state": "not_evaluated:RULE_BATCH_NOT_APPROVED",
+          "gate_4_state": "not_evaluated:RULE_BATCH_NOT_APPROVED",
+          "full_stage4_decision": null,
+          "position_state": "FLAT",
+          "target_weight": null,
+          "order_intent": null,
+          "trade_ready_forbidden": true
+        }
+      },
+      "FR-GATE-002": {
+        "requirement_id": "FR-GATE-002",
+        "machine_rule_ref": "industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-002",
+        "ntm_window": {
+          "anchor": "e4_first_public_at_date",
+          "duration": "half_open_[anchor_date,anchor_date_plus_12_calendar_months)",
+          "fact_available_at_lte_e4_first_public_at": true,
+          "presentation_currency_required": true,
+          "foreign_currency_requires_pit_fx_fact_or_assumption_translation_date_and_version": true,
+          "admissible_fx_material_missing": "ABSTAIN",
+          "silent_fx_conversion_or_basis_hash_drift": "BLOCKED"
+        },
+        "counterfactual_denominator": {
+          "formula": "recurring_operating_revenue-recurring_operating_cost-recurring_selling_expense-recurring_administrative_expense-recurring_research_expense-net_finance_cost-recurring_impairment_and_credit_losses+recurring_other_operating_income+recurring_investment_and_associate_income-normalized_income_tax-minority_interest_deduction",
+          "required_component_names": [
+            "recurring_operating_revenue",
+            "recurring_operating_cost",
+            "recurring_selling_expense",
+            "recurring_administrative_expense",
+            "recurring_research_expense",
+            "net_finance_cost",
+            "recurring_impairment_and_credit_losses",
+            "recurring_other_operating_income",
+            "recurring_investment_and_associate_income",
+            "normalized_income_tax",
+            "minority_interest_deduction"
+          ],
+          "signed_finance_cost_convention": "positive_cost_negative_income",
+          "bottom_up_company_or_segment_bridge_required": true,
+          "consensus_and_ttm_cross_check_only": true,
+          "event_effects_and_nonrecurring_items_removed": true,
+          "declared_graph_contains_event_or_double_counting": "BLOCKED",
+          "admissible_removal_amount_or_component_missing_or_conflicted": "ABSTAIN"
+        },
+        "denominator_track": {
+          "interval_propagation": "deterministic_interval_arithmetic_same_formula_no_cross_scenario_endpoint_cherry_pick",
+          "standard_track": "base>0_AND_downside>0_AND_interval.lower>0",
+          "fragile_profit_shadow_track": "complete_bridge_AND_any_of_base_downside_interval.lower_lte_0",
+          "fixed_cross_company_near_zero_amount_or_margin_threshold_forbidden": true,
+          "fragile_materiality_ratio": null,
+          "unreliable_interval": "ABSTAIN"
+        },
+        "event_incremental_bridge": {
+          "profit_formula": "ntm_recognizable_revenue-incremental_operating_cost-incremental_operating_expense-incremental_tax_and_surcharges-incremental_financing_cost-minority_interest_deduction",
+          "fcf_formula": "ntm_incremental_parent_normalized_profit+incremental_non_cash_items-incremental_working_capital-incremental_capex",
+          "industry_asp_historical_gpm_or_llm_substitution_forbidden": true
+        },
+        "profit_materiality": {
+          "formula": "base.ntm_incremental_parent_normalized_profit/base_counterfactual_profit",
+          "standard_track_only": true,
+          "threshold": "0.10",
+          "comparison": "gte",
+          "threshold_scope": "stage4_synthetic_research_validation_only"
+        },
+        "gate_2_mapping": {
+          "governance_hash_unit_time_double_count_or_calculation_graph_failure": "BLOCKED",
+          "required_economic_bridge_interval_or_scenario_missing_or_conflicted": "ABSTAIN",
+          "complete_base_materiality_lt_0_10": "REJECT",
+          "only_upside_materiality_gte_0_10": "REJECT",
+          "fragile_profit_shadow_track": "SHADOW_ONLY",
+          "base_materiality_gte_0_10_but_base_incremental_fcf_lte_0": "SHADOW_ONLY",
+          "pass_requires": [
+            "standard_track",
+            "base_materiality_gte_0_10",
+            "base_incremental_parent_normalized_profit_gt_0",
+            "base_incremental_fcf_gt_0",
+            "four_scenarios_complete"
+          ]
+        }
+      },
+      "FR-GATE-003": {
+        "requirement_id": "FR-GATE-003",
+        "machine_rule_ref": "industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-003",
+        "required_scenarios": {
+          "base": "most_likely_public_evidence_path_not_mechanical_midpoint",
+          "downside": "plausible_adverse_path_with_supported_worse_load_bearing_driver",
+          "upside": "supported_positive_path_with_observable_trigger",
+          "stress": "extreme_but_realistic_capital_loss_or_liquidity_path"
+        },
+        "driver_schema": [
+          "binding_amount_or_quantity",
+          "net_unit_price",
+          "delivery_and_acceptance_timing",
+          "ntm_revenue_recognition",
+          "incremental_operating_cost_or_margin",
+          "incremental_operating_expense",
+          "tax_and_surcharges",
+          "financing_cost",
+          "minority_interest",
+          "non_cash_items",
+          "working_capital",
+          "capex",
+          "cash_collection_timing",
+          "fx_rate_and_translation_basis"
+        ],
+        "driver_policy": {
+          "source_fact_assumption_as_of_value_unit_interval_trigger_and_falsifier_required": true,
+          "unchanged_drivers_explicitly_inherit_base": true,
+          "changed_drivers_require_causal_reason": true,
+          "independent_best_value_cherry_pick_forbidden": true,
+          "hidden_defaults_forbidden": true
+        },
+        "consistency": {
+          "same_formula_window_currency_unit_tax_minority_and_ownership_basis": true,
+          "upside_profit_gte_base_gte_downside": true,
+          "upside_base_downside_profit_ordering_failure": "BLOCKED",
+          "stress_severity_metrics": [
+            "incremental_profit_lower",
+            "incremental_fcf_lower",
+            "peak_external_financing_need_higher",
+            "minimum_liquidity_headroom_lower",
+            "irreversible_writeoff_higher"
+          ],
+          "stress_requires_at_least_one_strictly_worse_declared_metric": true,
+          "unexplained_apparently_better_stress_metric": "ABSTAIN"
+        },
+        "unbound_growth_policy": {
+          "repeat_purchase_expansion_share_gain_or_price_increase": "upside_only_until_new_binding_public_fact",
+          "new_binding_fact_requires_new_scenario_set_version": true
+        },
+        "probability_policy": {
+          "optional": true,
+          "if_any_then_all_base_downside_upside": true,
+          "exact_sum": "1.000000",
+          "calibration_sample_method_version_and_as_of_required": true,
+          "stress_probability": null,
+          "weighted_value_is_display_only": true,
+          "may_not_change_gate_2": true
+        },
+        "failure_policy": {
+          "missing_scenario_driver_or_gate2_output": "ABSTAIN",
+          "future_nonpublic_unknown_source_cross_run_implicit_hidden_default_or_hash_unit_dependency_failure": "BLOCKED"
+        },
+        "version_policy": {
+          "append_only": true,
+          "scenario_set_id_version_hash_and_supersedes_required": true,
+          "fixed_input_rule_migration_replay_required": true,
+          "replay_hash_mismatch_or_unreplayable": "BLOCKED",
+          "writeback_to_kb": false,
+          "authorizes_positions": false,
+          "authorizes_orders": false
+        }
+      }
+    },
+    "approved_source_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A3四道门利润分母与情景规则包_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "f2eef18f1a4c85fbc0587893beee4aea25f1d373a7f3482f23c0fbf08e08ea4c"
+      },
+      "approved_sections": ["9"],
+      "approved_items": 20
+    },
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A3四道门利润分母与情景批准记录_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "bfe9f9fb11ade5f6c1ebebf86f1366b34e3ab3ccc352b987002ebf7afbffea12"
+      },
+      "traceability_only": true
+    },
+    "runtime_must_not_parse_markdown": true
+  }
+}

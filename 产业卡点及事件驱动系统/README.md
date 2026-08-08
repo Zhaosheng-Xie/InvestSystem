@@ -1,9 +1,9 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3 deferred；Stage 4/4A-1 与 4A-2 completed、4A-3 draft_for_owner_approval；完整策略未实现`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3 deferred；Stage 4/4A-1—4A-3 completed、4A-4 next；完整策略未实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-03`
 市场范围：`中国 A 股`
-当前已授权边界：`Stage 2B、Stage 4/4A-1 与 Stage 4/4A-2 均仅在各自精确批准范围内进行匿名合成 research validation；4A-3 无批准、无 evaluator、无 runtime capability；完整 Stage 4 capability 关闭；不授权 backtest/paper/shadow/live、仓位或订单`
+当前已授权边界：`Stage 2B 与 Stage 4/4A-1—4A-3 均仅在各自精确批准范围内进行匿名合成 research validation；4A-3 只完成 Gate 1—2；Gate 3—4 与完整 Stage 4 capability 关闭；不授权 backtest/paper/shadow/live、仓位或订单`
 
 ## 系统一句话定义
 
@@ -37,7 +37,7 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-03`
 10. [Stage 2 进入 Stage 4 复核](../docs/validation/stage2-reentry-audit.md)
     - 状态：`passed_for_stage4_entry`；Stage 3 按 owner 决定延后，不冒充完成。
 11. [Stage 4 完整 P0 规则清单与批准包 v0.1](03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md)
-    - 状态：`partially_approved`；4A-1 与 4A-2 共八项已批准并实现，其余六项仍为 `draft`，完整 Stage 4 runtime capability 关闭。
+    - 状态：`partially_approved`；4A-1—4A-3 共十一项已批准并实现，其余三项仍为 `draft`，完整 Stage 4 runtime capability 关闭。
 12. [Stage 4 / 4A-1 上下文与产业映射规则包 v0.1](03_规则与规格/Stage4_4A1上下文与产业映射规则包_v0.1.md)
     - 状态：`approved / implemented for stage4_synthetic_research_validation only`；覆盖上下文准入、历史防回填、产业卡点和公司受益晋级。
 13. [Stage 4 / 4A-2 事件状态与审计分层规则包 v0.1](03_规则与规格/Stage4_4A2事件状态与审计分层规则包_v0.1.md)
@@ -51,7 +51,7 @@ Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提�
 
 Stage 2B 已完成并验收：精确批准规则、可信 fixture registry、E3.5/E4、四道门、利润桥、预期/估值、四类正常结果、pre-engine `BLOCKED`、DecisionRecord 和 replay 均有实现与测试。合成 `TRADE_READY` 与 `SHADOW_ONLY` 始终保持 `FLAT`、零权重、无 approver 且无仓位/订单权限；本批准不得推导为任何真实仓位或其他运行模式授权。
 
-Stage 4 已在 `codex/stage4` 完成 4A-1 与 4A-2：专属 `stage4_synthetic_research_validation` scope、14 项 P0 inventory、两个批次各自的精确 machine bundle/approval 和失败关闭 evaluator 已建立。4A-3 已形成 20 项待批准决策、精确 draft machine proposal 和零权限治理校验，但通用 registry 仍为空，也没有 Gate evaluator。Stage 2B capability、真实 KB 输入、backtest/paper/shadow/live、仓位和订单均不能进入该切片，剩余六条未批准规则不能获得完整 capability。
+Stage 4 已在 `codex/stage4` 完成 4A-1—4A-3：专属 `stage4_synthetic_research_validation` scope、14 项 P0 inventory、三个批次各自的精确 machine bundle/approval 和失败关闭 evaluator 已建立；原 draft proposal 均作为不可变谱系保留。4A-3 只输出 Gate 1—2 的局部研究结果，Gate 3—4 固定未评估。Stage 2B capability、真实 KB 输入、backtest/paper/shadow/live、仓位和订单均不能进入该切片，剩余三条未批准规则不能获得完整 capability。
 
 ## 推荐研发顺序
 

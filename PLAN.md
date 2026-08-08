@@ -1,12 +1,12 @@
-# InvestSystem 实施计划（v1.7）
+# InvestSystem 实施计划（v1.8）
 
-> 计划版本：`v1.7`
-> 基线日期：`2026-08-03`
+> 计划版本：`v1.8`
+> 基线日期：`2026-08-08`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
 > 当前阶段：`Stage 0—2B / completed；Stage 3 / deferred by owner；Stage 4 / in_progress`
-> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage4_4a1_context_industry_synthetic_validation_implemented / stage4_4a2_event_semantics_synthetic_validation_implemented / stage4_4a3_gate_profit_scenarios_draft_proposal_pinned / stage4_rule_governance_in_progress / real_transport_not_implemented / full_strategy_not_implemented`
-> 当前授权边界：`Stage 2B、Stage 4/4A-1 与 Stage 4/4A-2 均仅允许各自精确批准范围内的匿名合成 research validation；4A-3 只有待 owner 批准的规格和 draft machine proposal，没有 runtime capability 或 evaluator；完整 Stage 4 capability 仍关闭；不授权 backtest、paper、shadow、live、仓位或订单`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage4_4a1_context_industry_synthetic_validation_implemented / stage4_4a2_event_semantics_synthetic_validation_implemented / stage4_4a3_gate_profit_scenarios_synthetic_validation_implemented / stage4_rule_governance_in_progress / real_transport_not_implemented / full_strategy_not_implemented`
+> 当前授权边界：`Stage 2B 与 Stage 4/4A-1—4A-3 均只允许各自精确批准范围内的匿名合成 research validation；4A-3 只完成 Gate 1—2，Gate 3—4 和完整 Stage 4 capability 仍关闭；不授权 backtest、paper、shadow、live、仓位或订单`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
 
@@ -45,7 +45,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | Stage 2A | `completed` | KB 公共契约离线验证、投影、消费持久化与准入内核 | 已于 `2026-08-02` 验收关闭 |
 | Stage 2B | `completed` | 最小 approved 策略规格与合成纵向切片 | 已于 `2026-08-02` 通过正式验收；只授权 synthetic research validation |
 | Stage 3 | `deferred` | KB 正式 Release 传输与策略端到端验收 | owner 于 `2026-08-03` 决定本轮跳过；完成门保留，Stage 6 前仍须补齐 |
-| Stage 4 | `in_progress` | 完整产业事件规格与策略引擎 | `4A-1` 与 `4A-2` 共八项已批准并实现；`4A-3` 三项已形成精确 draft，等待 owner 批准；`4A-4` 三项仍未批准 |
+| Stage 4 | `in_progress` | 完整产业事件规格与策略引擎 | `4A-1—4A-3` 共十一项已批准并实现；`4A-4` 三项仍未批准 |
 | Stage 5 | `not_started` | 成交、组合与确定性回放 | Stage 4 |
 | Stage 6 | `not_started` | 历史验证与冠军挑战 | Stage 3、Stage 5 |
 | Stage 7 | `not_started` | 前瞻 shadow/paper 运行 | Stage 6、人工批准 |
@@ -600,15 +600,15 @@ InvestSystem 合成策略 fixture
 
 ### Stage 4：产业事件完整规格与确定性引擎
 
-状态：`in_progress / 4A-1 completed；4A-2 completed；4A-3 draft_for_owner_approval`
+状态：`in_progress / 4A-1 completed；4A-2 completed；4A-3 completed；4A-4 next`
 
-启动记录：Stage 2 进入门经[复核](docs/validation/stage2-reentry-audit.md)通过，owner 决定跳过 Stage 3 并启动 Stage 4。首个治理切片建立[完整 P0 规则清单与批准包](产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md)、14 项机器 inventory、专属 `stage4_synthetic_research_validation` scope 和 fail-closed capability 完成门。owner 已分别批准 4A-1 和 4A-2；两个批次均以独立、精确的 machine bundle/approval record 获取局部合成验证 capability。通用 registry 继续为空，调用方必须显式注入与目标批次完全匹配的批准。
+启动记录：Stage 2 进入门经[复核](docs/validation/stage2-reentry-audit.md)通过，owner 决定跳过 Stage 3 并启动 Stage 4。首个治理切片建立[完整 P0 规则清单与批准包](产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md)、14 项机器 inventory、专属 `stage4_synthetic_research_validation` scope 和 fail-closed capability 完成门。owner 已分别批准 4A-1、4A-2 和 4A-3；三个批次均以独立、精确的 machine bundle/approval record 获取局部合成验证 capability。通用 registry 继续为空，调用方必须显式注入与目标批次完全匹配的批准。
 
 4A-1 完成记录：`FR-CTX-001/002` 与 `FR-IND-001/002` 已固定为无分数补偿的四态证据规则和 `BLOCKED/REJECT/ABSTAIN/PASS` 结果；实现历史半开区间、禁止后见回填、十域上下文准入、五项产业卡点 AND 及 `technical_link → qualified_supplier → profit_beneficiary` 晋级。
 
-4A-2 完成记录：owner 明确批准[事件状态与审计分层规则包](产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层规则包_v0.1.md)第 8 节全部 16 项，且仅授权 `stage4_synthetic_research_validation`。原 draft 规格和 draft machine proposal 原样保留；新的[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层批准记录_v0.1.md)、approved machine bundle 和 approval record 精确绑定该批准。`FR-EVT-001—004` evaluator 已实现 E0—E7/E3.5 事实护照、E4 六项严格 AND、主体/PIT 关联、Fact/Assumption/Derived/Judgment/Audit 分层、重复观测、显式降级和规则迁移重放，并为每项建立正例、反例、边界与 `ABSTAIN` 测试。完整 inventory 当前八项 `approved`、六项 `draft`，因此完整 Stage 4 capability 继续失败关闭。
+4A-2 完成记录：owner 明确批准[事件状态与审计分层规则包](产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层规则包_v0.1.md)第 8 节全部 16 项，且仅授权 `stage4_synthetic_research_validation`。原 draft 规格和 draft machine proposal 原样保留；新的[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage4_4A2事件状态与审计分层批准记录_v0.1.md)、approved machine bundle 和 approval record 精确绑定该批准。`FR-EVT-001—004` evaluator 已实现 E0—E7/E3.5 事实护照、E4 六项严格 AND、主体/PIT 关联、Fact/Assumption/Derived/Judgment/Audit 分层、重复观测、显式降级和规则迁移重放，并为每项建立正例、反例、边界与 `ABSTAIN` 测试。
 
-4A-3 draft 记录：[四道门、利润分母与情景规则包](产业卡点及事件驱动系统/03_规则与规格/Stage4_4A3四道门利润分母与情景规则包_v0.1.md)已把 `FR-GATE-001—003` 收敛为 20 项 owner 决策，覆盖 Gate 1—2 固定短路、反事实 NTM 标准化归母利润、`standard/fragile` 分母、事件增量利润/FCF 和 base/downside/upside/stress 四情景。对应 machine proposal 固定 `declared_status=draft`、20 项全部 `pending`、空运行模式、零 runtime/交易权限，并精确绑定已批准 4A-1/4A-2 bundle。代码只验证提案 identity/hash/依赖/零权限，不提供 Gate evaluator。`0.10` 仍是待 owner 批准的 Stage 4 合成研究假设，不从 Stage 2B 自动继承。
+4A-3 完成记录：owner 明确批准[四道门、利润分母与情景规则包](产业卡点及事件驱动系统/03_规则与规格/Stage4_4A3四道门利润分母与情景规则包_v0.1.md)第 9 节全部 20 项，且仅授权 `stage4_synthetic_research_validation`。原 draft 规格和 proposal 保持不变；新的[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage4_4A3四道门利润分母与情景批准记录_v0.1.md)、approved machine bundle 和 approval record 精确绑定批准。`FR-GATE-001—003` evaluator 实现 Gate 1 固定短路、PIT 反事实 NTM 利润分母、确定性区间传播、`standard/fragile` 轨、事件增量利润/FCF、base/downside/upside/stress 四情景及可选概率校准；Gate 3—4 固定 `not_evaluated`，全部交易权限恒为 false。完整 inventory 当前十一项 `approved`、三项 `draft`，所以完整 Stage 4 capability 仍失败关闭。
 
 目标：在规则逐项获批后，实现产业卡点及事件驱动系统的完整确定性规则引擎。
 
@@ -872,7 +872,7 @@ InvestSystem 合成策略 fixture
 | Stage 2A | [正式验收记录](docs/validation/stage2a-acceptance.md)；实现提交 `01073c1`；固定 KB 提交 `58ed9c5` 的 20 个官方文件；provider canonical/catalog/reference fixture；Receipt/Observation/Retention Closure；SQLite v3 run-scoped confirmation、默认拒绝 authority、全闭包原子 pin、legacy quarantine、失败矩阵；GitHub Actions run `30744115034` 的 Windows/Linux 作业均成功 | 无；真实 HTTP/export/current-status transport 与 authority 启用属于 Stage 3，不是 Stage 2A 缺口 | `completed` |
 | Stage 2B | [正式验收记录](docs/validation/stage2b-acceptance.md)；实现提交 `d5d6003`；22 项 approved 规则；24+10 fixture registry；E3.5/E4、四道门、利润桥/预期/估值、Manifest、DecisionRecord、Replay；`617 passed, 4 skipped`；两轮审阅 `P0=0 / P1=0` | 无；真实 transport、完整策略和 durable DecisionRecord 持久化不在本阶段完成范围 | `completed` |
 | Stage 3 | Stage 2A、Stage 2B 已完成；KB Stage 6A 已正式完成；`rel_10e257ad87734d7bb5cadc55e7b444e7` 可用于正式传输核验，但只有 `market-daily` 样本 | owner 本轮跳过；锁定的公共 HTTP/export/current-status 契约、认证 transport、原始响应留存/重核、正式 Context Pack、两类 smoke、离线 replay 与非阻塞 E2E 均仍缺 | `deferred` |
-| Stage 4 | [Stage 2 进入复核](docs/validation/stage2-reentry-audit.md)；[4A 开发状态](docs/validation/stage4-development-status.md)；14 项 P0 inventory、专属 scope 与 fail-closed readiness boundary；4A-1 和 4A-2 共八项 approved 规则及 evaluator；4A-3 三项精确 draft 规格、machine proposal 和零 authority 治理测试 | 4A-3 的 20 项 owner 批准与 evaluator/四类业务测试；4A-4 三项规则批准；完整 14 项 machine bundle、完整策略引擎与 replay 验收 | `in_progress` |
+| Stage 4 | [Stage 2 进入复核](docs/validation/stage2-reentry-audit.md)；[4A 开发状态](docs/validation/stage4-development-status.md)；14 项 P0 inventory、专属 scope 与 fail-closed readiness boundary；4A-1—4A-3 共十一项 approved 规则、精确 capability、evaluator 与四类测试 | 4A-4 三项规则批准；完整 14 项 machine bundle、完整策略引擎与 replay 验收 | `in_progress` |
 | Stage 5 | 需求级边界 | 市场规则、组合、执行、P&L 回放 | `not_started` |
 | Stage 6 | 研究方法要求 | 预注册、正式历史验证和报告 | `not_started` |
 | Stage 7 | 运行目录占位 | 冻结版本、前瞻台账、paper 对账 | `not_started` |
@@ -886,7 +886,7 @@ InvestSystem 合成策略 fixture
 Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为：
 
 1. Stage 3 按 owner 决定保持 `deferred`；未来恢复时仍须固定公共 HTTP/export/current-status 契约，先由认证 transport 核验现有正式 `market-daily` Release 并保留原始响应证据，再在正式 Context Pack 通过受支持发布面可用后完成策略 smoke。
-2. Stage 4 的 4A-1 与 4A-2 已完成；4A-3 的 `FR-GATE-001—003` 精确 draft 已形成。下一步等待 owner 明确批准或修改第 9 节全部 20 项后，再生成 approved bundle、approval record、局部 evaluator 和四类业务测试。不得把普通“继续”、Stage 2B 阈值或任何局部 capability 外推为 4A-3 批准。
+2. Stage 4 的 4A-1—4A-3 已完成。下一步形成并审阅 4A-4 的 `FR-GATE-004/005` 与 `FR-EXIT-001` 精确规则包；未获 owner 明确批准前不得实现其预期、估值、退出或完整决策语义。
 3. Stage 4 完成后进入 Stage 5，建设组合、成交、确定性回放和经批准的 durable 运行记录；该开发不等待 KB 部署。
 4. Stage 3 与 Stage 5 均完成后，才进入 Stage 6 正式历史验证。
 5. backtest、paper、shadow 或 live 均须到对应后续阶段另行批准；Stage 2B 完成不授予这些模式。
@@ -914,3 +914,4 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 | `v1.5` | 2026-08-03 | `active` | 按 owner 的“继续”形成 4A-2 精确待批准包：把 `FR-EVT-001—004` 收敛为 16 项业务决策，固定 E 状态护照、E4 public、主体/PIT 与四类审计分层的 draft machine proposal，并以 hash pin、空运行模式、无 approval record 和失败关闭测试证明其尚非 runtime 能力。等待 owner 逐项批准后才实现 evaluator；其余 10 项仍未批准，完整 Stage 4 和全部交易权限继续关闭。 |
 | `v1.6` | 2026-08-03 | `active` | 记录 owner 明确批准 4A-2 第 8 节全部 16 项且仅授权 `stage4_synthetic_research_validation`；保留原 draft 不变，新增精确 approved bundle/approval record，并实现 `FR-EVT-001—004` 的事件状态、E4、主体/PIT 与审计知识图 evaluator 及四类测试。Stage 4 inventory 当前八项 approved、六项 draft；下一步是 4A-3 精确提案与批准，完整 Stage 4 和全部交易权限继续关闭。 |
 | `v1.7` | 2026-08-03 | `active` | 形成 4A-3 精确待批准包：把 `FR-GATE-001—003` 收敛为 20 项决策，固定 Gate 1—2 短路、PIT 反事实 NTM 分母、`standard/fragile` 轨、事件利润/FCF 与四情景的一致性，绑定已批准 4A-1/4A-2 精确 bundle。draft machine proposal 仍为空运行模式、无 approval record/evaluator 和零交易权限；等待 owner 明确批准。 |
+| `v1.8` | 2026-08-08 | `active` | 记录 owner 批准 4A-3 第 9 节全部 20 项且仅授权 `stage4_synthetic_research_validation`；保留原 draft，新增精确批准记录、approved machine bundle/approval record，实现 Gate 1—2、反事实 NTM 利润区间、事件利润/FCF、四情景、概率/版本/PIT 防线和四类测试。inventory 为十一项 approved、三项 draft；Gate 3—4、完整 Stage 4 和全部交易权限继续关闭，下一步进入 4A-4 规则包。 |

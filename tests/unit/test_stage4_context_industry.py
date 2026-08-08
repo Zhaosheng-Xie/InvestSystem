@@ -482,7 +482,7 @@ def test_4a1_approved_items_do_not_issue_complete_stage4_capability(
         json.loads(inventory_path.read_text(encoding="utf-8"))
     )
 
-    assert len(inventory.unapproved_requirement_ids) == 6
+    assert len(inventory.unapproved_requirement_ids) == 3
     with pytest.raises(Stage4RuleReadinessError) as exc_info:
         inventory.require_complete()
     assert exc_info.value.code == "STAGE4_RULES_NOT_FULLY_APPROVED"
