@@ -466,13 +466,10 @@ def test_4a1_typed_rules_cannot_be_forged_without_registry_capability() -> None:
     assert exc_info.value.code == "STAGE4_4A1_RULE_ISSUER_INVALID"
 
 
-def test_4a1_approved_items_do_not_issue_complete_stage4_capability(
+def test_all_locally_approved_items_do_not_issue_complete_stage4_capability(
     repository_root: Path,
 ) -> None:
-    from invest_system.strategies.industrial_event import (
-        Stage4RuleReadinessError,
-        stage4_rule_inventory_from_json_value,
-    )
+    from invest_system.strategies.industrial_event import stage4_rule_inventory_from_json_value
 
     inventory_path = repository_root / (
         "产业卡点及事件驱动系统/03_规则与规格/机器制品/"
@@ -482,7 +479,17 @@ def test_4a1_approved_items_do_not_issue_complete_stage4_capability(
         json.loads(inventory_path.read_text(encoding="utf-8"))
     )
 
-    assert len(inventory.unapproved_requirement_ids) == 3
-    with pytest.raises(Stage4RuleReadinessError) as exc_info:
-        inventory.require_complete()
-    assert exc_info.value.code == "STAGE4_RULES_NOT_FULLY_APPROVED"
+    assert inventory.unapproved_requirement_ids == ()
+    inventory.require_complete()
+
+    integration_proposal = json.loads(
+        (
+            repository_root / "产业卡点及事件驱动系统/03_规则与规格/机器制品/"
+            "industrial_event_stage4_4b_complete_engine_integration_"
+            "v0.1.0-draft.rule-bundle.json"
+        ).read_text(encoding="utf-8")
+    )
+    boundary = integration_proposal["rules"]["authorization_boundary"]
+    assert integration_proposal["declared_status"] == "draft"
+    assert boundary["runtime_capability_issued"] is False
+    assert boundary["authorizes_complete_stage4_capability"] is False

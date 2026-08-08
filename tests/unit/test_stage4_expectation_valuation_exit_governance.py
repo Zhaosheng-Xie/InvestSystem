@@ -36,7 +36,7 @@ INVENTORY_PATH = Path(
     "产业卡点及事件驱动系统/03_规则与规格/机器制品/"
     "industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json"
 )
-EXPECTED_INVENTORY_SHA256 = "6ccef82fc77ca73135bdfbebceca196728d02e6491033425fe903e4d60267fc2"
+EXPECTED_INVENTORY_SHA256 = "fc07b10bb17d91b3447504fe7f5b2e346023fd98bb14da991e1a1dd85381bf53"
 
 
 def _document(repository_root: Path) -> RuleBundleDocument:
@@ -75,18 +75,22 @@ def test_4a4_draft_has_zero_runtime_or_trading_authority(repository_root: Path) 
     assert proposal.authorizes_orders is False
 
 
-def test_4a4_rules_remain_draft_in_stage4_inventory(repository_root: Path) -> None:
+def test_4a4_rules_are_approved_in_stage4_inventory(repository_root: Path) -> None:
     value = json.loads((repository_root / INVENTORY_PATH).read_text(encoding="utf-8"))
     inventory = stage4_rule_inventory_from_json_value(value)
     by_id = {item.requirement_id: item for item in inventory.items}
 
     assert canonical_sha256(value) == EXPECTED_INVENTORY_SHA256
-    assert inventory.unapproved_requirement_ids == STAGE4_4A4_REQUIREMENT_IDS
+    assert inventory.unapproved_requirement_ids == ()
     for requirement_id in STAGE4_4A4_REQUIREMENT_IDS:
         item = by_id[requirement_id]
-        assert item.status is RuleStatus.DRAFT
-        assert item.approval_id is None
-        assert item.machine_rule_ref is None
+        assert item.status is RuleStatus.APPROVED
+        assert item.approval_id == ("rule_approval_stage4_4a4_expectation_valuation_exit_v0_1_0")
+        assert item.machine_rule_ref is not None
+        assert item.positive_test_refs
+        assert item.negative_test_refs
+        assert item.boundary_test_refs
+        assert item.abstain_test_refs
 
 
 def test_4a4_draft_cannot_issue_capability_from_default_registry(
@@ -145,16 +149,22 @@ def test_4a4_cannot_self_declare_approved(repository_root: Path) -> None:
     assert exc_info.value.code == "STAGE4_4A4_DRAFT_STATUS_UNSUPPORTED"
 
 
-def test_4a4_draft_has_no_approval_record_or_business_evaluator(
+def test_4a4_draft_has_no_draft_approval_but_approved_version_is_separate(
     repository_root: Path,
 ) -> None:
     machine_directory = (repository_root / DRAFT_BUNDLE_PATH).parent
 
-    assert not list(machine_directory.glob("industrial_event_stage4_4a4*.approval.json"))
+    assert not (
+        machine_directory
+        / "industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0-draft.approval.json"
+    ).exists()
+    assert [
+        path.name for path in machine_directory.glob("industrial_event_stage4_4a4*.approval.json")
+    ] == ["industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0.approval.json"]
 
     from invest_system.strategies import industrial_event
 
-    assert not hasattr(industrial_event, "evaluate_stage4_expectation_valuation_exit")
+    assert hasattr(industrial_event, "evaluate_stage4_expectation_valuation_exit")
     assert not hasattr(industrial_event, "evaluate_complete_stage4")
 
 

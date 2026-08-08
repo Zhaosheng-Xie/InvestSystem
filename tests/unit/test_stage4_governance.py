@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import replace
 from datetime import UTC, datetime
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
@@ -30,6 +31,13 @@ from invest_system.strategies.industrial_event import (
 INVENTORY_PATH = Path(
     "产业卡点及事件驱动系统/03_规则与规格/机器制品/"
     "industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json"
+)
+COMPLETE_INTEGRATION_DRAFT_PATH = Path(
+    "产业卡点及事件驱动系统/03_规则与规格/机器制品/"
+    "industrial_event_stage4_4b_complete_engine_integration_v0.1.0-draft.rule-bundle.json"
+)
+COMPLETE_INTEGRATION_SPEC_PATH = Path(
+    "产业卡点及事件驱动系统/03_规则与规格/Stage4_4B完整引擎集成与合成验收规则包_v0.1.md"
 )
 
 
@@ -121,14 +129,14 @@ def _registry(
     return RuleApprovalRegistry((approval,))
 
 
-def test_checked_in_stage4_inventory_has_approved_4a1_through_4a3_and_three_unapproved_rules(
+def test_checked_in_stage4_inventory_has_all_four_batches_approved(
     repository_root: Path,
 ) -> None:
     value = json.loads((repository_root / INVENTORY_PATH).read_text(encoding="utf-8"))
     inventory = stage4_rule_inventory_from_json_value(value)
 
     assert inventory.to_json_value() == value
-    assert inventory.unapproved_requirement_ids == STAGE4_REQUIRED_RULE_IDS[11:]
+    assert inventory.unapproved_requirement_ids == ()
     assert inventory.approval_scope is RuleApprovalScope.STAGE4_SYNTHETIC_RESEARCH_VALIDATION
     assert inventory.authorizes_backtest is False
     assert inventory.authorizes_paper is False
@@ -155,12 +163,69 @@ def test_checked_in_stage4_inventory_has_approved_4a1_through_4a3_and_three_unap
         assert rule_item.approval_id == "rule_approval_stage4_4a3_gate_profit_scenarios_v0_1_0"
         assert rule_item.machine_rule_ref is not None
     for rule_item in inventory.items[11:]:
-        assert rule_item.status is RuleStatus.DRAFT
-        assert rule_item.approval_id is None
-        assert rule_item.machine_rule_ref is None
-    with pytest.raises(Stage4RuleReadinessError) as exc_info:
-        inventory.require_complete()
-    assert exc_info.value.code == "STAGE4_RULES_NOT_FULLY_APPROVED"
+        assert rule_item.status is RuleStatus.APPROVED
+        assert rule_item.approval_id == (
+            "rule_approval_stage4_4a4_expectation_valuation_exit_v0_1_0"
+        )
+        assert rule_item.machine_rule_ref is not None
+    inventory.require_complete()
+
+
+def test_complete_stage4_integration_remains_an_exact_zero_authority_draft(
+    repository_root: Path,
+) -> None:
+    value = json.loads(
+        (repository_root / COMPLETE_INTEGRATION_DRAFT_PATH).read_text(encoding="utf-8")
+    )
+    rules = value["rules"]
+    boundary = rules["authorization_boundary"]
+
+    assert value["declared_status"] == "draft"
+    assert boundary["allowed_run_modes"] == []
+    assert boundary["runtime_capability_issued"] is False
+    assert boundary["authorizes_complete_stage4_capability"] is False
+    assert all(
+        boundary[field_name] is False
+        for field_name in (
+            "authorizes_backtest",
+            "authorizes_paper",
+            "authorizes_shadow",
+            "authorizes_live",
+            "authorizes_positions",
+            "authorizes_portfolio",
+            "authorizes_execution",
+            "authorizes_pnl",
+            "authorizes_orders",
+        )
+    )
+    assert rules["complete_inventory_binding"]["canonical_hash"]["value"] == (
+        "fc07b10bb17d91b3447504fe7f5b2e346023fd98bb14da991e1a1dd85381bf53"
+    )
+    assert tuple(rules["complete_inventory_binding"]["requirement_ids"]) == (
+        STAGE4_REQUIRED_RULE_IDS
+    )
+    assert [item["batch_id"] for item in rules["approved_batch_bindings"]] == [
+        "4A-1",
+        "4A-2",
+        "4A-3",
+        "4A-4",
+    ]
+    assert [item["approval_item_id"] for item in rules["owner_approval_items"]] == [
+        f"4B-{index:02d}" for index in range(1, 17)
+    ]
+    assert {item["status"] for item in rules["owner_approval_items"]} == {"pending"}
+
+    specification = (repository_root / COMPLETE_INTEGRATION_SPEC_PATH).read_bytes()
+    assert sha256(specification).hexdigest() == rules["document_binding"]["hash"]["value"]
+    assert not (
+        repository_root / "src/invest_system/strategies/industrial_event/stage4_complete_engine.py"
+    ).exists()
+    assert not (
+        repository_root
+        / COMPLETE_INTEGRATION_DRAFT_PATH.with_name(
+            "industrial_event_stage4_4b_complete_engine_integration_v0.1.0.approval.json"
+        )
+    ).exists()
 
 
 def test_inventory_requires_exact_stage4_owned_requirement_set() -> None:

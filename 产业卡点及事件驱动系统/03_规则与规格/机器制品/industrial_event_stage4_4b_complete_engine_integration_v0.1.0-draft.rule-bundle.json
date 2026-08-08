@@ -1,0 +1,151 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage4_4b_complete_engine_integration",
+  "bundle_version": "0.1.0-draft",
+  "declared_status": "draft",
+  "rules": {
+    "authorization_boundary": {
+      "proposed_approval_scope": "stage4_synthetic_research_validation",
+      "allowed_run_modes": [],
+      "specification_validation_only": true,
+      "runtime_capability_issued": false,
+      "authorizes_complete_stage4_capability": false,
+      "synthetic_only": true,
+      "validation_only": true,
+      "not_a_published_release": true,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_positions": false,
+      "authorizes_portfolio": false,
+      "authorizes_execution": false,
+      "authorizes_pnl": false,
+      "authorizes_orders": false
+    },
+    "batch": {
+      "batch_id": "4B",
+      "owner_approval_required": true,
+      "approval_items_required": 16,
+      "approved_items": 0,
+      "implements_new_business_semantics": false
+    },
+    "complete_inventory_binding": {
+      "schema_version": "0.1.0-draft",
+      "canonical_hash": {
+        "algorithm": "sha256",
+        "value": "fc07b10bb17d91b3447504fe7f5b2e346023fd98bb14da991e1a1dd85381bf53"
+      },
+      "requirement_ids": [
+        "FR-CTX-001",
+        "FR-CTX-002",
+        "FR-IND-001",
+        "FR-IND-002",
+        "FR-EVT-001",
+        "FR-EVT-002",
+        "FR-EVT-003",
+        "FR-EVT-004",
+        "FR-GATE-001",
+        "FR-GATE-002",
+        "FR-GATE-003",
+        "FR-GATE-004",
+        "FR-GATE-005",
+        "FR-EXIT-001"
+      ]
+    },
+    "approved_batch_bindings": [
+      {
+        "batch_id": "4A-1",
+        "bundle_hash": "5224e8e6d600b8f613d6dfaf4dd486d6caafdcf5fe3d8d3db29af2f25462a32d",
+        "rules_hash": "2e16e87585bccc1df735e33feed4b72e3160d7bb1c415320bed31ee01c1d264a",
+        "approval_record_hash": "84d47caa4b8226dd4e9c4dee31645214938e7321e25e93f368bf1ecc167b5e1a"
+      },
+      {
+        "batch_id": "4A-2",
+        "bundle_hash": "9f9f5cf843347a1918a894be1151c0ef720bd6318daa1077657e97e9324d6560",
+        "rules_hash": "574dd4273c60081b099cf2c2427a2f264521f57ff16aa70b5ce1138ea9e8f228",
+        "approval_record_hash": "57c5147ab93c7cf547f72347a7550f951c9ca2ad0cf97cb0755148bfa0d155ac"
+      },
+      {
+        "batch_id": "4A-3",
+        "bundle_hash": "e6936e9c236fd7ed3a67eb8c5e01cb02d23d8fa20c8fcd7a3ccbd615220619b2",
+        "rules_hash": "146c8c497f529a0b7c675882522f4928877c96093449b5e0245fb6cfb71a05f0",
+        "approval_record_hash": "786944b9263a7571632dbc5a2c92dcb1deb1431f8946f113ee883495dac5281a"
+      },
+      {
+        "batch_id": "4A-4",
+        "bundle_hash": "6ad34d6534b646eb0eb4fcab73c9da13e0738af0d3ae0d296143a48129ee1762",
+        "rules_hash": "d1d2e03d78f0a78c63e073916da87f9177bb2e7151bd1d4d9ec959cd865545e2",
+        "approval_record_hash": "8b75674537a9b8939cd259e2efb5a46752282714f19b23e181d9509ae09b919e"
+      }
+    ],
+    "orchestration_proposal": {
+      "input_contract": "Stage4CompleteSyntheticCase",
+      "single_case_and_cutoff": true,
+      "caller_supplied_partial_results_forbidden": true,
+      "execution_order": [
+        "validate_exact_capabilities_and_input_identity",
+        "evaluate_4A-1_context_industry",
+        "evaluate_4A-2_event_semantics",
+        "evaluate_4A-3_gate1_scenarios_gate2",
+        "evaluate_4A-4_gate3_gate4",
+        "aggregate_4A-4_exit_independently",
+        "emit_complete_result_and_replay_hash"
+      ],
+      "gate_outcome_precedence": ["BLOCKED", "REJECT", "ABSTAIN", "PASS"],
+      "all_four_gates_pass_label": "TRADE_READY_research_only",
+      "shadow_only_is_not_runtime_authority": true,
+      "exit_failure_does_not_rewrite_gate_results": true,
+      "unassessed_rules_must_be_explicit_not_evaluated": true,
+      "runtime_markdown_parsing_forbidden": true
+    },
+    "deterministic_replay_proposal": {
+      "canonical_input_hash_required": true,
+      "local_result_hashes_required": true,
+      "complete_replay_hash_required": true,
+      "rule_or_material_input_change_must_change_hash": true,
+      "runtime_noise_excluded": true
+    },
+    "synthetic_acceptance_proposal": {
+      "required_classes": [
+        "positive",
+        "negative",
+        "boundary",
+        "abstain",
+        "tamper_and_identity",
+        "deterministic_replay",
+        "local_evaluator_regression"
+      ],
+      "all_fourteen_requirements_traceable": true,
+      "real_kb_release_forbidden": true,
+      "real_market_position_account_or_order_state_forbidden": true
+    },
+    "owner_approval_items": [
+      {"approval_item_id": "4B-01", "status": "pending"},
+      {"approval_item_id": "4B-02", "status": "pending"},
+      {"approval_item_id": "4B-03", "status": "pending"},
+      {"approval_item_id": "4B-04", "status": "pending"},
+      {"approval_item_id": "4B-05", "status": "pending"},
+      {"approval_item_id": "4B-06", "status": "pending"},
+      {"approval_item_id": "4B-07", "status": "pending"},
+      {"approval_item_id": "4B-08", "status": "pending"},
+      {"approval_item_id": "4B-09", "status": "pending"},
+      {"approval_item_id": "4B-10", "status": "pending"},
+      {"approval_item_id": "4B-11", "status": "pending"},
+      {"approval_item_id": "4B-12", "status": "pending"},
+      {"approval_item_id": "4B-13", "status": "pending"},
+      {"approval_item_id": "4B-14", "status": "pending"},
+      {"approval_item_id": "4B-15", "status": "pending"},
+      {"approval_item_id": "4B-16", "status": "pending"}
+    ],
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4B完整引擎集成与合成验收规则包_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "d5c1ab50d76ea5d9444adcc92da24313b5ce5b51080c2e9258a5484a9417ca8d"
+      },
+      "traceability_only": true
+    }
+  }
+}

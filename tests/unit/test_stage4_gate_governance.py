@@ -35,7 +35,7 @@ INVENTORY_PATH = Path(
     "产业卡点及事件驱动系统/03_规则与规格/机器制品/"
     "industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json"
 )
-EXPECTED_INVENTORY_SHA256 = "6ccef82fc77ca73135bdfbebceca196728d02e6491033425fe903e4d60267fc2"
+EXPECTED_INVENTORY_SHA256 = "fc07b10bb17d91b3447504fe7f5b2e346023fd98bb14da991e1a1dd85381bf53"
 
 
 def _document(repository_root: Path) -> RuleBundleDocument:
@@ -80,7 +80,7 @@ def test_approved_4a3_rules_are_tracked_without_full_stage4_capability(
     by_id = {item.requirement_id: item for item in inventory.items}
 
     assert canonical_sha256(value) == EXPECTED_INVENTORY_SHA256
-    assert len(inventory.unapproved_requirement_ids) == 3
+    assert inventory.unapproved_requirement_ids == ()
     for requirement_id in STAGE4_4A3_REQUIREMENT_IDS:
         item = by_id[requirement_id]
         assert item.status is RuleStatus.APPROVED

@@ -337,7 +337,14 @@ def test_checked_in_stage4_rule_inventory_validates_but_grants_no_authority(
     inventory = stage4_rule_inventory_from_json_value(value)
 
     assert inventory.to_json_value() == value
-    assert inventory.unapproved_requirement_ids
+    assert inventory.unapproved_requirement_ids == ()
+    inventory.require_complete()
+    assert inventory.authorizes_backtest is False
+    assert inventory.authorizes_paper is False
+    assert inventory.authorizes_shadow is False
+    assert inventory.authorizes_live is False
+    assert inventory.authorizes_positions is False
+    assert inventory.authorizes_orders is False
 
 
 def test_rule_approval_scope_schema_matches_authoritative_model(

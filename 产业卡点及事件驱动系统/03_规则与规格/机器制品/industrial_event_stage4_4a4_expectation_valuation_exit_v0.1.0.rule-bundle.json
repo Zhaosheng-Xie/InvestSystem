@@ -1,0 +1,467 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage4_4a4_expectation_valuation_exit",
+  "bundle_version": "0.1.0",
+  "declared_status": "approved",
+  "rules": {
+    "authorization_boundary": {
+      "approval_scope": "stage4_synthetic_research_validation",
+      "allowed_run_modes": [
+        "research"
+      ],
+      "synthetic_only": true,
+      "validation_only": true,
+      "not_a_published_release": true,
+      "not_strategy_evidence": true,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_positions": false,
+      "authorizes_orders": false
+    },
+    "batch": {
+      "batch_id": "4A-4",
+      "requirement_ids": [
+        "FR-GATE-004",
+        "FR-GATE-005",
+        "FR-EXIT-001"
+      ],
+      "owner_approval_items": 24,
+      "owner_approval_items_approved": 24,
+      "partial_stage4_approval_only": true,
+      "authorizes_complete_stage4_capability": false
+    },
+    "approved_upstream_dependencies": {
+      "4A-1": {
+        "bundle_id": "industrial_event_stage4_4a1_context_industry",
+        "bundle_version": "0.1.0",
+        "bundle_hash": "5224e8e6d600b8f613d6dfaf4dd486d6caafdcf5fe3d8d3db29af2f25462a32d"
+      },
+      "4A-2": {
+        "bundle_id": "industrial_event_stage4_4a2_event_semantics",
+        "bundle_version": "0.1.0",
+        "bundle_hash": "9f9f5cf843347a1918a894be1151c0ef720bd6318daa1077657e97e9324d6560"
+      },
+      "4A-3": {
+        "bundle_id": "industrial_event_stage4_4a3_gate_profit_scenarios",
+        "bundle_version": "0.1.0",
+        "bundle_hash": "e6936e9c236fd7ed3a67eb8c5e01cb02d23d8fa20c8fcd7a3ccbd615220619b2"
+      }
+    },
+    "shared_semantics": {
+      "decimal_arithmetic": "fixed_point_only",
+      "gate_order": [
+        "gate_1",
+        "gate_2",
+        "gate_3",
+        "gate_4"
+      ],
+      "gate_evaluation_states": [
+        "evaluated",
+        "not_evaluated"
+      ],
+      "gate_outcomes": [
+        "PASS",
+        "REJECT",
+        "ABSTAIN",
+        "BLOCKED",
+        "SHADOW_ONLY"
+      ],
+      "exit_evaluation_states": [
+        "evaluated",
+        "not_evaluated",
+        "blocked"
+      ],
+      "exit_dispositions": [
+        "HOLD",
+        "REUNDERWRITE_REQUIRED",
+        "EXIT_CANDIDATE",
+        "NOT_APPLICABLE"
+      ],
+      "missing_is_not_false": true,
+      "score_compensation_forbidden": true,
+      "append_only_versioning_required": true,
+      "runtime_must_not_consume_real_market_or_position_state": true,
+      "synthetic_trade_ready_and_exit_candidate_are_research_labels_only": true
+    },
+    "rule_modules": {
+      "FR-GATE-004": {
+        "requirement_id": "FR-GATE-004",
+        "machine_rule_ref": "industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-004",
+        "expectation_snapshot": {
+          "required_fields": [
+            "snapshot_id",
+            "version",
+            "hash",
+            "supersedes",
+            "as_of",
+            "knowledge_cutoff",
+            "event_identity",
+            "counterparty_scope",
+            "product_scope",
+            "currency",
+            "unit",
+            "anticipated_event_state",
+            "binding_minimum_amount_or_quantity_interval",
+            "effective_period",
+            "delivery_and_acceptance_timing",
+            "material_conditions",
+            "cancellation_and_return_floor",
+            "expected_ntm_incremental_parent_profit_interval",
+            "expected_ntm_incremental_fcf_interval",
+            "source_fact_ids",
+            "assumption_ids",
+            "derived_ids",
+            "coverage_by_material_dimension"
+          ],
+          "anticipated_event_states": [
+            "explicitly_absent",
+            "directional_nonbinding",
+            "binding_expected"
+          ],
+          "as_of_strictly_before_e4_first_public_at": true,
+          "not_found_is_not_explicitly_absent": true,
+          "explicitly_absent_requires_public_refutation_zero_minimum_or_nonbinding_fact": true,
+          "append_only_identity_and_supersedes_required": true
+        },
+        "comparability": {
+          "required_equal_bases": [
+            "event_identity",
+            "legal_entity_and_attribution",
+            "counterparty_scope",
+            "product_or_service_scope",
+            "currency",
+            "unit",
+            "effective_period",
+            "obligation_basis",
+            "profit_and_fcf_basis",
+            "material_conditions"
+          ],
+          "nonmaterial_difference_requires_reason_and_audit_ref": true,
+          "system_may_not_ignore_difference": true,
+          "incomparable": "unknown"
+        },
+        "pre_e4_market_context": {
+          "required_fields": [
+            "context_id",
+            "version",
+            "hash",
+            "window_start_at",
+            "window_end_at",
+            "security_price_observation_ref",
+            "fully_diluted_shares_ref",
+            "benchmark_id",
+            "benchmark_return",
+            "security_return",
+            "relative_return",
+            "security_turnover",
+            "reference_turnover",
+            "relative_turnover",
+            "source_refs",
+            "method_id",
+            "method_version",
+            "method_hash"
+          ],
+          "window_end_strictly_before_e4_first_public_at": true,
+          "post_e4_backfill_forbidden": true,
+          "abnormal_return_or_volume_threshold": null,
+          "price_or_volume_alone_may_not_classify_or_pass": true,
+          "missing_admissible_context": "unknown"
+        },
+        "market_pricing_state": {
+          "pre_e4_market_cap_formula": "pre_e4_price*fully_diluted_shares",
+          "implied_event_value_lower_formula": "pre_e4_market_cap-base_business_equity_value_interval.upper",
+          "implied_event_value_upper_formula": "pre_e4_market_cap-base_business_equity_value_interval.lower",
+          "negative_implied_event_value_must_not_be_clamped": true,
+          "fully_reflected": "implied_event_value_interval.lower>=event_value_interval.upper",
+          "not_fully_reflected": "implied_event_value_interval.upper<event_value_interval.lower",
+          "indeterminate": "intervals_overlap_or_any_interval_unreliable_or_bases_incomparable",
+          "single_point_or_favorable_endpoint_selection_forbidden": true,
+          "shared_valuation_precomputation_does_not_evaluate_gate_4": true
+        },
+        "public_economic_expectation_class": {
+          "unexpected": "prior_explicitly_absent_AND_e4_positive_binding_minimum_AND_base_incremental_profit.lower>0_AND_base_incremental_fcf.lower>0",
+          "partially_priced": "same_event_previously_expected_AND_e4_base_profit.lower>prior_expected_profit.upper_AND_e4_base_fcf.lower>=prior_expected_fcf.lower_AND_e4_base_fcf.upper>=prior_expected_fcf.upper",
+          "fully_priced": "e4_base_profit.upper<=prior_expected_profit.upper_OR_actual_economics_below_prior",
+          "unknown": "interval_overlap_cross_dimension_incomparability_missing_conflict_directional_only_or_noncomparable_event",
+          "narrative_customer_term_or_amount_novelty_requires_binding_minimum_profit_or_fcf_change": true
+        },
+        "gate_3_mapping": {
+          "governance_pit_hash_unit_dependency_future_information_failure": "BLOCKED",
+          "market_fully_reflected": "REJECT:fully_priced",
+          "economic_fully_priced": "REJECT",
+          "economic_unknown_or_market_indeterminate_or_admissible_missing_conflict": "ABSTAIN",
+          "pass_requires": [
+            "economic_class_unexpected_or_partially_priced",
+            "market_pricing_state_not_fully_reflected"
+          ],
+          "post_e4_price_may_not_reclassify_pre_e4_expectation": true,
+          "post_e4_synthetic_price_must_be_reassessed_in_gate_4": true,
+          "heat_report_count_probability_or_score_compensation_forbidden": true
+        }
+      },
+      "FR-GATE-005": {
+        "requirement_id": "FR-GATE-005",
+        "machine_rule_ref": "industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-GATE-005",
+        "base_business_valuation": {
+          "must_exclude_target_e4_and_derivatives": true,
+          "required_fields": [
+            "valuation_id",
+            "version",
+            "hash",
+            "supersedes",
+            "as_of",
+            "knowledge_cutoff",
+            "method_id",
+            "method_version",
+            "method_hash",
+            "normalized_earnings_or_cash_flow_inputs",
+            "explicit_multiple_or_discount_inputs",
+            "base_business_equity_value_interval",
+            "currency",
+            "unit",
+            "tax",
+            "minority",
+            "ownership",
+            "fully_diluted_shares",
+            "fact_ids",
+            "assumption_ids",
+            "derived_ids",
+            "sensitivity_and_falsifiers"
+          ],
+          "permitted_method_families": [
+            "normalized_earnings_multiple",
+            "finite_dcf",
+            "epv"
+          ],
+          "one_primary_method_per_scenario_set": true,
+          "cross_check_method_display_only": true,
+          "industry_default_multiple_discount_growth_net_debt_or_shares_forbidden": true,
+          "unreliable_interval": "ABSTAIN",
+          "favorable_method_selection_e4_double_count_or_basis_hash_drift": "BLOCKED"
+        },
+        "event_finite_life_valuation": {
+          "present_value_formula": "sum(period_incremental_fcf_t/discount_factor_t)",
+          "scenario_equity_value_formula": "base_business_equity_value+event_finite_life_incremental_fcf_present_value",
+          "same_period_currency_discount_date_and_formula_across_scenarios": true,
+          "period_fcf_must_derive_from_approved_4a3_bridge": true,
+          "beyond_ntm_requires_public_binding_minimum_amount_term_and_conditions": true,
+          "single_event_terminal_or_perpetual_value_forbidden": true,
+          "unbound_repeat_purchase_expansion_share_gain_or_price_increase": "upside_only",
+          "new_binding_fact_requires_new_append_only_valuation_version": true,
+          "discount_factor_time_fraction_and_curve_explicit_positive_same_currency": true,
+          "heat_unfounded_multiple_expansion_or_probability_weighted_gate_compensation_forbidden": true
+        },
+        "anti_double_count_and_interval_consistency": {
+          "component_fields": [
+            "valuation_component_id",
+            "period",
+            "legal_entity",
+            "product_or_contract_scope",
+            "base_business_or_event_incremental"
+          ],
+          "one_economic_cash_flow_one_component_assignment": true,
+          "base_event_new_business_or_cross_scenario_duplicate_assignment_forbidden": true,
+          "upside_endpoints_gte_base_corresponding_endpoints": true,
+          "base_endpoints_gte_downside_corresponding_endpoints": true,
+          "downside_endpoints_gte_stress_corresponding_endpoints": true,
+          "every_interval_lower_lte_upper": true,
+          "duplicate_reversed_interval_or_calculation_cycle": "BLOCKED",
+          "admissible_component_missing_or_conflicted": "ABSTAIN"
+        },
+        "synthetic_research_price_assumption": {
+          "required_fields": [
+            "price_assumption_id",
+            "version",
+            "hash",
+            "as_of",
+            "knowledge_cutoff",
+            "price",
+            "fully_diluted_shares",
+            "explicit_cost_rate",
+            "explicit_slippage_rate",
+            "currency",
+            "unit",
+            "synthetic",
+            "not_first_actual_executable_price",
+            "source_fixture_ref"
+          ],
+          "price_and_shares_strictly_positive": true,
+          "cost_and_slippage_nonnegative": true,
+          "synthetic_must_be_true": true,
+          "not_first_actual_executable_price_must_be_true": true,
+          "real_input_hidden_friction_or_actual_executable_claim": "BLOCKED",
+          "stage5_must_rediscover_actual_price_and_rerun_gate_3_and_gate_4": true
+        },
+        "gate_4_calculation": {
+          "synthetic_market_cap_formula": "synthetic_price*fully_diluted_shares",
+          "explicit_friction_rate_formula": "explicit_cost_rate+explicit_slippage_rate",
+          "gate4_base_value": "base_scenario_equity_value_interval.lower",
+          "gate4_downside_value": "downside_scenario_equity_value_interval.lower",
+          "net_base_remaining_return_formula": "gate4_base_value/synthetic_market_cap-1-explicit_friction_rate",
+          "net_downside_return_formula": "gate4_downside_value/synthetic_market_cap-1-explicit_friction_rate",
+          "downside_loss_formula": "abs(min(0,net_downside_return))",
+          "reward_to_downside_formula": "net_base_remaining_return/downside_loss",
+          "minimum_net_base_remaining_return": "0.15",
+          "minimum_reward_to_downside": "2.00",
+          "comparison": "gte",
+          "downside_loss_must_be_gt_zero": true,
+          "downside_loss_zero": "ABSTAIN",
+          "only_upside_reaches_threshold": "REJECT",
+          "probability_weighted_value_may_not_compensate": true,
+          "threshold_scope": "stage4_synthetic_research_validation_only"
+        },
+        "proof_window": {
+          "minimum_observable_falsifiers": 2,
+          "next_public_verification_event_required": true,
+          "maximum_trading_days": 120,
+          "comparison": "lte",
+          "missing_or_unreliable": "ABSTAIN",
+          "exceeds_maximum": "REJECT",
+          "trading_day_count_must_be_explicit_versioned_external_input": true
+        },
+        "gate_4_mapping": {
+          "governance_hash_unit_calculation_graph_synthetic_identity_or_dependency_failure": "BLOCKED",
+          "admissible_valuation_price_friction_downside_falsifier_or_verification_missing_conflict": "ABSTAIN",
+          "threshold_or_proof_window_failure_or_only_upside_pass": "REJECT",
+          "all_gate4_conditions_satisfied": "PASS",
+          "four_gate_pass_synthetic_decision_label": "TRADE_READY",
+          "validation_only": true,
+          "position_state": "FLAT",
+          "target_approved_actual_weight": null,
+          "approver": null,
+          "order_intent": null,
+          "execution_basis": "synthetic_research_assumption_not_actual_executable",
+          "local_4a4_approval_does_not_issue_full_stage4_capability": true
+        }
+      },
+      "FR-EXIT-001": {
+        "requirement_id": "FR-EXIT-001",
+        "machine_rule_ref": "industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0.rule-bundle.json#/rules/rule_modules/FR-EXIT-001",
+        "strategy_judgment_contract": {
+          "permitted_inputs": [
+            "no_position",
+            "SyntheticHoldingSnapshot"
+          ],
+          "synthetic_holding_required_fields": [
+            "snapshot_id",
+            "version",
+            "hash",
+            "established_rule_ref",
+            "established_valuation_ref",
+            "registered_risk_budget_ref",
+            "as_of",
+            "validation_only"
+          ],
+          "no_position_disposition": "NOT_APPLICABLE",
+          "sell_order_target_weight_fill_or_pnl_forbidden": true,
+          "stage5_ledger_read_or_write_forbidden": true
+        },
+        "evidence_exit": {
+          "confirmed_triggers": [
+            "contract_cancelled_or_binding_minimum_zeroed",
+            "material_acceptance_failed",
+            "delay_beyond_profit_bridge_or_proof_window_deadline",
+            "price_quantity_or_binding_amount_reduced_so_gate2_or_gate4_no_longer_passes",
+            "customer_credit_deterioration_invalidates_collection_bad_debt_or_performance_assumption",
+            "load_bearing_profit_bridge_relation_falsified"
+          ],
+          "trigger_registration_fields": [
+            "trigger_id",
+            "observable_condition",
+            "evaluation_window",
+            "source_type",
+            "profit_or_valuation_component_refs",
+            "confirmed_refuted_unknown_rule"
+          ],
+          "post_hoc_free_text_trigger_forbidden": true,
+          "any_confirmed": "EXIT_CANDIDATE",
+          "admissible_missing_or_conflict": "unknown"
+        },
+        "risk_budget_exit": {
+          "formula": "current_actual_loss_amount>=registered_account_loss_budget_amount",
+          "equality_triggers": true,
+          "same_currency_holding_and_immutable_snapshot_required": true,
+          "registered_budget_is_original_and_may_not_expand_after_loss": true,
+          "stage4_compares_external_synthetic_snapshot_only": true,
+          "stage4_budget_generation_loss_estimation_ledger_or_order_forbidden": true,
+          "applicable_missing_or_conflict": "ABSTAIN",
+          "no_position": "not_applicable"
+        },
+        "time_exit": {
+          "formula": "elapsed_trading_days>=120_AND_preregistered_verification_event_not_confirmed",
+          "equality_triggers": true,
+          "elapsed_trading_days_requires_external_calendar_id_version_hash": true,
+          "stage4_calendar_maintenance_or_counting_forbidden": true,
+          "verification_event_id_condition_and_deadline_immutable": true,
+          "post_hoc_catalyst_swap_forbidden": true,
+          "new_thesis_requires_old_version_end_and_new_underwriting": true
+        },
+        "value_exit": {
+          "current_base_value_for_exit": "current_base_scenario_equity_value_interval.lower",
+          "formula": "current_market_cap>=current_base_value_for_exit_AND_no_approved_e5_or_e6_evidence_increases_current_value",
+          "equality_triggers": true,
+          "price_increase_may_not_raise_value": true,
+          "price_decrease_may_not_lower_fact_threshold": true,
+          "approved_e5_or_e6_new_evidence_requires_reunderwrite_before_value_change": true,
+          "unknown_or_conflicted_new_evidence_may_not_cancel_confirmed_value_exit": true
+        },
+        "reunderwriting": {
+          "question": "would_current_pit_evidence_and_current_price_pass_the_applicable_gates_if_flat",
+          "free_text_yes_or_no_override_forbidden": true,
+          "current_pit_evidence_current_versioned_valuation_and_explicit_price_required": true,
+          "new_value_relevant_evidence_without_completed_rerun": "REUNDERWRITE_REQUIRED",
+          "append_only_profit_bridge_valuation_and_decision_version_required": true
+        },
+        "aggregation": {
+          "priority": [
+            "structural_hard_failure_BLOCKED_null",
+            "any_trusted_confirmed_EXIT_CANDIDATE",
+            "any_applicable_unknown_ABSTAIN_null",
+            "new_evidence_pending_REUNDERWRITE_REQUIRED",
+            "all_applicable_refuted_and_reunderwriting_passes_HOLD",
+            "no_position_NOT_APPLICABLE"
+          ],
+          "unknown_trigger_may_not_cancel_confirmed_trigger": true,
+          "blocked_record_may_not_claim_executed_exit": true
+        },
+        "version_and_authority": {
+          "append_only": true,
+          "id_version_hash_and_supersedes_required": true,
+          "fixed_input_rule_migration_replay_required": true,
+          "replay_hash_changes_with_rule_fact_price_valuation_window_or_holding_change": true,
+          "historical_decision_may_not_be_silently_rewritten": true,
+          "writeback_to_kb": false,
+          "authorizes_backtest": false,
+          "authorizes_paper": false,
+          "authorizes_shadow": false,
+          "authorizes_live": false,
+          "authorizes_positions": false,
+          "authorizes_orders": false
+        }
+      }
+    },
+    "approved_source_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A4市场预期估值与退出规则包_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "7f2f1238ff5d9bae1c7a96b212b87dd56a04ac8a9013715e46d2b6cc9d864a62"
+      },
+      "approved_sections": [
+        "10"
+      ],
+      "approved_items": 24
+    },
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage4_4A4市场预期估值与退出批准记录_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "c793c776a309b418f9ec7de760a26899ce609b3541d71e957ad56cdbfa0d0724"
+      },
+      "traceability_only": true
+    },
+    "runtime_must_not_parse_markdown": true
+  }
+}

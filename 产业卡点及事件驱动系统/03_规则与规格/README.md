@@ -8,17 +8,19 @@ Stage 2B 已完成并通过[正式验收](../../docs/validation/stage2b-acceptan
 - [机器 rule bundle](机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.rule-bundle.json)：完整确定语义和授权边界的 canonical 运行制品；Markdown binding 只供追踪，运行时不得解析 Markdown。
 - [RuleApprovalRecord](机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.approval.json)：精确绑定 strategy、bundle、version、hash、批准人、时间、scope 和来源记录。
 
-Stage 4 已完成前三个执行批次；完整 capability 仍关闭：
+Stage 4 已完成四个局部执行批次；完整 capability 仍关闭：
 
-- [Stage 4 完整 P0 规则清单与批准包 v0.1](Stage4完整P0规则清单与批准包_v0.1.md)：`partially_approved / 4A-1 through 4A-3 completed`；
+- [Stage 4 完整 P0 规则清单与批准包 v0.1](Stage4完整P0规则清单与批准包_v0.1.md)：`all_14_p0_rules_approved / complete capability not issued`；
 - [4A-1 上下文与产业映射规则包](Stage4_4A1上下文与产业映射规则包_v0.1.md)：四条规则已绑定精确 [machine bundle](机器制品/industrial_event_stage4_4a1_context_industry_v0.1.0.rule-bundle.json) 和 [approval record](机器制品/industrial_event_stage4_4a1_context_industry_v0.1.0.approval.json)；
 - [4A-2 事件状态与审计分层规则包](Stage4_4A2事件状态与审计分层规则包_v0.1.md)及 [draft machine proposal](机器制品/industrial_event_stage4_4a2_event_semantics_v0.1.0-draft.rule-bundle.json)：作为获批前的不可变提案保留；
 - [4A-2 批准记录](Stage4_4A2事件状态与审计分层批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage4_4a2_event_semantics_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage4_4a2_event_semantics_v0.1.0.approval.json)：精确固定全部 16 项批准及零交易权限；
 - [4A-3 四道门、利润分母与情景规则包](Stage4_4A3四道门利润分母与情景规则包_v0.1.md)及 [draft machine proposal](机器制品/industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0-draft.rule-bundle.json)：作为获批前的不可变提案保留；
 - [4A-3 批准记录](Stage4_4A3四道门利润分母与情景批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage4_4a3_gate_profit_scenarios_v0.1.0.approval.json)：精确固定全部 20 项批准、4A-1/4A-2 上游身份和零交易权限；
-- [4A-4 市场预期、估值与退出规则包](Stage4_4A4市场预期估值与退出规则包_v0.1.md)及 [draft machine proposal](机器制品/industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0-draft.rule-bundle.json)：二十四项全部 `pending`，只允许结构/hash/上游依赖/零权限治理校验；没有 approval record、业务 evaluator 或 runtime capability；
-- [Stage 4 P0 machine inventory](机器制品/industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json)：14 项完整清单，前十一项 `approved`，其余三项 `draft`；
-- `stage4_synthetic_research_validation` 是独立 scope，Stage 2B capability 不能复用；4A-1—4A-3 只允许各自的局部合成验证，均不能签发完整 Stage 4 runtime capability。
+- [4A-4 市场预期、估值与退出规则包](Stage4_4A4市场预期估值与退出规则包_v0.1.md)及 [draft machine proposal](机器制品/industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0-draft.rule-bundle.json)：作为获批前的不可变提案保留；
+- [4A-4 批准记录](Stage4_4A4市场预期估值与退出批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage4_4a4_expectation_valuation_exit_v0.1.0.approval.json)：精确固定全部 24 项批准、4A-1—4A-3 上游身份和零交易权限；
+- [Stage 4 P0 machine inventory](机器制品/industrial_event_stage4_p0_rule_inventory_v0.1.0-draft.json)：14 项完整清单现均为 `approved`；
+- [4B 完整引擎集成与合成验收规则包](Stage4_4B完整引擎集成与合成验收规则包_v0.1.md)及 [draft machine proposal](机器制品/industrial_event_stage4_4b_complete_engine_integration_v0.1.0-draft.rule-bundle.json)：16 项全部 `pending`，只固定完整编排与验收合同；没有 approval record、完整编排器或完整 capability；
+- `stage4_synthetic_research_validation` 是独立 scope，Stage 2B capability 不能复用；4A-1—4A-4 只允许各自的局部合成验证，均不能签发完整 Stage 4 runtime capability。
 
 1. `KB输入引用与失败关闭规格_v0.1.md`
 2. `StrategyRunManifest与决策审计规格_v0.1.md`

@@ -1,6 +1,6 @@
 # 实现
 
-需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架、Stage 2A 的离线 Release 消费与准入内核，以及 Stage 2B 的最小合成策略纵向切片均已通过根级正式验收。owner 于 `2026-08-08` 恢复 Stage 3：3A 已完成 HTTP Client、immutable export 和官方 fixture 离线验收；3B 已重固定 KB `aab36fe` 公共传输契约，并通过独立 KB RC 进程与只读凭据的本机 HTTP 兼容验收，但尚无真实 run authority。Stage 4 的 4A-1 已实现上下文、历史语义、产业卡点与受益公司映射；4A-2 已实现事件状态、E4、主体/PIT 与审计分层；4A-3 已实现 Gate 1—2、利润分母和四情景的局部研究 evaluator。当前批准不授权 backtest、paper、shadow、live、仓位或订单。
+需求与边界已于 Stage 0 冻结；Stage 1 的工程与机器契约骨架、Stage 2A 的离线 Release 消费与准入内核，以及 Stage 2B 的最小合成策略纵向切片均已通过根级正式验收。owner 于 `2026-08-08` 恢复 Stage 3：3A 已完成 HTTP Client、immutable export 和官方 fixture 离线验收；3B 已重固定 KB `aab36fe` 公共传输契约，并通过独立 KB RC 进程与只读凭据的本机 HTTP 兼容验收，但尚无真实 run authority。Stage 4 的 4A-1 已实现上下文、历史语义、产业卡点与受益公司映射；4A-2 已实现事件状态、E4、主体/PIT 与审计分层；4A-3 已实现 Gate 1—2、利润分母和四情景；4A-4 已实现 Gate 3—4、估值和退出的局部研究 evaluator。当前批准不授权完整编排器、backtest、paper、shadow、live、仓位或订单。
 
 Stage 2B 的实际交付、验证锚点和未授权范围见根级 [Stage 2B 正式验收记录](../../docs/validation/stage2b-acceptance.md)。
 
@@ -8,7 +8,7 @@ Stage 3A 的固定字节、Client/export 能力、失败语义和后续联调门
 
 Stage 3B 的精确重固定、独立进程 HTTP 输出和脱敏验证证据见根级 [Stage 3B 正式跨仓只读 HTTP 验收](../../docs/validation/stage3b-http-acceptance.md)。该验收只关闭本机 RC transport compatibility；不代替 tcloud、Context Pack 策略 smoke、CAS/Observation 持久化或 run-scoped authority。
 
-Stage 4 当前交付见[开发状态](../../docs/validation/stage4-development-status.md)：完整 14 项 P0 inventory 中前十一项已批准。`stage4_context_industry.py`、`stage4_event_semantics.py` 与 `stage4_gate_profit_scenarios.py` 分别只接受精确 4A-1/4A-2/4A-3 approved bundle/approval capability；draft governance 模块继续固定原提案谱系。4A-3 evaluator 按 Gate 1 → 情景验证 → Gate 2 执行，Gate 3—4 固定 `not_evaluated`，不产生完整决策或交易权限。其余三项仍为 `draft`；只有 14 项全部批准、四类测试齐全、inventory hash 与完整 machine bundle 精确绑定且零交易权限未漂移时，`require_stage4_rule_capability` 才可能签发完整 capability。
+Stage 4 当前交付见[开发状态](../../docs/validation/stage4-development-status.md)：完整 14 项 P0 inventory 均已批准。`stage4_context_industry.py`、`stage4_event_semantics.py`、`stage4_gate_profit_scenarios.py` 与 `stage4_expectation_valuation_exit.py` 分别只接受精确 4A-1/4A-2/4A-3/4A-4 approved bundle/approval capability；draft governance 模块继续固定原提案谱系。4A-4 evaluator 只消费精确 4A-3 上游结果，评估 Gate 3 → Gate 4 并独立汇总退出，始终不产生真实决策或交易权限。14 项全 approved 只是完整 capability 的必要条件；4B 的完整输入、编排、统一结论和 replay 合同尚待 owner 批准，`require_stage4_rule_capability` 目前没有可接受的完整 approved bundle/registry 记录。
 
 Stage 2B runner 只能从精确 canonical [machine rule bundle](../03_规则与规格/机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.rule-bundle.json) 与对应 [RuleApprovalRecord](../03_规则与规格/机器制品/industrial_event_minimum_order_contract_slice_v0.1.0.approval.json) 获取 capability；Markdown 只供审阅与追踪，运行时不得解析。strategy/bundle/version/hash/scope、SyntheticValidationInput flags、四类输入 hash、fixture registry pin 或 `run_mode=research` 任一不匹配都必须在 evaluator 前失败关闭。`SHADOW_ONLY` 是合成结果标签，不构成 shadow 运行授权。
 
