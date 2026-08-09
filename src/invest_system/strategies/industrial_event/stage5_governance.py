@@ -63,6 +63,7 @@ class Stage5RuleCompatibilityError(ValueError):
 
 
 _STAGE5_MARKET_RULE_ISSUER = object()
+_STAGE5_PORTFOLIO_LEDGER_RULE_ISSUER = object()
 
 
 @dataclass(frozen=True, slots=True, init=False)
@@ -168,6 +169,177 @@ class ApprovedStage5MarketExecutionRules:
             bundle_hash=capability.bundle_hash,
             approval_record_hash=capability.approval_record_hash,
             approval_id=capability.approval_id,
+        )
+
+
+@dataclass(frozen=True, slots=True, init=False)
+class ApprovedStage5PortfolioLedgerRules:
+    """Unforgeable typed view of the approved Stage 5C portfolio semantics."""
+
+    bundle_hash: HashDigest
+    approval_record_hash: HashDigest
+    approval_id: str
+    normal_planned_loss_rate: Decimal
+    defensive_planned_loss_rate: Decimal
+    crisis_new_risk_rate: Decimal
+    initial_weight_cap: Decimal
+    company_weight_cap: Decimal
+    cluster_planned_loss_cap: Decimal
+    cluster_market_value_cap: Decimal
+    aggregate_planned_loss_cap: Decimal
+    drawdown_caution: Decimal
+    drawdown_derisk_only: Decimal
+    drawdown_stopped: Decimal
+    drawdown_survival_breach: Decimal
+    event_order: tuple[str, ...]
+    ledger_event_types: tuple[str, ...]
+
+    def __init__(
+        self,
+        *,
+        _issuer: object,
+        bundle_hash: HashDigest,
+        approval_record_hash: HashDigest,
+        approval_id: str,
+        ledger_event_types: tuple[str, ...],
+    ) -> None:
+        if _issuer is not _STAGE5_PORTFOLIO_LEDGER_RULE_ISSUER:
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_PORTFOLIO_LEDGER_RULE_ISSUER_INVALID",
+                "Stage 5C typed rules require the exact approved Stage 5A capability",
+            )
+        object.__setattr__(self, "bundle_hash", bundle_hash)
+        object.__setattr__(self, "approval_record_hash", approval_record_hash)
+        object.__setattr__(self, "approval_id", approval_id)
+        object.__setattr__(self, "normal_planned_loss_rate", Decimal("0.005"))
+        object.__setattr__(self, "defensive_planned_loss_rate", Decimal("0.0025"))
+        object.__setattr__(self, "crisis_new_risk_rate", Decimal("0"))
+        object.__setattr__(self, "initial_weight_cap", Decimal("0.05"))
+        object.__setattr__(self, "company_weight_cap", Decimal("0.10"))
+        object.__setattr__(self, "cluster_planned_loss_cap", Decimal("0.015"))
+        object.__setattr__(self, "cluster_market_value_cap", Decimal("0.20"))
+        object.__setattr__(self, "aggregate_planned_loss_cap", Decimal("0.04"))
+        object.__setattr__(self, "drawdown_caution", Decimal("0.08"))
+        object.__setattr__(self, "drawdown_derisk_only", Decimal("0.12"))
+        object.__setattr__(self, "drawdown_stopped", Decimal("0.15"))
+        object.__setattr__(self, "drawdown_survival_breach", Decimal("0.20"))
+        object.__setattr__(
+            self,
+            "event_order",
+            ("effective_at", "event_type_priority", "ledger_event_id"),
+        )
+        object.__setattr__(self, "ledger_event_types", ledger_event_types)
+
+    @classmethod
+    def from_approved_bundle(
+        cls,
+        document: RuleBundleDocument,
+        capability: ApprovedRuleCapability,
+    ) -> ApprovedStage5PortfolioLedgerRules:
+        """Bind the exact approved bundle to executable Stage 5C constants."""
+
+        if capability.bundle_hash != document.bundle_hash():
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_CAPABILITY_BUNDLE_MISMATCH",
+                "capability and Stage 5A bundle identities differ",
+            )
+        if capability.approval_scope is not STAGE5_APPROVAL_SCOPE:
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_APPROVAL_SCOPE_MISMATCH",
+                "only Stage 5 synthetic execution validation is approved",
+            )
+        if (
+            document.bundle_hash().value != STAGE5_5A_RULE_BUNDLE_SHA256
+            or canonical_sha256(document.rules) != STAGE5_5A_RULES_SHA256
+            or capability.approval_id != STAGE5_5A_RULE_APPROVAL_ID
+            or capability.approval_record_hash.value != STAGE5_5A_RULE_APPROVAL_RECORD_SHA256
+        ):
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_PORTFOLIO_LEDGER_IDENTITY_UNSUPPORTED",
+                "Stage 5C requires the exact owner-approved Stage 5A identities",
+            )
+        modules = _mapping(document.rules.get("rule_modules"), field_name="rule_modules")
+        portfolio = _mapping(
+            modules.get("portfolio_and_risk"),
+            field_name="portfolio_and_risk",
+        )
+        limits = _mapping(portfolio.get("limits"), field_name="portfolio_and_risk.limits")
+        drawdown = _mapping(
+            portfolio.get("drawdown"),
+            field_name="portfolio_and_risk.drawdown",
+        )
+        ledger = _mapping(
+            modules.get("ledger_corporate_actions_and_pnl"),
+            field_name="ledger_corporate_actions_and_pnl",
+        )
+        journal = _mapping(ledger.get("journal"), field_name="ledger.journal")
+        settlement = _mapping(
+            ledger.get("settlement_and_availability"),
+            field_name="ledger.settlement_and_availability",
+        )
+        lots = _mapping(ledger.get("lots"), field_name="ledger.lots")
+        derived = _mapping(ledger.get("derived_state"), field_name="ledger.derived_state")
+        event_types = tuple(journal.get("event_types", ()))
+        expected_event_types = (
+            "OPENING_BALANCE",
+            "CASH_RESERVATION",
+            "CASH_RELEASE",
+            "SYNTHETIC_ORDER_ACCEPTED",
+            "SYNTHETIC_ORDER_CANCELLED",
+            "TRADE_FILL",
+            "FEE",
+            "TAX",
+            "TRADE_SETTLEMENT",
+            "SECURITY_AVAILABILITY",
+            "CASH_DIVIDEND",
+            "SHARE_DISTRIBUTION",
+            "SPLIT_OR_CONSOLIDATION",
+            "RIGHTS_OR_ALLOTMENT",
+            "DELISTING_OR_CASH_OUT",
+            "MARK_TO_MARKET",
+            "EXTERNAL_CASH_FLOW",
+            "REVERSAL",
+            "REPLACEMENT",
+        )
+        if (
+            portfolio.get("stress_loss_rate_formula")
+            != "max(abs(min(0,stress_scenario_return)),0.10)"
+            or portfolio.get("initial_target_value_formula")
+            != "min(account_nav*planned_account_loss_rate/stress_loss_rate,account_nav*0.05,liquidity_capacity_value,company_remaining_cap,every_risk_cluster_remaining_cap,aggregate_open_risk_remaining_value,available_cash_after_cost_reserve)"
+            or limits.get("normal_planned_account_loss_rate") != "0.005"
+            or limits.get("defensive_planned_account_loss_rate") != "0.0025"
+            or limits.get("crisis_new_risk_rate") != "0"
+            or limits.get("initial_e4_weight_cap") != "0.05"
+            or limits.get("single_company_total_weight_cap") != "0.10"
+            or limits.get("risk_cluster_planned_loss_cap") != "0.015"
+            or limits.get("risk_cluster_market_value_cap") != "0.20"
+            or limits.get("aggregate_open_planned_loss_cap") != "0.04"
+            or limits.get("comparison") != "lte"
+            or tuple(portfolio.get("market_regime_states", ())) != ("NORMAL", "DEFENSIVE", "CRISIS")
+            or drawdown.get("equality_enters_stricter_band") is not True
+            or journal.get("append_only") is not True
+            or journal.get("double_entry") is not True
+            or journal.get("direct_balance_mutation") != "forbidden"
+            or tuple(journal.get("sort_order", ()))
+            != ("effective_at", "event_type_priority", "ledger_event_id")
+            or event_types != expected_event_types
+            or settlement.get("trade_settlement_sellability_and_cash_availability_separate")
+            is not True
+            or settlement.get("cash_reserve_covers_price_and_worst_applicable_cost") is not True
+            or lots.get("method") != "FIFO"
+            or derived.get("actual_quantity_cash_cost_sellable_and_nav_derived_from_journal")
+            is not True
+        ):
+            raise Stage5RuleCompatibilityError(
+                "STAGE5_PORTFOLIO_LEDGER_MACHINE_SEMANTICS_UNSUPPORTED",
+                "approved Stage 5C portfolio or ledger semantics differ from this slice",
+            )
+        return cls(
+            _issuer=_STAGE5_PORTFOLIO_LEDGER_RULE_ISSUER,
+            bundle_hash=capability.bundle_hash,
+            approval_record_hash=capability.approval_record_hash,
+            approval_id=capability.approval_id,
+            ledger_event_types=event_types,
         )
 
 

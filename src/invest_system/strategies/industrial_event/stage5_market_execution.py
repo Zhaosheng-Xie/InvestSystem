@@ -32,6 +32,7 @@ from .stage4_expectation_valuation_exit import (
     VersionedArtifactIdentity,
 )
 from .stage4_gate_profit_scenarios import DecimalInterval
+from .stage5_decimal import with_stage5_decimal_context
 from .stage5_governance import (
     STAGE5_APPROVAL_SCOPE,
     STAGE5_STRATEGY_ID,
@@ -589,6 +590,155 @@ class SyntheticApprovalFixture(CanonicalModel):
 
 
 @dataclass(frozen=True, slots=True)
+class Stage5SubmissionReductionConstraint(CanonicalModel):
+    """Content-addressed, reduction-only limits issued by the Stage 5C engine.
+
+    The market executor does not interpret portfolio semantics.  It only applies
+    these already-computed ceilings to each executable quote before creating a
+    synthetic order or fill.
+    """
+
+    identity: VersionedArtifactIdentity
+    case_id: str
+    strategy_id: str
+    security_id: str
+    account_fixture_id: str
+    action_intent: Stage5ActionIntent
+    as_of: datetime
+    effective_approved_quantity: int
+    maximum_quantity: int
+    maximum_gross_notional: str | None
+    maximum_cash_outflow: str | None
+    maximum_transaction_cost_reserve: str | None
+    maximum_sellable_quantity: int | None
+    candidate_hash: HashDigest
+    candidate_session_id: str | None
+    candidate_observation_id: str | None
+    candidate_at: datetime | None
+    candidate_market_rule_hash: HashDigest | None
+    candidate_cost_schedule_hash: HashDigest | None
+    candidate_impact_curve_hash: HashDigest | None
+    target_hash: HashDigest
+    portfolio_approval_hash: HashDigest
+    market_approval_hash: HashDigest
+    source_account_snapshot_hash: HashDigest
+    source_initial_ledger_hash: HashDigest
+    source_risk_cluster_hash: HashDigest
+    source_market_regime_hash: HashDigest
+    expected_ledger_head_hash: HashDigest
+    reason_codes: tuple[str, ...]
+    synthetic: bool = True
+    validation_only: bool = True
+    may_only_reduce: bool = True
+
+    def __post_init__(self) -> None:
+        _require_identity(self.identity)
+        for name in ("case_id", "strategy_id", "security_id", "account_fixture_id"):
+            _require_id(name, getattr(self, name))
+        if not isinstance(self.action_intent, Stage5ActionIntent):
+            raise TypeError("action_intent must be Stage5ActionIntent")
+        object.__setattr__(self, "as_of", normalize_utc(self.as_of, field_name="as_of"))
+        if (
+            isinstance(self.effective_approved_quantity, bool)
+            or not isinstance(self.effective_approved_quantity, int)
+            or self.effective_approved_quantity < 0
+        ):
+            raise ValueError("effective_approved_quantity must be non-negative")
+        if (
+            isinstance(self.maximum_quantity, bool)
+            or not isinstance(self.maximum_quantity, int)
+            or self.maximum_quantity < 0
+        ):
+            raise ValueError("maximum_quantity must be a non-negative integer")
+        if self.maximum_quantity > self.effective_approved_quantity:
+            raise ValueError("maximum_quantity cannot exceed effective approval")
+        for name in ("candidate_session_id", "candidate_observation_id"):
+            value = getattr(self, name)
+            if value is not None:
+                _require_id(name, value)
+        if self.candidate_at is not None:
+            object.__setattr__(
+                self,
+                "candidate_at",
+                normalize_utc(self.candidate_at, field_name="candidate_at"),
+            )
+        side = _side(self.action_intent)
+        if side is TradeSide.BUY:
+            if (
+                self.maximum_gross_notional is None
+                or self.maximum_cash_outflow is None
+                or self.maximum_transaction_cost_reserve is None
+                or self.maximum_sellable_quantity is not None
+            ):
+                raise ValueError(
+                    "buy constraints require gross-notional, cash-outflow and cost-reserve caps"
+                )
+            _non_negative_decimal("maximum_gross_notional", self.maximum_gross_notional)
+            _non_negative_decimal("maximum_cash_outflow", self.maximum_cash_outflow)
+            _non_negative_decimal(
+                "maximum_transaction_cost_reserve",
+                self.maximum_transaction_cost_reserve,
+            )
+        elif (
+            self.maximum_gross_notional is None
+            or self.maximum_cash_outflow is not None
+            or self.maximum_transaction_cost_reserve is not None
+            or self.maximum_sellable_quantity is None
+        ):
+            raise ValueError(
+                "sell constraints require gross-notional and sellable-quantity caps only"
+            )
+        elif (
+            isinstance(self.maximum_sellable_quantity, bool)
+            or not isinstance(self.maximum_sellable_quantity, int)
+            or self.maximum_sellable_quantity < 0
+        ):
+            raise ValueError("maximum_sellable_quantity must be a non-negative integer")
+        else:
+            _non_negative_decimal("maximum_gross_notional", self.maximum_gross_notional)
+        for name in (
+            "candidate_hash",
+            "target_hash",
+            "portfolio_approval_hash",
+            "market_approval_hash",
+            "source_account_snapshot_hash",
+            "source_initial_ledger_hash",
+            "source_risk_cluster_hash",
+            "source_market_regime_hash",
+            "expected_ledger_head_hash",
+        ):
+            if not isinstance(getattr(self, name), HashDigest):
+                raise TypeError(f"{name} must be HashDigest")
+        for name in (
+            "candidate_market_rule_hash",
+            "candidate_cost_schedule_hash",
+            "candidate_impact_curve_hash",
+        ):
+            value = getattr(self, name)
+            if value is not None and not isinstance(value, HashDigest):
+                raise TypeError(f"{name} must be HashDigest or None")
+        candidate_parts = (
+            self.candidate_session_id,
+            self.candidate_observation_id,
+            self.candidate_at,
+            self.candidate_market_rule_hash,
+            self.candidate_cost_schedule_hash,
+            self.candidate_impact_curve_hash,
+        )
+        if any(value is None for value in candidate_parts) and any(
+            value is not None for value in candidate_parts
+        ):
+            raise ValueError("candidate binding fields must be either complete or all None")
+        object.__setattr__(
+            self,
+            "reason_codes",
+            _require_texts("reason_codes", self.reason_codes),
+        )
+        if not self.synthetic or not self.validation_only or not self.may_only_reduce:
+            raise ValueError("submission constraints must be synthetic reduction-only fixtures")
+
+
+@dataclass(frozen=True, slots=True)
 class Stage5MarketExecutionCase(CanonicalModel):
     case_id: str
     strategy_id: str
@@ -822,6 +972,43 @@ class Stage5MarketExecutionResult(CanonicalModel):
     connects_broker: bool = field(default=False, init=False)
 
 
+@dataclass(frozen=True, slots=True)
+class Stage5MarketCandidate(CanonicalModel):
+    """No-side-effect Stage 5B candidate used by the Stage 5C seam."""
+
+    schema_version: str
+    case_input_hash: HashDigest
+    market_execution_preview: Stage5MarketExecutionResult
+    candidate_session_id: str | None
+    candidate_observation_id: str | None
+    candidate_at: datetime | None
+    candidate_market_rule_hash: HashDigest | None
+    candidate_cost_schedule_hash: HashDigest | None
+    candidate_impact_curve_hash: HashDigest | None
+    candidate_hash: HashDigest
+    preview_only: bool = field(default=True, init=False)
+    persists_state: bool = field(default=False, init=False)
+    authorizes_orders: bool = field(default=False, init=False)
+
+
+@dataclass(frozen=True, slots=True)
+class Stage5ConstrainedMarketExecutionProjection(CanonicalModel):
+    """Stage 5B output bound to an exact Stage 5C reduction constraint."""
+
+    schema_version: str
+    market_candidate: Stage5MarketCandidate
+    constraint_hash: HashDigest
+    market_execution_result: Stage5MarketExecutionResult
+    effective_approved_quantity: int
+    unsubmitted_quantity: int
+    unfilled_cancelled_quantity: int
+    replay_hash: HashDigest
+    synthetic: bool = field(default=True, init=False)
+    validation_only: bool = field(default=True, init=False)
+    persists_state: bool = field(default=False, init=False)
+    authorizes_orders: bool = field(default=False, init=False)
+
+
 Stage5Artifact = (
     MarketRuleSet
     | TradingCalendar
@@ -831,6 +1018,7 @@ Stage5Artifact = (
     | CostSchedule
     | ImpactCurve
     | SyntheticApprovalFixture
+    | Stage5SubmissionReductionConstraint
 )
 
 
@@ -864,6 +1052,55 @@ def stage5_market_execution_replay_sha256(
     projected = result.to_json_value()
     del projected["replay_hash"]
     return canonical_sha256({"case": case, "result": projected})
+
+
+def stage5_constrained_market_execution_replay_sha256(
+    case: Stage5MarketExecutionCase,
+    candidate: Stage5MarketCandidate,
+    constraint: Stage5SubmissionReductionConstraint,
+    result: Stage5MarketExecutionResult,
+) -> str:
+    """Hash a constrained projection without weakening the Stage 5B replay."""
+
+    return canonical_sha256(
+        {
+            "schema_version": "0.2.0",
+            "case": case,
+            "market_candidate": candidate,
+            "constraint": constraint,
+            "market_execution_result": result,
+        }
+    )
+
+
+def stage5_market_candidate_sha256(
+    case: Stage5MarketExecutionCase,
+    preview: Stage5MarketExecutionResult,
+    *,
+    candidate_session_id: str | None,
+    candidate_observation_id: str | None,
+    candidate_at: datetime | None,
+    candidate_market_rule_hash: HashDigest | None,
+    candidate_cost_schedule_hash: HashDigest | None,
+    candidate_impact_curve_hash: HashDigest | None,
+) -> str:
+    """Bind the exact raw case and no-side-effect market preview."""
+
+    return canonical_sha256(
+        {
+            "schema_version": "0.2.0",
+            "case": case,
+            "market_execution_preview": preview,
+            "selected_candidate": {
+                "session_id": candidate_session_id,
+                "observation_id": candidate_observation_id,
+                "candidate_at": candidate_at,
+                "market_rule_hash": candidate_market_rule_hash,
+                "cost_schedule_hash": candidate_cost_schedule_hash,
+                "impact_curve_hash": candidate_impact_curve_hash,
+            },
+        }
+    )
 
 
 def _artifact_failure(value: Stage5Artifact) -> str | None:
@@ -1046,6 +1283,36 @@ def _precheck_failure(case: Stage5MarketExecutionCase) -> str | None:
     return None
 
 
+def _submission_constraint_failure(
+    case: Stage5MarketExecutionCase,
+    constraint: Stage5SubmissionReductionConstraint,
+) -> str | None:
+    if (
+        constraint.case_id != case.case_id
+        or constraint.strategy_id != case.strategy_id
+        or constraint.security_id != case.security_id
+        or constraint.account_fixture_id != case.account_fixture_id
+        or constraint.action_intent is not case.action_intent
+    ):
+        return "SUBMISSION_REDUCTION_CONSTRAINT_SCOPE_MISMATCH"
+    if (
+        constraint.effective_approved_quantity > case.synthetic_approval_fixture.approved_quantity
+        or constraint.maximum_quantity > constraint.effective_approved_quantity
+    ):
+        return "SUBMISSION_REDUCTION_CONSTRAINT_INCREASE_FORBIDDEN"
+    if (
+        constraint.market_approval_hash
+        != case.synthetic_approval_fixture.identity.declared_content_hash
+    ):
+        return "SUBMISSION_REDUCTION_CONSTRAINT_APPROVAL_MISMATCH"
+    if (
+        constraint.maximum_sellable_quantity is not None
+        and constraint.maximum_quantity > constraint.maximum_sellable_quantity
+    ):
+        return "SUBMISSION_REDUCTION_CONSTRAINT_SELLABLE_MISMATCH"
+    return _artifact_failure(constraint)
+
+
 def _side(action: Stage5ActionIntent) -> TradeSide:
     return (
         TradeSide.BUY
@@ -1215,6 +1482,8 @@ def _affordable_quote(
     curve: ImpactCurve,
     cost: CostSchedule,
     side: TradeSide,
+    maximum_cash_outflow: Decimal | None = None,
+    maximum_transaction_cost_reserve: Decimal | None = None,
 ) -> _Quote | None:
     """Find the greatest deterministic lot that stays within the approved notional cap."""
 
@@ -1232,7 +1501,27 @@ def _affordable_quote(
             cost,
             side,
         )
-        if candidate is not None and candidate.gross <= notional_cap:
+        actual_transaction_cost = (
+            Decimal(candidate.costs.total)
+            if candidate is not None and side is TradeSide.BUY
+            else Decimal(0)
+        )
+        reserved_cash_outflow = (
+            candidate.gross + maximum_transaction_cost_reserve
+            if candidate is not None
+            and side is TradeSide.BUY
+            and maximum_transaction_cost_reserve is not None
+            else Decimal(0)
+        )
+        if (
+            candidate is not None
+            and candidate.gross <= notional_cap
+            and (
+                maximum_transaction_cost_reserve is None
+                or actual_transaction_cost <= maximum_transaction_cost_reserve
+            )
+            and (maximum_cash_outflow is None or reserved_cash_outflow <= maximum_cash_outflow)
+        ):
             best = candidate
             low = middle + 1
         else:
@@ -1502,9 +1791,10 @@ def _observation_failure(
     return None
 
 
-def evaluate_stage5_market_execution(
+def _evaluate_stage5_market_execution(
     case: Stage5MarketExecutionCase,
     rules: ApprovedStage5MarketExecutionRules,
+    constraint: Stage5SubmissionReductionConstraint | None,
 ) -> Stage5MarketExecutionResult:
     """Evaluate historical rules and create at most one deterministic synthetic fill."""
 
@@ -1518,6 +1808,10 @@ def evaluate_stage5_market_execution(
         case.synthetic_approval_fixture.approved_at,
     )
     failure = _precheck_failure(case)
+    if failure is None and constraint is not None:
+        if not isinstance(constraint, Stage5SubmissionReductionConstraint):
+            raise TypeError("constraint must be Stage5SubmissionReductionConstraint")
+        failure = _submission_constraint_failure(case, constraint)
     if failure is not None:
         return _result(
             case,
@@ -1685,6 +1979,8 @@ def evaluate_stage5_market_execution(
                     case.synthetic_approval_fixture.approved_quantity // lot_size
                 ) * lot_size
                 candidate_quantity = min(capacity, approved_quantity)
+                if constraint is not None:
+                    candidate_quantity = min(candidate_quantity, constraint.maximum_quantity)
                 if candidate_quantity < lot_size:
                     last_status = Stage5ExecutionStatus.NON_EXECUTABLE
                     last_reasons = ("MINIMUM_LOT_EXCEEDS_CAP",)
@@ -1756,12 +2052,31 @@ def evaluate_stage5_market_execution(
                 quote = _affordable_quote(
                     candidate_quantity,
                     lot_size,
-                    Decimal(case.synthetic_approval_fixture.approved_notional_cap),
+                    min(
+                        Decimal(case.synthetic_approval_fixture.approved_notional_cap),
+                        (
+                            Decimal(constraint.maximum_gross_notional)
+                            if constraint is not None
+                            and constraint.maximum_gross_notional is not None
+                            else Decimal(case.synthetic_approval_fixture.approved_notional_cap)
+                        ),
+                    ),
                     observation,
                     market_rule,
                     impact,
                     cost,
                     side,
+                    (
+                        Decimal(constraint.maximum_cash_outflow)
+                        if constraint is not None and constraint.maximum_cash_outflow is not None
+                        else None
+                    ),
+                    (
+                        Decimal(constraint.maximum_transaction_cost_reserve)
+                        if constraint is not None
+                        and constraint.maximum_transaction_cost_reserve is not None
+                        else None
+                    ),
                 )
                 if quote is None:
                     last_status = Stage5ExecutionStatus.NON_EXECUTABLE
@@ -1855,17 +2170,35 @@ def evaluate_stage5_market_execution(
                     filled_at=observation.window_end,
                     observation_id=observation.observation_id,
                 )
-                cancelled = case.synthetic_approval_fixture.approved_quantity - quote.quantity
-                status = (
-                    Stage5ExecutionStatus.PARTIALLY_FILLED
-                    if cancelled > 0
-                    else Stage5ExecutionStatus.FILLED
+                effective_approved = (
+                    constraint.effective_approved_quantity
+                    if constraint is not None
+                    else case.synthetic_approval_fixture.approved_quantity
                 )
-                fill_reason = (
-                    "SYNTHETIC_PARTIAL_FILL_WITH_DAY_REMAINDER_CANCELLED"
-                    if cancelled > 0
-                    else "SYNTHETIC_FIRST_EXECUTABLE_WINDOW_FILLED"
-                )
+                approved_remainder = effective_approved - quote.quantity
+                if constraint is not None:
+                    # The constrained quantity is the submitted DAY intent and is
+                    # filled deterministically in this slice.  Approval above that
+                    # ceiling was never submitted, so it is not a cancelled order.
+                    cancelled = 0
+                    status = Stage5ExecutionStatus.FILLED
+                    fill_reason = (
+                        "STAGE5C_APPROVED_REMAINDER_NOT_SUBMITTED"
+                        if approved_remainder > 0
+                        else "STAGE5C_CONSTRAINED_FIRST_EXECUTABLE_WINDOW_FILLED"
+                    )
+                else:
+                    cancelled = approved_remainder
+                    status = (
+                        Stage5ExecutionStatus.PARTIALLY_FILLED
+                        if cancelled > 0
+                        else Stage5ExecutionStatus.FILLED
+                    )
+                    fill_reason = (
+                        "SYNTHETIC_PARTIAL_FILL_WITH_DAY_REMAINDER_CANCELLED"
+                        if cancelled > 0
+                        else "SYNTHETIC_FIRST_EXECUTABLE_WINDOW_FILLED"
+                    )
                 attempts.append(
                     _attempt(
                         day=day,
@@ -1897,7 +2230,7 @@ def evaluate_stage5_market_execution(
                         quantity=quote.quantity,
                     ),
                 ]
-                if cancelled > 0:
+                if cancelled > 0 and constraint is None:
                     events.append(
                         SyntheticExecutionEvent(
                             event_time=session.closes_at,
@@ -1924,20 +2257,232 @@ def evaluate_stage5_market_execution(
         and len(trade_dates) == rules.entry_attempt_days
         and not saw_abstain
     ):
+        terminal_reasons = last_reasons
+        if constraint is not None:
+            terminal_reasons = tuple(
+                dict.fromkeys(reason for attempt in attempts for reason in attempt.reason_codes)
+            )
         return _result(
             case,
             rules,
             status=Stage5ExecutionStatus.ENTRY_EXPIRED,
-            reason_codes=("ENTRY_UNFILLED_AFTER_DAY_THREE", *last_reasons),
+            reason_codes=("ENTRY_UNFILLED_AFTER_DAY_THREE", *terminal_reasons),
             eligible_from=eligible_from,
             attempts=tuple(attempts),
         )
     final_status = Stage5ExecutionStatus.ABSTAIN if saw_abstain else last_status
+    final_reasons = last_reasons
+    if constraint is not None:
+        final_reasons = tuple(
+            dict.fromkeys(reason for attempt in attempts for reason in attempt.reason_codes)
+        )
     return _result(
         case,
         rules,
         status=final_status,
-        reason_codes=last_reasons,
+        reason_codes=final_reasons,
         eligible_from=eligible_from,
         attempts=tuple(attempts),
+    )
+
+
+def evaluate_stage5_market_execution(
+    case: Stage5MarketExecutionCase,
+    rules: ApprovedStage5MarketExecutionRules,
+) -> Stage5MarketExecutionResult:
+    """Run the exact standalone Stage 5B v0.1 synthetic market slice."""
+
+    return _evaluate_stage5_market_execution(case, rules, None)
+
+
+@with_stage5_decimal_context
+def plan_stage5_market_candidate(
+    case: Stage5MarketExecutionCase,
+    rules: ApprovedStage5MarketExecutionRules,
+    constraint: Stage5SubmissionReductionConstraint | None = None,
+) -> Stage5MarketCandidate:
+    """Plan the first executable market window for the supplied ceilings.
+
+    Without a constraint this is the unchanged standalone Stage 5B preview.  A
+    Stage 5C caller may pass a content-addressed provisional constraint whose
+    candidate binding is still empty.  The planner applies only its reduction
+    ceilings while it scans the normal chronological window stream; it never
+    uses an unconstrained fill to choose the constrained candidate.
+    """
+
+    if constraint is not None and not isinstance(constraint, Stage5SubmissionReductionConstraint):
+        raise TypeError("constraint must be Stage5SubmissionReductionConstraint or None")
+    preview = _evaluate_stage5_market_execution(case, rules, constraint)
+    selected_attempt = next(
+        (
+            item
+            for item in preview.attempts
+            if preview.fill is not None and item.observation_id == preview.fill.observation_id
+        ),
+        None,
+    )
+    selected_observation = (
+        next(
+            (
+                item
+                for item in case.market_observation_set.observations
+                if selected_attempt is not None
+                and item.observation_id == selected_attempt.observation_id
+            ),
+            None,
+        )
+        if selected_attempt is not None
+        else None
+    )
+    candidate_session_id = selected_attempt.session_id if selected_attempt is not None else None
+    candidate_observation_id = (
+        selected_attempt.observation_id if selected_attempt is not None else None
+    )
+    candidate_at = selected_observation.window_end if selected_observation is not None else None
+    candidate_market_rule_hash = (
+        selected_attempt.market_rule_hash if selected_attempt is not None else None
+    )
+    candidate_cost_schedule_hash = (
+        selected_attempt.cost_schedule_hash if selected_attempt is not None else None
+    )
+    candidate_impact_curve_hash = (
+        selected_attempt.impact_curve_hash if selected_attempt is not None else None
+    )
+    candidate_hash = _hash(
+        stage5_market_candidate_sha256(
+            case,
+            preview,
+            candidate_session_id=candidate_session_id,
+            candidate_observation_id=candidate_observation_id,
+            candidate_at=candidate_at,
+            candidate_market_rule_hash=candidate_market_rule_hash,
+            candidate_cost_schedule_hash=candidate_cost_schedule_hash,
+            candidate_impact_curve_hash=candidate_impact_curve_hash,
+        )
+    )
+    return Stage5MarketCandidate(
+        schema_version="0.2.0",
+        case_input_hash=_hash(canonical_sha256(case)),
+        market_execution_preview=preview,
+        candidate_session_id=candidate_session_id,
+        candidate_observation_id=candidate_observation_id,
+        candidate_at=candidate_at,
+        candidate_market_rule_hash=candidate_market_rule_hash,
+        candidate_cost_schedule_hash=candidate_cost_schedule_hash,
+        candidate_impact_curve_hash=candidate_impact_curve_hash,
+        candidate_hash=candidate_hash,
+    )
+
+
+def bind_stage5_submission_constraint_candidate(
+    constraint: Stage5SubmissionReductionConstraint,
+    candidate: Stage5MarketCandidate,
+) -> Stage5SubmissionReductionConstraint:
+    """Bind a provisional reduction constraint to its planned final candidate."""
+
+    if not isinstance(constraint, Stage5SubmissionReductionConstraint):
+        raise TypeError("constraint must be Stage5SubmissionReductionConstraint")
+    if not isinstance(candidate, Stage5MarketCandidate):
+        raise TypeError("candidate must be Stage5MarketCandidate")
+    candidate_at = candidate.candidate_at
+    identity = replace(
+        constraint.identity,
+        as_of=candidate_at if candidate_at is not None else constraint.as_of,
+        declared_content_hash=_hash("0" * 64),
+    )
+    return bind_stage5_artifact(
+        replace(
+            constraint,
+            identity=identity,
+            as_of=candidate_at if candidate_at is not None else constraint.as_of,
+            candidate_hash=candidate.candidate_hash,
+            candidate_session_id=candidate.candidate_session_id,
+            candidate_observation_id=candidate.candidate_observation_id,
+            candidate_at=candidate_at,
+            candidate_market_rule_hash=candidate.candidate_market_rule_hash,
+            candidate_cost_schedule_hash=candidate.candidate_cost_schedule_hash,
+            candidate_impact_curve_hash=candidate.candidate_impact_curve_hash,
+        )
+    )
+
+
+def _constraint_binds_candidate(
+    constraint: Stage5SubmissionReductionConstraint,
+    candidate: Stage5MarketCandidate,
+) -> bool:
+    if (
+        constraint.candidate_hash != candidate.candidate_hash
+        or constraint.candidate_session_id != candidate.candidate_session_id
+        or constraint.candidate_observation_id != candidate.candidate_observation_id
+        or constraint.candidate_at != candidate.candidate_at
+        or constraint.candidate_market_rule_hash != candidate.candidate_market_rule_hash
+        or constraint.candidate_cost_schedule_hash != candidate.candidate_cost_schedule_hash
+        or constraint.candidate_impact_curve_hash != candidate.candidate_impact_curve_hash
+    ):
+        return False
+    return candidate.candidate_at is None or constraint.as_of == candidate.candidate_at
+
+
+@with_stage5_decimal_context
+def evaluate_stage5_market_execution_constrained(
+    case: Stage5MarketExecutionCase,
+    rules: ApprovedStage5MarketExecutionRules,
+    constraint: Stage5SubmissionReductionConstraint,
+) -> Stage5ConstrainedMarketExecutionProjection:
+    """Run Stage 5B with an exact, reduction-only Stage 5C constraint.
+
+    The outer projection binds the constraint to the otherwise unchanged 5B
+    case/result replay.  It remains a synthetic research-validation artifact.
+    """
+
+    if not isinstance(constraint, Stage5SubmissionReductionConstraint):
+        raise TypeError("constraint must be Stage5SubmissionReductionConstraint")
+    candidate = plan_stage5_market_candidate(case, rules, constraint)
+    eligible_from = max(
+        case.decision_at,
+        case.strategy_processing_completed_at,
+        case.synthetic_approval_fixture.approved_at,
+    )
+    constraint_failure = _submission_constraint_failure(case, constraint)
+    if constraint_failure is not None:
+        result = _result(
+            case,
+            rules,
+            status=Stage5ExecutionStatus.PRECHECK_BLOCKED,
+            reason_codes=(constraint_failure,),
+            eligible_from=eligible_from,
+        )
+    elif not _constraint_binds_candidate(constraint, candidate):
+        result = _result(
+            case,
+            rules,
+            status=Stage5ExecutionStatus.PRECHECK_BLOCKED,
+            reason_codes=("SUBMISSION_REDUCTION_CANDIDATE_MISMATCH",),
+            eligible_from=eligible_from,
+        )
+    elif constraint.maximum_quantity == 0:
+        result = _result(
+            case,
+            rules,
+            status=Stage5ExecutionStatus.SYNTHETIC_REJECTED,
+            reason_codes=("STAGE5C_ZERO_SUBMITTABLE_QUANTITY",),
+            eligible_from=eligible_from,
+            attempts=candidate.market_execution_preview.attempts,
+        )
+    else:
+        result = candidate.market_execution_preview
+    constraint_hash = _hash(canonical_sha256(constraint))
+    submitted_quantity = result.order_intent.quantity if result.order_intent is not None else 0
+    filled_quantity = result.fill.quantity if result.fill is not None else 0
+    return Stage5ConstrainedMarketExecutionProjection(
+        schema_version="0.2.0",
+        market_candidate=candidate,
+        constraint_hash=constraint_hash,
+        market_execution_result=result,
+        effective_approved_quantity=constraint.effective_approved_quantity,
+        unsubmitted_quantity=constraint.effective_approved_quantity - submitted_quantity,
+        unfilled_cancelled_quantity=submitted_quantity - filled_quantity,
+        replay_hash=_hash(
+            stage5_constrained_market_execution_replay_sha256(case, candidate, constraint, result)
+        ),
     )

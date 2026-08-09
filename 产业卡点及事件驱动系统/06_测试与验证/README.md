@@ -63,15 +63,17 @@ Stage 4 的 4A governance、4A-1—4A-4 局部合成执行、既有 draft 谱系
 
 这些测试只证明 4A-1—4A-4 和完整 4B 能在各自精确批准的匿名合成 research-validation scope 内执行；不证明历史有效性、正式 KB 策略 smoke、生产运行或任何交易能力已经实现。
 
-## Stage 5A—5B 当前测试边界
+## Stage 5A—5C 当前测试边界
 
 [Stage 5A 精确规则包](../03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)四十项已获 owner 批准。原 draft machine proposal 保持 40 项 `pending`、运行模式为空和零权限；独立 approved bundle、approval record 与治理 verifier 精确固定批准谱系和 `stage5_synthetic_execution_validation` scope。
 
 Stage 5A 治理专项验证：规格/draft/批准文档/approved bundle/approval record 的精确 hash；40 项 ID 顺序与批准状态；Stage 4B 上游 pin；draft 不可签发 capability；错误 scope、批准记录漂移、规则漂移、上游漂移和权限扩张均失败关闭。
 
-Stage 5B 业务专项验证：同一运行 Stage 4 case/result/replay 绑定；历史有效规则与交易日历选择；规则区间重叠和 hash 漂移失败关闭；日期精度与日线 `turnover/volume`；停牌和一字涨停；lot/tick/5% 容量；历史费用和最低佣金；冲击曲线单调性、插值和禁止外推；当前 synthetic executable price 的 Gate 3/4 重算；三日入场到期；确定性 full/partial fill、余量取消、事件排序和 replay。Stage 5A/5B 专项为 `19 passed`，全仓为 `841 passed, 4 skipped`。
+Stage 5B 业务专项验证：同一运行 Stage 4 case/result/replay 绑定；历史有效规则与交易日历选择；规则区间重叠和 hash 漂移失败关闭；日期精度与日线 `turnover/volume`；停牌和一字涨停；lot/tick/5% 容量；历史费用和最低佣金；冲击曲线单调性、插值和禁止外推；当前 synthetic executable price 的 Gate 3/4 重算；三日入场到期；确定性 full/partial fill、余量取消、事件排序和 replay。Stage 5A/5B 当时专项为 `19 passed`，全仓为 `841 passed, 4 skipped`。
 
-所有 backtest/paper/shadow/live/真实账户/仓位/订单/券商/KB 写权限保持 false。组合、账户、现金/可卖量、结算、双分录账本、公司行动、P&L 和 durable replay golden matrix 必须在 Stage 5C—5D 实现后另行验收。
+Stage 5C 业务专项验证：typed recovery record 与多风险簇；NORMAL/DEFENSIVE/CRISIS、8/12/15/20% 回撤及单票/簇/组合等号边界；quantity/notional/planned-loss、现金、worst-cost reserve、容量与可卖量的提交前只减不增约束；缩量后首个可成交候选重算与精确绑定；五层数量和未提交/取消语义；批准/候选/fill/recovery 的 PIT 上界、sizing source 漂移全链传播、未绑定 settlement exception 失败关闭，以及未来事件不进入当前状态；append-only 双分录、事件 schema、账户/策略隔离、FIFO、负现金/超卖、revision chain、幂等/conflict 与 deterministic partial replay。Stage 5A—5C 专项为 `93 passed`，全仓为 `915 passed, 4 skipped`。
 
-正式结果见[Stage 5A 规则治理批准验收记录](../../docs/validation/stage5-5a-governance-acceptance.md)和[Stage 5B 历史市场规则与合成成交验收记录](../../docs/validation/stage5-5b-market-execution-acceptance.md)。
+所有 backtest/paper/shadow/live/真实账户/仓位/订单/券商/KB 写权限保持 false。非空公司行动、marks、NAV/P&L、外部现金流、全局费用资本化 lot-cost 对账、SQLite migration、durable atomic persistence 及完整 Stage 5 replay/golden matrix 必须在 Stage 5D 实现后另行验收。
+
+正式结果见[Stage 5A 规则治理批准验收记录](../../docs/validation/stage5-5a-governance-acceptance.md)、[Stage 5B 历史市场规则与合成成交验收记录](../../docs/validation/stage5-5b-market-execution-acceptance.md)和[Stage 5C 合成组合与内存账本验收记录](../../docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。
 
