@@ -1,12 +1,12 @@
-# InvestSystem 实施计划（v2.8）
+# InvestSystem 实施计划（v2.9）
 
-> 计划版本：`v2.8`
+> 计划版本：`v2.9`
 > 基线日期：`2026-08-09`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 0—2B / completed；Stage 3 / in_progress（3A—3B completed，3C—3D not_started）；Stage 4 / completed_with_scope_limits；Stage 5 / in_progress（5A governance approved，5B—5C completed_with_scope_limits，5D exact-rule governance awaiting owner approval）`
-> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3a_pinned_transport_contract_and_offline_clients_completed / stage3b_independent_loopback_http_rc_accepted_without_authority / stage4_complete_synthetic_research_validation_engine_accepted / all_14_stage4_p0_rules_approved / stage5a_approved_rule_identity_and_capability_guard_completed / stage5b_historical_market_and_synthetic_fill_engine_accepted / stage5c_synthetic_portfolio_and_in_memory_ledger_accepted / stage5d_exact_rule_proposal_awaiting_owner_approval / stage5d_not_implemented / full_production_strategy_not_implemented`
-> 当前授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5C 均只允许各自精确批准范围内的匿名合成 research validation；Stage 5D 当前只有 48 项待批准精确规则和零权限 draft machine proposal，不存在 capability 或业务实现；Stage 5C 只实现合成账户/组合风险、五层数量、结算投影和截至运行时点的内存 append-only 双分录账本，不证明公司行动、NAV/P&L、SQLite、durable atomic persistence 或完整 Stage 5 replay 已实现；不授权 backtest、paper、shadow、live、真实仓位、真实账户、真实订单、券商接入或资金部署`
+> 当前阶段：`Stage 0—2B / completed；Stage 3 / in_progress（3A—3B completed，3C—3D not_started）；Stage 4 / completed_with_scope_limits；Stage 5 / in_progress（5A governance approved，5B—5C completed_with_scope_limits，5D governance approved / 5D-1 not_started）`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3a_pinned_transport_contract_and_offline_clients_completed / stage3b_independent_loopback_http_rc_accepted_without_authority / stage4_complete_synthetic_research_validation_engine_accepted / all_14_stage4_p0_rules_approved / stage5a_approved_rule_identity_and_capability_guard_completed / stage5b_historical_market_and_synthetic_fill_engine_accepted / stage5c_synthetic_portfolio_and_in_memory_ledger_accepted / stage5d_approved_rule_identity_and_capability_guard_completed / stage5d_business_not_implemented / full_production_strategy_not_implemented`
+> 当前授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均只允许各自精确批准范围内的匿名合成 research validation；Stage 5D capability 只证明 48 项规则和谱系获批，5D-1 evaluator、Ledger V2、公司行动、NAV/P&L 与 complete replay 尚未实现，5D-2 persistence 当前仍未授权执行；Stage 5C 只实现合成账户/组合风险、五层数量、结算投影和截至运行时点的内存 append-only 双分录账本；不授权 backtest、paper、shadow、live、真实仓位、真实账户、真实订单、券商接入或资金部署`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
 
@@ -27,8 +27,8 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 - Stage 2A 已通过[正式验收](docs/validation/stage2a-acceptance.md)：从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按 Git 对象原始字节引入 20 个官方文件，并完成 provider canonical、契约目录、官方 reference fixture 验证/窄投影、消费 Receipt/Observation、显式 Release 留存闭包，以及 SQLite v3 的 run-scoped 当前状态确认、默认拒绝 authority、receipt-derived atomic pin、legacy v2 quarantine 和审计留存。实现提交 `01073c1` 的 GitHub Actions run `30744115034` 在 Windows/Linux 均成功。
 - Stage 3A 已在 KB RC 契约提交 `2c84277ef463b5dd9a3fda3f2976a30cade53af5` 完成只读 HTTP Client、不可变导出包验证器和官方 fixture 离线验收。Stage 3B 随后把完整 Stage 6B transport snapshot 重固定到 `aab36fe229104779b50ec71e2dc37a9fad81d285`，并通过独立 KB RC 进程、短期只读凭据的真实本机 HTTP 兼容验收。它没有签发 `RunReleaseStatusConfirmation`，所有输出仍为 `authority_eligible=false`；tcloud、正式 Context Pack 策略 smoke、完整产业策略集成、组合/执行、P&L 和任何真实运行模式仍不存在。
 - [产业卡点及事件驱动系统 PRD v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md) 已于 `2026-07-31` 获用户批准并 `supersedes` v0.2；首个最小订单/合同规则包已在 `stage2b_synthetic_validation` scope 内批准并实现，Stage 4 的 14 项 P0 规则也已分四批批准并实现局部 evaluator。独立 4B 完整编排已获得 scope-limited 批准并通过合成验收；v0.2 只作历史追溯。
-- owner 已批准 [Stage 5 / 5A 成交、组合、账本与确定性回放精确规则包](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)第 13 节全部四十项，且只授权 `stage5_synthetic_execution_validation`。原规格和零权限 draft proposal 保持不变；独立[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、approved bundle、approval record 和治理 capability verifier 已形成。Stage 5B 已完成历史市场与 synthetic fill 纵向切片并通过[验收](docs/validation/stage5-5b-market-execution-acceptance.md)；Stage 5C 已完成合成组合、受约束成交与内存账本纵向切片并通过[验收](docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。Stage 5D、durable persistence 和所有真实/交易模式仍不存在。
-- Stage 5D 进入精确规则治理：新增[公司行动、估值、P&L、完整回放与原子持久化精确规则草案](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)及[零权限 machine proposal](产业卡点及事件驱动系统/03_规则与规格/机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0-draft.rule-bundle.json)，收敛 Stage 5A 尚不足以编码的 P&L 防双计、公司行动、Ledger V2、多证券估值、完整 replay 和 SQLite v4 原子提交语义。48 项均为 `pending`；在 owner 批准前不得实现。
+- owner 已批准 [Stage 5 / 5A 成交、组合、账本与确定性回放精确规则包](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)第 13 节全部四十项，且只授权 `stage5_synthetic_execution_validation`。原规格和零权限 draft proposal 保持不变；独立[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、approved bundle、approval record 和治理 capability verifier 已形成。Stage 5B 已完成历史市场与 synthetic fill 纵向切片并通过[验收](docs/validation/stage5-5b-market-execution-acceptance.md)；Stage 5C 已完成合成组合、受约束成交与内存账本纵向切片并通过[验收](docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。
+- owner 已原子批准 [Stage 5D 公司行动、估值、P&L、完整回放与原子持久化精确规则](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)第 13 节全部 48 项，且仍只授权 `stage5_synthetic_execution_validation`。原规则和零权限 draft machine proposal 保持原始字节不变；独立[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化批准记录_v0.1.md)、approved bundle、approval record 和 fail-closed governance verifier 已形成并精确固定 Stage 5A/5C 上游。当前只打开 5D-1 实施门；5D-1 业务 evaluator 尚未实现，5D-2 persistence 仍等待 5D-1 独立验收，所有真实/交易模式继续关闭。
 - 用户于 `2026-08-02` 批准《最小订单合同纵向切片规则包 v0.1》全部 22 项，仅授权 Stage 2B 匿名合成 `research` validation。实现提交 `d5d6003` 和[正式验收](docs/validation/stage2b-acceptance.md)已关闭 Stage 2B；该批准不授权 backtest、paper、shadow、live、仓位或订单。
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md) 仅完成独立研究建档，需求、规则和实现尚未开始。
 - `原始文档/` 是同事提出的设想和材料基线；`归档/` 中的 HTML、截图和旧规格只供追溯，均不得冒充当前实现或验证证据。
@@ -48,7 +48,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | Stage 2B | `completed` | 最小 approved 策略规格与合成纵向切片 | 已于 `2026-08-02` 通过正式验收；只授权 synthetic research validation |
 | Stage 3 | `in_progress` | KB 正式 Release 传输与策略端到端验收 | 3A 离线与 3B 独立本机 HTTP 已完成；3C tcloud、3D 正式 Context Pack 策略 smoke 未开始 |
 | Stage 4 | `completed_with_scope_limits` | 完整产业事件规格与策略引擎 | `4A-1—4A-4` 与 `4B` 均已批准并完成匿名合成完整编排、统一结论和 replay 验收；无真实/交易权限 |
-| Stage 5 | `in_progress / 5B—5C completed_with_scope_limits / 5D rule_governance_in_progress` | 成交、组合与确定性回放 | 5A 治理、5B 历史市场/合成成交和 5C 合成组合/内存账本已完成；5D 48 项精确草案待 owner 批准，业务实现未开始 |
+| Stage 5 | `in_progress / 5B—5C completed_with_scope_limits / 5D governance approved` | 成交、组合与确定性回放 | 5A 治理、5B 历史市场/合成成交和 5C 合成组合/内存账本已完成；5D 48 项规则及批准谱系已完成，5D-1 业务实现尚未开始 |
 | Stage 6 | `not_started` | 历史验证与冠军挑战 | Stage 3、Stage 5 |
 | Stage 7 | `not_started` | 前瞻 shadow/paper 运行 | Stage 6、人工批准 |
 | Stage 8 | `optional` | 产业策略受控扩展；实盘仍需另行授权 | Stage 7、新批准 |
@@ -651,7 +651,7 @@ Stage 3A 与 3B 的证据分别见 [Stage 3A 离线传输消费者验收](docs/v
 
 ### Stage 5：成交、组合与回放真实性
 
-状态：`in_progress / 5A governance approved / 5B—5C completed_with_scope_limits / 5D exact-rule governance awaiting owner approval`
+状态：`in_progress / 5A governance approved / 5B—5C completed_with_scope_limits / 5D governance approved / 5D-1 not_started`
 
 5A 完成记录：owner 于 `2026-08-08` 批准[Stage 5 / 5A 成交、组合、账本与确定性回放精确规则包](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)第 13 节全部四十项，只授权 `stage5_synthetic_execution_validation`。原规格与 draft machine proposal 保持不可变；新的[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、approved bundle 和 approval record 精确固定 Stage 4B 上游身份、市场/成本/风险/账本/P&L/replay 语义及零真实权限。
 
@@ -659,7 +659,7 @@ Stage 3A 与 3B 的证据分别见 [Stage 3A 离线传输消费者验收](docs/v
 
 5C 完成记录：新增合成账户/风险/恢复/结算 typed contracts、精确组合风险与五层数量计算、Stage 5B candidate → reduction constraint → finalize 两阶段接缝、现金/成本准备金/可卖量的提交前约束，以及截至 injected clock 的内存 append-only 双分录账本、FIFO lot、结算与证券可用性投影、reversal/replacement 和确定性 partial replay。5C 重新绑定原始 5B case/result/input/replay，受约束数量只能减少；未获组合批准或未提交的数量不会冒充订单取消，未来结算事件也不会泄漏到当前状态。正式证据见 [Stage 5C 验收记录](docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。非空公司行动、marks、NAV/P&L、外部现金流、SQLite migration、durable atomic persistence、完整 Stage 5 replay 与 golden matrix 均留在 5D。
 
-5D 治理记录：Stage 5A 的原则级文字不足以唯一决定费用/税费/滑点与 realized/unrealized 的加总关系、五类公司行动的权益和舍入、mark/NAV 的 PIT，以及 SQLite 的原子对象集合。为避免自行猜测，先形成 48 项[精确待批准规则](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)：`5D-1` 先完成纯内存 Ledger V2、公司行动、mark/NAV、二维 P&L 和 complete replay，`5D-2` 再把同一完整聚合以 SQLite v4 单事务持久化。当前 machine proposal 的运行模式为空、无 approval record、无 evaluator、无 migration 或 runtime capability；不得提前实现。
+5D 治理记录：Stage 5A 的原则级文字不足以唯一决定费用/税费/滑点与 realized/unrealized 的加总关系、五类公司行动的权益和舍入、mark/NAV 的 PIT，以及 SQLite 的原子对象集合，因此形成 48 项[精确规则](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)。owner 已整包原子批准，原 draft bytes 保持不变；新的[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化批准记录_v0.1.md)、approved bundle、approval record 和 `stage5d_governance.py` 精确绑定全部 48 项、Stage 5A approved identity 与 Stage 5C commit `7f64c584c5c7be5e2385a177fab9e5d31e3f665b`。当前只有治理 capability；`5D-1` 业务实现尚未开始，`5D-2` 仍为 `currently_authorized=false`。
 
 目标：把理论决策转换为符合历史 A 股制度和真实可成交约束的组合与执行结果。
 
@@ -867,12 +867,11 @@ Stage 3A 与 3B 的证据分别见 [Stage 3A 离线传输消费者验收](docs/v
 3. 首版每次 run 恰好一个 `strategy_input_ref`。
 4. 同时支持只读 HTTP API 和不可变导出包；缓存使用 `var/cache/kb-releases/`、`20 GiB` 软上限，历史引用制品不自动删除。
 5. Release 撤回后阻断新 run；历史材料保留且只允许 `audit_replay`。
+6. Stage 5D 第 13 节全部 48 项已原子批准：只授权 `stage5_synthetic_execution_validation`；先完成 5D-1 纯函数并独立验收，之后才可进入 5D-2 SQLite v4 原子持久化；全部真实/交易权限保持关闭。
 
 ### 11.3 后续需要用户确认
 
-1. 是否批准《Stage 5 / 5D 公司行动、估值、P&L、完整回放与原子持久化精确规则包 v0.1》第 13 节全部 48 项；批准范围仍只能是 `stage5_synthetic_execution_validation`，且不授权 backtest、paper、shadow、live 或真实订单。
-2. 是否按草案确认：5D 分为先纯函数、后持久化两段；沿用 InvestSystem 自有 SQLite 并升到 v4；Manifest、Stage 4/5 规范字节、全部 projected/accepted 事件、marks、P&L 与 complete replay 作为一个不可拆原子聚合；同字节幂等、同键异字节冲突、generation 冲突必须重新加载并重算，`audit_replay` 严格零写。
-3. Stage 8 是否长期停在 shadow/paper，还是未来允许另行评估人工批准的小额 canary。
+1. Stage 8 是否长期停在 shadow/paper，还是未来允许另行评估人工批准的小额 canary。
 
 ### 11.4 明确延后
 
@@ -896,7 +895,7 @@ Stage 3A 与 3B 的证据分别见 [Stage 3A 离线传输消费者验收](docs/v
 | Stage 2B | [正式验收记录](docs/validation/stage2b-acceptance.md)；实现提交 `d5d6003`；22 项 approved 规则；24+10 fixture registry；E3.5/E4、四道门、利润桥/预期/估值、Manifest、DecisionRecord、Replay；`617 passed, 4 skipped`；两轮审阅 `P0=0 / P1=0` | 无；真实 transport、完整策略和 durable DecisionRecord 持久化不在本阶段完成范围 | `completed` |
 | Stage 3 | [3A 离线验收](docs/validation/stage3a-acceptance.md)与[3B 独立本机 HTTP 验收](docs/validation/stage3b-http-acceptance.md)；固定 KB `aab36fe` transport snapshot；真实独立进程、短期只读凭据；所有输出 `authority_eligible=false` | 3C tcloud 真实只读传输；3D 精确正式 Context Pack Release 策略 smoke 与 authority 持久化 | `in_progress` |
 | Stage 4 | [Stage 2 进入复核](docs/validation/stage2-reentry-audit.md)；[4B 正式验收](docs/validation/stage4-4b-acceptance.md)；14 项 P0 inventory、4A-1—4A-4 和独立 4B capability 均精确 approved；完整匿名合成编排、统一结论与 replay 已验收 | 无；真实 KB/生产运行与交易能力分别留在 Stage 3D、Stage 5 及后续阶段 | `completed_with_scope_limits` |
-| Stage 5 | [5A 精确规则草案](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)、[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、approved bundle、approval record、capability guard、[5A 治理验收](docs/validation/stage5-5a-governance-acceptance.md)、[5B 市场/成交验收](docs/validation/stage5-5b-market-execution-acceptance.md)、[5C 组合/账本验收](docs/validation/stage5-5c-portfolio-ledger-acceptance.md)及 [5D 48 项精确待批准草案](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)；5D 治理专项 `9 passed`、全仓 `924 passed, 4 skipped`，已实现部分仍止于 5C，5D 草案和 machine proposal 均为零权限 | owner 批准 5D 48 项后，才实现 5D-1 纯内存完整回放、5D-2 SQLite v4 原子持久化及 golden matrix | `in_progress / 5D_rule_governance_awaiting_owner_approval` |
+| Stage 5 | [5A 精确规则](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)、[5A 批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、approved artifacts、capability guard、[5A 治理验收](docs/validation/stage5-5a-governance-acceptance.md)、[5B 市场/成交验收](docs/validation/stage5-5b-market-execution-acceptance.md)、[5C 组合/账本验收](docs/validation/stage5-5c-portfolio-ledger-acceptance.md)，以及 [5D 48 项精确规则](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)、[5D 批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化批准记录_v0.1.md)、approved bundle/approval record 和 capability guard；已实现部分仍止于 5C | 实现并验收 5D-1 纯内存完整回放；之后才可打开 5D-2 SQLite v4 原子持久化及 golden matrix | `in_progress / 5D_governance_approved / 5D-1_not_started` |
 | Stage 6 | 研究方法要求 | 预注册、正式历史验证和报告 | `not_started` |
 | Stage 7 | 运行目录占位 | 冻结版本、前瞻台账、paper 对账 | `not_started` |
 | Stage 8 | 无 | 新授权及各分支独立完成门 | `optional` |
@@ -910,7 +909,7 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 
 1. Stage 4 已完成完整 synthetic golden/replay 验收；该结仓不自动进入 backtest 或 Stage 5。
 2. Stage 3 在 KB 提供 tcloud 正式只读端点和精确 Context Pack Published Release 后，依次完成 3C 与 3D；不得以工作树、mock 或本地活动库替代。
-3. Stage 5A 四十项已批准，5B 市场/成交与 5C 组合/内存账本已完成 scope-limited 合成验收；5D 当前先等待 owner 批准 48 项精确规则，再依次实现 5D-1 纯内存公司行动/NAV/二维 P&L/完整 replay 和 5D-2 SQLite v4 原子持久化，不得跨批把草案或预留事件写成完成。
+3. Stage 5A 四十项和 Stage 5D 四十八项均已按各自 exact bundle 获批，5B 市场/成交与 5C 组合/内存账本已完成 scope-limited 合成验收；下一步实现并验收 5D-1 纯内存公司行动/NAV/二维 P&L/完整 replay，只有其独立通过后才进入 5D-2 SQLite v4 原子持久化，不得把批准谱系或预留事件写成业务完成。
 4. backtest、paper、shadow 或 live 均须到对应后续阶段另行批准；任何合成 capability 均不授予这些模式。
 
 ---
@@ -947,3 +946,4 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 | `v2.6` | 2026-08-08 | `active` | 完成 Stage 5B 历史市场与合成成交纵向切片：精确绑定 Stage 5A capability 和同一运行 Stage 4 case/result/replay，实现历史规则/日历/会话、首次可成交、日线 VWAP、lot/tick/5% 容量、历史成本、单调冲击、当前价 Gate 重算、三日到期、DAY synthetic intent/fill/cancel 与 deterministic replay；全仓 `841 passed, 4 skipped`。5C—5D、SQLite、backtest/paper/shadow/live 与真实账户订单仍未实现或授权。 |
 | `v2.7` | 2026-08-09 | `active` | 完成 Stage 5C 合成组合与内存账本纵向切片：实现内容寻址账户/风险/恢复/结算合同、风险预算和五层数量、两阶段 candidate/只减不增 constraint、提交前现金/成本准备金/可卖量、PIT 与承重证据哈希闭环、截至时点的 append-only 双分录/FIFO/结算投影及确定性 partial replay；Stage 5 专项 `93 passed`，全仓 `915 passed, 4 skipped`。5D 公司行动、NAV/P&L、SQLite、durable full replay 及全部真实/交易模式仍未实现或授权。 |
 | `v2.8` | 2026-08-09 | `active` | 启动 Stage 5D 精确规则治理。因 Stage 5A 对 P&L 防双计、公司行动日期/权益/舍入、逐证券成本闭合、mark/NAV、完整 replay 和 SQLite 原子集合仍不足以唯一编码，形成 48 项待批准规则与零权限 draft machine proposal；冻结 exact event semantic map、十八格 P&L 公式、状态独立 PIT、`(beginning_at,ending_at]` 与同库 v4 原子边界，治理专项 `9 passed`、全仓 `924 passed, 4 skipped`。批准前不实现 evaluator、migration 或 runtime capability，全部真实/交易权限继续关闭。 |
+| `v2.9` | 2026-08-09 | `active` | 记录 owner 原子批准 Stage 5D 第 13 节全部 48 项且仅授权 `stage5_synthetic_execution_validation`；保留规则 draft 与零权限 machine proposal 原始字节，新增精确批准记录、approved bundle、approval record 和 fail-closed capability verifier，绑定 48 项正文、Stage 5A identities 与 Stage 5C commit `7f64c584`。当前只打开 5D-1 实施门；5D-1 业务未实现，5D-2 persistence 仍未授权执行，全部真实/交易权限继续关闭。 |

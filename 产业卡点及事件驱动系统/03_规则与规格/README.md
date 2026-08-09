@@ -29,7 +29,14 @@ Stage 5A 规则治理已完成 owner 批准登记：
 - [5A draft machine proposal](机器制品/industrial_event_stage5_5a_execution_portfolio_ledger_replay_v0.1.0-draft.rule-bundle.json)：只用于固定提案身份和 owner 审阅谱系；40 项均 `pending`，运行模式为空，全部真实/交易权限为 false；
 - [5A 批准记录](Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage5_5a_execution_portfolio_ledger_replay_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage5_5a_execution_portfolio_ledger_replay_v0.1.0.approval.json)：精确固定全部 40 项批准、Stage 4B 上游身份和零真实/交易权限；
 - [5A 规则治理验收](../../docs/validation/stage5-5a-governance-acceptance.md)：验证精确 hash、scope、40 项身份、上游 pin、权限边界及篡改失败关闭；
-- 当前只有 5A 治理 capability verifier；MarketRuleSet、首次可成交、fill、组合风险、PositionLedger、P&L、replay、数据库 migration 和合成/历史结果仍未实现。Stage 4B capability 或原 draft 均不能替代精确 5A capability。
+- 5A 治理 capability verifier 继续固定 Stage 5 上游身份；5B 市场/成交和 5C 合成组合/内存账本已另行实现与验收，Stage 4B capability 或原 draft 均不能替代精确 5A capability。
+
+Stage 5D 规则治理已完成 owner 原子批准登记：
+
+- [Stage 5 / 5D 公司行动、估值、P&L、完整回放与原子持久化精确规则包](Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)与[原零权限 draft machine proposal](机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0-draft.rule-bundle.json)保持原始字节不变；
+- [5D 批准记录](Stage5_5D公司行动估值P&L完整回放与原子持久化批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0.approval.json)精确绑定 48 项决定、Stage 5A approved identity、Stage 5C commit `7f64c584c5c7be5e2385a177fab9e5d31e3f665b` 和批准文档；
+- `require_stage5d_rule_capability` 只签发 `stage5_synthetic_execution_validation` 的匿名合成 `research` capability；全部真实/交易权限为 false，5D-2 durable persistence 仍未获当前阶段授权；
+- 当前没有 5D business evaluator、Ledger V2、公司行动、NAV/P&L、complete replay 或 SQLite v4 实现。规则获批不得冒充能力已实现。
 
 1. `KB输入引用与失败关闭规格_v0.1.md`
 2. `StrategyRunManifest与决策审计规格_v0.1.md`

@@ -6,7 +6,7 @@ Stage 5A 的[精确规则包](../03_规则与规格/Stage5_5A成交组合账本�
 
 Stage 5C 已新增 `stage5_execution_contracts.py`、`stage5_portfolio_risk.py`、`stage5_portfolio_ledger_engine.py`、`stage5_fill_projection.py`、`stage5_ledger.py` 与固定 Decimal context。它使用 candidate → reduction-only constraint → finalize 两阶段接缝，在首次可成交窗口按组合批准、风险、现金、成本准备金、容量与可卖量只减不增地重算数量；分离 target/approved/submitted/filled/actual，并以截至 injected clock 的内存 append-only 双分录/FIFO journal 投影结算与证券可用状态。正式证据见[Stage 5C 验收记录](../../docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。非空公司行动、marks、NAV/P&L、外部现金流、SQLite 表/migration、durable atomic persistence 和完整 Stage 5 replay 仍属于 5D，不能由预留 enum、scheduled future event 或 partial replay 冒充。
 
-Stage 5D 当前处于精确规则治理，只有[48 项待批准草案](../03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)和零权限 machine proposal。拟议顺序为 `5D-1` 纯函数 Ledger V2/公司行动/mark/NAV/二维 P&L/complete replay，验收后再做 `5D-2` SQLite v4 原子持久化。批准前不得新增 5D evaluator、数据库表或 migration，也不得改变 Stage 5C 的 scope-limited 契约。
+Stage 5D 的[48 项精确规则](../03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)已被 owner 整包原子批准；原 draft 保持不变，独立[批准记录](../03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化批准记录_v0.1.md)、approved bundle、approval record 和 `stage5d_governance.py` fail-closed verifier 已形成。当前只允许开始 `5D-1` 纯函数 Ledger V2/公司行动/mark/NAV/二维 P&L/complete replay 实现；5D-1 尚未实现或验收，`5D-2` SQLite v4 原子持久化继续保持 `currently_authorized=false`，不得提前新增数据库表或 migration，也不得改变 Stage 5C 的 scope-limited 契约。
 
 Stage 2B 的实际交付、验证锚点和未授权范围见根级 [Stage 2B 正式验收记录](../../docs/validation/stage2b-acceptance.md)。
 

@@ -163,9 +163,6 @@ def test_stage5d_all_48_items_are_pending_with_zero_runtime_authority(
     assert batch["runtime_code_exists"] is False
     assert batch["evaluator_exists"] is False
     assert batch["persistence_exists"] is False
-    assert not (repository_root / APPROVED_BUNDLE_PATH).exists()
-    assert not (repository_root / APPROVAL_PATH).exists()
-
     boundary = rules["authorization_boundary"]
     assert boundary["proposed_approval_scope"] == "stage5_synthetic_execution_validation"
     assert boundary["allowed_run_modes"] == []

@@ -1,0 +1,15 @@
+{
+  "approval_id": "rule_approval_stage5_5d_corporate_action_pnl_replay_persistence_v0_1_0",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage5_5d_corporate_action_pnl_replay_persistence",
+  "bundle_version": "0.1.0",
+  "bundle_hash": {
+    "algorithm": "sha256",
+    "value": "0202d8a15e85851e58af06e9e7c62903efd51f87c7222cbb0172d9e59648be63"
+  },
+  "approved_by": "repository_owner",
+  "approved_at": "2026-08-09T07:52:58.767380Z",
+  "approval_scope": "stage5_synthetic_execution_validation",
+  "approval_source_ref": "codex_thread_019fb33f_123d_7500_8b38_cb9bd6e820b8_owner_approval_stage5_5d_20260809",
+  "schema_version": "0.1.0-draft"
+}

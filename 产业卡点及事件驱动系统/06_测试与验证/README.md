@@ -75,7 +75,7 @@ Stage 5C 业务专项验证：typed recovery record 与多风险簇；NORMAL/DEF
 
 所有 backtest/paper/shadow/live/真实账户/仓位/订单/券商/KB 写权限保持 false。非空公司行动、marks、NAV/P&L、外部现金流、全局费用资本化 lot-cost 对账、SQLite migration、durable atomic persistence 及完整 Stage 5 replay/golden matrix 必须在 Stage 5D 实现后另行验收。
 
-Stage 5D 目前只验证规则治理草案：文档与 machine proposal 的 SHA-256 绑定、48 项完整正文 hash 与整包原子批准、精确 Stage 5A/5C 上游、空运行模式、零 approval/evaluator/persistence/capability、Ledger V2 exact event map、状态独立 PIT、十八格 P&L、`(beginning_at,ending_at]` 和 SQLite v4 完整原子聚合语义。Stage 5D 治理专项为 `9 passed`，纳入后的全仓结果为 `924 passed, 4 skipped`；该测试不执行任何公司行动、估值、P&L、数据库迁移或持久化。
+Stage 5D 草案治理测试继续固定原文与 draft machine proposal 的 SHA-256、48 项完整正文 hash、精确 Stage 5A/5C 上游、零 draft 权限、Ledger V2 exact event map、状态独立 PIT、十八格 P&L、`(beginning_at,ending_at]` 和 SQLite v4 原子聚合语义。新增批准谱系测试精确固定 approved bundle/approval record/批准文档、48 项整包批准、Stage 5A/5C pin、仅匿名合成 `research` 的 capability，并验证 partial approval、错误 scope、批准记录漂移、上游漂移、语义漂移及任何真实/交易/提前 persistence 权限扩张均失败关闭。当前测试仍不执行公司行动、估值、P&L、数据库迁移或持久化。
 
 正式结果见[Stage 5A 规则治理批准验收记录](../../docs/validation/stage5-5a-governance-acceptance.md)、[Stage 5B 历史市场规则与合成成交验收记录](../../docs/validation/stage5-5b-market-execution-acceptance.md)和[Stage 5C 合成组合与内存账本验收记录](../../docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。
 
