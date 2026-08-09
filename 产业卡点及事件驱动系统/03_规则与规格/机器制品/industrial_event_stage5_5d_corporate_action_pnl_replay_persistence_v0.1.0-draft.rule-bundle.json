@@ -1,0 +1,1456 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage5_5d_corporate_action_pnl_replay_persistence",
+  "bundle_version": "0.1.0-draft",
+  "declared_status": "draft",
+  "rules": {
+    "authorization_boundary": {
+      "proposed_approval_scope": "stage5_synthetic_execution_validation",
+      "allowed_run_modes": [],
+      "specification_validation_only": true,
+      "runtime_capability_issued": false,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_real_positions": false,
+      "authorizes_real_accounts": false,
+      "authorizes_real_orders": false,
+      "authorizes_broker_connectivity": false,
+      "authorizes_durable_persistence": false,
+      "authorizes_kb_write": false,
+      "authorizes_real_data": false,
+      "authorizes_strategy_performance_claim": false,
+      "authorizes_stage6": false,
+      "authorizes_cross_strategy_ledger_or_pnl": false,
+      "future_capability_may_not_be_inherited_from_stage2b_stage4_stage5b_or_stage5c": true
+    },
+    "batch": {
+      "stage": "Stage 5",
+      "batch_id": "5D",
+      "purpose": "rule_governance_only",
+      "requirement_ids": [
+        "FR-GATE-006",
+        "FR-RISK-001",
+        "FR-RISK-002",
+        "FR-RISK-003",
+        "FR-EXEC-001",
+        "FR-AUDIT-001",
+        "FR-EXIT-001:execution_projection"
+      ],
+      "owner_approval_required": true,
+      "approval_items_required": 48,
+      "approved_items": 0,
+      "approved_machine_bundle_exists": false,
+      "approval_record_exists": false,
+      "runtime_code_exists": false,
+      "evaluator_exists": false,
+      "persistence_exists": false
+    },
+    "owner_approval_atomicity": {
+      "authorization_predicate": "all(5D-01..5D-48==approved)",
+      "all_48_required": true,
+      "same_exact_bundle_document_and_approval_record_required": true,
+      "pending_rejected_missing_or_identity_drift_result": "draft_zero_runtime_authority",
+      "partial_capability_forbidden": true,
+      "partial_implementation_authority_forbidden": true,
+      "decision_text_sha256_contract": {
+        "algorithm": "sha256",
+        "source": "section_13_complete_checkbox_line",
+        "byte_encoding": "utf-8_without_bom",
+        "line_slice": "from_-_[ ]_through_end_of_line",
+        "line_terminator_included": false
+      }
+    },
+    "exact_upstream_dependencies": {
+      "stage5a_rule_governance": {
+        "batch_id": "5A",
+        "bundle_id": "industrial_event_stage5_5a_execution_portfolio_ledger_replay",
+        "bundle_version": "0.1.0",
+        "bundle_hash": {
+          "algorithm": "sha256",
+          "value": "c69bc7170b608bc6f3e2dd4119e08b13d4f10f03730be115dbc191b47544eeb7"
+        },
+        "rules_hash": {
+          "algorithm": "sha256",
+          "value": "bb7ef84b1287be1111fe95571efa58cd268a65d862b7d235508fc31ccbaf0c69"
+        },
+        "approval_record_hash": {
+          "algorithm": "sha256",
+          "value": "5b9536f546337ba38408d255b3fbad68fbbdf6d9ccba9af79b10b6e04ca8cd78"
+        },
+        "approval_id": "rule_approval_stage5_5a_execution_portfolio_ledger_replay_v0_1_0",
+        "specification_hash": {
+          "algorithm": "sha256",
+          "value": "df866949bdfcc8eb52451b38155080551291d7539f17b730a01a233cf60a5740"
+        },
+        "approval_document_hash": {
+          "algorithm": "sha256",
+          "value": "4862d0c8add5d28db8f24432d4d3958c9de6f73bf74ae7d4754e0290916cbf02"
+        },
+        "existing_stage5a_artifact_bytes_must_remain_unchanged": true,
+        "dependency_is_approved_rule_authority": true
+      },
+      "stage5c_implementation_baseline": {
+        "commit_algorithm": "git-sha1",
+        "commit": "7f64c584c5c7be5e2385a177fab9e5d31e3f665b",
+        "commit_is_implementation_baseline_not_runtime_capability": true,
+        "standalone_stage5b_v0_1_contract_must_remain_unchanged": true,
+        "ledger_v2_changes_require_stage5c_schema_version_increment": true,
+        "ledger_v2_may_change_stage5c_canonical_event_and_replay_bytes": true,
+        "stage5a_through_stage5c_regression_must_be_rerun": true,
+        "future_approved_bundle_must_bind_baseline_and_actual_stage5d_code_commit": true,
+        "stage5d_must_not_backfill_or_overwrite_historical_stage5c_artifacts": true
+      },
+      "dependency_identity_drift": "PRECHECK_BLOCKED"
+    },
+    "shared_semantics": {
+      "synthetic_market_fixture_only": true,
+      "synthetic_account_fixture_only": true,
+      "fixed_point_decimal_only": true,
+      "utc_storage_and_market_local_trade_date_required": true,
+      "all_inputs_require_id_version_hash_and_supersedes": true,
+      "typed_canonical_codec_required": true,
+      "append_only": true,
+      "fail_closed": true,
+      "runtime_must_not_parse_markdown": true,
+      "no_randomness": true,
+      "no_kb_internal_read_or_write": true,
+      "industrial_theme_signal_ledger_and_pnl_interchange": false,
+      "undefined_corporate_action_mark_cost_pnl_or_persistence_behavior": "PRECHECK_BLOCKED"
+    },
+    "implementation_sequence": {
+      "status": "draft",
+      "phase_order": [
+        "5D-1",
+        "5D-2"
+      ],
+      "5D-1": {
+        "purpose": "pure_in_memory_complete_stage5_evaluation",
+        "includes": [
+          "typed_stage5d_case_and_inputs",
+          "internal_stage5c_recomputation",
+          "ledger_v2",
+          "non_empty_corporate_actions",
+          "marks_and_nav",
+          "two_dimensional_pnl",
+          "complete_stage5_replay",
+          "golden_matrix"
+        ],
+        "io_or_external_side_effects": false,
+        "persists_state": false,
+        "must_complete_before_5d_2": true
+      },
+      "5D-2": {
+        "purpose": "sqlite_v4_atomic_durable_persistence",
+        "requires_exact_accepted_5d_1_result": true,
+        "may_not_recompute_or_backfill_5d_1_inside_sql_transaction": true,
+        "currently_authorized": false,
+        "currently_implemented": false
+      },
+      "raw_case_only": true,
+      "stage5d_engine_must_internally_recompute_stage5c": true,
+      "caller_supplied_stage5c_result_partial_replay_or_derived_projection": "forbidden",
+      "stage5c_source_case_result_input_and_replay_must_bind_exactly": true
+    },
+    "stage5d_input_contract": {
+      "status": "draft",
+      "object_name": "Stage5DCompleteReplayCase",
+      "required_fields": [
+        "case_id",
+        "strategy_id",
+        "account_fixture_id",
+        "raw_stage5c_case",
+        "account_wide_multi_security_opening_state",
+        "opening_lot_attribution_set",
+        "corporate_action_coverage_set",
+        "corporate_action_election_set",
+        "unadjusted_mark_observation_set",
+        "synthetic_external_cash_flow_set",
+        "valuation_period",
+        "knowledge_cutoff",
+        "code_commit",
+        "config_hash",
+        "decimal_context_id",
+        "purpose",
+        "injected_clock"
+      ],
+      "single_strategy_and_account_per_case": true,
+      "account_case_may_contain_multiple_securities": true,
+      "raw_stage5c_case_must_contain_raw_stage4_and_stage5_inputs": true,
+      "corporate_action_coverage_set": {
+        "typed": true,
+        "security_and_period_scope_required": true,
+        "all_state_specific_economic_and_knowledge_times_required": true,
+        "not_applicable_state_must_be_typed": true,
+        "canonical_hash_source_byte_hash_and_completeness_required": true,
+        "explicit_complete_empty_coverage_may_represent_no_actions": true,
+        "missing_or_scope_mismatched": "PRECHECK_BLOCKED"
+      },
+      "corporate_action_election_set": {
+        "typed": true,
+        "election_requirement_required_for_every_covered_action": true,
+        "election_requirement_allowlist": [
+          "NOT_APPLICABLE",
+          "MANDATORY",
+          "CHOICE_REQUIRED"
+        ],
+        "not_applicable_or_mandatory_choice_fields_and_times": "typed_NOT_APPLICABLE_only",
+        "caller_choice_for_not_applicable_or_mandatory": "forbidden",
+        "choice_required_fields": [
+          "election_id",
+          "action_id",
+          "strategy_id",
+          "account_fixture_id",
+          "security_id",
+          "choice_code",
+          "election_made_at",
+          "election_available_at",
+          "election_deadline_at",
+          "deadline_rule_id",
+          "deadline_rule_version",
+          "deadline_rule_hash",
+          "source_id",
+          "source_bytes_hash",
+          "revision_id",
+          "supersedes",
+          "canonical_hash"
+        ],
+        "choice_code_must_come_from_exact_action_terms": true,
+        "recognized_time_formulas": {
+          "choice_made_ordering": "terms_available_at_lte_election_made_at_lte_election_deadline_at",
+          "election_recognized_at": "max(election_made_at,election_available_at,terms_available_at)",
+          "choice_dependent_phase_recognized_at": "max(base_action_phase_recognized_at,election_recognized_at)",
+          "default_recognized_at": "max(election_deadline_at,default_available_at,terms_available_at)",
+          "default_choice_dependent_phase_recognized_at": "max(base_action_phase_recognized_at,default_recognized_at)",
+          "revised_election_recognized_at": "max(revision_made_at,revision_available_at,terms_available_at)"
+        },
+        "pit_horizon_contract": {
+          "choice_made_before_deadline_but_available_after_horizon": "PENDING_ELECTION_future_plan_only",
+          "choice_dependent_phase_required_in_horizon_without_valid_choice": "PRECHECK_BLOCKED_before_first_accepted_event",
+          "choice_or_revision_may_not_be_backfilled_to_earlier_phase": true
+        },
+        "default_contract": {
+          "may_apply_only_after_deadline": true,
+          "required_fields": [
+            "default_choice_code",
+            "default_rule_id",
+            "default_rule_version",
+            "default_rule_hash",
+            "default_available_at"
+          ],
+          "must_be_explicit_in_exact_action_terms_versioned_and_content_addressed": true,
+          "recognized_time_formula_ref": "/stage5d_input_contract/corporate_action_election_set/recognized_time_formulas/default_recognized_at",
+          "missing_explicit_default": "UNKNOWN_BLOCKED",
+          "missing_choice_may_be_inferred_as_decline": false
+        },
+        "active_election_per_journal_prefix": "at_most_one",
+        "idempotency": {
+          "same_identity_same_canonical_bytes": "idempotent",
+          "same_identity_different_canonical_bytes": "PRECHECK_BLOCKED_conflict"
+        },
+        "revision_contract": {
+          "action_terms_must_explicitly_allow_revision": true,
+          "required_fields_when_present": [
+            "revision_id",
+            "supersedes",
+            "revision_made_at",
+            "revision_available_at"
+          ],
+          "revision_made_at_must_be_lte_election_deadline_at": true,
+          "recognized_time_formula_ref": "/stage5d_input_contract/corporate_action_election_set/recognized_time_formulas/revised_election_recognized_at",
+          "effective_correction": "append_only_REVERSAL_then_REPLACEMENT_after_revision_recognized_at",
+          "overwrite_or_backwrite": "forbidden"
+        },
+        "action_election_deadline_default_revision_source_and_canonical_hash_required": true
+      },
+      "unadjusted_mark_observation_set": {
+        "typed": true,
+        "multi_security": true,
+        "unadjusted_prices_only": true,
+        "observed_at_mark_available_at_session_rule_source_coverage_and_completeness_required": true,
+        "coverage_scope_at_each_valuation_point": "securities_with_actual_quantity_gt_zero_in_that_inclusive_journal_prefix",
+        "actual_quantity_eq_zero_market_value": "exact_decimal_zero_without_mark_requirement",
+        "fully_disposed_security_requires_ending_mark": false,
+        "missing_or_unverifiable_scope_coverage_completeness_or_source_hash": "PRECHECK_BLOCKED",
+        "complete_coverage_may_prove_no_eligible_legal_observation": true,
+        "complete_coverage_without_legal_observation_outcome_ref": "/rule_modules/marks_and_nav/outcome_precedence"
+      },
+      "synthetic_external_cash_flow_set": {
+        "typed": true,
+        "strategy_and_account_isolated": true,
+        "flow_id_direction_cny_amount_economic_knowledge_cash_state_recognized_times_authorization_source_and_hash_required": true,
+        "deposit_and_withdrawal_only": true,
+        "must_not_encode_trade_dividend_fee_tax_or_corporate_action_cash": true
+      },
+      "valuation_period": {
+        "beginning_at_and_ending_at_required": true,
+        "ordering": "beginning_at_lt_ending_at_lte_injected_clock",
+        "beginning_prefix": "effective_at_lte_beginning_at",
+        "ending_prefix": "effective_at_lte_ending_at",
+        "period_interval": "beginning_at_lt_effective_at_lte_ending_at",
+        "beginning_inclusive_ending_inclusive_prefixes_required": true,
+        "beginning_inclusive_ending_exclusive_implementation": "forbidden"
+      },
+      "opening_lot_attribution_set": {
+        "typed_per_lot_component_breakdown_required": true,
+        "must_reconcile_to_opening_lot_full_cost_and_security_cost": true,
+        "unknown_other_plug_or_inferred_breakdown": "forbidden",
+        "missing_components": "ABSTAIN_incomplete_pnl"
+      },
+      "account_wide_multi_security_opening_state": {
+        "typed": true,
+        "exact_projected_and_accepted_as_of_event_sets_required": true,
+        "exact_base_generation_event_set_hash_and_journal_head_required": true,
+        "all_nonzero_account_securities_and_account_level_cash_events_required": true,
+        "every_nonzero_lot_requires_opening_attribution_and_corporate_action_coverage": true,
+        "each_valuation_point_requires_mark_coverage_only_for_prefix_actual_quantity_gt_zero": true,
+        "fully_disposed_security_requires_ending_mark": false,
+        "canonical_sort": [
+          "security_id",
+          "lot_id"
+        ]
+      },
+      "state_specific_temporal_semantics": {
+        "terms_fields": [
+          "announced_at",
+          "terms_available_at"
+        ],
+        "entitlement_fields": [
+          "entitlement_cutoff_at",
+          "entitlement_rule_available_at"
+        ],
+        "economic_action_fields": [
+          "economic_effective_at",
+          "economic_state_available_at"
+        ],
+        "cash_fields": [
+          "payable_at",
+          "paid_at",
+          "paid_state_available_at",
+          "cash_available_at",
+          "cash_available_state_available_at"
+        ],
+        "security_fields": [
+          "security_delivered_at",
+          "delivered_state_available_at",
+          "security_sellable_at",
+          "sellable_state_available_at"
+        ],
+        "recognized_time_formulas": {
+          "entitlement_determined_at": "max(entitlement_cutoff_at,terms_available_at,entitlement_rule_available_at)",
+          "recognized_at": "max(economic_effective_at,economic_state_available_at,entitlement_determined_at)",
+          "paid_recognized_at": "max(paid_at,paid_state_available_at,recognized_at)",
+          "cash_available_recognized_at": "max(cash_available_at,cash_available_state_available_at,paid_recognized_at)",
+          "security_delivered_recognized_at": "max(security_delivered_at,delivered_state_available_at,recognized_at)",
+          "security_sellable_recognized_at": "max(security_sellable_at,sellable_state_available_at,security_delivered_recognized_at)"
+        },
+        "not_applicable_must_be_explicit": true,
+        "event_effective_at_uses_its_own_recognized_time": true,
+        "action_wide_available_at_reuse": "forbidden",
+        "paid_fact_unknown_remains_receivable": true,
+        "paid_but_cash_unavailable_uses_cash_settled_unavailable": true,
+        "recognized_but_undelivered_security_uses_security_unsettled": true,
+        "delivered_but_unsellable_security_uses_security_unsellable": true
+      },
+      "mark_temporal_semantics": {
+        "fields": [
+          "observed_at",
+          "mark_available_at"
+        ],
+        "mark_to_market_effective_at": "max(observed_at,mark_available_at)"
+      },
+      "external_flow_temporal_semantics": {
+        "fields": [
+          "economic_effective_at",
+          "flow_available_at",
+          "cash_available_at",
+          "cash_state_available_at"
+        ],
+        "recognized_at": "max(economic_effective_at,flow_available_at,cash_available_at,cash_state_available_at)"
+      },
+      "stage5c_settlement_temporal_semantics": {
+        "each_moment_fields": [
+          "moment_effective_at",
+          "market_rule_available_at",
+          "state_available_at"
+        ],
+        "recognized_moments": [
+          "buy_cash_paid_recognized_at",
+          "security_delivered_recognized_at",
+          "security_sellable_recognized_at",
+          "sell_cash_paid_recognized_at",
+          "sell_cash_available_recognized_at"
+        ],
+        "formula_for_each": "max(moment_effective_at,market_rule_available_at,state_available_at)",
+        "reuse_another_state_available_time": "forbidden",
+        "nonempty_special_exception_fails_before_time_derivation": true
+      },
+      "purposes": [
+        "new_research_validation",
+        "audit_replay"
+      ],
+      "all_typed_inputs_require_id_version_hash_supersedes_and_pit_upper_bound": true,
+      "unverifiable_input_scope_coverage_source_hash_or_replay_basis": "PRECHECK_BLOCKED",
+      "complete_mark_coverage_without_legal_observation_outcome_ref": "/rule_modules/marks_and_nav/outcome_precedence"
+    },
+    "rule_modules": {
+      "ledger_v2": {
+        "status": "draft",
+        "version": "2",
+        "posting_object": "LedgerPostingV2",
+        "posting_required_fields": [
+          "account",
+          "asset_unit",
+          "security_id",
+          "debit",
+          "credit"
+        ],
+        "posting_signed_delta_formula": "debit-credit",
+        "posting_exactly_one_positive_side_required": true,
+        "zero_posting": "forbidden",
+        "balance_separately_by_asset_unit": true,
+        "asset_units": [
+          "CNY",
+          "SHARE"
+        ],
+        "cash_posting_scope": "CNY_with_null_security_id",
+        "security_cost_receivable_or_payable_scope": "CNY_with_exact_security_id",
+        "security_quantity_scope": "SHARE_with_exact_security_id",
+        "security_id_required_for_security_quantity_cost_and_security_attribution_postings": true,
+        "account_level_posting_security_id": null,
+        "explicit_account_codes": [
+          "CASH_AVAILABLE",
+          "CASH_RESERVED",
+          "CASH_RECEIVABLE",
+          "CASH_SETTLED_UNAVAILABLE",
+          "CASH_PAYABLE",
+          "SECURITY_COST",
+          "TRADE_CLEARING",
+          "REALIZED_PNL_CONTROL",
+          "FEE_EXPENSE_CONTROL",
+          "TAX_EXPENSE_CONTROL",
+          "OPENING_CONTROL",
+          "SECURITY_UNSETTLED",
+          "SECURITY_UNSELLABLE",
+          "SECURITY_SELLABLE",
+          "SECURITY_CONTROL",
+          "EXTERNAL_CAPITAL",
+          "CORPORATE_ACTION_RECEIVABLE",
+          "CORPORATE_ACTION_PAYABLE",
+          "CORPORATE_ACTION_CLEARING",
+          "CORPORATE_ACTION_INCOME_CONTROL",
+          "OTHER_RECEIVABLE",
+          "OTHER_PAYABLE",
+          "DIVIDEND_INCOME_CONTROL"
+        ],
+        "account_scope_allowlist": {
+          "CNY_null": [
+            "CASH_AVAILABLE",
+            "CASH_RESERVED",
+            "CASH_SETTLED_UNAVAILABLE",
+            "EXTERNAL_CAPITAL",
+            "OPENING_CONTROL"
+          ],
+          "CNY_security": [
+            "CASH_RECEIVABLE",
+            "CASH_PAYABLE",
+            "SECURITY_COST",
+            "TRADE_CLEARING",
+            "REALIZED_PNL_CONTROL",
+            "FEE_EXPENSE_CONTROL",
+            "TAX_EXPENSE_CONTROL",
+            "CORPORATE_ACTION_RECEIVABLE",
+            "CORPORATE_ACTION_PAYABLE",
+            "CORPORATE_ACTION_CLEARING",
+            "CORPORATE_ACTION_INCOME_CONTROL",
+            "DIVIDEND_INCOME_CONTROL",
+            "OTHER_RECEIVABLE",
+            "OTHER_PAYABLE",
+            "OPENING_CONTROL"
+          ],
+          "SHARE_security": [
+            "SECURITY_UNSETTLED",
+            "SECURITY_UNSELLABLE",
+            "SECURITY_SELLABLE",
+            "SECURITY_CONTROL",
+            "OPENING_CONTROL"
+          ]
+        },
+        "cash_and_external_capital_require_null_security": true,
+        "security_cost_receivable_payable_clearing_income_expense_and_quantity_require_exact_security": true,
+        "trade_and_corporate_action_clearing_must_zero_within_disposal_event": true,
+        "opening_control_requires_typed_input_amount_and_may_not_plug_computed_residual": true,
+        "receivable_and_payable_accounts_must_be_explicit_not_net_hidden": true,
+        "external_capital_balances_external_cash_flows_and_is_not_pnl": true,
+        "lot_object": "LedgerLotEffectV2",
+        "lot_required_cost_fields": [
+          "benchmark_principal_delta",
+          "execution_slippage_delta",
+          "fees_delta",
+          "taxes_delta",
+          "corporate_action_basis_adjustment_delta",
+          "full_cost_delta"
+        ],
+        "lot_required_lineage_fields": [
+          "lot_id",
+          "security_id",
+          "acquired_at",
+          "source_fill_id",
+          "source_event_ids",
+          "governing_rule_hashes",
+          "supersedes_or_reversal_of"
+        ],
+        "full_cost_formula": "benchmark_principal+execution_slippage+fees+taxes+corporate_action_basis_adjustment",
+        "cost_component_signs": {
+          "benchmark_principal": "gte_zero",
+          "execution_slippage": "signed_quantity_times_execution_minus_benchmark",
+          "fees": "gte_zero",
+          "taxes": "gte_zero",
+          "corporate_action_basis_adjustment": "signed_but_rule_proven_and_closed_across_lineage",
+          "full_cost": "gte_zero"
+        },
+        "opening_lot_requires_same_component_set": true,
+        "opening_lot_summary_full_cost_without_components": "ABSTAIN_incomplete_pnl",
+        "unknown_other_or_plug_cost_component": "forbidden",
+        "per_security_cost_identity": "sum(open_lot_full_cost_for_security)=SECURITY_COST_for_security",
+        "account_security_cost_identity": "sum(SECURITY_COST_by_security)=account_total_security_cost",
+        "buy_fee_and_tax": {
+          "capitalized_into_lot_and_per_security_security_cost": true,
+          "separate_fee_or_tax_expense_posting_that_duplicates_cost": "forbidden"
+        },
+        "sell_cost_and_proceeds": {
+          "fifo_consumed_full_cost_is_realized_cost": true,
+          "sell_fee_and_tax_are_deducted_from_receivable_and_attributed_as_period_cost_exactly_once": true,
+          "each_cost_component_is_removed_proportionally_with_deterministic_final_exhaustion": true,
+          "fee_tax_or_cost_as_second_expense_after_netting": "forbidden"
+        },
+        "external_cash_flow_event": {
+          "uses_typed_external_cash_flow_set": true,
+          "posts_between_cash_or_receivable_payable_and_external_capital": true,
+          "changes_equity_but_is_removed_by_net_external_cash_inflow_in_period_pnl": true
+        },
+        "event_type_priority": {
+          "REVERSAL": 5,
+          "OPENING_BALANCE": 10,
+          "CASH_RESERVATION": 20,
+          "SYNTHETIC_ORDER_ACCEPTED": 30,
+          "TRADE_FILL": 40,
+          "FEE": 50,
+          "TAX": 51,
+          "SYNTHETIC_ORDER_CANCELLED": 60,
+          "CASH_RELEASE": 70,
+          "TRADE_SETTLEMENT": 80,
+          "SECURITY_AVAILABILITY": 90,
+          "REPLACEMENT": 95,
+          "CASH_DIVIDEND": 100,
+          "SHARE_DISTRIBUTION": 101,
+          "SPLIT_OR_CONSOLIDATION": 102,
+          "RIGHTS_OR_ALLOTMENT": 103,
+          "DELISTING_OR_CASH_OUT": 104,
+          "MARK_TO_MARKET": 105,
+          "EXTERNAL_CASH_FLOW": 106
+        },
+        "priority_map_must_match_stage5c_and_is_versioned_in_complete_replay": true,
+        "stage5c_replay_entry_continues_to_reject_all_stage5d_event_types": true,
+        "stage5d_uses_independent_complete_replay_policy": true,
+        "event_sort_order": [
+          "effective_at",
+          "event_type_priority",
+          "ledger_event_id"
+        ],
+        "settlement_special_exception": {
+          "any_nonempty_special_exception_id_in_first_version": "PRECHECK_BLOCKED",
+          "future_exception_requires_separate_content_addressed_market_rule_contract_and_owner_approval": true,
+          "corporate_action_contract_or_free_text_may_not_bypass_settlement_cycle": true
+        },
+        "exact_event_semantic_map": {
+          "event_semantic_map_id": "stage5d_ledger_v2_exact_event_map",
+          "version": "1.0.0",
+          "closed_world_allowlist": true,
+          "canonical_hash_enters_every_event_and_complete_replay": true,
+          "zero_amount_posting_group_is_omitted": true,
+          "notation": {
+            "debit": "D(account,amount,security_scope)",
+            "credit": "C(account,amount,security_scope)",
+            "transfer": "X_to_Y(amount)=D(Y,amount)+C(X,amount)",
+            "null_security_scope": "account_level_cash_only"
+          },
+          "base_variables": {
+            "quantity": "q>0",
+            "buy_benchmark_principal": "B=q*buy_benchmark_price",
+            "buy_slippage": "S_buy=q*(buy_execution_price-buy_benchmark_price)",
+            "buy_gross": "G_buy=B+S_buy=q*buy_execution_price>0",
+            "buy_fee": "F_buy>=0",
+            "buy_tax": "T_buy>=0",
+            "buy_full_cost": "K_buy=G_buy+F_buy+T_buy",
+            "sell_gross": "G_sell=q*sell_execution_price>0",
+            "disposed_fifo_cost": "C_disposed=sum(exact_FIFO_disposed_lot_components)>=0",
+            "sell_fee": "F_sell>=0",
+            "sell_tax": "T_sell>=0",
+            "sell_net_receivable": "P_sell=G_sell-F_sell-T_sell>=0",
+            "gain_control_close_nonnegative": "D(clearing,x)+C(REALIZED_PNL_CONTROL,x)",
+            "gain_control_close_negative": "D(REALIZED_PNL_CONTROL,-x)+C(clearing,-x)"
+          },
+          "stage5c_event_semantics": [
+            {"semantic_id": "OPENING_BALANCE", "event_type": "OPENING_BALANCE", "phase": "OPENING", "postings_formula": "typed_positive_assets_debit_and_liabilities_or_controls_credit_balanced_only_by_declared_OPENING_CONTROL", "lot_effect_formula": "one_+quantity_+sellable_components_full_cost_effect_per_opening_lot", "recognized_time": "opening_as_of"},
+            {"semantic_id": "CASH_RESERVATION_BUY", "event_type": "CASH_RESERVATION", "phase": "BUY", "postings_formula": "CASH_AVAILABLE_to_CASH_RESERVED(R),R>=K_buy", "lot_effect_formula": "none", "recognized_time": "submitted_at"},
+            {"semantic_id": "SYNTHETIC_ORDER_ACCEPTED", "event_type": "SYNTHETIC_ORDER_ACCEPTED", "phase": "ACCEPTED", "postings_formula": "none", "lot_effect_formula": "none_bind_order_approval_rule_source_hashes", "recognized_time": "accepted_at"},
+            {"semantic_id": "TRADE_FILL_BUY", "event_type": "TRADE_FILL", "phase": "BUY", "postings_formula": "D(SECURITY_COST,G_buy,s)+C(CASH_PAYABLE,G_buy,s)+D(SECURITY_UNSETTLED,q,s)+C(SECURITY_CONTROL,q,s)", "lot_effect_formula": "create_fill_lot(+q,sellable+0,B,S_buy,fee=0,tax=0,basis=0,full=G_buy)", "recognized_time": "filled_at"},
+            {"semantic_id": "FEE_BUY", "event_type": "FEE", "phase": "BUY", "postings_formula": "D(SECURITY_COST,F_buy,s)+C(CASH_PAYABLE,F_buy,s)", "lot_effect_formula": "same_fill_lot_fees+=F_buy;full+=F_buy", "recognized_time": "filled_at"},
+            {"semantic_id": "TAX_BUY", "event_type": "TAX", "phase": "BUY", "postings_formula": "D(SECURITY_COST,T_buy,s)+C(CASH_PAYABLE,T_buy,s)", "lot_effect_formula": "same_fill_lot_taxes+=T_buy;full+=T_buy", "recognized_time": "filled_at"},
+            {"semantic_id": "TRADE_FILL_SELL", "event_type": "TRADE_FILL", "phase": "SELL", "postings_formula": "D(CASH_RECEIVABLE,G_sell,s)+C(TRADE_CLEARING,G_sell,s);D(TRADE_CLEARING,C_disposed,s)+C(SECURITY_COST,C_disposed,s);D(SECURITY_CONTROL,q,s)+C(SECURITY_SELLABLE,q,s);gain(G_sell-C_disposed)_zeros_TRADE_CLEARING", "lot_effect_formula": "exact_FIFO_-q_-sellable_and_remove_all_five_components_and_full_cost", "recognized_time": "filled_at"},
+            {"semantic_id": "FEE_SELL", "event_type": "FEE", "phase": "SELL", "postings_formula": "D(FEE_EXPENSE_CONTROL,F_sell,s)+C(CASH_RECEIVABLE,F_sell,s)", "lot_effect_formula": "none_only_reduce_same_fill_receivable", "recognized_time": "filled_at"},
+            {"semantic_id": "TAX_SELL", "event_type": "TAX", "phase": "SELL", "postings_formula": "D(TAX_EXPENSE_CONTROL,T_sell,s)+C(CASH_RECEIVABLE,T_sell,s)", "lot_effect_formula": "none_only_reduce_same_fill_receivable", "recognized_time": "filled_at"},
+            {"semantic_id": "SYNTHETIC_ORDER_CANCELLED", "event_type": "SYNTHETIC_ORDER_CANCELLED", "phase": "CANCELLED", "postings_formula": "none", "lot_effect_formula": "none_cash_release_is_separate_event", "recognized_time": "cancelled_at"},
+            {"semantic_id": "CASH_RELEASE_UNUSED_BUY_RESERVE", "event_type": "CASH_RELEASE", "phase": "UNUSED_BUY_RESERVE", "postings_formula": "CASH_RESERVED_to_CASH_AVAILABLE(R-K_buy)", "lot_effect_formula": "none", "recognized_time": "buy_cash_payable_recognized_at"},
+            {"semantic_id": "TRADE_SETTLEMENT_BUY_CASH", "event_type": "TRADE_SETTLEMENT", "phase": "BUY_CASH", "postings_formula": "D(CASH_PAYABLE,K_buy,s)+C(CASH_RESERVED,K_buy,null)", "lot_effect_formula": "none", "recognized_time": "buy_cash_paid_recognized_at"},
+            {"semantic_id": "TRADE_SETTLEMENT_BUY_SECURITY", "event_type": "TRADE_SETTLEMENT", "phase": "BUY_SECURITY", "postings_formula": "SECURITY_UNSETTLED_to_SECURITY_UNSELLABLE(q)", "lot_effect_formula": "no_cost_change", "recognized_time": "security_delivered_recognized_at"},
+            {"semantic_id": "SECURITY_AVAILABILITY_BUY", "event_type": "SECURITY_AVAILABILITY", "phase": "BUY", "postings_formula": "SECURITY_UNSELLABLE_to_SECURITY_SELLABLE(q)", "lot_effect_formula": "same_lot_sellable+=q", "recognized_time": "security_sellable_recognized_at"},
+            {"semantic_id": "TRADE_SETTLEMENT_SELL_CASH", "event_type": "TRADE_SETTLEMENT", "phase": "SELL_CASH", "postings_formula": "if_paid_before_available:D(CASH_SETTLED_UNAVAILABLE,P_sell,null)+C(CASH_RECEIVABLE,P_sell,s);if_equal:D(CASH_AVAILABLE,P_sell,null)+C(CASH_RECEIVABLE,P_sell,s)", "lot_effect_formula": "none_direct_form_forbids_separate_release", "recognized_time": "sell_cash_paid_recognized_at"},
+            {"semantic_id": "CASH_RELEASE_SELL_CASH_AVAILABLE", "event_type": "CASH_RELEASE", "phase": "SELL_CASH_AVAILABLE", "postings_formula": "only_if_paid_before_available:CASH_SETTLED_UNAVAILABLE_to_CASH_AVAILABLE(P_sell)", "lot_effect_formula": "none", "recognized_time": "sell_cash_available_recognized_at"},
+            {"semantic_id": "REVERSAL", "event_type": "REVERSAL", "phase": "CORRECTION", "postings_formula": "strictly_swap_every_debit_and_credit_of_original_event", "lot_effect_formula": "negate_quantity_sellable_and_all_five_cost_components;bind_unique_original", "recognized_time": "correction_available_at"},
+            {"semantic_id": "REPLACEMENT", "event_type": "REPLACEMENT", "phase": "CORRECTION", "postings_formula": "new_event_exact_postings_revalidated_by_this_map", "lot_effect_formula": "new_exact_lot_effects;bind_accepted_reversal_and_original;no_in_place_overwrite", "recognized_time": "replacement_available_at"}
+          ],
+          "corporate_action_fee_tax_compound_rule": {
+            "typed_source_components_required": true,
+            "standalone_fee_or_tax_event_at_priority_50_or_51": "forbidden",
+            "postings_must_be_compounded_into_corresponding_action_phase": true
+          },
+          "corporate_action_variables": {
+            "gross_cash": "G_action",
+            "disposed_full_cost": "C_action",
+            "entitlement_quantity": "Q_action",
+            "rights_full_cost": "K_rights=benchmark_principal+typed_acquisition_fee+typed_acquisition_tax"
+          },
+          "corporate_action_cash_phases": {
+            "paid_before_available": "D(CASH_SETTLED_UNAVAILABLE,P,null)+C(CORPORATE_ACTION_RECEIVABLE,P,s)",
+            "available_after_paid": "CASH_SETTLED_UNAVAILABLE_to_CASH_AVAILABLE(P)",
+            "paid_equals_available_compound": "D(CASH_AVAILABLE,P,null)+C(CORPORATE_ACTION_RECEIVABLE,P,s)",
+            "same_time_adjacent_phases_must_algebraically_merge": true,
+            "same_priority_event_id_or_hash_order_dependency": "forbidden"
+          },
+          "stage5d_event_semantics": [
+            {"semantic_id": "CASH_DIVIDEND_RECOGNIZE", "event_type": "CASH_DIVIDEND", "phase": "RECOGNIZE", "postings_formula": "D(CORPORATE_ACTION_RECEIVABLE,G_action,s)+C(DIVIDEND_INCOME_CONTROL,G_action,s);if_typed_F_T_same_time:D(FEE_EXPENSE_CONTROL,F,s)+D(TAX_EXPENSE_CONTROL,T,s)+C(CORPORATE_ACTION_RECEIVABLE,F+T,s)", "lot_effect_formula": "none;P=G_action-F-T;gross_fee_tax_are_three_unique_pnl_cells", "recognized_time": "recognized_at"},
+            {"semantic_id": "CASH_DIVIDEND_PAID_OR_AVAILABLE", "event_type": "CASH_DIVIDEND", "phase": "PAID_OR_AVAILABLE", "postings_formula": "use_corporate_action_cash_phases_for_exact_outstanding_receivable", "lot_effect_formula": "none", "recognized_time": "paid_recognized_at_or_cash_available_recognized_at"},
+            {"semantic_id": "SHARE_DISTRIBUTION_RECOGNIZE", "event_type": "SHARE_DISTRIBUTION", "phase": "RECOGNIZE", "postings_formula": "D(SECURITY_UNSETTLED,Q_action,s)+C(SECURITY_CONTROL,Q_action,s)", "lot_effect_formula": "append_quantity_lineage_pro_rata_to_entitlement_lots;all_five_cost_components_and_total_full_cost_unchanged", "recognized_time": "recognized_at"},
+            {"semantic_id": "SHARE_DISTRIBUTION_DELIVERED", "event_type": "SHARE_DISTRIBUTION", "phase": "DELIVERED", "postings_formula": "SECURITY_UNSETTLED_to_SECURITY_UNSELLABLE(Q_action)", "lot_effect_formula": "no_cost_change", "recognized_time": "security_delivered_recognized_at"},
+            {"semantic_id": "SHARE_DISTRIBUTION_SELLABLE", "event_type": "SHARE_DISTRIBUTION", "phase": "SELLABLE", "postings_formula": "SECURITY_UNSELLABLE_to_SECURITY_SELLABLE(Q_action)", "lot_effect_formula": "corresponding_lots_sellable+=Q_action", "recognized_time": "security_sellable_recognized_at"},
+            {"semantic_id": "SPLIT_OR_CONSOLIDATION_RECOGNIZE", "event_type": "SPLIT_OR_CONSOLIDATION", "phase": "RECOGNIZE", "postings_formula": "for_each_bucket_delta_q:increase_D(bucket,delta_q)+C(SECURITY_CONTROL,delta_q);decrease_reverse", "lot_effect_formula": "multiply_each_lot_and_bucket_by_exact_rational_ratio;five_components_and_full_cost_absolute_amounts_unchanged", "recognized_time": "recognized_at"},
+            {"semantic_id": "RIGHTS_OR_ALLOTMENT_DECLINE", "event_type": "RIGHTS_OR_ALLOTMENT", "phase": "DECLINE", "postings_formula": "none", "lot_effect_formula": "none_bind_election_action_rule_hashes", "recognized_time": "recognized_at"},
+            {"semantic_id": "RIGHTS_OR_ALLOTMENT_EXERCISE_RECOGNIZE", "event_type": "RIGHTS_OR_ALLOTMENT", "phase": "EXERCISE_RECOGNIZE", "postings_formula": "CASH_AVAILABLE_to_CASH_RESERVED(K_rights);D(SECURITY_COST,K_rights,s)+C(CORPORATE_ACTION_PAYABLE,K_rights,s);D(SECURITY_UNSETTLED,Q_action,s)+C(SECURITY_CONTROL,Q_action,s)", "lot_effect_formula": "create_unsettled_action_lot(+Q_action,sellable+0,benchmark_principal_fee_tax,slippage=0,basis=0,full=K_rights);nonzero_basis_requires_separate_approved_rule", "recognized_time": "recognized_at"},
+            {"semantic_id": "RIGHTS_OR_ALLOTMENT_PAID", "event_type": "RIGHTS_OR_ALLOTMENT", "phase": "PAID", "postings_formula": "D(CORPORATE_ACTION_PAYABLE,K_rights,s)+C(CASH_RESERVED,K_rights,null)", "lot_effect_formula": "none", "recognized_time": "paid_recognized_at"},
+            {"semantic_id": "RIGHTS_OR_ALLOTMENT_DELIVERED", "event_type": "RIGHTS_OR_ALLOTMENT", "phase": "DELIVERED", "postings_formula": "SECURITY_UNSETTLED_to_SECURITY_UNSELLABLE(Q_action)", "lot_effect_formula": "no_cost_or_full_cost_change", "recognized_time": "security_delivered_recognized_at"},
+            {"semantic_id": "RIGHTS_OR_ALLOTMENT_SELLABLE", "event_type": "RIGHTS_OR_ALLOTMENT", "phase": "SELLABLE", "postings_formula": "SECURITY_UNSELLABLE_to_SECURITY_SELLABLE(Q_action)", "lot_effect_formula": "corresponding_lot_sellable+=Q_action", "recognized_time": "security_sellable_recognized_at"},
+            {"semantic_id": "DELISTING_OR_CASH_OUT_RECOGNIZE", "event_type": "DELISTING_OR_CASH_OUT", "phase": "RECOGNIZE", "postings_formula": "D(CORPORATE_ACTION_RECEIVABLE,G_action,s)+C(CORPORATE_ACTION_CLEARING,G_action,s);D(CORPORATE_ACTION_CLEARING,C_action,s)+C(SECURITY_COST,C_action,s);gain(G_action-C_action)_zeros_clearing;D(SECURITY_CONTROL,q_bucket,s)+C(bucket,q_bucket,s)", "lot_effect_formula": "dispose_exact_eligible_lots_and_remove_quantity_sellable_and_all_five_cost_components", "recognized_time": "recognized_at"},
+            {"semantic_id": "DELISTING_OR_CASH_OUT_PAID_OR_AVAILABLE", "event_type": "DELISTING_OR_CASH_OUT", "phase": "PAID_OR_AVAILABLE", "postings_formula": "same_time_typed_fee_tax_debit_expense_controls_and_credit_receivable_then_use_net_receivable_in_common_cash_phases", "lot_effect_formula": "none", "recognized_time": "paid_recognized_at_or_cash_available_recognized_at"},
+            {"semantic_id": "CASH_IN_LIEU", "event_type": "SHARE_DISTRIBUTION_OR_SPLIT_OR_CONSOLIDATION", "phase": "CASH_IN_LIEU", "postings_formula": "embed_in_source_action_and_reuse_cash_out_receivable_clearing_realized_control_and_cash_phases", "lot_effect_formula": "dispose_only_explicit_fractional_quantity_and_cost;gross_cash_not_net_or_zero_cost_enters_corporate_action_cash_cell", "recognized_time": "source_action_state_recognized_time"},
+            {"semantic_id": "INDEPENDENT_CORPORATE_ACTION_CASH", "event_type": "CORPORATE_ACTION_CASH", "phase": "NO_COST_BASIS_DISPOSAL", "postings_formula": "D(CORPORATE_ACTION_RECEIVABLE,G_action,s)+C(CORPORATE_ACTION_INCOME_CONTROL,G_action,s);same_phase_typed_F_T_debit_expense_controls_and_credit_receivable;then_common_cash_phases_use_net_receivable", "lot_effect_formula": "none;typed_action_must_prove_no_security_cost_basis_disposal;gross_fee_tax_each_enter_one_pnl_cell", "recognized_time": "recognized_at_then_cash_state_recognized_times"},
+            {"semantic_id": "MARK_TO_MARKET", "event_type": "MARK_TO_MARKET", "phase": "MEMO", "postings_formula": "none", "lot_effect_formula": "none_bind_mark_observation_rule_source", "recognized_time": "max(observed_at,mark_available_at)"},
+            {"semantic_id": "EXTERNAL_CASH_FLOW_DEPOSIT", "event_type": "EXTERNAL_CASH_FLOW", "phase": "DEPOSIT", "postings_formula": "D(CASH_AVAILABLE,G_flow,null)+C(EXTERNAL_CAPITAL,G_flow,null)", "lot_effect_formula": "none_and_not_pnl", "recognized_time": "max(flow_economic_knowledge_cash_state_times)"},
+            {"semantic_id": "EXTERNAL_CASH_FLOW_WITHDRAWAL", "event_type": "EXTERNAL_CASH_FLOW", "phase": "WITHDRAWAL", "postings_formula": "D(EXTERNAL_CAPITAL,G_flow,null)+C(CASH_AVAILABLE,G_flow,null)", "lot_effect_formula": "none_and_fail_closed_on_insufficient_balance", "recognized_time": "max(flow_economic_knowledge_cash_state_times)"}
+          ],
+          "stage5c_semantic_count": 18,
+          "stage5d_semantic_count": 18,
+          "every_action_phase_binds": [
+            "action_id",
+            "election_id",
+            "source_hash",
+            "rule_hash",
+            "phase",
+            "economic_at",
+            "state_available_at",
+            "recognized_at"
+          ],
+          "net_amount_may_not_infer_fee_tax_fractional_basis_paid_delivered_or_sellable": true,
+          "uncovered_or_nonunique_compound_or_nonzero_clearing_or_negative_receivable_payable_or_map_mismatch": "PRECHECK_BLOCKED_before_first_accepted_action_event"
+        },
+        "each_event_reconciles_currency_security_quantity_and_per_security_cost": true,
+        "automatic_plug_or_cross_security_cost_netting": "forbidden"
+      },
+      "corporate_actions": {
+        "status": "draft",
+        "input_objects": [
+          "CorporateActionCoverageSet",
+          "CorporateActionElectionSet"
+        ],
+        "effective_dated_content_addressed_input_required": true,
+        "point_in_time_upper_bound_required": true,
+        "supported_action_types": [
+          "CASH_DIVIDEND",
+          "SHARE_DISTRIBUTION",
+          "SPLIT_OR_CONSOLIDATION",
+          "RIGHTS_OR_ALLOTMENT",
+          "DELISTING_OR_CASH_OUT"
+        ],
+        "temporal_contract_ref": "/stage5d_input_contract/state_specific_temporal_semantics",
+        "election_contract_ref": "/stage5d_input_contract/corporate_action_election_set",
+        "required_temporal_fields": {
+          "terms": [
+            "announced_at",
+            "terms_available_at"
+          ],
+          "entitlement": [
+            "entitlement_cutoff_at",
+            "entitlement_rule_available_at",
+            "entitlement_determined_at"
+          ],
+          "economic_recognition": [
+            "economic_effective_at",
+            "economic_state_available_at",
+            "recognized_at"
+          ],
+          "cash": [
+            "payable_at",
+            "paid_at",
+            "paid_state_available_at",
+            "paid_recognized_at",
+            "cash_available_at",
+            "cash_available_state_available_at",
+            "cash_available_recognized_at"
+          ],
+          "security": [
+            "security_delivered_at",
+            "delivered_state_available_at",
+            "security_delivered_recognized_at",
+            "security_sellable_at",
+            "sellable_state_available_at",
+            "security_sellable_recognized_at"
+          ]
+        },
+        "state_specific_recognized_time_formulas_ref": "/stage5d_input_contract/state_specific_temporal_semantics/recognized_time_formulas",
+        "choice_and_default_recognized_time_formulas_ref": "/stage5d_input_contract/corporate_action_election_set/recognized_time_formulas",
+        "not_applicable_state_fields_must_be_typed": true,
+        "action_wide_available_at_or_single_recognized_at_for_all_phases": "forbidden",
+        "eligibility_source": "accepted_as_of_append_only_journal_prefix_at_entitlement_cutoff",
+        "entitlement_contract": {
+          "record_cutoff_and_eligible_quantity_rules_must_be_proven_by_action_terms_and_market_rule_set": true,
+          "settled_unsettled_and_restricted_security_treatment_must_be_explicit": true,
+          "sellable_quantity_may_not_substitute_for_entitlement_quantity": true,
+          "unprovable_cutoff_or_eligibility_treatment": "PRECHECK_BLOCKED_entire_action"
+        },
+        "future_terms_entitlement_election_default_revision_recognition_payment_cash_delivery_or_sellable_state_must_not_leak": true,
+        "use_unadjusted_fill_and_mark_prices": true,
+        "adjusted_price_as_fill_mark_or_cash_flow": "forbidden",
+        "exact_event_semantic_map_ref": "/rule_modules/ledger_v2/exact_event_semantic_map",
+        "cash_dividend": {
+          "entitlement_quantity_derived_from_journal_prefix": true,
+          "exact_phases": [
+            "RECOGNIZE",
+            "PAID",
+            "AVAILABLE"
+          ],
+          "recognition_posts_gross_receivable_and_dividend_income_control": true,
+          "typed_fee_and_tax_are_compounded_into_the_exact_action_phase": true,
+          "gross_dividend_fee_and_tax_enter_three_distinct_pnl_cells": true,
+          "paid_and_cash_available_use_their_own_recognized_times": true,
+          "paid_before_cash_available_uses_cash_settled_unavailable": true,
+          "does_not_rewrite_fill_or_lot": true,
+          "future_payment_does_not_enter_current_nav": true,
+          "fee_or_tax_may_not_be_inferred_from_net_dividend": true,
+          "standalone_same_time_fee_or_tax_ledger_event": "forbidden"
+        },
+        "share_distribution_split_and_consolidation": {
+          "share_distribution": {
+            "exact_phases": [
+              "RECOGNIZE",
+              "DELIVERED",
+              "SELLABLE"
+            ],
+            "creates_append_only_lot_lineage_and_quantity_effect": true,
+            "preserves_historical_fill_bytes": true,
+            "same_security_preserves_total_full_cost": true,
+            "recognized_delivered_and_sellable_use_their_own_recognized_times": true,
+            "recognized_quantity_is_unsettled_delivered_is_unsellable_and_sellable_is_sellable": true,
+            "different_security_or_missing_cost_allocation_rule": "PRECHECK_BLOCKED",
+            "automatic_zero_cost": "forbidden"
+          },
+          "split_or_consolidation": {
+            "exact_phase": "RECOGNIZE",
+            "exact_rational_ratio_required": true,
+            "adjusts_every_quantity_bucket_and_lot_while_preserving_each_absolute_cost_component_and_full_cost": true,
+            "fractional_share_keep_drop_or_cash_in_lieu_requires_explicit_action_and_market_rule": true,
+            "cash_in_lieu_reuses_exact_cash_out_receivable_clearing_basis_disposal_and_cash_phases": true,
+            "silent_truncation_rounding_or_cash_substitution": "forbidden"
+          }
+        },
+        "rights_allotment": {
+          "allowed_typed_elections": [
+            "DECLINE",
+            "EXERCISE",
+            "MANDATORY"
+          ],
+          "election_requirement_by_choice": {
+            "DECLINE": "CHOICE_REQUIRED",
+            "EXERCISE": "CHOICE_REQUIRED",
+            "MANDATORY": "MANDATORY"
+          },
+          "decline_or_exercise_requires_choice_made_lte_deadline_and_pit_available": true,
+          "choice_dependent_phase_recognized_at_formula_ref": "/stage5d_input_contract/corporate_action_election_set/recognized_time_formulas/choice_dependent_phase_recognized_at",
+          "exact_exercise_phases": [
+            "EXERCISE_RECOGNIZE",
+            "PAID",
+            "DELIVERED",
+            "SELLABLE"
+          ],
+          "exercise_recognize_atomically_reserves_cash_creates_payable_security_cost_unsettled_quantity_and_new_unsettled_lot": true,
+          "new_lot_at_recognition_contains_benchmark_principal_fee_tax_and_zero_slippage_and_basis_unless_separately_approved": true,
+          "paid_only_clears_payable_against_reserved_cash": true,
+          "delivered_only_moves_unsettled_to_unsellable_and_sellable_only_moves_unsellable_to_sellable": true,
+          "each_phase_uses_its_own_recognized_time": true,
+          "exercise_does_not_create_market_order_or_fill": true,
+          "rights_sale_or_other_market_trade_requires_separate_execution_contract": true,
+          "missing_choice_or_terms_when_phase_is_due": "PRECHECK_BLOCKED"
+        },
+        "delisting_or_cash_out": {
+          "mandatory_or_voluntary_status_election_eligible_lots_gross_cash_terms_removed_quantity_and_all_state_times_required": true,
+          "mandatory_exit_election_requirement": "MANDATORY",
+          "voluntary_choice_allowlist": [
+            "ACCEPT_CASH",
+            "DECLINE"
+          ],
+          "voluntary_exit_election_requirement": "CHOICE_REQUIRED",
+          "choice_dependent_phase_recognized_at_formula_ref": "/stage5d_input_contract/corporate_action_election_set/recognized_time_formulas/choice_dependent_phase_recognized_at",
+          "exact_phases": [
+            "RECOGNIZE",
+            "PAID",
+            "AVAILABLE"
+          ],
+          "recognition_creates_gross_receivable_disposes_exact_fifo_cost_and_quantity_and_zeros_corporate_action_clearing": true,
+          "removed_lot_cost_components_enter_realized_attribution": true,
+          "typed_fee_and_tax_reduce_receivable_and_enter_their_own_pnl_cells_exactly_once": true,
+          "before_paid_recognized_at_remains_receivable": true,
+          "paid_before_cash_available_recognized_at_uses_cash_settled_unavailable": true,
+          "cash_available_uses_its_own_state_and_knowledge_time": true,
+          "unknown_exit_price_future_resume_price_zero_price_missing_election_or_silent_position_removal": "forbidden"
+        },
+        "uncovered_fractional_different_security_cash_in_lieu_rights_trade_or_voluntary_exit_branch": "PRECHECK_BLOCKED",
+        "hidden_market_convention_default": "forbidden",
+        "explicit_default_contract_ref": "/stage5d_input_contract/corporate_action_election_set/default_contract",
+        "action_event_and_lot_effect_bind_action_election_deadline_default_source_rule_and_revision_hashes": true,
+        "election_revision_contract_ref": "/stage5d_input_contract/corporate_action_election_set/revision_contract",
+        "cross_strategy_or_account_effect": "forbidden",
+        "correction": "REVERSAL_then_REPLACEMENT",
+        "applicable_unknown_ambiguous_or_unmodelled_action": "PRECHECK_BLOCKED",
+        "event_order": [
+          "effective_at",
+          "event_type_priority",
+          "ledger_event_id"
+        ],
+        "source_identity_enters_complete_replay": true
+      },
+      "marks_and_nav": {
+        "status": "draft",
+        "mark_input_object": "UnadjustedMarkObservationSet",
+        "valuation_time_must_be_injected": true,
+        "mark_scope_contract": {
+          "scope_is_evaluated_separately_at_each_valuation_point": true,
+          "mark_required_when": "actual_quantity_gt_zero_in_that_inclusive_journal_prefix",
+          "actual_quantity_eq_zero_market_value": "exact_decimal_zero",
+          "actual_quantity_eq_zero_mark_requirement": "none",
+          "fully_disposed_before_ending_requires_ending_mark": false,
+          "one_missing_required_security_mark_makes_whole_account_incomplete": true,
+          "partial_account_nav_or_pnl": "forbidden"
+        },
+        "mark_price": "latest_legal_positive_unadjusted_price_with_observed_at_and_available_at_lte_valuation_at",
+        "mark_must_bind_market_observation_and_market_rule_identity": true,
+        "mark_must_match_exact_security_market_session_and_rule_scope": true,
+        "same_observed_at_different_canonical_content": "PRECHECK_BLOCKED",
+        "outcome_precedence": [
+          {
+            "priority": 1,
+            "condition": "scope_coverage_completeness_source_hash_identity_pit_or_same_time_uniqueness_missing_unverifiable_malformed_or_conflicting",
+            "result": "PRECHECK_BLOCKED"
+          },
+          {
+            "priority": 2,
+            "condition": "ledger_posting_lot_cost_cash_equity_cell_matrix_or_other_reconciliation_failure",
+            "result": "RECONCILIATION_BLOCKED"
+          },
+          {
+            "priority": 3,
+            "condition": "coverage_complete_ledger_reconciled_required_position_has_no_legal_historical_observation",
+            "result": "ABSTAIN_incomplete_account_nav_and_pnl"
+          }
+        ],
+        "reconciliation_failure_may_be_downgraded_to_mark_missing_abstain": false,
+        "executable_price_claim_from_mark": "forbidden",
+        "suspended_security": {
+          "last_legal_mark_may_be_used": true,
+          "stale_must_be_true": true,
+          "stale_duration_and_source_required": true
+        },
+        "missing_historical_legal_mark_after_complete_coverage_and_reconciled_ledger": "ABSTAIN_incomplete_account_nav_and_pnl",
+        "zero_price_future_resume_adjusted_proposal_or_fill_price_backfill": "forbidden",
+        "mark_to_market_event": {
+          "typed_append_only_memo_event": true,
+          "changes_cash_quantity_or_historical_cost": false,
+          "all_balance_changing_events_remain_double_entry": true,
+          "correction": "REVERSAL_then_REPLACEMENT"
+        },
+        "settled_cash_formula": "cash_available+cash_reserved+cash_settled_unavailable",
+        "position_market_value_formula": "sum(actual_quantity*unadjusted_mark_price)",
+        "equity_formula": "settled_cash+trade_cash_receivable-trade_cash_payable+corporate_action_receivable-corporate_action_payable+position_market_value+other_receivable-other_payable",
+        "closed_world_account_to_nav_mapping": {
+          "closed_world": true,
+          "direct_add_once": [
+            "CNY/null:CASH_AVAILABLE",
+            "CNY/null:CASH_RESERVED",
+            "CNY/null:CASH_SETTLED_UNAVAILABLE",
+            "CNY/security:CASH_RECEIVABLE",
+            "CNY/security:CORPORATE_ACTION_RECEIVABLE",
+            "CNY/security:OTHER_RECEIVABLE"
+          ],
+          "direct_subtract_once": [
+            "CNY/security:CASH_PAYABLE",
+            "CNY/security:CORPORATE_ACTION_PAYABLE",
+            "CNY/security:OTHER_PAYABLE"
+          ],
+          "replaced_by_position_market_value": [
+            "CNY/security:SECURITY_COST"
+          ],
+          "excluded_from_direct_nav": [
+            "CNY/null:EXTERNAL_CAPITAL",
+            "CNY/null:OPENING_CONTROL",
+            "CNY/security:TRADE_CLEARING",
+            "CNY/security:REALIZED_PNL_CONTROL",
+            "CNY/security:FEE_EXPENSE_CONTROL",
+            "CNY/security:TAX_EXPENSE_CONTROL",
+            "CNY/security:CORPORATE_ACTION_CLEARING",
+            "CNY/security:CORPORATE_ACTION_INCOME_CONTROL",
+            "CNY/security:DIVIDEND_INCOME_CONTROL",
+            "CNY/security:OPENING_CONTROL",
+            "SHARE/security:SECURITY_UNSETTLED",
+            "SHARE/security:SECURITY_UNSELLABLE",
+            "SHARE/security:SECURITY_SELLABLE",
+            "SHARE/security:SECURITY_CONTROL",
+            "SHARE/security:OPENING_CONTROL"
+          ],
+          "trade_receivable_and_payable_accounts": [
+            "CASH_RECEIVABLE",
+            "CASH_PAYABLE"
+          ],
+          "corporate_action_receivable_and_payable_accounts": [
+            "CORPORATE_ACTION_RECEIVABLE",
+            "CORPORATE_ACTION_PAYABLE"
+          ],
+          "other_receivable_and_payable_accounts": [
+            "OTHER_RECEIVABLE",
+            "OTHER_PAYABLE"
+          ],
+          "each_included_balance_enters_exactly_once": true,
+          "every_ledger_account_scope_pair_must_be_classified_exactly_once": true,
+          "security_cost_is_not_added_because_market_value_replaces_cost": true,
+          "clearing_accounts_must_reconcile_to_zero_but_never_enter_nav": true,
+          "quantity_control_and_pnl_control_accounts_never_enter_nav_directly": true,
+          "external_capital_is_only_capital_counterparty_and_period_external_flow_reconciliation": true
+        },
+        "period_total_pnl_formula": "ending_equity-beginning_equity-net_external_cash_inflow",
+        "external_cash_flow_is_not_investment_pnl": true,
+        "beginning_and_ending_valuation_use_two_prefixes_of_same_canonical_journal": true,
+        "future_scheduled_events_must_not_enter_earlier_prefix": true,
+        "caller_supplied_nav": "cross_check_only_not_authority",
+        "missing_any_required_position_mark_after_complete_coverage_and_reconciled_ledger": "ABSTAIN_incomplete_account_nav_and_pnl",
+        "nav_cash_position_receivable_and_payable_state_derived_from_journal": true,
+        "cached_balance_or_nav_as_authority": "forbidden"
+      },
+      "two_dimensional_pnl": {
+        "status": "draft",
+        "pnl_formula_map_id": "stage5d_pnl_3x6_signed_formula_map",
+        "version": "1.0.0",
+        "canonical_hash_enters_every_pnl_envelope_and_complete_replay": true,
+        "sign_convention": "positive_increases_equity_or_pnl_negative_decreases_equity_or_pnl",
+        "atomic_fact_object": "Stage5PnlCell",
+        "row_axis_name": "realization",
+        "row_axis_values": [
+          "realized",
+          "unrealized",
+          "non_position_income"
+        ],
+        "column_axis_name": "driver",
+        "column_axis_values": [
+          "price",
+          "slippage",
+          "fee",
+          "tax",
+          "cash_dividend",
+          "corporate_action_cash"
+        ],
+        "only_atomic_cells_are_summable_facts": true,
+        "each_economic_amount_maps_to_exactly_one_atomic_cell": true,
+        "atomic_cell_identity_dimensions": [
+          "strategy_id",
+          "account_fixture_id",
+          "security_id",
+          "as_of",
+          "realization",
+          "driver"
+        ],
+        "contribution_object": "Stage5PnlContribution",
+        "contribution_identity_dimensions": [
+          "strategy_id",
+          "account_fixture_id",
+          "security_id",
+          "as_of",
+          "realization",
+          "driver",
+          "formula_term",
+          "source_event_id",
+          "source_lot_id",
+          "source_action_id"
+        ],
+        "nullable_contribution_identity_dimensions": [
+          "source_lot_id",
+          "source_action_id"
+        ],
+        "formula_term_allowlist": [
+          "TB",
+          "TS",
+          "DB",
+          "DS",
+          "DF",
+          "DT",
+          "DA",
+          "SF",
+          "ST",
+          "CAD",
+          "MV",
+          "RB",
+          "RS",
+          "RF",
+          "RT",
+          "RA",
+          "NF",
+          "NT",
+          "DIV",
+          "CAI"
+        ],
+        "lot_level_contribution_terms": [
+          "DB",
+          "DS",
+          "DF",
+          "DT",
+          "DA",
+          "MV",
+          "RB",
+          "RS",
+          "RF",
+          "RT",
+          "RA"
+        ],
+        "event_or_action_level_contribution_terms": [
+          "TB",
+          "TS",
+          "SF",
+          "ST",
+          "CAD",
+          "NF",
+          "NT",
+          "DIV",
+          "CAI"
+        ],
+        "event_or_action_level_source_lot_id": null,
+        "contribution_identity_must_be_unique_and_source_bound": true,
+        "contribution_signed_amounts_sum_exactly_to_atomic_cell": true,
+        "source_event_id_in_atomic_cell_identity_or_direct_period_cell_subtraction": "forbidden",
+        "row_marginals": "derived_disclosure_only",
+        "column_marginals": "derived_disclosure_only",
+        "grand_total": "sum_atomic_cells_exactly_once",
+        "adding_marginals_or_grand_total_back_to_cells": "forbidden",
+        "cumulative_term_definitions": {
+          "TB": "ordinary_sell_benchmark_gross_proceeds",
+          "TS": "ordinary_sell_quantity_times_execution_minus_benchmark_price",
+          "DB_DS_DF_DT_DA": "disposed_lot_benchmark_principal_acquisition_slippage_acquisition_fee_acquisition_tax_corporate_action_basis_adjustment",
+          "SF_ST": "sell_or_action_period_fee_and_tax_not_acquisition_lot_cost",
+          "CAD": "gross_corporate_action_cash_that_disposes_security_cost_basis",
+          "MV": "remaining_quantity_times_legal_unadjusted_mark",
+          "RB_RS_RF_RT_RA": "remaining_lot_five_cost_components",
+          "NF_NT": "income_fee_and_tax_without_security_cost_basis_disposal",
+          "DIV": "gross_cash_dividend_income",
+          "CAI": "gross_corporate_action_income_without_security_cost_basis_disposal"
+        },
+        "corporate_action_basis_adjustment_classification": {
+          "driver": "price_only",
+          "disposed_formula_term": "-DA",
+          "remaining_formula_term": "-RA",
+          "may_enter_corporate_action_cash_driver": false
+        },
+        "gross_and_component_uniqueness": {
+          "corporate_action_cash_cells_store_gross_not_net": true,
+          "acquisition_fee_and_tax_enter_only_DF_DT_RF_RT": true,
+          "sell_or_action_fee_and_tax_enter_only_SF_ST_NF_NT": true,
+          "same_gross_cash_basis_fee_tax_or_slippage_enters_exactly_one_cell": true,
+          "basis_disposal_status_unprovable": "PRECHECK_BLOCKED_entire_action"
+        },
+        "closed_world_signed_formula_cells": [
+          {"realization": "realized", "driver": "price", "allowed": true, "formula": "TB(t)-DB(t)-DA(t)"},
+          {"realization": "realized", "driver": "slippage", "allowed": true, "formula": "TS(t)-DS(t)"},
+          {"realization": "realized", "driver": "fee", "allowed": true, "formula": "-SF(t)-DF(t)"},
+          {"realization": "realized", "driver": "tax", "allowed": true, "formula": "-ST(t)-DT(t)"},
+          {"realization": "realized", "driver": "cash_dividend", "allowed": false, "formula": "0", "classification": "FORBIDDEN"},
+          {"realization": "realized", "driver": "corporate_action_cash", "allowed": true, "formula": "CAD(t)", "gross_only": true},
+          {"realization": "unrealized", "driver": "price", "allowed": true, "formula": "MV(t)-RB(t)-RA(t)"},
+          {"realization": "unrealized", "driver": "slippage", "allowed": true, "formula": "-RS(t)"},
+          {"realization": "unrealized", "driver": "fee", "allowed": true, "formula": "-RF(t)"},
+          {"realization": "unrealized", "driver": "tax", "allowed": true, "formula": "-RT(t)"},
+          {"realization": "unrealized", "driver": "cash_dividend", "allowed": false, "formula": "0", "classification": "FORBIDDEN"},
+          {"realization": "unrealized", "driver": "corporate_action_cash", "allowed": false, "formula": "0", "classification": "FORBIDDEN"},
+          {"realization": "non_position_income", "driver": "price", "allowed": false, "formula": "0", "classification": "FORBIDDEN"},
+          {"realization": "non_position_income", "driver": "slippage", "allowed": false, "formula": "0", "classification": "FORBIDDEN"},
+          {"realization": "non_position_income", "driver": "fee", "allowed": true, "formula": "-NF(t)"},
+          {"realization": "non_position_income", "driver": "tax", "allowed": true, "formula": "-NT(t)"},
+          {"realization": "non_position_income", "driver": "cash_dividend", "allowed": true, "formula": "DIV(t)", "gross_only": true},
+          {"realization": "non_position_income", "driver": "corporate_action_cash", "allowed": true, "formula": "CAI(t)", "gross_only": true}
+        ],
+        "cell_count": 18,
+        "allowed_cell_count": 13,
+        "forbidden_cell_count": 5,
+        "forbidden_cells_materialize_exact_decimal_zero": true,
+        "forbidden_cells_allow_no_contribution": true,
+        "forbidden_nonzero_or_contribution": "RECONCILIATION_BLOCKED",
+        "ordinary_sell_gross_formula": "TB+TS",
+        "basis_disposal_corporate_action_has_no_TB_or_TS_and_uses_gross_CAD": true,
+        "realized_and_unrealized_method": "FIFO_full_cost",
+        "period_boundary": "(beginning_at,ending_at]",
+        "prefix_boundary_semantics": {
+          "beginning_prefix": "all_events_with_effective_at_lte_beginning_at",
+          "ending_prefix": "all_events_with_effective_at_lte_ending_at",
+          "event_exactly_at_beginning_at_period_contribution": "zero",
+          "event_exactly_at_ending_at": "included",
+          "beginning_inclusive_ending_exclusive": "forbidden"
+        },
+        "period_matrix_formula": "cumulative_matrix_at_ending_inclusive-cumulative_matrix_at_beginning_inclusive",
+        "period_equity_formula": "ending_equity-beginning_equity-net_external_cash_inflow",
+        "period_identity": "sum(period_matrix_atomic_cells_exactly_once)=period_equity_formula",
+        "external_capital_enters_pnl_matrix": false,
+        "trades_dividends_or_corporate_action_cash_may_be_relabelled_external_flow": false,
+        "components_must_reconcile_to_period_total_pnl": true,
+        "security_to_portfolio_aggregation": {
+          "is_independent_reconciliation_layer_not_a_pnl_axis": true,
+          "portfolio_cells_equal_exact_sum_of_security_cells_and_account_only_cells": true,
+          "security_marginals_must_not_be_resummed": true,
+          "portfolio_total_must_reconcile_to_account_equity_change_less_net_external_cash_inflow": true
+        },
+        "incomplete_mark_or_unreconciled_cell": {
+          "complete_mark_coverage_missing_legal_observation_after_reconciled_ledger": "ABSTAIN_incomplete_pnl",
+          "unreconciled_contribution_cell_formula_matrix_cost_cash_or_equity": "RECONCILIATION_BLOCKED",
+          "reconciliation_failure_may_be_downgraded_to_abstain": false,
+          "partial_security_or_account_nav_or_pnl": "forbidden"
+        },
+        "automatic_plug_cell": "forbidden"
+      },
+      "complete_replay": {
+        "status": "draft",
+        "aggregate_object": "Stage5CompleteReplayEnvelope",
+        "complete_horizon_formula": "all_events_whose_own_state_recognized_at_lte_ending_at_where_ending_at_lte_injected_clock",
+        "ending_at_is_inclusive": true,
+        "accepted_as_of_uses_each_event_or_phase_own_knowledge_and_state_time": true,
+        "corporate_action_recognized_paid_cash_available_security_delivered_and_security_sellable_states_are_independently_cut_off": true,
+        "election_choice_default_and_revision_each_use_their_own_recognized_time": true,
+        "stage5c_raw_case_is_recomputed_internally_before_stage5d_projection": true,
+        "future_scheduled_events_retained_only_in_separate_plan": true,
+        "future_payment_cash_availability_security_delivery_or_sellability_may_enter_accepted_state": false,
+        "future_election_default_or_revision_may_enter_accepted_state": false,
+        "replay_hash_includes": [
+          "stage5a_bundle_rules_and_approval_identity",
+          "exact_stage4_case_result_input_and_replay",
+          "exact_stage5c_case_result_and_partial_replay",
+          "target_approval_constraint_order_intent_and_fill",
+          "market_rule_calendar_session_observation_cost_and_impact",
+          "corporate_action_coverage_election_deadline_default_revision_and_generated_events",
+          "accepted_as_of_ledger_event_sequences_and_journal_heads",
+          "separate_future_scheduled_plan_identity",
+          "mark_set_outcome_precedence_closed_world_nav_and_atomic_pnl_cells",
+          "security_to_portfolio_reconciliation",
+          "code_commit",
+          "semantic_config_hash",
+          "decimal_context_and_rounding_rules",
+          "injected_clock"
+        ],
+        "replay_hash_excludes": [
+          "wall_clock_noise",
+          "process_id",
+          "machine_path",
+          "log_location",
+          "database_rowid",
+          "database_sequence",
+          "dictionary_insertion_order",
+          "network_endpoint",
+          "operational_sqlite_configuration"
+        ],
+        "projected_and_accepted_as_of_event_sets_are_distinct": true,
+        "future_scheduled_events_must_not_enter_accepted_as_of_state": true,
+        "stable_event_order": [
+          "effective_at",
+          "event_type_priority",
+          "ledger_event_id"
+        ],
+        "semantic_input_change_must_change_affected_hash": true,
+        "typed_canonical_decode_and_reencode_verification_required": true,
+        "same_inputs_require_same_bytes_events_pnl_and_replay_hash": true,
+        "audit_replay": {
+          "reads_exact_original_artifact_roles_and_event_ordinals": true,
+          "requires_exact_source_run_and_source_replay_hash": true,
+          "audit_only": true,
+          "runtime_capability_issued": false,
+          "authority_eligible": false,
+          "creates_new_current_decision_target_approval_position_order_fill_or_pnl": false,
+          "updates_account_generation": false,
+          "may_call_5d_2": false,
+          "creates_or_updates_artifact_membership_ledger_event_generation_cache_or_sqlite_row": false,
+          "durable_write": false,
+          "success_or_failure_is_in_memory_only": true,
+          "new_rules_recalculation_requires_independent_new_research_validation": true
+        }
+      },
+      "sqlite_v4_durable_persistence": {
+        "status": "draft",
+        "owned_database": "var/state/invest_system.sqlite3",
+        "target_schema_version": 4,
+        "second_database_or_attach": "forbidden",
+        "kb_database_path_import_package_or_internal_artifact_access": "forbidden",
+        "migration": {
+          "exact_v3_schema_snapshot_must_be_frozen": true,
+          "unknown_or_tampered_v3_schema": "refuse_with_zero_writes",
+          "path": "verified_v3_to_v4_additive_migration",
+          "transaction": "BEGIN_IMMEDIATE",
+          "migration_failure_rolls_back_schema_and_user_version": true,
+          "lazy_create_table_if_not_exists": "forbidden"
+        },
+        "connection_contract": {
+          "single_connection_per_atomic_write": true,
+          "journal_mode": "WAL",
+          "foreign_keys": true,
+          "unique_constraints_required": true,
+          "recursive_triggers": true,
+          "busy_timeout_required": true,
+          "synchronous_for_stage5_durable_commit": "FULL"
+        },
+        "required_tables": [
+          "stage5_artifacts",
+          "stage5_run_aggregates",
+          "stage5_run_artifacts",
+          "stage5_ledger_events",
+          "stage5_run_ledger_events",
+          "stage5_account_generations"
+        ],
+        "table_roles": {
+          "stage5_artifacts": "content_addressed_canonical_artifacts",
+          "stage5_run_aggregates": "complete_replay_root_and_seal",
+          "stage5_run_artifacts": "ordered_typed_role_membership",
+          "stage5_ledger_events": "immutable_projected_and_accepted_events",
+          "stage5_run_ledger_events": "run_event_order_and_disposition",
+          "stage5_account_generations": "strategy_account_generation_expected_prior_head_and_new_journal_head"
+        },
+        "implicit_seventh_table_file_or_second_database_bypass": "forbidden",
+        "authoritative_state": "append_only_canonical_journal_and_immutable_run_aggregate",
+        "mutable_balance_lot_position_or_nav_authority": "forbidden",
+        "normalized_children_or_cached_projections": "non_authoritative_and_must_reverify_against_canonical_parent",
+        "atomic_commit_group": [
+          "strategy_run_manifest_and_local_release_pin_identity",
+          "stage4_case_result_input_and_replay",
+          "stage5c_complete_case_and_result",
+          "target_approval_constraint_order_intent_and_fill",
+          "projected_and_accepted_as_of_ledger_events",
+          "corporate_action_inputs_and_events",
+          "marks_nav_and_atomic_pnl_cells",
+          "security_to_portfolio_reconciliation",
+          "complete_stage5_replay",
+          "replay_seal_root_and_ordered_typed_memberships",
+          "artifact_role_closure",
+          "account_generation"
+        ],
+        "zero_event_complete_run_requires_explicit_empty_ordered_memberships": true,
+        "commit_order": [
+          "pure_compute_complete_bundle",
+          "verify_capability_inputs_hashes_ledger_pnl_and_replay",
+          "begin_immediate",
+          "recheck_local_release_pin_and_expected_account_generation",
+          "insert_complete_immutable_group",
+          "typed_read_back_verify_persisted_role_closure",
+          "commit"
+        ],
+        "partial_fill_without_ledger_or_pnl_without_source_hash": "forbidden",
+        "any_precheck_reconciliation_hash_or_sql_failure": "rollback_entire_group",
+        "persistence_outcome_precedence": [
+          {
+            "priority": 1,
+            "condition": "mark_missing_ABSTAIN_with_incomplete_pnl_or_any_other_incomplete_pnl",
+            "result": "must_not_call_5d_2_zero_visible_write"
+          },
+          {
+            "priority": 2,
+            "condition": "technical_codec_schema_hash_identity_concurrency_reconciliation_sqlite_interrupt_or_read_back_failure",
+            "result": "zero_visible_write"
+          },
+          {
+            "priority": 3,
+            "condition": "pnl_complete_and_all_reconciliation_passed_and_zero_financial_mutation_and_business_BLOCKED_or_ABSTAIN",
+            "result": "may_persist_sealed_immutable_evaluation_without_advancing_financial_state"
+          }
+        ],
+        "complete_pnl_reconciled_zero_financial_mutation_business_blocked_or_abstain": "may_persist_as_sealed_immutable_evaluation_without_advancing_financial_state",
+        "mark_missing_abstain_incomplete_pnl_may_call_5d_2": false,
+        "sealed_blocked_or_abstain_must_not_create_or_advance_account_generation_or_journal_head": true,
+        "technical_codec_schema_hash_identity_concurrency_reconciliation_incomplete_pnl_sqlite_interrupt_or_read_back_failure": "zero_visible_write",
+        "idempotency": {
+          "same_run_case_or_event_identity_same_canonical_bytes": "return_verified_existing_receipt",
+          "same_run_case_or_event_identity_different_canonical_bytes": "immutable_conflict_and_rollback",
+          "same_replay_hash_different_canonical_bytes": "integrity_failure_and_rollback"
+        },
+        "account_concurrency": {
+          "append_only_generation_records": true,
+          "expected_base_event_set_hash_required": true,
+          "generation_or_event_set_conflict": "rollback_reload_and_recompute_full_stage5",
+          "sql_only_retry_or_silent_fill_rebase": "forbidden"
+        },
+        "read_contract": {
+          "approved_typed_codec_required_before_write_and_after_six_table_read_back": true,
+          "encode_decode_canonical_reencode_required": true,
+          "typed_read_recomputes_type_schema_role_allowlist_canonical_hash_order_cross_references_head_and_semantic_invariants": true,
+          "generic_json_dictionary_or_database_row_shape_as_verification": "forbidden",
+          "read_time_tamper": "integrity_failure_no_auto_repair",
+          "database_row_order_is_not_event_order": true,
+          "read_or_verify_grants_runtime_authority": false
+        },
+        "crash_contract": {
+          "crash_before_commit": "no_group",
+          "crash_after_commit": "complete_group_recovered_by_sqlite_wal"
+        },
+        "local_release_pin_recheck_before_new_run_commit": true,
+        "withdrawn_or_unconfirmable_release_blocks_new_run": true,
+        "historical_withdrawn_material_only_allowed_for_zero_write_audit_replay": true,
+        "config_separation": {
+          "semantic_config_hash_includes": [
+            "rules",
+            "schemas",
+            "decimal_context",
+            "rounding",
+            "all_configuration_affecting_canonical_results"
+          ],
+          "operational_config_excludes_from_replay_identity": [
+            "sqlite_path",
+            "journal_mode",
+            "synchronous",
+            "busy_timeout",
+            "connection_parameters",
+            "retry_parameters"
+          ],
+          "operational_setting_below_required_safety_floor": "PRECHECK_BLOCKED",
+          "database_target_must_resolve_inside_investsystem_owned_state_surface": true
+        },
+        "semantic_config_hash_separate_from_operational_sqlite_config": true
+      },
+      "validation_matrix": {
+        "status": "draft",
+        "golden_cases_required": [
+          "each_exact_event_and_phase_positive_and_negative_case",
+          "missing_or_extra_posting_wrong_scope_wrong_sign_lot_drift_nonzero_clearing_and_same_time_compound",
+          "cash_dividend_gross_fee_tax_recognized_paid_and_cash_available",
+          "share_distribution_recognized_delivered_and_sellable",
+          "split_and_consolidation_exact_ratio_and_each_quantity_bucket",
+          "rights_decline_exercise_mandatory_missing_choice_and_recognized_unsettled_lot",
+          "delisting_cash_out_gross_basis_fee_tax_paid_and_cash_available",
+          "fractional_quantity_cash_in_lieu_and_basis_removal",
+          "independent_corporate_action_income_without_basis_disposal",
+          "entitlement_settled_unsettled_restricted_and_unprovable_market_rule_treatment",
+          "state_specific_knowledge_payment_cash_delivery_and_sellable_time_shift_non_leakage",
+          "election_not_applicable_mandatory_and_choice_required_typed_contract",
+          "election_made_available_deadline_and_choice_dependent_phase_recognized_time",
+          "election_pending_future_plan_missing_due_choice_and_no_implicit_decline",
+          "election_explicit_default_recognized_time_and_missing_default_unknown_blocked",
+          "election_revision_deadline_availability_idempotency_conflict_and_reversal_replacement",
+          "stale_mark",
+          "mark_scope_or_coverage_missing_is_precheck_blocked",
+          "complete_mark_coverage_without_legal_observation_is_account_abstain_incomplete_pnl",
+          "unreconciled_ledger_or_pnl_is_reconciliation_blocked_not_mark_abstain",
+          "mark_scope_uses_actual_quantity_at_each_valuation_point_and_fully_disposed_security_needs_no_ending_mark",
+          "closed_world_account_to_nav_includes_each_balance_once_replaces_security_cost_with_market_value_and_excludes_controls",
+          "two_dimensional_pnl_exact_18_cells_13_allowed_5_forbidden_and_marginals",
+          "pnl_numeric_ordinary_sell_positive_and_negative_slippage_nonzero_acquisition_components_and_sell_fee_tax",
+          "pnl_numeric_remaining_position_dividend_delisting_cash_in_lieu_and_independent_income",
+          "pnl_contributions_sum_exactly_to_cells_and_duplicate_or_unbound_source_fails",
+          "pnl_gross_basis_fee_tax_slippage_each_enter_one_cell_only",
+          "period_event_exactly_at_beginning_has_zero_contribution",
+          "period_event_inside_or_exactly_at_ending_is_included",
+          "beginning_inclusive_ending_exclusive_boundary_implementation_fails",
+          "security_to_portfolio_reconciliation",
+          "external_cash_flow_exclusion",
+          "projected_future_event_non_leakage",
+          "same_bytes_idempotency",
+          "same_key_different_bytes_conflict",
+          "account_generation_conflict",
+          "migration_tamper_and_injected_failure",
+          "atomic_write_failure_at_every_insert_boundary",
+          "complete_pnl_business_abstain_may_seal_but_mark_missing_incomplete_pnl_never_calls_5d_2",
+          "read_time_tamper",
+          "same_input_same_complete_replay_hash",
+          "audit_replay_zero_authority_and_zero_write",
+          "kb_and_cross_strategy_isolation"
+        ],
+        "full_repository_regression_required": true,
+        "successful_validation_does_not_authorize_any_run_mode": true
+      }
+    },
+    "owner_approval_items": [
+      {"approval_item_id": "5D-01", "status": "pending", "decision_text_sha256": "6dc466ea027e578bb2b3ad0573a07c0279a109bd4b138a01c6f68cd06fc3d94d", "rule_paths": ["/authorization_boundary", "/owner_approval_atomicity"]},
+      {"approval_item_id": "5D-02", "status": "pending", "decision_text_sha256": "5f8815ed6c7b8939dcb67c0c92d540cb8b1c0de8d95b9b2d6b3239bb8c812f5a", "rule_paths": ["/exact_upstream_dependencies/stage5a_rule_governance"]},
+      {"approval_item_id": "5D-03", "status": "pending", "decision_text_sha256": "acaf79846ab2848a20c95447bfbc6e747e443d9ab950ebaad99aa7e2eff0e91a", "rule_paths": ["/exact_upstream_dependencies/stage5c_implementation_baseline"]},
+      {"approval_item_id": "5D-04", "status": "pending", "decision_text_sha256": "0ec12be208efabc9752cf9b373a1bbf99f84c6137b1516c04678d4db41e3d231", "rule_paths": ["/implementation_sequence/phase_order", "/implementation_sequence/5D-1", "/implementation_sequence/5D-1/must_complete_before_5d_2"]},
+      {"approval_item_id": "5D-05", "status": "pending", "decision_text_sha256": "a128444854493d4257e18fad255aa358f6bf26ad50529e8ee627e912f42c1622", "rule_paths": ["/implementation_sequence/5D-2"]},
+      {"approval_item_id": "5D-06", "status": "pending", "decision_text_sha256": "290097046078f0c64b61209d0b2030a4b443cea3184ad47309f9e28da11a59ed", "rule_paths": ["/authorization_boundary/allowed_run_modes", "/authorization_boundary/runtime_capability_issued", "/shared_semantics/no_kb_internal_read_or_write", "/shared_semantics/industrial_theme_signal_ledger_and_pnl_interchange"]},
+      {"approval_item_id": "5D-07", "status": "pending", "decision_text_sha256": "0fc8fdd2d39b299d9b3fe236aab775f7509ec0b2d373439f75191b078d5f2a22", "rule_paths": ["/stage5d_input_contract/object_name", "/stage5d_input_contract/raw_stage5c_case_must_contain_raw_stage4_and_stage5_inputs", "/implementation_sequence/raw_case_only", "/implementation_sequence/stage5d_engine_must_internally_recompute_stage5c", "/implementation_sequence/caller_supplied_stage5c_result_partial_replay_or_derived_projection"]},
+      {"approval_item_id": "5D-08", "status": "pending", "decision_text_sha256": "cca1f7a5b389be82eaf62c27422d645d10d268f4a6320c746ebb2b02286fffb7", "rule_paths": ["/stage5d_input_contract/corporate_action_coverage_set", "/stage5d_input_contract/corporate_action_election_set", "/stage5d_input_contract/state_specific_temporal_semantics"]},
+      {"approval_item_id": "5D-09", "status": "pending", "decision_text_sha256": "72b378ae539898840369de823c559a6ea0b9d1b12bc4d6e2633c56889903caf5", "rule_paths": ["/stage5d_input_contract/unadjusted_mark_observation_set", "/stage5d_input_contract/mark_temporal_semantics"]},
+      {"approval_item_id": "5D-10", "status": "pending", "decision_text_sha256": "958ae8862559f47656a46fd5a76fa38b2278d7345823429943d15056592d9aca", "rule_paths": ["/stage5d_input_contract/synthetic_external_cash_flow_set", "/stage5d_input_contract/external_flow_temporal_semantics", "/rule_modules/ledger_v2/external_cash_flow_event"]},
+      {"approval_item_id": "5D-11", "status": "pending", "decision_text_sha256": "e8571a8330e78fd07a9421257d77cfc5c4bb4566a616138a0048ae677c98e258", "rule_paths": ["/stage5d_input_contract/opening_lot_attribution_set", "/rule_modules/ledger_v2/opening_lot_requires_same_component_set", "/rule_modules/ledger_v2/opening_lot_summary_full_cost_without_components"]},
+      {"approval_item_id": "5D-12", "status": "pending", "decision_text_sha256": "287af3282ff0fe98e011ddb6c619c6b70f3bc32c6310f14dfb665e2de0ee2a1c", "rule_paths": ["/stage5d_input_contract/single_strategy_and_account_per_case", "/stage5d_input_contract/account_case_may_contain_multiple_securities", "/stage5d_input_contract/account_wide_multi_security_opening_state", "/stage5d_input_contract/unadjusted_mark_observation_set/coverage_scope_at_each_valuation_point"]},
+      {"approval_item_id": "5D-13", "status": "pending", "decision_text_sha256": "36802b855fbe51aca2ad8e1c1eb3bb80275e60526724cc3945e042d979961887", "rule_paths": ["/rule_modules/ledger_v2/posting_required_fields", "/rule_modules/ledger_v2/posting_signed_delta_formula", "/rule_modules/ledger_v2/posting_exactly_one_positive_side_required", "/rule_modules/ledger_v2/asset_units", "/rule_modules/ledger_v2/account_scope_allowlist", "/rule_modules/ledger_v2/automatic_plug_or_cross_security_cost_netting"]},
+      {"approval_item_id": "5D-14", "status": "pending", "decision_text_sha256": "9d731917db28a2136bdb3e15403bc4a9267800520bde27b90880ee2abd8d01f5", "rule_paths": ["/rule_modules/ledger_v2/event_type_priority", "/rule_modules/ledger_v2/event_sort_order", "/rule_modules/ledger_v2/priority_map_must_match_stage5c_and_is_versioned_in_complete_replay"]},
+      {"approval_item_id": "5D-15", "status": "pending", "decision_text_sha256": "f4df5276460709d4450e314274a34330feb961b2bb6149849fa47a00193580cc", "rule_paths": ["/rule_modules/ledger_v2/lot_required_cost_fields", "/rule_modules/ledger_v2/lot_required_lineage_fields", "/rule_modules/ledger_v2/full_cost_formula", "/rule_modules/ledger_v2/cost_component_signs", "/rule_modules/ledger_v2/opening_lot_requires_same_component_set", "/rule_modules/ledger_v2/unknown_other_or_plug_cost_component"]},
+      {"approval_item_id": "5D-16", "status": "pending", "decision_text_sha256": "894620f7f6bba58c70618e1f36f116a40a569179f8c61a4497c22e1a18149580", "rule_paths": ["/rule_modules/ledger_v2/buy_fee_and_tax", "/rule_modules/ledger_v2/sell_cost_and_proceeds"]},
+      {"approval_item_id": "5D-17", "status": "pending", "decision_text_sha256": "aeee9882474c0d8538f55e89c48b59ffad6430e7d09a7f7a8f645b35889eff91", "rule_paths": ["/rule_modules/ledger_v2/sell_cost_and_proceeds/fifo_consumed_full_cost_is_realized_cost", "/rule_modules/ledger_v2/sell_cost_and_proceeds/each_cost_component_is_removed_proportionally_with_deterministic_final_exhaustion", "/rule_modules/ledger_v2/lot_required_lineage_fields"]},
+      {"approval_item_id": "5D-18", "status": "pending", "decision_text_sha256": "b5f7cad866e94224570c9e4aac14270be0d7e20750512d882e777c229b625782", "rule_paths": ["/rule_modules/ledger_v2/explicit_account_codes", "/rule_modules/ledger_v2/account_scope_allowlist", "/rule_modules/ledger_v2/receivable_and_payable_accounts_must_be_explicit_not_net_hidden", "/rule_modules/ledger_v2/external_cash_flow_event"]},
+      {"approval_item_id": "5D-19", "status": "pending", "decision_text_sha256": "aa4878d06b1ec87dc1fcc779cd94064b919fd59348d6e7509886a907ce65d456", "rule_paths": ["/rule_modules/ledger_v2/exact_event_semantic_map", "/rule_modules/ledger_v2/per_security_cost_identity", "/rule_modules/ledger_v2/account_security_cost_identity", "/rule_modules/ledger_v2/each_event_reconciles_currency_security_quantity_and_per_security_cost", "/rule_modules/ledger_v2/automatic_plug_or_cross_security_cost_netting"]},
+      {"approval_item_id": "5D-20", "status": "pending", "decision_text_sha256": "4c7aa4430c15708b3e9d7efa21ad632a51b9beac40a03cbda4abb7fc6f29916d", "rule_paths": ["/rule_modules/ledger_v2/stage5c_replay_entry_continues_to_reject_all_stage5d_event_types", "/rule_modules/ledger_v2/stage5d_uses_independent_complete_replay_policy", "/rule_modules/ledger_v2/settlement_special_exception"]},
+      {"approval_item_id": "5D-21", "status": "pending", "decision_text_sha256": "c53ef17e39297ad24ba66ec01b37e61ae31685e0656028c909014af666b5d883", "rule_paths": ["/rule_modules/corporate_actions/effective_dated_content_addressed_input_required", "/rule_modules/corporate_actions/required_temporal_fields", "/rule_modules/corporate_actions/state_specific_recognized_time_formulas_ref", "/rule_modules/corporate_actions/election_contract_ref", "/rule_modules/corporate_actions/choice_and_default_recognized_time_formulas_ref", "/rule_modules/corporate_actions/entitlement_contract", "/rule_modules/corporate_actions/future_terms_entitlement_election_default_revision_recognition_payment_cash_delivery_or_sellable_state_must_not_leak", "/rule_modules/corporate_actions/applicable_unknown_ambiguous_or_unmodelled_action", "/rule_modules/ledger_v2/exact_event_semantic_map/every_action_phase_binds"]},
+      {"approval_item_id": "5D-22", "status": "pending", "decision_text_sha256": "2a91c7a657a4abe9d8b2468108271835a176acad959d083ae4f54f606671caf3", "rule_paths": ["/rule_modules/corporate_actions/cash_dividend", "/rule_modules/ledger_v2/exact_event_semantic_map/stage5d_event_semantics", "/rule_modules/ledger_v2/exact_event_semantic_map/corporate_action_fee_tax_compound_rule"]},
+      {"approval_item_id": "5D-23", "status": "pending", "decision_text_sha256": "23a8d6905a63b5be5a8c2e2c453ab0bd2afee45d5399e0639e8d595e6f6c593a", "rule_paths": ["/rule_modules/corporate_actions/share_distribution_split_and_consolidation/share_distribution", "/rule_modules/ledger_v2/exact_event_semantic_map/stage5d_event_semantics"]},
+      {"approval_item_id": "5D-24", "status": "pending", "decision_text_sha256": "f298ab3bd5a402f77f7d5df86f2d95f7c4f9cb70d284aaeee5d50769cb9f59d8", "rule_paths": ["/rule_modules/corporate_actions/share_distribution_split_and_consolidation/split_or_consolidation", "/rule_modules/ledger_v2/exact_event_semantic_map/stage5d_event_semantics"]},
+      {"approval_item_id": "5D-25", "status": "pending", "decision_text_sha256": "173b47e0cfb35c0b09aa2bae55995aead219078810ea0aebed11a26655259b7d", "rule_paths": ["/rule_modules/corporate_actions/rights_allotment", "/stage5d_input_contract/corporate_action_election_set/recognized_time_formulas", "/rule_modules/ledger_v2/exact_event_semantic_map/stage5d_event_semantics"]},
+      {"approval_item_id": "5D-26", "status": "pending", "decision_text_sha256": "2f36543bee5069a674b756352e53925e03f9976ea3c833b498b251c7cad0b7a4", "rule_paths": ["/rule_modules/corporate_actions/delisting_or_cash_out", "/stage5d_input_contract/corporate_action_election_set/recognized_time_formulas", "/rule_modules/ledger_v2/exact_event_semantic_map/corporate_action_cash_phases", "/rule_modules/ledger_v2/exact_event_semantic_map/stage5d_event_semantics"]},
+      {"approval_item_id": "5D-27", "status": "pending", "decision_text_sha256": "5dd952d1a8196a63bc12f2d04a41cac2b021ea5d7d5cb4296448441116338673", "rule_paths": ["/rule_modules/corporate_actions/uncovered_fractional_different_security_cash_in_lieu_rights_trade_or_voluntary_exit_branch", "/rule_modules/corporate_actions/hidden_market_convention_default", "/rule_modules/corporate_actions/explicit_default_contract_ref", "/stage5d_input_contract/corporate_action_election_set/default_contract", "/rule_modules/ledger_v2/exact_event_semantic_map/uncovered_or_nonunique_compound_or_nonzero_clearing_or_negative_receivable_payable_or_map_mismatch"]},
+      {"approval_item_id": "5D-28", "status": "pending", "decision_text_sha256": "90d58ca4710105aaf1a7834057a9cf85c5a6dcff1eda9ed6ec7a1bc4f3587978", "rule_paths": ["/rule_modules/corporate_actions/action_event_and_lot_effect_bind_action_election_deadline_default_source_rule_and_revision_hashes", "/rule_modules/corporate_actions/election_revision_contract_ref", "/stage5d_input_contract/corporate_action_election_set/idempotency", "/stage5d_input_contract/corporate_action_election_set/revision_contract", "/rule_modules/corporate_actions/correction", "/rule_modules/corporate_actions/cross_strategy_or_account_effect", "/rule_modules/ledger_v2/exact_event_semantic_map/stage5c_event_semantics"]},
+      {"approval_item_id": "5D-29", "status": "pending", "decision_text_sha256": "219e7af0fe1fe2ae65bc5ea71e0e0e08f6f31abb6692b4c7734af289df45966a", "rule_paths": ["/rule_modules/corporate_actions/use_unadjusted_fill_and_mark_prices", "/rule_modules/corporate_actions/adjusted_price_as_fill_mark_or_cash_flow"]},
+      {"approval_item_id": "5D-30", "status": "pending", "decision_text_sha256": "2a68a4507445597ecc1c49f5eb973c0434d61e0c0aa6748f8a144ee87ba04902", "rule_paths": ["/rule_modules/marks_and_nav/mark_scope_contract", "/rule_modules/marks_and_nav/mark_price", "/rule_modules/marks_and_nav/mark_must_bind_market_observation_and_market_rule_identity", "/rule_modules/marks_and_nav/mark_must_match_exact_security_market_session_and_rule_scope", "/rule_modules/marks_and_nav/same_observed_at_different_canonical_content"]},
+      {"approval_item_id": "5D-31", "status": "pending", "decision_text_sha256": "99676cf5599dba8ada315d46747f655e7305d3c82be6466243e74a748889f555", "rule_paths": ["/rule_modules/marks_and_nav/suspended_security", "/rule_modules/marks_and_nav/executable_price_claim_from_mark"]},
+      {"approval_item_id": "5D-32", "status": "pending", "decision_text_sha256": "271c9651e0e67589121269db53f36c7edbbfb6f9838b695afd5f8ff574268ac2", "rule_paths": ["/stage5d_input_contract/unadjusted_mark_observation_set/missing_or_unverifiable_scope_coverage_completeness_or_source_hash", "/rule_modules/marks_and_nav/outcome_precedence", "/rule_modules/marks_and_nav/reconciliation_failure_may_be_downgraded_to_mark_missing_abstain", "/rule_modules/marks_and_nav/missing_historical_legal_mark_after_complete_coverage_and_reconciled_ledger", "/rule_modules/marks_and_nav/zero_price_future_resume_adjusted_proposal_or_fill_price_backfill"]},
+      {"approval_item_id": "5D-33", "status": "pending", "decision_text_sha256": "e8905392fc58534716ad240040bace096f67d0c0d3bb8ad76fe6527f1dae3625", "rule_paths": ["/rule_modules/marks_and_nav/mark_to_market_event"]},
+      {"approval_item_id": "5D-34", "status": "pending", "decision_text_sha256": "4d3cf1fac50f7b9c5821cc6a4877eab9d3a0f2c797210fbaf77034108a730e06", "rule_paths": ["/rule_modules/marks_and_nav/settled_cash_formula", "/rule_modules/marks_and_nav/position_market_value_formula", "/rule_modules/marks_and_nav/equity_formula", "/rule_modules/marks_and_nav/closed_world_account_to_nav_mapping", "/rule_modules/marks_and_nav/nav_cash_position_receivable_and_payable_state_derived_from_journal", "/rule_modules/marks_and_nav/caller_supplied_nav"]},
+      {"approval_item_id": "5D-35", "status": "pending", "decision_text_sha256": "eaecb31045f60f61ae3a2918fbcf415684f038e88ba7e2dc182d840a772ede70", "rule_paths": ["/rule_modules/marks_and_nav/beginning_and_ending_valuation_use_two_prefixes_of_same_canonical_journal", "/rule_modules/marks_and_nav/mark_scope_contract", "/stage5d_input_contract/valuation_period", "/rule_modules/two_dimensional_pnl/period_boundary", "/rule_modules/two_dimensional_pnl/prefix_boundary_semantics", "/stage5d_input_contract/account_wide_multi_security_opening_state"]},
+      {"approval_item_id": "5D-36", "status": "pending", "decision_text_sha256": "cb325a2bc8dff38e9b8b0b8d471542283aea8987f2abcec28d95cea0ede18cda", "rule_paths": ["/rule_modules/two_dimensional_pnl/pnl_formula_map_id", "/rule_modules/two_dimensional_pnl/row_axis_values", "/rule_modules/two_dimensional_pnl/column_axis_values", "/rule_modules/two_dimensional_pnl/closed_world_signed_formula_cells", "/rule_modules/two_dimensional_pnl/cell_count", "/rule_modules/two_dimensional_pnl/allowed_cell_count", "/rule_modules/two_dimensional_pnl/forbidden_cell_count"]},
+      {"approval_item_id": "5D-37", "status": "pending", "decision_text_sha256": "28f55fc1a8529daac4593f49f00bb00cf416ccbcbfd6d8c16bf258ef0bd44953", "rule_paths": ["/rule_modules/two_dimensional_pnl/atomic_cell_identity_dimensions", "/rule_modules/two_dimensional_pnl/contribution_object", "/rule_modules/two_dimensional_pnl/contribution_identity_dimensions", "/rule_modules/two_dimensional_pnl/nullable_contribution_identity_dimensions", "/rule_modules/two_dimensional_pnl/contribution_signed_amounts_sum_exactly_to_atomic_cell", "/rule_modules/two_dimensional_pnl/forbidden_cells_materialize_exact_decimal_zero", "/rule_modules/two_dimensional_pnl/forbidden_cells_allow_no_contribution", "/rule_modules/two_dimensional_pnl/row_marginals", "/rule_modules/two_dimensional_pnl/column_marginals", "/rule_modules/two_dimensional_pnl/grand_total", "/rule_modules/two_dimensional_pnl/adding_marginals_or_grand_total_back_to_cells"]},
+      {"approval_item_id": "5D-38", "status": "pending", "decision_text_sha256": "d636337783a2fd7115517e2a840d996b3d48a1d6575a6c0330f8f5d11e3c31e2", "rule_paths": ["/rule_modules/two_dimensional_pnl/sign_convention", "/rule_modules/two_dimensional_pnl/cumulative_term_definitions", "/rule_modules/two_dimensional_pnl/corporate_action_basis_adjustment_classification", "/rule_modules/two_dimensional_pnl/gross_and_component_uniqueness", "/rule_modules/two_dimensional_pnl/closed_world_signed_formula_cells", "/rule_modules/two_dimensional_pnl/ordinary_sell_gross_formula", "/rule_modules/two_dimensional_pnl/basis_disposal_corporate_action_has_no_TB_or_TS_and_uses_gross_CAD"]},
+      {"approval_item_id": "5D-39", "status": "pending", "decision_text_sha256": "d268bdb8191beed72c973511ad59e8491306f1d87ca1173291e144b8e5e1d3e7", "rule_paths": ["/rule_modules/two_dimensional_pnl/period_boundary", "/rule_modules/two_dimensional_pnl/prefix_boundary_semantics", "/rule_modules/two_dimensional_pnl/period_matrix_formula", "/rule_modules/two_dimensional_pnl/period_equity_formula", "/rule_modules/two_dimensional_pnl/period_identity", "/rule_modules/two_dimensional_pnl/external_capital_enters_pnl_matrix"]},
+      {"approval_item_id": "5D-40", "status": "pending", "decision_text_sha256": "d6244e4c65c8338339ecef3ba4db4e0821f3a35bb399b88e9a3143dcaa39d512", "rule_paths": ["/rule_modules/two_dimensional_pnl/security_to_portfolio_aggregation", "/rule_modules/two_dimensional_pnl/incomplete_mark_or_unreconciled_cell", "/rule_modules/marks_and_nav/outcome_precedence", "/rule_modules/two_dimensional_pnl/automatic_plug_cell"]},
+      {"approval_item_id": "5D-41", "status": "pending", "decision_text_sha256": "e2dd4c87260d2e965f60e171ffbdebb2363e8a68c217793995303fa0201f08d9", "rule_paths": ["/rule_modules/complete_replay/complete_horizon_formula", "/rule_modules/complete_replay/ending_at_is_inclusive", "/rule_modules/complete_replay/accepted_as_of_uses_each_event_or_phase_own_knowledge_and_state_time", "/rule_modules/complete_replay/corporate_action_recognized_paid_cash_available_security_delivered_and_security_sellable_states_are_independently_cut_off", "/rule_modules/complete_replay/election_choice_default_and_revision_each_use_their_own_recognized_time", "/rule_modules/complete_replay/future_scheduled_events_retained_only_in_separate_plan", "/rule_modules/complete_replay/future_payment_cash_availability_security_delivery_or_sellability_may_enter_accepted_state", "/rule_modules/complete_replay/future_election_default_or_revision_may_enter_accepted_state", "/rule_modules/complete_replay/stage5c_raw_case_is_recomputed_internally_before_stage5d_projection"]},
+      {"approval_item_id": "5D-42", "status": "pending", "decision_text_sha256": "5db441b67e0bb0d13b4402c431d32ba48d04cad3721bc9745ed190400b810a12", "rule_paths": ["/rule_modules/ledger_v2/exact_event_semantic_map/closed_world_allowlist", "/rule_modules/two_dimensional_pnl/pnl_formula_map_id", "/rule_modules/complete_replay/replay_hash_includes", "/rule_modules/complete_replay/replay_hash_excludes", "/rule_modules/complete_replay/semantic_input_change_must_change_affected_hash", "/rule_modules/complete_replay/same_inputs_require_same_bytes_events_pnl_and_replay_hash"]},
+      {"approval_item_id": "5D-43", "status": "pending", "decision_text_sha256": "437279fe702471e7875862a0553f0e685bceb5827f2262932cf62b403e8a44e0", "rule_paths": ["/rule_modules/complete_replay/audit_replay"]},
+      {"approval_item_id": "5D-44", "status": "pending", "decision_text_sha256": "ee69ad87f5c3a57dff05bcaab66bc14733e6f7d23ace1a8ac0d36e1c4985c35b", "rule_paths": ["/rule_modules/sqlite_v4_durable_persistence/owned_database", "/rule_modules/sqlite_v4_durable_persistence/target_schema_version", "/rule_modules/sqlite_v4_durable_persistence/required_tables", "/rule_modules/sqlite_v4_durable_persistence/table_roles", "/rule_modules/sqlite_v4_durable_persistence/atomic_commit_group", "/rule_modules/sqlite_v4_durable_persistence/zero_event_complete_run_requires_explicit_empty_ordered_memberships", "/rule_modules/sqlite_v4_durable_persistence/migration", "/rule_modules/sqlite_v4_durable_persistence/config_separation", "/rule_modules/sqlite_v4_durable_persistence/second_database_or_attach"]},
+      {"approval_item_id": "5D-45", "status": "pending", "decision_text_sha256": "ba65cfd71e7af4469b831a0dce4e5a7804483f7bf7513e0ffb0ea78be550864c", "rule_paths": ["/rule_modules/sqlite_v4_durable_persistence/idempotency", "/rule_modules/sqlite_v4_durable_persistence/connection_contract", "/rule_modules/sqlite_v4_durable_persistence/account_concurrency"]},
+      {"approval_item_id": "5D-46", "status": "pending", "decision_text_sha256": "74c036367be566f79976aa594c4d18e646604cdcf9bd5782f64ecc6789e21acb", "rule_paths": ["/rule_modules/sqlite_v4_durable_persistence/read_contract", "/rule_modules/sqlite_v4_durable_persistence/commit_order", "/rule_modules/sqlite_v4_durable_persistence/persistence_outcome_precedence", "/rule_modules/sqlite_v4_durable_persistence/complete_pnl_reconciled_zero_financial_mutation_business_blocked_or_abstain", "/rule_modules/sqlite_v4_durable_persistence/mark_missing_abstain_incomplete_pnl_may_call_5d_2", "/rule_modules/sqlite_v4_durable_persistence/sealed_blocked_or_abstain_must_not_create_or_advance_account_generation_or_journal_head", "/rule_modules/sqlite_v4_durable_persistence/technical_codec_schema_hash_identity_concurrency_reconciliation_incomplete_pnl_sqlite_interrupt_or_read_back_failure", "/rule_modules/sqlite_v4_durable_persistence/any_precheck_reconciliation_hash_or_sql_failure", "/rule_modules/sqlite_v4_durable_persistence/crash_contract"]},
+      {"approval_item_id": "5D-47", "status": "pending", "decision_text_sha256": "42f3f68489dbcf25f000bf46935d2f8bab55c49c0b7da979572f2c58f205c02c", "rule_paths": ["/rule_modules/validation_matrix"]},
+      {"approval_item_id": "5D-48", "status": "pending", "decision_text_sha256": "2532104c1311f16fefd7e4ba90b867cb3435b6358b5d636bb1851f8876023210", "rule_paths": ["/authorization_boundary", "/owner_approval_atomicity", "/shared_semantics/no_kb_internal_read_or_write", "/shared_semantics/industrial_theme_signal_ledger_and_pnl_interchange", "/shared_semantics/undefined_corporate_action_mark_cost_pnl_or_persistence_behavior", "/rule_modules/sqlite_v4_durable_persistence/kb_database_path_import_package_or_internal_artifact_access"]}
+    ],
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "db09ab438836167e0736aaa459d82fc24c6a22de6868ef7b0952e6546b410f46"
+      },
+      "traceability_only": true
+    },
+    "runtime_must_not_parse_markdown": true
+  }
+}

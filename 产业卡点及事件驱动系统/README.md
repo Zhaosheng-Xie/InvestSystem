@@ -1,9 +1,9 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3/3A—3B completed、3C—3D not_started；Stage 4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5C completed_with_scope_limits；完整生产策略未实现`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3/3A—3B completed、3C—3D not_started；Stage 4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5C completed_with_scope_limits；Stage 5D exact-rule governance awaiting owner approval；完整生产策略未实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-09`
 市场范围：`中国 A 股`
-当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5C 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 5B synthetic fill 与 Stage 5C synthetic account/ledger 都不是交易授权；不签发 KB current-status authority 或正式 StrategyRunManifest；不授权 backtest/paper/shadow/live、真实仓位、真实账户、真实订单或券商接入`
+当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5C 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 5D 只有 48 项待批准草案，不签发 capability；Stage 5B synthetic fill 与 Stage 5C synthetic account/ledger 都不是交易授权；不签发 KB current-status authority 或正式 StrategyRunManifest；不授权 backtest/paper/shadow/live、真实仓位、真实账户、真实订单或券商接入`
 
 ## 系统一句话定义
 
@@ -70,6 +70,8 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-09`
     - 状态：`completed_with_scope_limits`；已实现历史规则、日历、首次可成交、成本/冲击、当前价 Gate 重算及 deterministic synthetic fill，但不含组合、账本、P&L、持久化或真实交易权限。
 27. [Stage 5 / 5C 合成组合与内存账本验收记录](../docs/validation/stage5-5c-portfolio-ledger-acceptance.md)
     - 状态：`completed_with_scope_limits`；已实现合成组合风险、五层数量、提交前现金/成本准备金/可卖量、结算投影和截至时点的内存双分录账本，但不含 5D 公司行动、NAV/P&L、持久化或真实交易权限。
+28. [Stage 5 / 5D 公司行动、估值、P&L、完整回放与原子持久化精确规则包 v0.1](03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)
+    - 状态：`draft_for_owner_approval / governance_only`；48 项均为 `pending`，[配套 machine proposal](03_规则与规格/机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0-draft.rule-bundle.json)的运行模式为空且全部权限为 false。它不是 5D 业务实现、SQLite migration 或 runtime capability。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空，HTTP/export 都在 I/O 前失败关闭；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实 acquisition/current status、认证 transport 和原始响应留存归入 Stage 3，策略语义属于 Stage 2B 以后。
 
@@ -82,6 +84,8 @@ Stage 5A rule governance 已完成精确批准登记：四十项规则区分 `EN
 Stage 5B 已完成市场与成交纵向切片：从同一运行的原始 Stage 4 case/result/replay 出发，按历史时点选择内容寻址规则、交易日历、成本表和冲击曲线，确定首个可成交窗口，重跑当前价 Gate 3/4，并生成内存内 deterministic synthetic fill。该阶段自身不证明组合或账本已经实现。
 
 Stage 5C 已完成组合与账本纵向切片：先在历史候选窗口按 portfolio/risk/account 约束重新计算，再绑定只减不增 constraint 完成 synthetic fill；随后按 injected clock 投影现金、证券、FIFO lot、结算与可卖状态，并写入内存 append-only 双分录 journal。非空公司行动、marks、NAV/P&L、SQLite、durable atomic persistence 和完整 Stage 5 replay 仍属于 5D。
+
+Stage 5D 当前只完成精确规则提案：先以 Ledger V2、五类公司行动、未复权 mark、多证券 NAV、二维 P&L 和 complete replay 构成 `5D-1` 纯函数闭环，再以同一 InvestSystem SQLite 的 v4 单事务完整聚合构成 `5D-2`。在 owner 批准全部 48 项前，不得实现、签发 capability 或把草案描述为系统能力。
 
 ## 推荐研发顺序
 

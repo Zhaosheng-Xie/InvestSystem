@@ -63,7 +63,7 @@ Stage 4 的 4A governance、4A-1—4A-4 局部合成执行、既有 draft 谱系
 
 这些测试只证明 4A-1—4A-4 和完整 4B 能在各自精确批准的匿名合成 research-validation scope 内执行；不证明历史有效性、正式 KB 策略 smoke、生产运行或任何交易能力已经实现。
 
-## Stage 5A—5C 当前测试边界
+## Stage 5A—5D 当前测试边界
 
 [Stage 5A 精确规则包](../03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)四十项已获 owner 批准。原 draft machine proposal 保持 40 项 `pending`、运行模式为空和零权限；独立 approved bundle、approval record 与治理 verifier 精确固定批准谱系和 `stage5_synthetic_execution_validation` scope。
 
@@ -74,6 +74,8 @@ Stage 5B 业务专项验证：同一运行 Stage 4 case/result/replay 绑定；�
 Stage 5C 业务专项验证：typed recovery record 与多风险簇；NORMAL/DEFENSIVE/CRISIS、8/12/15/20% 回撤及单票/簇/组合等号边界；quantity/notional/planned-loss、现金、worst-cost reserve、容量与可卖量的提交前只减不增约束；缩量后首个可成交候选重算与精确绑定；五层数量和未提交/取消语义；批准/候选/fill/recovery 的 PIT 上界、sizing source 漂移全链传播、未绑定 settlement exception 失败关闭，以及未来事件不进入当前状态；append-only 双分录、事件 schema、账户/策略隔离、FIFO、负现金/超卖、revision chain、幂等/conflict 与 deterministic partial replay。Stage 5A—5C 专项为 `93 passed`，全仓为 `915 passed, 4 skipped`。
 
 所有 backtest/paper/shadow/live/真实账户/仓位/订单/券商/KB 写权限保持 false。非空公司行动、marks、NAV/P&L、外部现金流、全局费用资本化 lot-cost 对账、SQLite migration、durable atomic persistence 及完整 Stage 5 replay/golden matrix 必须在 Stage 5D 实现后另行验收。
+
+Stage 5D 目前只验证规则治理草案：文档与 machine proposal 的 SHA-256 绑定、48 项完整正文 hash 与整包原子批准、精确 Stage 5A/5C 上游、空运行模式、零 approval/evaluator/persistence/capability、Ledger V2 exact event map、状态独立 PIT、十八格 P&L、`(beginning_at,ending_at]` 和 SQLite v4 完整原子聚合语义。Stage 5D 治理专项为 `9 passed`，纳入后的全仓结果为 `924 passed, 4 skipped`；该测试不执行任何公司行动、估值、P&L、数据库迁移或持久化。
 
 正式结果见[Stage 5A 规则治理批准验收记录](../../docs/validation/stage5-5a-governance-acceptance.md)、[Stage 5B 历史市场规则与合成成交验收记录](../../docs/validation/stage5-5b-market-execution-acceptance.md)和[Stage 5C 合成组合与内存账本验收记录](../../docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。
 
