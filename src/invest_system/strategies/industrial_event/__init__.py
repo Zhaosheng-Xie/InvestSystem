@@ -412,6 +412,21 @@ from .stage5d_governance import (
     Stage5DApprovalCompatibilityError,
     require_stage5d_rule_capability,
 )
+from .stage5d_ledger_v2 import (
+    STAGE5D_V2_SLICE_SCHEMA_VERSION,
+    Stage5DV2DerivedState,
+    Stage5DV2Event,
+    Stage5DV2EventType,
+    Stage5DV2ReplayResult,
+    Stage5DV2ReplayStatus,
+    replay_stage5d_v2_slice,
+)
+from .stage5d_stage5c_adapter import (
+    Stage5DSourceDrivenSliceResult,
+    Stage5DSourceDrivenSliceStatus,
+    evaluate_stage5d_source_driven_ledger_slice,
+    stage5d_source_driven_slice_sha256,
+)
 
 __all__ = [
     "CASE_MATERIAL_HASH_PREDICATE",
@@ -510,6 +525,7 @@ __all__ = [
     "STAGE5_5D_RULES_SHA256",
     "STAGE5_5D_SPECIFICATION_SHA256",
     "STAGE5_5D_STAGE5C_BASELINE_COMMIT",
+    "STAGE5D_V2_SLICE_SCHEMA_VERSION",
     "STAGE5_APPROVAL_SCOPE",
     "STAGE5_STRATEGY_ID",
     "STAGE5B_SCHEMA_VERSION",
@@ -603,6 +619,13 @@ __all__ = [
     "Stage4RuleReadinessError",
     "Stage5RuleCompatibilityError",
     "Stage5DApprovalCompatibilityError",
+    "Stage5DSourceDrivenSliceResult",
+    "Stage5DSourceDrivenSliceStatus",
+    "Stage5DV2DerivedState",
+    "Stage5DV2Event",
+    "Stage5DV2EventType",
+    "Stage5DV2ReplayResult",
+    "Stage5DV2ReplayStatus",
     "CostSchedule",
     "ImpactCurve",
     "ImpactNode",
@@ -729,6 +752,7 @@ __all__ = [
     "plan_stage5_market_candidate",
     "evaluate_stage5_portfolio_target",
     "evaluate_stage5_portfolio_ledger",
+    "evaluate_stage5d_source_driven_ledger_slice",
     "stage5_artifact_content_sha256",
     "stage5_constrained_market_execution_replay_sha256",
     "stage5_market_candidate_sha256",
@@ -738,6 +762,8 @@ __all__ = [
     "stage5c_portfolio_ledger_projection_sha256",
     "ledger_event_content_sha256",
     "replay_stage5c_ledger",
+    "replay_stage5d_v2_slice",
+    "stage5d_source_driven_slice_sha256",
     "stage4_rule_inventory_from_json_value",
     "stage4_event_rule_proposal_from_document",
     "stage4_expectation_valuation_exit_rule_proposal_from_document",
