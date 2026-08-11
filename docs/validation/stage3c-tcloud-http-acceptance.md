@@ -82,4 +82,4 @@ InvestSystem 使用仓库自有的 `scripts/validate-kb-stage3-http.py`、已固
 - 没有保存 HTTP 响应正文或 artifact 到仓库；验收记录只保存非敏感身份与哈希。
 - 没有授权 backtest、paper、shadow、live、真实账户、仓位、订单、券商接入或资金部署。
 - Stage 3 总体继续为 `in_progress`；3A—3C 已完成，3D 正式 Context Pack 策略 smoke 尚未开始。
-- 本次提交完成后，KB 会话应立即撤销本轮短期 Token。
+- owner 已于 `2026-08-11` 确认 KB 会话完成本轮短期 Token 撤销；该凭据不再用于 Stage 3D 或任何后续验收。
