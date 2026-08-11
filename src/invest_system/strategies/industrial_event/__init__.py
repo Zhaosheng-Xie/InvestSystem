@@ -414,16 +414,20 @@ from .stage5d_governance import (
 )
 from .stage5d_ledger_v2 import (
     STAGE5D_V2_SLICE_SCHEMA_VERSION,
+    Stage5DV2CostComponents,
     Stage5DV2DerivedState,
     Stage5DV2Event,
     Stage5DV2EventType,
+    Stage5DV2OpeningLotAttribution,
     Stage5DV2ReplayResult,
     Stage5DV2ReplayStatus,
+    bind_stage5d_v2_opening_attribution,
     replay_stage5d_v2_slice,
 )
 from .stage5d_stage5c_adapter import (
     Stage5DSourceDrivenSliceResult,
     Stage5DSourceDrivenSliceStatus,
+    build_stage5d_v2_continuation_basis,
     evaluate_stage5d_source_driven_ledger_slice,
     stage5d_source_driven_slice_sha256,
 )
@@ -621,11 +625,15 @@ __all__ = [
     "Stage5DApprovalCompatibilityError",
     "Stage5DSourceDrivenSliceResult",
     "Stage5DSourceDrivenSliceStatus",
+    "Stage5DV2CostComponents",
     "Stage5DV2DerivedState",
     "Stage5DV2Event",
     "Stage5DV2EventType",
+    "Stage5DV2OpeningLotAttribution",
     "Stage5DV2ReplayResult",
     "Stage5DV2ReplayStatus",
+    "bind_stage5d_v2_opening_attribution",
+    "build_stage5d_v2_continuation_basis",
     "CostSchedule",
     "ImpactCurve",
     "ImpactNode",

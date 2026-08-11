@@ -1,8 +1,8 @@
 """Minimal source-driven Stage 5D Ledger V2 kernel.
 
 This module is intentionally narrower than the complete Stage 5D-1 engine.  It
-supports only an empty synthetic opening, a Stage 5C BUY fill, the associated
-cash/security settlement transitions, and an explicit no-fill opening.  It is
+supports an attributed synthetic opening, Stage 5C BUY/SELL fills, their cash
+and security settlement transitions, and an explicit no-fill opening.  It is
 pure, deterministic, in-memory, and grants no execution or persistence
 authority.
 """
@@ -13,33 +13,44 @@ from dataclasses import dataclass, field, replace
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from enum import StrEnum
+from fractions import Fraction
 
 from invest_system.canonical import canonical_sha256, normalize_utc
 from invest_system.models import CanonicalModel, HashDigest
 
-STAGE5D_V2_SLICE_SCHEMA_VERSION = "0.1.0"
+STAGE5D_V2_SLICE_SCHEMA_VERSION = "0.2.0"
 
 
 class Stage5DV2EventType(StrEnum):
     OPENING_BALANCE = "OPENING_BALANCE"
+    OPENING_POSITION = "OPENING_POSITION"
     BUY_TRADE = "BUY_TRADE"
+    SELL_TRADE = "SELL_TRADE"
     BUY_CASH_SETTLEMENT = "BUY_CASH_SETTLEMENT"
+    SELL_CASH_SETTLEMENT = "SELL_CASH_SETTLEMENT"
+    SELL_CASH_AVAILABLE = "SELL_CASH_AVAILABLE"
     SECURITY_SETTLEMENT = "SECURITY_SETTLEMENT"
     SECURITY_SELLABLE = "SECURITY_SELLABLE"
 
 
 STAGE5D_V2_EVENT_PRIORITY = {
     Stage5DV2EventType.OPENING_BALANCE: 10,
+    Stage5DV2EventType.OPENING_POSITION: 11,
     Stage5DV2EventType.BUY_TRADE: 40,
+    Stage5DV2EventType.SELL_TRADE: 40,
     Stage5DV2EventType.BUY_CASH_SETTLEMENT: 80,
+    Stage5DV2EventType.SELL_CASH_SETTLEMENT: 80,
     Stage5DV2EventType.SECURITY_SETTLEMENT: 81,
     Stage5DV2EventType.SECURITY_SELLABLE: 82,
+    Stage5DV2EventType.SELL_CASH_AVAILABLE: 83,
 }
 
 
 class Stage5DV2Account(StrEnum):
     CASH_AVAILABLE = "CASH_AVAILABLE"
     CASH_PAYABLE = "CASH_PAYABLE"
+    CASH_RECEIVABLE = "CASH_RECEIVABLE"
+    CASH_SETTLED_UNAVAILABLE = "CASH_SETTLED_UNAVAILABLE"
     OPENING_CONTROL = "OPENING_CONTROL"
     SECURITY_COST_PRINCIPAL = "SECURITY_COST_PRINCIPAL"
     SECURITY_COST_FEE = "SECURITY_COST_FEE"
@@ -50,6 +61,11 @@ class Stage5DV2Account(StrEnum):
     SECURITY_UNSELLABLE = "SECURITY_UNSELLABLE"
     SECURITY_SELLABLE = "SECURITY_SELLABLE"
     SECURITY_CONTROL = "SECURITY_CONTROL"
+    SELL_PROCEEDS_CONTROL = "SELL_PROCEEDS_CONTROL"
+    REALIZED_COST_BASIS_CONTROL = "REALIZED_COST_BASIS_CONTROL"
+    REALIZED_FEE = "REALIZED_FEE"
+    REALIZED_TAX = "REALIZED_TAX"
+    REALIZED_SLIPPAGE = "REALIZED_SLIPPAGE"
 
 
 class Stage5DV2SourceRole(StrEnum):
@@ -57,6 +73,7 @@ class Stage5DV2SourceRole(StrEnum):
     STAGE5C_RESULT = "STAGE5C_RESULT"
     ACCOUNT_SNAPSHOT = "ACCOUNT_SNAPSHOT"
     INITIAL_LEDGER = "INITIAL_LEDGER"
+    OPENING_ATTRIBUTION = "OPENING_ATTRIBUTION"
     ORDER_INTENT = "ORDER_INTENT"
     FILL = "FILL"
     MARKET_OBSERVATION = "MARKET_OBSERVATION"
@@ -169,6 +186,116 @@ class Stage5DV2CostComponents(CanonicalModel):
 
 
 @dataclass(frozen=True, slots=True)
+class Stage5DV2CostComponentDelta(CanonicalModel):
+    """Signed change to the five cost buckets of one lot."""
+
+    principal: str
+    fee: str
+    tax: str
+    slippage: str
+    basis_adjustment: str
+
+    def __post_init__(self) -> None:
+        for name in ("principal", "fee", "tax", "slippage", "basis_adjustment"):
+            parsed = _decimal(name, getattr(self, name))
+            object.__setattr__(self, name, _decimal_text(parsed))
+
+    def total(self) -> Decimal:
+        return sum(
+            (
+                Decimal(self.principal),
+                Decimal(self.fee),
+                Decimal(self.tax),
+                Decimal(self.slippage),
+                Decimal(self.basis_adjustment),
+            ),
+            Decimal(0),
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class Stage5DV2OpeningLotAttribution(CanonicalModel):
+    """Content-addressed five-component attribution for a Stage 5C opening lot."""
+
+    attribution_id: str
+    strategy_id: str
+    account_fixture_id: str
+    lot_id: str
+    security_id: str
+    acquired_at: datetime
+    quantity: int
+    sellable_quantity: int
+    governing_market_rule_hash: HashDigest
+    source_lot_hash: HashDigest
+    cost_components: Stage5DV2CostComponents
+    declared_content_hash: HashDigest
+    synthetic: bool = field(default=True, init=False)
+    validation_only: bool = field(default=True, init=False)
+    persists_state: bool = field(default=False, init=False)
+    authorizes_positions: bool = field(default=False, init=False)
+    authorizes_orders: bool = field(default=False, init=False)
+
+    def __post_init__(self) -> None:
+        for name in (
+            "attribution_id",
+            "strategy_id",
+            "account_fixture_id",
+            "lot_id",
+            "security_id",
+        ):
+            _text(name, getattr(self, name))
+        object.__setattr__(
+            self,
+            "acquired_at",
+            normalize_utc(self.acquired_at, field_name="acquired_at"),
+        )
+        if (
+            isinstance(self.quantity, bool)
+            or not isinstance(self.quantity, int)
+            or self.quantity <= 0
+        ):
+            raise ValueError("quantity must be a positive integer")
+        if (
+            isinstance(self.sellable_quantity, bool)
+            or not isinstance(self.sellable_quantity, int)
+            or not 0 <= self.sellable_quantity <= self.quantity
+        ):
+            raise ValueError("sellable_quantity must be between zero and quantity")
+        for name in (
+            "governing_market_rule_hash",
+            "source_lot_hash",
+            "declared_content_hash",
+        ):
+            if not isinstance(getattr(self, name), HashDigest):
+                raise TypeError(f"{name} must be HashDigest")
+        if not isinstance(self.cost_components, Stage5DV2CostComponents):
+            raise TypeError("cost_components must be Stage5DV2CostComponents")
+
+
+def stage5d_v2_opening_attribution_sha256(value: Stage5DV2OpeningLotAttribution) -> str:
+    projected = value.to_json_value()
+    del projected["declared_content_hash"]
+    return canonical_sha256(projected)
+
+
+def bind_stage5d_v2_opening_attribution(
+    value: Stage5DV2OpeningLotAttribution,
+) -> Stage5DV2OpeningLotAttribution:
+    if not isinstance(value, Stage5DV2OpeningLotAttribution):
+        raise TypeError("value must be Stage5DV2OpeningLotAttribution")
+    return replace(
+        value,
+        declared_content_hash=_hash(
+            {
+                key: item
+                for key, item in value.to_json_value().items()
+                if key != "declared_content_hash"
+            }
+        ),
+    )
+
+
+@dataclass(frozen=True, slots=True)
 class Stage5DV2LotEffect(CanonicalModel):
     lot_id: str
     security_id: str
@@ -178,7 +305,7 @@ class Stage5DV2LotEffect(CanonicalModel):
     unsettled_quantity_delta: int
     unsellable_quantity_delta: int
     sellable_quantity_delta: int
-    cost_components_delta: Stage5DV2CostComponents
+    cost_components_delta: Stage5DV2CostComponents | Stage5DV2CostComponentDelta
 
     def __post_init__(self) -> None:
         _text("lot_id", self.lot_id)
@@ -199,8 +326,11 @@ class Stage5DV2LotEffect(CanonicalModel):
             value = getattr(self, name)
             if isinstance(value, bool) or not isinstance(value, int):
                 raise TypeError(f"{name} must be an integer")
-        if not isinstance(self.cost_components_delta, Stage5DV2CostComponents):
-            raise TypeError("cost_components_delta must be Stage5DV2CostComponents")
+        if not isinstance(
+            self.cost_components_delta,
+            (Stage5DV2CostComponents, Stage5DV2CostComponentDelta),
+        ):
+            raise TypeError("cost_components_delta must be a typed V2 cost delta")
         if (
             self.quantity_delta == 0
             and self.unsettled_quantity_delta == 0
@@ -373,6 +503,33 @@ def _balanced(event: Stage5DV2Event) -> bool:
     return bool(by_unit) and all(debit == credit for debit, credit in by_unit.values())
 
 
+def _cost_values(
+    value: Stage5DV2CostComponents | Stage5DV2CostComponentDelta,
+) -> dict[str, Decimal]:
+    return {
+        name: Decimal(getattr(value, name))
+        for name in ("principal", "fee", "tax", "slippage", "basis_adjustment")
+    }
+
+
+def _exact_pro_rata(value: Decimal, take: int, quantity: int) -> Decimal | None:
+    """Return an exact terminating pro-rata decimal, or fail closed."""
+
+    if quantity <= 0 or take < 0 or take > quantity:
+        return None
+    if take == quantity:
+        return value
+    ratio = Fraction(value) * Fraction(take, quantity)
+    denominator = ratio.denominator
+    while denominator % 2 == 0:
+        denominator //= 2
+    while denominator % 5 == 0:
+        denominator //= 5
+    if denominator != 1:
+        return None
+    return Decimal(ratio.numerator) / Decimal(ratio.denominator)
+
+
 def _validate_event(event: Stage5DV2Event) -> str | None:
     roles = _source_roles(event)
     deltas = _posting_deltas(event)
@@ -391,6 +548,81 @@ def _validate_event(event: Stage5DV2Event) -> str | None:
         control = deltas.get((Stage5DV2Account.OPENING_CONTROL, "CNY", None), Decimal(0))
         if cash <= 0 or control != -cash or len(deltas) != 2:
             return "STAGE5D_V2_OPENING_POSTINGS_INVALID"
+        return None
+    if event.event_type is Stage5DV2EventType.OPENING_POSITION:
+        if event.security_id is None or len(event.lot_effects) != 1:
+            return "STAGE5D_V2_OPENING_POSITION_SCOPE_INVALID"
+        if roles != {
+            Stage5DV2SourceRole.STAGE5C_CASE,
+            Stage5DV2SourceRole.ACCOUNT_SNAPSHOT,
+            Stage5DV2SourceRole.INITIAL_LEDGER,
+            Stage5DV2SourceRole.OPENING_ATTRIBUTION,
+        }:
+            return "STAGE5D_V2_OPENING_POSITION_SOURCE_SET_INVALID"
+        effect = event.lot_effects[0]
+        components = effect.cost_components_delta
+        if (
+            effect.security_id != event.security_id
+            or effect.quantity_delta <= 0
+            or effect.unsettled_quantity_delta != 0
+            or effect.unsellable_quantity_delta < 0
+            or effect.sellable_quantity_delta < 0
+            or effect.unsellable_quantity_delta + effect.sellable_quantity_delta
+            != effect.quantity_delta
+            or any(value < 0 for value in _cost_values(components).values())
+        ):
+            return "STAGE5D_V2_OPENING_POSITION_LOT_INVALID"
+        component_accounts = {
+            "principal": Stage5DV2Account.SECURITY_COST_PRINCIPAL,
+            "fee": Stage5DV2Account.SECURITY_COST_FEE,
+            "tax": Stage5DV2Account.SECURITY_COST_TAX,
+            "slippage": Stage5DV2Account.SECURITY_COST_SLIPPAGE,
+            "basis_adjustment": Stage5DV2Account.SECURITY_COST_BASIS_ADJUSTMENT,
+        }
+        for name, account in component_accounts.items():
+            if deltas.get((account, "CNY", event.security_id), Decimal(0)) != Decimal(
+                getattr(components, name)
+            ):
+                return "STAGE5D_V2_OPENING_POSITION_COST_MISMATCH"
+        opening_expected_keys: set[tuple[Stage5DV2Account, str, str | None]] = {
+            (account, "CNY", event.security_id)
+            for name, account in component_accounts.items()
+            if Decimal(getattr(components, name)) != 0
+        }
+        opening_expected_keys.add((Stage5DV2Account.OPENING_CONTROL, "CNY", None))
+        if effect.unsellable_quantity_delta != 0:
+            opening_expected_keys.add(
+                (Stage5DV2Account.SECURITY_UNSELLABLE, event.security_id, event.security_id)
+            )
+        if effect.sellable_quantity_delta != 0:
+            opening_expected_keys.add(
+                (Stage5DV2Account.SECURITY_SELLABLE, event.security_id, event.security_id)
+            )
+        opening_expected_keys.add(
+            (Stage5DV2Account.SECURITY_CONTROL, event.security_id, event.security_id)
+        )
+        if set(deltas) != opening_expected_keys:
+            return "STAGE5D_V2_OPENING_POSITION_ACCOUNT_SET_INVALID"
+        opening_control = deltas.get((Stage5DV2Account.OPENING_CONTROL, "CNY", None), Decimal(0))
+        unsellable = deltas.get(
+            (Stage5DV2Account.SECURITY_UNSELLABLE, event.security_id, event.security_id),
+            Decimal(0),
+        )
+        sellable = deltas.get(
+            (Stage5DV2Account.SECURITY_SELLABLE, event.security_id, event.security_id),
+            Decimal(0),
+        )
+        control = deltas.get(
+            (Stage5DV2Account.SECURITY_CONTROL, event.security_id, event.security_id),
+            Decimal(0),
+        )
+        if (
+            opening_control != -components.total()
+            or unsellable != effect.unsellable_quantity_delta
+            or sellable != effect.sellable_quantity_delta
+            or control != -effect.quantity_delta
+        ):
+            return "STAGE5D_V2_OPENING_POSITION_POSTINGS_INVALID"
         return None
     if event.security_id is None:
         return "STAGE5D_V2_SECURITY_SCOPE_MISSING"
@@ -447,6 +679,101 @@ def _validate_event(event: Stage5DV2Event) -> str | None:
         ):
             return "STAGE5D_V2_BUY_POSTINGS_INVALID"
         return None
+    if event.event_type is Stage5DV2EventType.SELL_TRADE:
+        if (
+            roles
+            != {
+                Stage5DV2SourceRole.STAGE5C_CASE,
+                Stage5DV2SourceRole.STAGE5C_RESULT,
+                Stage5DV2SourceRole.ORDER_INTENT,
+                Stage5DV2SourceRole.FILL,
+                Stage5DV2SourceRole.MARKET_OBSERVATION,
+                Stage5DV2SourceRole.MARKET_RULE,
+                Stage5DV2SourceRole.COST_SCHEDULE,
+                Stage5DV2SourceRole.IMPACT_CURVE,
+            }
+            or not event.lot_effects
+        ):
+            return "STAGE5D_V2_SELL_SOURCE_OR_LOT_INVALID"
+        removed_components = {
+            name: -sum(
+                (Decimal(getattr(item.cost_components_delta, name)) for item in event.lot_effects),
+                Decimal(0),
+            )
+            for name in ("principal", "fee", "tax", "slippage", "basis_adjustment")
+        }
+        if any(
+            effect.security_id != event.security_id
+            or effect.quantity_delta >= 0
+            or effect.unsettled_quantity_delta != 0
+            or effect.unsellable_quantity_delta != 0
+            or effect.sellable_quantity_delta != effect.quantity_delta
+            or any(value > 0 for value in _cost_values(effect.cost_components_delta).values())
+            for effect in event.lot_effects
+        ):
+            return "STAGE5D_V2_SELL_LOT_EFFECT_INVALID"
+        component_accounts = {
+            "principal": Stage5DV2Account.SECURITY_COST_PRINCIPAL,
+            "fee": Stage5DV2Account.SECURITY_COST_FEE,
+            "tax": Stage5DV2Account.SECURITY_COST_TAX,
+            "slippage": Stage5DV2Account.SECURITY_COST_SLIPPAGE,
+            "basis_adjustment": Stage5DV2Account.SECURITY_COST_BASIS_ADJUSTMENT,
+        }
+        for name, account in component_accounts.items():
+            if (
+                deltas.get((account, "CNY", event.security_id), Decimal(0))
+                != -removed_components[name]
+            ):
+                return "STAGE5D_V2_SELL_COST_COMPONENT_MISMATCH"
+        removed_quantity = -sum(item.quantity_delta for item in event.lot_effects)
+        cash_receivable = deltas.get((Stage5DV2Account.CASH_RECEIVABLE, "CNY", None), Decimal(0))
+        realized_fee = deltas.get((Stage5DV2Account.REALIZED_FEE, "CNY", None), Decimal(0))
+        realized_tax = deltas.get((Stage5DV2Account.REALIZED_TAX, "CNY", None), Decimal(0))
+        realized_slippage = deltas.get(
+            (Stage5DV2Account.REALIZED_SLIPPAGE, "CNY", None), Decimal(0)
+        )
+        proceeds = deltas.get((Stage5DV2Account.SELL_PROCEEDS_CONTROL, "CNY", None), Decimal(0))
+        realized_basis = deltas.get(
+            (Stage5DV2Account.REALIZED_COST_BASIS_CONTROL, "CNY", None), Decimal(0)
+        )
+        security_control = deltas.get(
+            (Stage5DV2Account.SECURITY_CONTROL, event.security_id, event.security_id),
+            Decimal(0),
+        )
+        sellable = deltas.get(
+            (Stage5DV2Account.SECURITY_SELLABLE, event.security_id, event.security_id),
+            Decimal(0),
+        )
+        sell_expected_keys: set[tuple[Stage5DV2Account, str, str | None]] = {
+            (Stage5DV2Account.CASH_RECEIVABLE, "CNY", None),
+            (Stage5DV2Account.SELL_PROCEEDS_CONTROL, "CNY", None),
+            (Stage5DV2Account.REALIZED_COST_BASIS_CONTROL, "CNY", None),
+            (Stage5DV2Account.SECURITY_CONTROL, event.security_id, event.security_id),
+            (Stage5DV2Account.SECURITY_SELLABLE, event.security_id, event.security_id),
+        }
+        for amount, account in (
+            (realized_fee, Stage5DV2Account.REALIZED_FEE),
+            (realized_tax, Stage5DV2Account.REALIZED_TAX),
+            (realized_slippage, Stage5DV2Account.REALIZED_SLIPPAGE),
+        ):
+            if amount != 0:
+                sell_expected_keys.add((account, "CNY", None))
+        for name, account in component_accounts.items():
+            if removed_components[name] != 0:
+                sell_expected_keys.add((account, "CNY", event.security_id))
+        if set(deltas) != sell_expected_keys:
+            return "STAGE5D_V2_SELL_ACCOUNT_SET_INVALID"
+        if (
+            cash_receivable <= 0
+            or any(value < 0 for value in (realized_fee, realized_tax, realized_slippage))
+            or proceeds >= 0
+            or realized_basis != sum(removed_components.values(), Decimal(0))
+            or cash_receivable + realized_fee + realized_tax + realized_slippage != -proceeds
+            or security_control != removed_quantity
+            or sellable != -removed_quantity
+        ):
+            return "STAGE5D_V2_SELL_POSTINGS_INVALID"
+        return None
     if roles != {
         Stage5DV2SourceRole.FILL,
         Stage5DV2SourceRole.SETTLEMENT_TERMS,
@@ -460,6 +787,26 @@ def _validate_event(event: Stage5DV2Event) -> str | None:
         cash = deltas.get((Stage5DV2Account.CASH_AVAILABLE, "CNY", None), Decimal(0))
         if payable <= 0 or cash != -payable or len(deltas) != 2:
             return "STAGE5D_V2_CASH_SETTLEMENT_POSTINGS_INVALID"
+        return None
+    if event.event_type is Stage5DV2EventType.SELL_CASH_SETTLEMENT:
+        if event.lot_effects:
+            return "STAGE5D_V2_CASH_SETTLEMENT_HAS_LOT_EFFECT"
+        receivable = deltas.get((Stage5DV2Account.CASH_RECEIVABLE, "CNY", None), Decimal(0))
+        unavailable = deltas.get(
+            (Stage5DV2Account.CASH_SETTLED_UNAVAILABLE, "CNY", None), Decimal(0)
+        )
+        if receivable >= 0 or unavailable != -receivable or len(deltas) != 2:
+            return "STAGE5D_V2_SELL_CASH_SETTLEMENT_POSTINGS_INVALID"
+        return None
+    if event.event_type is Stage5DV2EventType.SELL_CASH_AVAILABLE:
+        if event.lot_effects:
+            return "STAGE5D_V2_CASH_AVAILABILITY_HAS_LOT_EFFECT"
+        unavailable = deltas.get(
+            (Stage5DV2Account.CASH_SETTLED_UNAVAILABLE, "CNY", None), Decimal(0)
+        )
+        available = deltas.get((Stage5DV2Account.CASH_AVAILABLE, "CNY", None), Decimal(0))
+        if unavailable >= 0 or available != -unavailable or len(deltas) != 2:
+            return "STAGE5D_V2_SELL_CASH_AVAILABILITY_POSTINGS_INVALID"
         return None
     if len(event.lot_effects) != 1:
         return "STAGE5D_V2_SECURITY_SETTLEMENT_LOT_MISSING"
@@ -536,6 +883,46 @@ class _MutableLot:
     tax: Decimal = Decimal(0)
     slippage: Decimal = Decimal(0)
     basis_adjustment: Decimal = Decimal(0)
+
+
+def _validate_fifo_sell(
+    event: Stage5DV2Event,
+    lots: dict[str, _MutableLot],
+) -> str | None:
+    requested = -sum(item.quantity_delta for item in event.lot_effects)
+    remaining = requested
+    expected: list[tuple[_MutableLot, str, int, dict[str, Decimal]]] = []
+    for lot_id, lot in sorted(lots.items(), key=lambda item: (item[1].acquired_at, item[0])):
+        if lot.security_id != event.security_id or lot.sellable <= 0 or remaining == 0:
+            continue
+        take = min(lot.sellable, remaining)
+        components: dict[str, Decimal] = {}
+        for name in ("principal", "fee", "tax", "slippage", "basis_adjustment"):
+            value = _exact_pro_rata(getattr(lot, name), take, lot.quantity)
+            if value is None:
+                return "STAGE5D_V2_FIFO_COST_NOT_EXACTLY_REPRESENTABLE"
+            components[name] = value
+        expected.append((lot, lot_id, take, components))
+        remaining -= take
+    if remaining != 0 or len(expected) != len(event.lot_effects):
+        return "STAGE5D_V2_FIFO_SELLABLE_QUANTITY_INSUFFICIENT"
+    for effect, (lot, lot_id, take, components) in zip(event.lot_effects, expected, strict=True):
+        if (
+            effect.lot_id != lot_id
+            or effect.security_id != lot.security_id
+            or effect.acquired_at != lot.acquired_at
+            or effect.source_fill_hash != lot.source_fill_hash
+            or effect.quantity_delta != -take
+            or effect.sellable_quantity_delta != -take
+            or effect.unsettled_quantity_delta != 0
+            or effect.unsellable_quantity_delta != 0
+            or any(
+                Decimal(getattr(effect.cost_components_delta, name)) != -amount
+                for name, amount in components.items()
+            )
+        ):
+            return "STAGE5D_V2_FIFO_LOT_REMOVAL_MISMATCH"
+    return None
 
 
 def replay_stage5d_v2_slice(
@@ -624,6 +1011,16 @@ def replay_stage5d_v2_slice(
     balances: dict[tuple[Stage5DV2Account, str, str | None], Decimal] = {}
     lots: dict[str, _MutableLot] = {}
     for event in accepted:
+        if event.event_type is Stage5DV2EventType.SELL_TRADE:
+            fifo_failure = _validate_fifo_sell(event, lots)
+            if fifo_failure is not None:
+                return _blocked(
+                    Stage5DV2ReplayStatus.RECONCILIATION_BLOCKED,
+                    fifo_failure,
+                    replay_as_of,
+                    projected,
+                    accepted,
+                )
         for posting in event.postings:
             key = (posting.account, posting.unit, posting.security_id)
             balances[key] = (
@@ -681,10 +1078,33 @@ def replay_stage5d_v2_slice(
                     projected,
                     accepted,
                 )
+            if any(
+                getattr(current, name) < 0
+                for name in ("principal", "fee", "tax", "slippage", "basis_adjustment")
+            ):
+                return _blocked(
+                    Stage5DV2ReplayStatus.RECONCILIATION_BLOCKED,
+                    "STAGE5D_V2_LOT_COST_COMPONENT_NEGATIVE",
+                    replay_as_of,
+                    projected,
+                    accepted,
+                )
         if balances.get((Stage5DV2Account.CASH_AVAILABLE, "CNY", None), Decimal(0)) < 0:
             return _blocked(
                 Stage5DV2ReplayStatus.RECONCILIATION_BLOCKED,
                 "STAGE5D_V2_NEGATIVE_AVAILABLE_CASH",
+                replay_as_of,
+                projected,
+                accepted,
+            )
+        if (
+            balances.get((Stage5DV2Account.CASH_RECEIVABLE, "CNY", None), Decimal(0)) < 0
+            or balances.get((Stage5DV2Account.CASH_SETTLED_UNAVAILABLE, "CNY", None), Decimal(0))
+            < 0
+        ):
+            return _blocked(
+                Stage5DV2ReplayStatus.RECONCILIATION_BLOCKED,
+                "STAGE5D_V2_NEGATIVE_RECEIVABLE_OR_SETTLED_UNAVAILABLE_CASH",
                 replay_as_of,
                 projected,
                 accepted,
@@ -709,6 +1129,7 @@ def replay_stage5d_v2_slice(
             ),
         )
         for lot_id, value in sorted(lots.items())
+        if value.quantity > 0
     )
     component_accounts = {
         "principal": Stage5DV2Account.SECURITY_COST_PRINCIPAL,
@@ -805,17 +1226,21 @@ __all__ = [
     "Stage5DV2Account",
     "Stage5DV2Balance",
     "Stage5DV2CostComponents",
+    "Stage5DV2CostComponentDelta",
     "Stage5DV2DerivedLot",
     "Stage5DV2DerivedState",
     "Stage5DV2Event",
     "Stage5DV2EventType",
     "Stage5DV2LotEffect",
+    "Stage5DV2OpeningLotAttribution",
     "Stage5DV2Posting",
     "Stage5DV2ReplayResult",
     "Stage5DV2ReplayStatus",
     "Stage5DV2SourceRef",
     "Stage5DV2SourceRole",
+    "bind_stage5d_v2_opening_attribution",
     "bind_stage5d_v2_event",
     "replay_stage5d_v2_slice",
+    "stage5d_v2_opening_attribution_sha256",
     "stage5d_v2_event_sha256",
 ]
