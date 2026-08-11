@@ -90,4 +90,6 @@ Stage 5C 业务专项验证：typed recovery record 与多风险簇；NORMAL/DEF
 
 Stage 5D 治理测试继续固定原文与 draft machine proposal 的 SHA-256、48 项完整正文 hash、精确 Stage 5A/5C 上游、零 draft 权限、Ledger V2 exact event map、状态独立 PIT、十八格 P&L、`(beginning_at,ending_at]` 和 SQLite v4 原子聚合语义；这证明治理上限，不等于当前实现覆盖全部 48 项。批准谱系测试继续验证 partial approval、错误 scope、批准记录漂移、上游漂移、语义漂移及任何真实/交易/提前 persistence 权限扩张均失败关闭。受限 5D-1 业务验收必须另有一个预注册 golden：同一输入逐字节确定、所有承重金额可追溯、未支持事件 fail closed、无 selection-by-outcome。
 
+[首条回放预注册](../../docs/validation/stage5d-first-order-contract-replay-preregistration.md)现已把匿名合成 ENTER/BUY case、时间范围、五事件 closed world、期末 mark `8`、NAV `99986.77` 和 P&L `-13.23` 固定为 machine-readable fixture；四项预注册合同测试与九项已有 source-driven Ledger 测试合跑为 `13 passed`，全部 Stage 5D 相邻测试为 `32 passed`，全仓为 `955 passed, 4 skipped`。这只证明实施输入已冻结，不代表 mark/NAV/P&L 或 complete replay 已实现。
+
 正式结果见[Stage 5A 规则治理批准验收记录](../../docs/validation/stage5-5a-governance-acceptance.md)、[Stage 5B 历史市场规则与合成成交验收记录](../../docs/validation/stage5-5b-market-execution-acceptance.md)和[Stage 5C 合成组合与内存账本验收记录](../../docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。

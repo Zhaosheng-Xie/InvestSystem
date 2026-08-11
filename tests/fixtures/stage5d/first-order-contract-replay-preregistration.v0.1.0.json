@@ -1,0 +1,212 @@
+{
+  "schema_version": "0.1.0",
+  "preregistration_id": "stage5d_first_order_contract_replay_v0_1_0",
+  "status": "frozen_for_implementation",
+  "frozen_on": "2026-08-12",
+  "baseline": {
+    "integration_commit": "4c1cd4d0d1986e32d78e32063163fe4a0b7523af",
+    "stage5c_implementation_baseline_commit": "7f64c584c5c7be5e2385a177fab9e5d31e3f665b",
+    "stage5a_rule_bundle_sha256": "c69bc7170b608bc6f3e2dd4119e08b13d4f10f03730be115dbc191b47544eeb7",
+    "stage5a_approval_record_sha256": "5b9536f546337ba38408d255b3fbad68fbbdf6d9ccba9af79b10b6e04ca8cd78",
+    "stage5d_rule_bundle_id": "industrial_event_stage5_5d_corporate_action_pnl_replay_persistence",
+    "stage5d_rule_bundle_version": "0.1.0",
+    "stage5d_rule_bundle_sha256": "0202d8a15e85851e58af06e9e7c62903efd51f87c7222cbb0172d9e59648be63",
+    "stage5d_rules_sha256": "22c84398b52dd20f09fe9c7c18edeccfd0f132cc3892b670d21a945b28665dcb",
+    "stage5d_approval_id": "rule_approval_stage5_5d_corporate_action_pnl_replay_persistence_v0_1_0",
+    "stage5d_approval_record_sha256": "9f2e3a08dc209d276b4ed82eed416719e9fcf83f86dd6f571afd70d82ab7ea05"
+  },
+  "scope": {
+    "approval_scope": "stage5_synthetic_execution_validation",
+    "run_mode": "research",
+    "strategy_id": "industrial_bottleneck_event",
+    "synthetic": true,
+    "validation_only": true,
+    "authority_eligible": false,
+    "authorizes_backtest": false,
+    "authorizes_paper": false,
+    "authorizes_shadow": false,
+    "authorizes_live": false,
+    "authorizes_positions": false,
+    "authorizes_orders": false,
+    "connects_broker": false,
+    "persists_state": false,
+    "reads_kb_internal_state": false,
+    "writes_kb": false
+  },
+  "business_semantics_anchor": {
+    "description": "anonymous synthetic high-speed optical interconnect binding order/contract event",
+    "fixture_path": "tests/fixtures/stage2b/normal/synthetic-order-contract-base.v0.1.0.json",
+    "fixture_raw_sha256": "c1d89a7d020767c2cd67647caf564f258a8e83ed9f68255d74f721db588795fd",
+    "fixture_canonical_sha256": "2f92ff71b5428fc96634e20f70979252f7d97093d8d043367c4c062ff70f0fce",
+    "fixture_id": "synthetic_fixture_stage2b_optical_contract_001",
+    "direct_runtime_input": false,
+    "not_a_published_release": true,
+    "not_strategy_evidence": true
+  },
+  "case": {
+    "case_id": "stage4_4a4_case_001",
+    "strategy_id": "industrial_bottleneck_event",
+    "security_id": "600000.SH",
+    "account_fixture_id": "anonymous_account_001",
+    "action_intent": "ENTER",
+    "venue": "SSE",
+    "board": "MAIN",
+    "security_type": "EQUITY",
+    "risk_label": "STANDARD",
+    "materializer": "tests/unit/test_stage5_portfolio_ledger.py::_case(repository_root, sell=False, reject=False)",
+    "stage4_case_sha256": "f1122a373a458c20908ba4235c1414a1404b4fd6a65db0fda8525c8d0deb7172",
+    "stage4_result_sha256": "8db6a0755fab51d6217a2796e09ba3b7f00051c1eff82ad6fd86f85e02606be8",
+    "stage5_market_execution_case_sha256": "5bb8b98f7d27ee1fe79574502dd765e9bb9593c12c4929ed50a565aa083e787a",
+    "stage5c_case_sha256": "06a9eaac57fec706b7bda7566494256cd0df045e1bdab2d826a1a85066a1ee62",
+    "stage5c_result_sha256": "daf123cd8ad8418a5794c5aa86f08b66d6c18e3aebd1cdef58cae1b0d88dab59"
+  },
+  "horizon": {
+    "timezone": "UTC",
+    "knowledge_cutoff": "2025-01-16T00:00:00.000000Z",
+    "decision_at": "2025-01-17T00:00:00.000000Z",
+    "beginning_at": "2025-01-20T02:10:00.000000Z",
+    "fill_at": "2025-01-20T02:31:00.000000Z",
+    "security_settlement_at": "2025-01-21T02:10:00.000000Z",
+    "security_sellable_at": "2025-01-21T02:10:00.000000Z",
+    "ending_mark_observed_at": "2025-01-21T07:00:00.000000Z",
+    "ending_mark_available_at": "2025-01-21T07:01:00.000000Z",
+    "ending_at": "2025-01-21T07:01:00.000000Z",
+    "case_injected_clock": "2025-02-01T00:00:00.000000Z",
+    "period_convention": "(beginning_at, ending_at]",
+    "opening_snapshot_effective_at_must_equal_beginning_at": true,
+    "no_event_or_mark_after_ending_at_may_enter_current_results": true
+  },
+  "inputs": {
+    "opening_available_cash": "100000",
+    "opening_actual_quantity": 0,
+    "opening_sellable_quantity": 0,
+    "opening_lots": [],
+    "approved_quantity": 200,
+    "fill": {
+      "fill_id": "synthetic_fill_b11033004c59d2aaef7256e0",
+      "fill_sha256": "18b198a25001a41dc9a566f236d37234469a8725edc9f2f63473bcdf372af020",
+      "side": "BUY",
+      "quantity": 200,
+      "benchmark_vwap": "8",
+      "fill_price": "8.04",
+      "gross_notional": "1608",
+      "principal_cost": "1600",
+      "fee": "5.23",
+      "tax": "0",
+      "slippage": "8",
+      "cash_effect": "-1613.23"
+    },
+    "ending_mark": {
+      "mark_id": "synthetic_mark_600000_20250121_close",
+      "security_id": "600000.SH",
+      "price": "8",
+      "currency": "CNY",
+      "observed_at": "2025-01-21T07:00:00.000000Z",
+      "available_at": "2025-01-21T07:01:00.000000Z",
+      "source_kind": "synthetic_preregistered_close_mark",
+      "synthetic": true,
+      "validation_only": true
+    },
+    "external_cash_flows": [],
+    "corporate_actions": []
+  },
+  "required_financial_event_inventory": [
+    {
+      "ordinal": 0,
+      "event_type": "OPENING_BALANCE",
+      "effective_at": "2025-01-20T02:10:00.000000Z",
+      "required": true
+    },
+    {
+      "ordinal": 1,
+      "event_type": "BUY_TRADE",
+      "effective_at": "2025-01-20T02:31:00.000000Z",
+      "required": true
+    },
+    {
+      "ordinal": 2,
+      "event_type": "BUY_CASH_SETTLEMENT",
+      "effective_at": "2025-01-20T02:31:00.000000Z",
+      "required": true
+    },
+    {
+      "ordinal": 3,
+      "event_type": "SECURITY_SETTLEMENT",
+      "effective_at": "2025-01-21T02:10:00.000000Z",
+      "required": true
+    },
+    {
+      "ordinal": 4,
+      "event_type": "SECURITY_SELLABLE",
+      "effective_at": "2025-01-21T02:10:00.000000Z",
+      "required": true
+    }
+  ],
+  "current_source_driven_slice_baseline": {
+    "result_sha256": "7872330b5e3a93047e305ada37b07dc5aaa946ffbef40b6ca8c0e5dbc2cddc3f",
+    "slice_replay_sha256": "225b52cdab7f287524d33abd7c23c1ed2369d55847fee325554dcf97f120a836",
+    "v2_replay_sha256": "81ef794391c3f6c02983d51b0faca9b7398dd1070b1a6fa306fda296a0ec2fdf",
+    "v2_head_sha256": "a0239ae4fdb21201b898ab32f5cde27d7efbec3ff1fd42b331eae62d9adf0977",
+    "projected_event_sha256": [
+      "154e9904dc69fa21e251e4124d916102b658994d1c2c1f5d9cec8312a21bfb47",
+      "c01ed072a5cc92b4d9780e78a13bdf816171f5e009915ba92b082f5a21701539",
+      "e381e20c848f341d0ba3c41ba4462dad1b16137a85587422a4a47df1abe74053",
+      "a1511909dc50caecd0317d66c3a4a61b59d883a632111015cac219bf8b397846",
+      "d941623c338f83b1868bcbce452eea2d2ca96585e968183e0daf7c5843b39b61"
+    ],
+    "not_the_complete_replay_output": true,
+    "opening_event_time_must_be_rematerialized_at_the_preregistered_beginning": true
+  },
+  "expected_economic_outcome": {
+    "opening_nav": "100000",
+    "ending_available_cash": "98386.77",
+    "ending_actual_quantity": 200,
+    "ending_sellable_quantity": 200,
+    "ending_mark_price": "8",
+    "ending_market_value": "1600",
+    "ending_nav": "99986.77",
+    "external_cash_flow": "0",
+    "corporate_action_cash": "0",
+    "realized_pnl": "0",
+    "price_movement_contribution": "0",
+    "fee_contribution": "-5.23",
+    "tax_contribution": "0",
+    "slippage_contribution": "-8",
+    "total_pnl": "-13.23",
+    "nav_identity": "ending_nav - opening_nav - external_cash_flow = total_pnl",
+    "cost_drivers_must_not_be_added_again_to_full_cost_unrealized_pnl": true
+  },
+  "support_matrix": {
+    "supported_action_intents": [
+      "ENTER"
+    ],
+    "supported_trade_sides": [
+      "BUY"
+    ],
+    "supported_securities": [
+      "600000.SH"
+    ],
+    "supported_corporate_action_types": [],
+    "supported_external_cash_flow_types": [],
+    "unsupported_trade_sides": [
+      "SELL"
+    ],
+    "unsupported_corporate_action_policy": "PRECHECK_BLOCKED_BEFORE_FINANCIAL_OUTPUT",
+    "unsupported_external_cash_flow_policy": "PRECHECK_BLOCKED_BEFORE_FINANCIAL_OUTPUT",
+    "missing_or_unverifiable_mark_coverage_policy": "PRECHECK_BLOCKED_BEFORE_FINANCIAL_OUTPUT",
+    "complete_coverage_without_eligible_ending_mark_policy": "ABSTAIN_INCOMPLETE_PNL",
+    "no_selection_by_outcome": true
+  },
+  "completion_gate": {
+    "same_call_stage5c_recomputation_required": true,
+    "source_driven_projection_required": true,
+    "exact_full_event_prefix_required": true,
+    "beginning_and_ending_nav_required": true,
+    "pnl_reconciliation_required": true,
+    "deterministic_complete_replay_required": true,
+    "unsupported_input_negative_cases_required": true,
+    "audit_only_replay_zero_authority_required": true,
+    "sqlite_or_durable_persistence_required": false,
+    "full_securities_accounting_coverage_required": false
+  }
+}

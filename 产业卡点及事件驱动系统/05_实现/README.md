@@ -8,6 +8,8 @@ Stage 5C 已新增 `stage5_execution_contracts.py`、`stage5_portfolio_risk.py`�
 
 Stage 5D 的[48 项精确规则](../03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)已被 owner 整包原子批准；原 draft 保持不变，独立[批准记录](../03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化批准记录_v0.1.md)、approved bundle、approval record 和 `stage5d_governance.py` fail-closed verifier 已形成。当前 `5D-1` 只实现第一条预注册订单/合同历史回放实际需要的 source-driven Ledger V2、结算/可用性、费用/税费/滑点、必要公司行动、mark/NAV、P&L 和 complete replay；不因治理清单完整就一次实现全部证券会计边角。case/horizon 与事件 inventory 必须先冻结，支持矩阵外输入必须稳定 `BLOCKED/ABSTAIN` 且不得发布 partial NAV/P&L。`5D-2` SQLite v4 原子持久化继续保持 `currently_authorized=false`，不得提前新增数据库表或 migration，也不得改变 Stage 5C 的 scope-limited 契约。
 
+[第一条订单/合同回放预注册](../../docs/validation/stage5d-first-order-contract-replay-preregistration.md)已完成：固定匿名合成 ENTER/BUY、五个金融事件、价格不变的期末 mark 以及 `-13.23` 总 P&L。下一实现切片只补 opening rematerialization、期末 mark/NAV、P&L 和 complete replay；SELL、公司行动、外部现金流与持久化不进入本切片。
+
 Stage 2B 的实际交付、验证锚点和未授权范围见根级 [Stage 2B 正式验收记录](../../docs/validation/stage2b-acceptance.md)。
 
 Stage 3A 的固定字节、Client/export 能力、失败语义和后续联调门见根级 [Stage 3A 离线传输消费者验收](../../docs/validation/stage3a-acceptance.md)。合成 transport fixture 固定 `authority_eligible=false`，不能为新 run 提供当前状态权威。
