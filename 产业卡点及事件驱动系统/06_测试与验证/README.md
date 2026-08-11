@@ -23,6 +23,19 @@
 
 `TRADE_READY`、`SHADOW_ONLY`、`REJECT`、`ABSTAIN` 和 `BLOCKED` 案例必须共同入库；`BLOCKED` 使用独立失败 fixture，任何 `TRADE_READY` 合成正例必须先有对应 `approved` 规则，且不代表 paper/live 授权。
 
+## Stage 3D 已验收证据
+
+[Stage 3D 真实公网 Context Pack 验收](../../docs/validation/stage3d-context-pack-http-acceptance.md)固定了正式 Context Pack/Evidence Release、两份主制品和两份公开 Schema，并验证：
+
+- 真实公网 Release/Manifest/完整 Status 与 `published` 状态；
+- artifact 字节、响应头、Context Pack 查询/下载等值和固定 transport snapshot；
+- Document/Span/Fact/CandidateEvent/EvidenceLink/EvidenceRef、node/edge/source/company mapping 引用闭包和 PIT；
+- provider-neutral 输入、四制品消费 Receipt、三类 validation-only Observation 和 StrategyRunManifest；
+- missing/conflict/counterexample/unrecoverable 信息不丢失，材料不足时正确 `ABSTAIN`；
+- `authority_eligible=false`、无确认、零持久化、零运行或交易权限。
+
+Stage 3D 专项为 `18 passed`，全仓为 `951 passed, 4 skipped`。该验收只证明正式 Context Pack 的只读 mapping/smoke，不证明策略有效，也不打开新 run authority。
+
 ## Stage 2B 已验收证据
 
 Stage 2B 的[正式验收记录](../../docs/validation/stage2b-acceptance.md)固定：
@@ -78,4 +91,3 @@ Stage 5C 业务专项验证：typed recovery record 与多风险簇；NORMAL/DEF
 Stage 5D 草案治理测试继续固定原文与 draft machine proposal 的 SHA-256、48 项完整正文 hash、精确 Stage 5A/5C 上游、零 draft 权限、Ledger V2 exact event map、状态独立 PIT、十八格 P&L、`(beginning_at,ending_at]` 和 SQLite v4 原子聚合语义。新增批准谱系测试精确固定 approved bundle/approval record/批准文档、48 项整包批准、Stage 5A/5C pin、仅匿名合成 `research` 的 capability，并验证 partial approval、错误 scope、批准记录漂移、上游漂移、语义漂移及任何真实/交易/提前 persistence 权限扩张均失败关闭。当前测试仍不执行公司行动、估值、P&L、数据库迁移或持久化。
 
 正式结果见[Stage 5A 规则治理批准验收记录](../../docs/validation/stage5-5a-governance-acceptance.md)、[Stage 5B 历史市场规则与合成成交验收记录](../../docs/validation/stage5-5b-market-execution-acceptance.md)和[Stage 5C 合成组合与内存账本验收记录](../../docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。
-
