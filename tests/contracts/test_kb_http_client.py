@@ -60,7 +60,13 @@ def _client(
     )
 
 
-def _envelope(data: dict[str, Any], *, request_id: str) -> dict[str, Any]:
+def _envelope(
+    data: dict[str, Any],
+    *,
+    request_id: str,
+    release_id: str = "rel_stage6b_transport_fixture",
+    knowledge_cutoff: str = "2026-08-01T00:00:00.000000Z",
+) -> dict[str, Any]:
     return {
         "meta": {
             "request_id": request_id,
@@ -68,8 +74,8 @@ def _envelope(data: dict[str, Any], *, request_id: str) -> dict[str, Any]:
             "schema_version": "1.0.0",
             "generated_at": "2026-08-01T00:04:00.000000Z",
             "as_of": None,
-            "knowledge_cutoff": "2026-08-01T00:00:00.000000Z",
-            "release_id": "rel_stage6b_transport_fixture",
+            "knowledge_cutoff": knowledge_cutoff,
+            "release_id": release_id,
             "next_cursor": None,
         },
         "data": data,
@@ -166,6 +172,88 @@ def test_manifest_context_pack_build_unknown_field_fails_closed(
 
     with pytest.raises(KBHTTPContractError, match="pinned contract"):
         _client(kb_transport_catalog, executor).get_manifest(manifest["release_id"])
+
+
+def test_exact_context_pack_query_is_validated_by_pinned_openapi(
+    kb_transport_catalog: KBTransportContractCatalog,
+) -> None:
+    fixture = kb_transport_catalog.base_catalog.stage6_fixture
+    release_id = fixture["expected_strategy_input_ref"]["dataset_release_id"]
+    release = next(
+        item for item in fixture["releases"] if item["dataset_release"]["release_id"] == release_id
+    )
+    context_pack = copy.deepcopy(
+        next(
+            value
+            for value in release["artifacts"].values()
+            if isinstance(value, dict) and value.get("schema_version") == "1.0.0"
+        )
+    )
+    context_pack_id = "ctx_0123456789abcdef0123456789abcdef"
+    context_pack["context_pack_id"] = context_pack_id
+    executor = QueueExecutor(
+        [
+            _response(
+                200,
+                _envelope(
+                    context_pack,
+                    request_id="req-context-pack",
+                    release_id=release_id,
+                    knowledge_cutoff=context_pack["knowledge_cutoff"],
+                ),
+            )
+        ]
+    )
+
+    result = _client(kb_transport_catalog, executor).get_context_pack(
+        context_pack_id,
+        release_id=release_id,
+    )
+
+    assert result.data == context_pack
+    assert result.authority_eligible is False
+    assert executor.requests[0].url.endswith(
+        f"/api/v1/context-packs/{context_pack_id}?release_id={release_id}"
+    )
+
+
+def test_context_pack_query_unknown_field_fails_closed(
+    kb_transport_catalog: KBTransportContractCatalog,
+) -> None:
+    fixture = kb_transport_catalog.base_catalog.stage6_fixture
+    release_id = fixture["expected_strategy_input_ref"]["dataset_release_id"]
+    release = next(
+        item for item in fixture["releases"] if item["dataset_release"]["release_id"] == release_id
+    )
+    context_pack = copy.deepcopy(
+        next(
+            value
+            for value in release["artifacts"].values()
+            if isinstance(value, dict) and value.get("schema_version") == "1.0.0"
+        )
+    )
+    context_pack_id = "ctx_0123456789abcdef0123456789abcdef"
+    context_pack["context_pack_id"] = context_pack_id
+    context_pack["unknown_contract_field"] = True
+    executor = QueueExecutor(
+        [
+            _response(
+                200,
+                _envelope(
+                    context_pack,
+                    request_id="req-context-pack",
+                    release_id=release_id,
+                    knowledge_cutoff=context_pack["knowledge_cutoff"],
+                ),
+            )
+        ]
+    )
+
+    with pytest.raises(KBHTTPContractError, match="pinned contract"):
+        _client(kb_transport_catalog, executor).get_context_pack(
+            context_pack_id,
+            release_id=release_id,
+        )
 
 
 def test_latest_is_rejected_before_executor_io(

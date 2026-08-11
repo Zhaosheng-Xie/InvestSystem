@@ -74,6 +74,9 @@ _EXPECTED_OPERATIONS = {
         ["export:read"],
     ),
 }
+_PINNED_QUERY_OPERATIONS = {
+    "/api/v1/context-packs/{context_pack_id}": "get_context_pack",
+}
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _GIT_OBJECT_RE = re.compile(r"^[0-9a-f]{40}$")
 _CATALOG_CONSTRUCTION_TOKEN = object()
@@ -275,7 +278,7 @@ class KBTransportContractCatalog:
     ) -> None:
         """Validate one response against the exact pinned OpenAPI operation schema."""
 
-        if path_template not in _EXPECTED_OPERATIONS:
+        if path_template not in {*_EXPECTED_OPERATIONS, *_PINNED_QUERY_OPERATIONS}:
             raise ContractValidationError("OpenAPI response path is not an approved operation")
         paths = _object(self._openapi.get("paths"), field="OpenAPI paths")
         path_item = _object(paths.get(path_template), field="OpenAPI path")
@@ -501,6 +504,10 @@ def _verify_openapi(openapi: dict[str, Any]) -> None:
             or operation.get("x-required-scopes") != scopes
         ):
             raise ContractValidationError(f"OpenAPI operation identity differs: {path}")
+    for path, operation_id in _PINNED_QUERY_OPERATIONS.items():
+        operation = paths.get(path, {}).get("get") if isinstance(paths.get(path), dict) else None
+        if not isinstance(operation, dict) or operation.get("operationId") != operation_id:
+            raise ContractValidationError(f"OpenAPI query operation identity differs: {path}")
 
 
 def load_kb_transport_contract_snapshot(snapshot_root: str | Path) -> KBTransportContractCatalog:

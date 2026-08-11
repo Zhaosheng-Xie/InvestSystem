@@ -26,8 +26,10 @@ _RELEASE_OPENAPI_PATH = "/api/v1/dataset-releases/{release_id}"
 _MANIFEST_OPENAPI_PATH = "/api/v1/dataset-releases/{release_id}/manifest"
 _STATUS_OPENAPI_PATH = "/api/v1/dataset-releases/{release_id}/status"
 _ARTIFACT_OPENAPI_PATH = "/api/v1/dataset-releases/{release_id}/artifacts/{artifact_id}"
+_CONTEXT_PACK_OPENAPI_PATH = "/api/v1/context-packs/{context_pack_id}"
 _RELEASE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,127}$")
 _ARTIFACT_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$")
+_CONTEXT_PACK_ID_RE = re.compile(r"^ctx_[0-9a-f]{32}$")
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 DEFAULT_MAX_ARTIFACT_BYTES = 512 * 1024**2
 
@@ -148,6 +150,12 @@ def _exact_release_id(value: str) -> str:
 def _artifact_id(value: str) -> str:
     if not isinstance(value, str) or _ARTIFACT_ID_RE.fullmatch(value) is None:
         raise ValueError("artifact_id violates the pinned provider identifier contract")
+    return value
+
+
+def _context_pack_id(value: str) -> str:
+    if not isinstance(value, str) or _CONTEXT_PACK_ID_RE.fullmatch(value) is None:
+        raise ValueError("context_pack_id violates the pinned provider identifier contract")
     return value
 
 
@@ -434,6 +442,64 @@ class KBReadOnlyHTTPClient:
         ):
             raise KBHTTPContractError("HTTP Release/Manifest/status identity closure differs")
         return VerifiedHTTPReleaseBundle(release=release, manifest=manifest, status=status)
+
+    def get_context_pack(
+        self,
+        context_pack_id: str,
+        *,
+        release_id: str,
+    ) -> VerifiedHTTPDocument:
+        """Fetch one exact Context Pack through the pinned public query operation."""
+
+        exact_pack = _context_pack_id(context_pack_id)
+        exact_release = _exact_release_id(release_id)
+        path = (
+            f"/api/v1/context-packs/{quote(exact_pack, safe='')}"
+            f"?release_id={quote(exact_release, safe='')}"
+        )
+        response = self._request(path, max_bytes=self._max_json_bytes)
+        if response.status_code != 200:
+            raise self._error(response, openapi_path=_CONTEXT_PACK_OPENAPI_PATH)
+        headers = _lower_headers(response.headers)
+        content_type = headers.get("content-type", "").split(";", 1)[0].strip().lower()
+        if content_type != "application/json":
+            raise KBHTTPContractError(
+                "KB Context Pack success response Content-Type is not application/json"
+            )
+        try:
+            payload = load_strict_json_bytes(response.body, source="get_context_pack")
+            self._catalog.validate_openapi_json_response(
+                _CONTEXT_PACK_OPENAPI_PATH,
+                200,
+                payload,
+            )
+            self._catalog.validate_instance(HTTP_ENVELOPE_ID, payload)
+            if not isinstance(payload, dict) or not isinstance(payload.get("data"), dict):
+                raise KBHTTPContractError("KB Context Pack success data must be an object")
+        except (ContractValidationError, ValueError) as exc:
+            if isinstance(exc, KBHTTPContractError):
+                raise
+            raise KBHTTPContractError(
+                "KB get_context_pack response violates the pinned contract"
+            ) from exc
+        meta = payload["meta"]
+        data = payload["data"]
+        if (
+            meta.get("release_id") != exact_release
+            or data.get("context_pack_id") != exact_pack
+            or data.get("knowledge_cutoff") != meta.get("knowledge_cutoff")
+        ):
+            raise KBHTTPContractError("KB Context Pack query identity differs")
+        return VerifiedHTTPDocument(
+            operation="get_context_pack",
+            request_path=path,
+            release_id=exact_release,
+            request_id=meta["request_id"],
+            knowledge_cutoff=meta["knowledge_cutoff"],
+            response_sha256=sha256(response.body).hexdigest(),
+            response_bytes=response.body,
+            data=data,
+        )
 
     def download_artifact(
         self,
