@@ -86,8 +86,8 @@ Stage 5B 业务专项验证：同一运行 Stage 4 case/result/replay 绑定；�
 
 Stage 5C 业务专项验证：typed recovery record 与多风险簇；NORMAL/DEFENSIVE/CRISIS、8/12/15/20% 回撤及单票/簇/组合等号边界；quantity/notional/planned-loss、现金、worst-cost reserve、容量与可卖量的提交前只减不增约束；缩量后首个可成交候选重算与精确绑定；五层数量和未提交/取消语义；批准/候选/fill/recovery 的 PIT 上界、sizing source 漂移全链传播、未绑定 settlement exception 失败关闭，以及未来事件不进入当前状态；append-only 双分录、事件 schema、账户/策略隔离、FIFO、负现金/超卖、revision chain、幂等/conflict 与 deterministic partial replay。Stage 5A—5C 专项为 `93 passed`，全仓为 `915 passed, 4 skipped`。
 
-所有 backtest/paper/shadow/live/真实账户/仓位/订单/券商/KB 写权限保持 false。非空公司行动、marks、NAV/P&L、外部现金流、全局费用资本化 lot-cost 对账、SQLite migration、durable atomic persistence 及完整 Stage 5 replay/golden matrix 必须在 Stage 5D 实现后另行验收。
+所有 backtest/paper/shadow/live/真实账户/仓位/订单/券商/KB 写权限保持 false。Stage 5D 当前验收范围限定为第一条预注册订单/合同历史 replay：冻结 case/horizon、事件 inventory 和支持矩阵，准确覆盖实际出现的 source-driven ledger、结算/可用性、成本、必要公司行动、mark/NAV、P&L 与 complete replay。未支持事件必须保留为 `BLOCKED/ABSTAIN`，不能静默剔除、近似入账或发布 partial NAV/P&L；全量证券会计边角和 SQLite durable persistence 不作为本受限 5D-1 切片完成门。
 
-Stage 5D 草案治理测试继续固定原文与 draft machine proposal 的 SHA-256、48 项完整正文 hash、精确 Stage 5A/5C 上游、零 draft 权限、Ledger V2 exact event map、状态独立 PIT、十八格 P&L、`(beginning_at,ending_at]` 和 SQLite v4 原子聚合语义。新增批准谱系测试精确固定 approved bundle/approval record/批准文档、48 项整包批准、Stage 5A/5C pin、仅匿名合成 `research` 的 capability，并验证 partial approval、错误 scope、批准记录漂移、上游漂移、语义漂移及任何真实/交易/提前 persistence 权限扩张均失败关闭。当前测试仍不执行公司行动、估值、P&L、数据库迁移或持久化。
+Stage 5D 治理测试继续固定原文与 draft machine proposal 的 SHA-256、48 项完整正文 hash、精确 Stage 5A/5C 上游、零 draft 权限、Ledger V2 exact event map、状态独立 PIT、十八格 P&L、`(beginning_at,ending_at]` 和 SQLite v4 原子聚合语义；这证明治理上限，不等于当前实现覆盖全部 48 项。批准谱系测试继续验证 partial approval、错误 scope、批准记录漂移、上游漂移、语义漂移及任何真实/交易/提前 persistence 权限扩张均失败关闭。受限 5D-1 业务验收必须另有一个预注册 golden：同一输入逐字节确定、所有承重金额可追溯、未支持事件 fail closed、无 selection-by-outcome。
 
 正式结果见[Stage 5A 规则治理批准验收记录](../../docs/validation/stage5-5a-governance-acceptance.md)、[Stage 5B 历史市场规则与合成成交验收记录](../../docs/validation/stage5-5b-market-execution-acceptance.md)和[Stage 5C 合成组合与内存账本验收记录](../../docs/validation/stage5-5c-portfolio-ledger-acceptance.md)。

@@ -1,9 +1,9 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3 completed_with_scope_limits（3A—3D accepted without run authority）；Stage 4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5C completed_with_scope_limits；Stage 5D governance approved、5D-1 not_started；完整生产策略未实现`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3 completed_with_scope_limits（3A—3D accepted without run authority）；Stage 4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5C completed_with_scope_limits；Stage 5D governance approved、5D-1 first_order_contract_replay in_progress；完整生产策略未实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-12`
 市场范围：`中国 A 股`
-当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 3D 只生成 validation-only 的真实 Context Pack StrategyRunManifest 并正确 ABSTAIN，不签发 KB current-status authority 或 RunReleaseStatusConfirmation；Stage 5D capability 只证明 48 项规则身份获批，不证明 evaluator、Ledger V2、NAV/P&L、SQLite 或完整 replay 已实现；Stage 5B synthetic fill 与 Stage 5C synthetic account/ledger 都不是交易授权；不授权 backtest/paper/shadow/live、真实仓位、真实账户、真实订单或券商接入`
+当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 3D 只生成 validation-only 的真实 Context Pack StrategyRunManifest 并正确 ABSTAIN，不签发 KB current-status authority 或 RunReleaseStatusConfirmation；Stage 5D capability 只证明 48 项规则身份获批，当前 5D-1 工程门仅覆盖第一条预注册订单/合同历史回放实际需要的 source-driven Ledger V2、必要公司行动、mark/NAV、P&L 和 complete replay，越界输入必须 BLOCKED/ABSTAIN；Stage 5B synthetic fill 与 Stage 5C synthetic account/ledger 都不是交易授权；不授权 backtest/paper/shadow/live、真实仓位、真实账户、真实订单或券商接入`
 
 ## 系统一句话定义
 
@@ -85,7 +85,7 @@ Stage 5B 已完成市场与成交纵向切片：从同一运行的原始 Stage 4
 
 Stage 5C 已完成组合与账本纵向切片：先在历史候选窗口按 portfolio/risk/account 约束重新计算，再绑定只减不增 constraint 完成 synthetic fill；随后按 injected clock 投影现金、证券、FIFO lot、结算与可卖状态，并写入内存 append-only 双分录 journal。非空公司行动、marks、NAV/P&L、SQLite、durable atomic persistence 和完整 Stage 5 replay 仍属于 5D。
 
-Stage 5D 当前完成了精确规则批准谱系：先以 Ledger V2、五类公司行动、未复权 mark、多证券 NAV、二维 P&L 和 complete replay 构成 `5D-1` 纯函数闭环，再以同一 InvestSystem SQLite 的 v4 单事务完整聚合构成 `5D-2`。批准只打开按该顺序实施和验证的治理门；5D-1 尚未实现，5D-2 仍未获当前阶段执行授权，不得把规则描述冒充系统能力。
+Stage 5D 当前完成了精确规则批准谱系，48 项规则继续作为长期治理上限。`5D-1` 的当前交付不追求一次覆盖五类公司行动和全部多证券会计边角，而是先对第一条预注册订单/合同 case/horizon 完成 source-driven Ledger V2、实际出现的公司行动、mark/NAV、P&L 和 deterministic complete replay；支持矩阵外的输入必须在发布 partial NAV/P&L 前失败关闭。该受限切片独立验收后才可讨论 `5D-2`，SQLite v4 仍未获当前阶段执行授权。
 
 ## 推荐研发顺序
 
