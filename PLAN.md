@@ -1,10 +1,10 @@
-# InvestSystem 实施计划（v3.1）
+# InvestSystem 实施计划（v3.2）
 
-> 计划版本：`v3.1`
-> 基线日期：`2026-08-11`
+> 计划版本：`v3.2`
+> 基线日期：`2026-08-12`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 0—2B / completed；Stage 3 / in_progress（3A—3C completed，3D completed_with_scope_limits without run authority）；Stage 4 / completed_with_scope_limits；Stage 5 / in_progress（5A governance approved，5B—5C completed_with_scope_limits，5D governance approved / 5D-1 not_started）`
+> 当前阶段：`Stage 0—2B / completed；Stage 3 / completed_with_scope_limits（3A—3D accepted without run authority）；Stage 4 / completed_with_scope_limits；Stage 5 / in_progress（5A governance approved，5B—5C completed_with_scope_limits，5D governance approved / 5D-1 not_started）`
 > 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3a_pinned_transport_contract_and_offline_clients_completed / stage3b_independent_loopback_http_rc_accepted_without_authority / stage3c_real_tcloud_https_transport_accepted_without_authority / stage3d_real_context_pack_mapping_and_validation_smoke_accepted_without_authority / stage4_complete_synthetic_research_validation_engine_accepted / all_14_stage4_p0_rules_approved / stage5a_approved_rule_identity_and_capability_guard_completed / stage5b_historical_market_and_synthetic_fill_engine_accepted / stage5c_synthetic_portfolio_and_in_memory_ledger_accepted / stage5d_approved_rule_identity_and_capability_guard_completed / stage5d_business_not_implemented / full_production_strategy_not_implemented`
 > 当前授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均只允许各自精确批准范围内的匿名合成 research validation；Stage 5D capability 只证明 48 项规则和谱系获批，5D-1 evaluator、Ledger V2、公司行动、NAV/P&L 与 complete replay 尚未实现，5D-2 persistence 当前仍未授权执行；Stage 5C 只实现合成账户/组合风险、五层数量、结算投影和截至运行时点的内存 append-only 双分录账本；不授权 backtest、paper、shadow、live、真实仓位、真实账户、真实订单、券商接入或资金部署`
 
@@ -46,7 +46,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | Stage 1 | `completed` | 工程与机器契约骨架 | 已于 `2026-07-31` 验收关闭 |
 | Stage 2A | `completed` | KB 公共契约离线验证、投影、消费持久化与准入内核 | 已于 `2026-08-02` 验收关闭 |
 | Stage 2B | `completed` | 最小 approved 策略规格与合成纵向切片 | 已于 `2026-08-02` 通过正式验收；只授权 synthetic research validation |
-| Stage 3 | `in_progress` | KB 正式 Release 传输与策略端到端验收 | 3A—3C 已完成；3D 真实 Context Pack 映射与 validation-only smoke 已 scope-limited 完成，新 run authority/持久化准入未授权 |
+| Stage 3 | `completed_with_scope_limits` | KB 正式 Release 传输、provider-neutral 映射与只读策略 smoke | 3A—3D 已验收关闭；新 run authority、确认与持久化准入移交 Stage 6/7 独立授权门 |
 | Stage 4 | `completed_with_scope_limits` | 完整产业事件规格与策略引擎 | `4A-1—4A-4` 与 `4B` 均已批准并完成匿名合成完整编排、统一结论和 replay 验收；无真实/交易权限 |
 | Stage 5 | `in_progress / 5B—5C completed_with_scope_limits / 5D governance approved` | 成交、组合与确定性回放 | 5A 治理、5B 历史市场/合成成交和 5C 合成组合/内存账本已完成；5D 48 项规则及批准谱系已完成，5D-1 业务实现尚未开始 |
 | Stage 6 | `not_started` | 历史验证与冠军挑战 | Stage 3、Stage 5 |
@@ -70,7 +70,7 @@ Stage 2A + Stage 2B                                │
 题材系统：独立 deferred track（另行批准、另立阶段，不接在 Stage 8 后）
 ```
 
-Stage 0 与 Stage 1 已于 `2026-07-31` 关闭，Stage 2A 与 Stage 2B 已于 `2026-08-02` 关闭。owner 曾于 `2026-08-03` 延后 Stage 3，并于 `2026-08-08` 按“固定公共契约 → Client → 官方 fixture 离线验收 → 独立进程本机 HTTP 联调 → tcloud → 正式 Context Pack smoke”的顺序恢复。Stage 3A—3B 已按固定 KB 契约完成；Stage 3C 于 `2026-08-11` 使用真实公网 HTTPS、正式 `market_daily` Release 和短期只读凭据通过。Stage 3D 同日使用正式 Context Pack/Evidence Published Release 完成真实 provider-neutral 映射和 validation-only smoke，正确保留 missing/unrecoverable 信息并输出 `ABSTAIN`。3C—3D 均未借用 KB 工作树、内部包、数据库、mock 或 TestClient。由于本轮明确保持 `authority_eligible=false`、不签发 `RunReleaseStatusConfirmation` 且零持久化，Stage 3 总体仍为 `in_progress`，但不再有 KB 交付 blocker。Stage 4—5 不等待 Stage 3 authority，Stage 3 与 Stage 5 只在正式历史验证 Stage 6 前汇合。
+Stage 0 与 Stage 1 已于 `2026-07-31` 关闭，Stage 2A 与 Stage 2B 已于 `2026-08-02` 关闭。owner 曾于 `2026-08-03` 延后 Stage 3，并于 `2026-08-08` 按“固定公共契约 → Client → 官方 fixture 离线验收 → 独立进程本机 HTTP 联调 → tcloud → 正式 Context Pack smoke”的顺序恢复。Stage 3A—3B 已按固定 KB 契约完成；Stage 3C 于 `2026-08-11` 使用真实公网 HTTPS、正式 `market_daily` Release 和短期只读凭据通过。Stage 3D 同日使用正式 Context Pack/Evidence Published Release 完成真实 provider-neutral 映射和 validation-only smoke，正确保留 missing/unrecoverable 信息并输出 `ABSTAIN`。3C—3D 均未借用 KB 工作树、内部包、数据库、mock 或 TestClient。owner 随后批准按 scope-limited 边界关闭 Stage 3：本阶段不签发 `RunReleaseStatusConfirmation`、不持久化且保持 `authority_eligible=false`；新 run authority、确认和持久化准入属于 Stage 6/7 的独立授权门，不再作为 Stage 3 尾项。Stage 3 与 Stage 5 在正式历史验证 Stage 6 汇合。
 
 ---
 
@@ -317,7 +317,7 @@ InvestSystem/
 | InvestSystem 合成策略 fixture | InvestSystem | 验证 provider-neutral DTO、最小 approved 规则及 `TRADE_READY`、`SHADOW_ONLY`、`REJECT`、`ABSTAIN` | 不冒充真实事实、正式 Release、live 授权或 Alpha 证据 |
 | 失败注入 fixture | InvestSystem；基于确定输入构造 | 验证篡改、撤回、不兼容 Schema、缺失制品和未来信息均严格失败关闭 | 不替代正常契约或策略案例，也不冒充 KB 发布 |
 | Stage 6A 正式 `market-daily` Release | KB；`rel_10e257ad87734d7bb5cadc55e7b444e7` | Stage 3 正式 HTTP/导出传输、Manifest、制品、状态、权限和消费记录核验 | 不包含 Context Pack，不进入订单/合同策略，不证明策略 smoke 成功 |
-| 精确 Published Release 中的正式 Context Pack 制品 | KB；当前公网尚未交付 | Stage 3 真实只读策略 smoke 与端到端审计 | 不保证产生正例；材料不足时允许并预期 `ABSTAIN` |
+| 精确 Published Release 中的正式 Context Pack 制品 | KB；`rel_fc8be9b554aa414ca8ad5a14aaec69d9` 已于 `2026-08-11` 通过公网验收 | Stage 3 真实只读策略 smoke 与端到端审计 | 已正确 `ABSTAIN`；不授予 run authority |
 
 三类 fixture、正式传输样本和正式策略输入必须在目录、标识、报告和测试名称中明确区分。合成数据必须带 `synthetic=true` 或等价的不可混淆标记，任何报告不得把它表述为 KB 事实；正式 `market-daily` 样本也不得被映射成并不存在的 Context Pack。
 
@@ -492,7 +492,7 @@ InvestSystem 合成策略 fixture
 
 - 通过显式依赖更新提交/变更集固定 KB 公共契约的提交、Schema、lock、fixture 字节和来源哈希。
 - 以 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 作为 Stage 6A provider 实现与公共契约基线，以 `6ea33c4` 作为 KB PLAN v2.20 的验收记录提交，并记录 `1d6b823` 的后续快照边界澄清；InvestSystem 仍须通过自己的显式依赖更新固定所需文件、版本、原始字节和哈希，不跟随 KB 分支 HEAD，也不依赖 KB 工作树。
-- 建立可执行 transport capability 门；公共 HTTP/export 契约未固定时必须在 I/O 前拒绝，真实 acquisition 进入 Stage 3，禁止导入 KB Python 包或引用 KB 工作树补协议。
+- 建立可执行 transport capability 门；公共 HTTP/export 契约未固定时必须在 I/O 前拒绝。真实 acquisition 已在 Stage 3 scope-limited 验收，禁止导入 KB Python 包或引用 KB 工作树补协议；带 authority 的运行准入仍须 Stage 6/7 独立实现。
 - 使用 KB 官方 fixture 验证 `strategy-input-ref.v1`、Release Manifest、`manifest_hash` 对象、制品大小/哈希、状态摘要交叉绑定和游标语义；官方 fixture 原始字节不得改写，摘要不得冒充当前 authority。
 - 使用 InvestSystem 失败注入 fixture 验证撤回状态事件、篡改和不兼容输入的失败关闭，不把自建负例冒充 KB 官方 fixture。
 - 将 KB 公共对象显式映射为 provider-neutral `VerifiedKnowledgeInput`，保存确定性 `ArtifactConsumptionReceipt`，并把获取与状态检查另存为 append-only Observation。
@@ -507,7 +507,7 @@ InvestSystem 合成策略 fixture
 - SQLite 已提升到 `user_version=3`：除确定性 Receipt、三类 append-only Observation、完整五字段 Release 身份、Manifest 快照、CAS 和传递留存闭包外，还持久化严格 canonical 的 `RunReleaseStatusConfirmation`、全闭包 items 和 run binding。provider Manifest 语义哈希与 sealed 文档物理哈希/大小继续分轴保存；canonical parent 是聚合权威，关系 child row 只能是其精确索引。
 - `pin_run(manifest, confirmation)` 已取消调用方 `artifact_ids` 旁路，只能从持久 Receipt/闭包推导 root 与全部 source Release/Manifest/制品；事务内重核 fetch、current published status、local admission、受信 authority、最大年龄/时钟偏差、全闭包状态事件、完整聚合和 CAS 字节。authority 默认空集合；provider status 连续链、线性 `supersedes`、不可回拨 current head、终态撤回和真实持久化因果共同阻止陈旧授权。
 - 非空已验证 v2 无损升级到 v3，并把全部旧 pin 写入不可变 quarantine；后注入 confirmation/binding 不能恢复普通运行，历史材料仍可审计。
-- 两种批准 transport 在 I/O 前以稳定 blocker code 拒绝。当前固定 KB 提交缺少锁定的公共 HTTP envelope/OpenAPI、不可变 export-package 和完整 current-status response 契约，因此真实 acquisition、鉴权、重试、原始响应留存与 authority 启用明确进入 Stage 3，不作为 Stage 2A 已实现能力。
+- 两种批准 transport 在 I/O 前以稳定 blocker code 拒绝。Stage 2A 基线当时缺少锁定的公共 HTTP envelope/OpenAPI、不可变 export-package 和完整 current-status response 契约；这些只读 transport/acquisition 能力后来由 Stage 3 验收。authority、原始响应持久化和运行准入仍不是 Stage 2A 或 Stage 3 能力，移交 Stage 6/7。
 
 完成门：
 
@@ -562,7 +562,7 @@ InvestSystem 合成策略 fixture
 
 ### Stage 3：KB 正式 Release 端到端验收
 
-状态：`in_progress / 3A—3C completed；3D completed_with_scope_limits without run authority`
+状态：`completed_with_scope_limits / 3A—3D accepted without run authority`
 
 恢复记录：owner 于 `2026-08-08` 要求按 `KB 固定提交 → IS 3A 离线 Client/fixture → 3B 本机独立 HTTP → 3C tcloud → 3D 正式 Context Pack` 顺序恢复验证。3B 已在同日按 KB `aab36fe229104779b50ec71e2dc37a9fad81d285` 通过；3A—3B 的完成不等于 Stage 3 完成。不得用本地 KB 输入、脏工作树、同进程 TestClient 或 IS 自建 mock 冒充 3C—3D。
 
@@ -587,11 +587,10 @@ InvestSystem 合成策略 fixture
 
 - 使用只读 scope 通过正式 HTTP API 或授权的不可变导出包精确获取 `dataset_release_id` 和 `artifact_id`，禁止调用管理写 API。
 - 验证发布状态、Schema、Manifest、结构化 `manifest_hash`、制品大小/哈希、PIT 和撤回状态。
-- 由已认证 transport 保存 HTTP current-status 原始响应或 export 中的等价状态证据到 InvestSystem 自有不可变 CAS，重算 `response_bytes_hash`，并由 Adapter 而不是调用方构造 `RunReleaseStatusConfirmation`；只有固定 contract hash 的 authority policy 才能启用。
-- 将已验证制品复制到 InvestSystem 自有内容寻址缓存，保存 `ArtifactConsumptionReceipt`、`ArtifactFetchObservation`、`ReleaseStatusObservation`、`ReleaseAdmissionObservation` 和 `VerifiedKnowledgeInput`；provider 状态与本地准入分开记录，StrategyRunManifest 引用本次准入所用的三个 observation ID。
+- 在内存中重算 HTTP 响应、Manifest、状态链和制品哈希，并构造确定性的 `ArtifactConsumptionReceipt`、`ArtifactFetchObservation`、`ReleaseStatusObservation`、`ReleaseAdmissionObservation` 和 provider-neutral 输入；本阶段的 validation-only StrategyRunManifest 引用三类 observation ID，但不写 CAS、SQLite 或运行状态。
 - 先用 Stage 6A 正式 `market-daily` Release 验证真实传输、权限、Manifest、制品、状态、Receipt 和 Observations；该核验不创建虚假的 Context Pack、StrategyRunManifest 或订单/合同结论。
 - 待正式 Context Pack 通过受支持发布面交付后，用它运行真实策略 smoke；若不包含订单/合同正例或关键时点，预期结果可以是 `ABSTAIN`，不得推动 KB 修改事实来配合测试。
-- 验证重复消费时确定性 `ArtifactConsumptionReceipt` 保持一致、三类 observation 只追加不改写，以及 KB 暂时不可用时对已固定历史制品的离线重放。
+- 验证重复消费时确定性 `ArtifactConsumptionReceipt` 保持一致，并以固定官方 fixture 覆盖离线契约重放；持久化 append-only observation 和历史运行 pin 留给获得独立授权的 Stage 6/7 run admission。
 - 运行非阻塞的跨仓 E2E/兼容任务；该任务由 InvestSystem 或人工调度负责，不得成为 KB required CI 或 KB 主线发布的隐式依赖。
 
 完成门：
@@ -599,13 +598,14 @@ InvestSystem 合成策略 fixture
 - 正式 `market-daily` Release 的传输与审计链通过，且正式 Context Pack 的获取、验证、映射、策略 smoke 和审计链端到端成功；业务结果可以是 `ABSTAIN`。
 - 篡改、撤回、权限、未知 Schema、Manifest 不一致和 PIT 错误均在策略启动前 `BLOCKED`。
 - StrategyRunManifest 引用本次准入使用的 Fetch/Status/AdmissionObservation ID；状态事件身份与本地准入结果可分别审计，而 observation ID、时间和端点不进入确定性 `replay_hash`。
-- 每个新 run 的 immutable confirmation binding 可追溯到已认证 transport 的原始状态证据，且其响应哈希、authority contract、全闭包 status event 与 SQLite 投影均可重算；不能仅凭调用方自填 self hash 获得准入。
 - 历史运行使用精确制品，不通过 `latest` 漂移；KB 离线时仍可按留存政策确定性重放。
 - 不依赖 KB 工作树、内部目录、数据库、Python 包、环境、缓存、volume 或 required CI。
 
+后续授权门：Stage 6 在首个正式历史验证 run 前，必须独立实现并验收 historical-validation admission、已认证状态证据、run-scoped confirmation 和 IS 自有原子持久化；Stage 7 若启动当前时点的 shadow/paper，再独立验收 current-status 重新确认和运行留存。两者都不得复用本次 `authority_eligible=false` 的 validation-only 对象取得权限，也不得回开或改写 Stage 3。
+
 验收证据：KB Stage 6A 正式完成引用、显式依赖更新提交/变更集、固定版本清单、`market-daily` 正式传输报告、`ArtifactConsumptionReceipt`、Fetch/Status/AdmissionObservations、Context Pack StrategyRunManifest、正式策略 smoke 报告、失败用例、离线 replay 和非阻塞 E2E 记录。
 
-Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/validation/stage3a-acceptance.md)、[Stage 3B 正式跨仓只读 HTTP 验收](docs/validation/stage3b-http-acceptance.md)、[Stage 3C 真实 tcloud 只读 HTTPS 验收](docs/validation/stage3c-tcloud-http-acceptance.md)和 [Stage 3D 真实公网 Context Pack 验收](docs/validation/stage3d-context-pack-http-acceptance.md)。3D 已关闭正式 Context Pack 传输、映射和 validation-only smoke，但没有满足本节关于新 run authority、确认和原子持久化的完整完成门。
+Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/validation/stage3a-acceptance.md)、[Stage 3B 正式跨仓只读 HTTP 验收](docs/validation/stage3b-http-acceptance.md)、[Stage 3C 真实 tcloud 只读 HTTPS 验收](docs/validation/stage3c-tcloud-http-acceptance.md)和 [Stage 3D 真实公网 Context Pack 验收](docs/validation/stage3d-context-pack-http-acceptance.md)。这些证据关闭 Stage 3 的正式传输、映射和 validation-only smoke 完成门；新 run authority、确认和原子持久化已经显式移交 Stage 6/7，不是 Stage 3 未完成项。
 
 明确不做：不把策略状态写回 KB，不静默兼容未知版本，不要求正式输入给出通过结论，不以 E2E 成功证明策略有效。
 
@@ -613,7 +613,7 @@ Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/val
 
 状态：`completed_with_scope_limits / 4A-1—4A-4 and 4B accepted`
 
-启动记录：Stage 2 进入门经[复核](docs/validation/stage2-reentry-audit.md)通过。首个治理切片建立[完整 P0 规则清单与批准包](产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md)、14 项机器 inventory、专属 `stage4_synthetic_research_validation` scope 和 fail-closed capability 完成门。owner 已分别批准 4A-1—4A-4；四个批次均以独立、精确的 machine bundle/approval record 获取局部合成验证 capability。通用 registry 继续为空，调用方必须显式注入与目标批次完全匹配的批准。Stage 3 后续已恢复并完成 3A—3B，两条工作线继续按边界独立推进。
+启动记录：Stage 2 进入门经[复核](docs/validation/stage2-reentry-audit.md)通过。首个治理切片建立[完整 P0 规则清单与批准包](产业卡点及事件驱动系统/03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md)、14 项机器 inventory、专属 `stage4_synthetic_research_validation` scope 和 fail-closed capability 完成门。owner 已分别批准 4A-1—4A-4；四个批次均以独立、精确的 machine bundle/approval record 获取局部合成验证 capability。通用 registry 继续为空，调用方必须显式注入与目标批次完全匹配的批准。Stage 3 已在独立工作线完成 3A—3D 并按 scope-limited 边界关闭。
 
 4A-1 完成记录：`FR-CTX-001/002` 与 `FR-IND-001/002` 已固定为无分数补偿的四态证据规则和 `BLOCKED/REJECT/ABSTAIN/PASS` 结果；实现历史半开区间、禁止后见回填、十域上下文准入、五项产业卡点 AND 及 `technical_link → qualified_supplier → profit_beneficiary` 晋级。
 
@@ -688,10 +688,11 @@ Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/val
 
 目标：在严格 PIT、成交和成本约束下，检验完整系统是否比简单竞争假设提供稳定的样本外增量。
 
-进入条件：Stage 3 正式 Release E2E 与 Stage 5 组合/执行引擎均已完成；这里是两条并行分支的汇合门。
+进入条件：Stage 3 已按 `completed_with_scope_limits` 关闭正式 Release E2E，Stage 5 组合/执行引擎完成；这里是两条并行分支的汇合门。Stage 3 的 validation-only 完成不自动授予历史运行准入。
 
 工作内容：
 
+- 在首个正式历史验证 run 前，独立批准并实现 historical-validation admission：由已认证 transport 固定原始状态证据，签发 run-scoped `RunReleaseStatusConfirmation`，并把 Receipt/Observations/Manifest/完整 Release 闭包原子写入 IS 自有状态层；任一失败零写且不得运行策略。
 - 预注册样本、窗口、指标、基线、门槛和失败条件。
 - 执行 golden、PIT replay、walk-forward 和冻结 holdout。
 - 比较零假设、简单竞争模型与完整系统。
@@ -718,6 +719,7 @@ Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/val
 
 工作内容：
 
+- 在首个 shadow/paper run 前，独立批准并验收当前状态重新确认、凭据轮换、append-only 运行留存和撤回后的新 run 阻断；不得直接复用 Stage 6 历史确认或 Stage 3 validation-only 对象。
 - 冻结策略、规则、输入契约和运行节奏。
 - 实时登记全部候选、拒绝、ABSTAIN 和 BLOCKED，不得选择性跳过。
 - 运行 paper 成交与账本对账，比较模型成本、实际延迟和可成交性。
@@ -793,9 +795,9 @@ Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/val
 | KB 公共 Schema/lock/官方 fixture | Stage 2A 已显式固定 20 个官方文件的字节和来源哈希并完成离线验收 | 为 Stage 3 的显式 transport 契约更新提供基线；与已完成的 Stage 2B 保持隔离 |
 | KB Release/API 一致性与撤回 | 由 KB 仓库负责 | InvestSystem 只消费并验证外部行为 |
 | 最小策略切片 | 使用 InvestSystem 合成 fixture | Stage 2B 已完成，不依赖 KB 服务或正式 Release |
-| KB Stage 6B：真实消费者 | 在本仓库实现 | Stage 2A 已关闭离线消费/准入内核；Stage 3 实现认证 transport 与正式 Release E2E |
+| KB Stage 6B：真实消费者 | 已在本仓库完成 Stage 3A—3D | 认证只读 transport、正式 Release E2E 与 Context Pack smoke 已关闭；run admission 属于 Stage 6/7 |
 | Stage 6A 正式 `market-daily` Release | `rel_10e257ad87734d7bb5cadc55e7b444e7`，只有 16 条行情样本 | 可做正式传输/Receipt 核验；不得冒充 Context Pack 或策略 smoke |
-| 正式 Context Pack Release 交付 | 阶段 4/5 正式数据尚未进入当前公网数据集；须由 KB 另行备份、对账、授权并通过正式发布面提供 | 只阻塞 Stage 3 策略 smoke、Stage 3 完成和后续 Stage 6，不阻塞 Stage 1、2A、2B、4 或 5 |
+| 正式 Context Pack Release 交付 | Context Pack `rel_fc8be9b554aa414ca8ad5a14aaec69d9` 与 Evidence `rel_02f1148031c04036a5f7d5cda9807fb5` 已通过正式发布面验收 | Stage 3 已 scope-limited 关闭；后续只在新 Release/Schema 变化时做显式兼容更新 |
 | 跨仓兼容/E2E | 显式、按需、非阻塞任务 | 只测公共发布面；不得成为任一仓 required CI |
 
 ### 9.2 变更规则
@@ -842,14 +844,14 @@ Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/val
 
 ### 11.1 主要风险
 
-- KB Stage 6A 已完成，但当前公网正式 Release 只有 16 条 `market-daily` 样本；若把“交付面验收完成”误写成“财务、Evidence 与 Context Pack 已公网部署”，会让 InvestSystem 针对不存在的正式输入开发或验收。
+- KB Stage 6A 的 `market-daily` Release 只有 16 条样本；Stage 3D 虽已验证一个正式 Context Pack/Evidence 闭包，也不能外推为全部财务与研究数据均已公网部署或足以支持历史验证。
 - PRD v0.3 已批准为需求基线；只有 Stage 2B 最小规则包在窄合成 scope 内获批并实现，完整策略规则仍为待批准。把需求批准或窄 scope 扩写成完整策略、回测或交易权限仍是主要治理风险。
 - `Data_Analysis` 被多个项目共用且已有 OpenCV/NumPy 冲突；若普通 `pip install` 触发解析器升级、降级或卸载既有包，会同时影响 KB 和其他项目。必须坚持精确 lock、editable `--no-deps`、安装前后基线和干净 CI 复验。
 - 若通过兄弟目录、把 KB editable install 当依赖、`PYTHONPATH`、submodule、链接、共享 DB/cache/volume 或双仓 required CI 求方便，会形成不可审计的隐式耦合。
 - KB 官方 contract fixture、InvestSystem 合成策略 fixture、失败注入 fixture 和正式 Release 若标识不清，可能把传输测试、策略测试、故障测试或真实证据相互冒充。
-- 当前公网发布面没有正式 Context Pack；直接读取 KB 本地活动库或工作树来绕过交付会破坏双仓边界。未来正式交付的 Context Pack 也未必包含订单/合同正例和完整时点；把合理的 `ABSTAIN` 误判成集成失败，会诱导为测试而污染 KB 事实。
-- Stage 2A 已实现 SQLite v3 的全闭包状态确认、原子 run pin 和独立 `audit_replay` 边界；Stage 2B 只实现不接真实 Release 的合成 runner。未来 Stage 3 的真实 transport/策略编排若绕过该准入 API，仍可能错误复用已撤回或无法确认的输入。
-- Stage 3 的真实 authority 不能只信任调用方填写的 `authority_id`、contract hash、无密钥 confirmation self hash 或 `response_bytes_hash`；必须由已认证只读 transport 构造，并在 InvestSystem 自有不可变 CAS 中保留和重核原始响应/导出证据。
+- Stage 3D 正式 Context Pack 已正确产生 `ABSTAIN`；若把材料不足误判成集成失败，仍会诱导为测试而污染 KB 事实。任何后续数据扩展只能通过新 Published Release 和显式兼容更新进入。
+- Stage 2A 已实现 SQLite v3 的全闭包状态确认、原子 run pin 和独立 `audit_replay` 边界；Stage 3 只关闭 validation-only 真实 transport/mapping/smoke。Stage 6/7 若绕过独立 run admission 直接复用 Stage 3 对象，仍可能错误消费已撤回或无法确认的输入。
+- Stage 6/7 的真实 run authority 不能只信任调用方填写的 `authority_id`、contract hash、无密钥 confirmation self hash 或 `response_bytes_hash`；必须由已认证只读 transport 构造，并在 InvestSystem 自有不可变 CAS 中保留和重核原始响应/导出证据。
 - Stage 2B 最小切片的 Gate 2/3/4 已在合成 scope 内批准；完整产业策略的市场状态、成本、风险、退出、其余 Gate 适用范围和若干 E 级事件定义仍含 `hypothesis` 或 `TBD`。
 - 2019—2026 的历史 PIT、题材成员、市场预期和首次可见时间可能不可恢复；正确处理是 `ABSTAIN`，不是事后补齐。
 - Gate 3 的历史市场预期重建可能成为最大的数据缺口。
@@ -891,10 +893,10 @@ Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/val
 |---|---|---|---|
 | Stage 0 | PLAN v0.4 用户批准；PRD v0.3 需求基线批准；ADR-0001；根/产业文档同步；工程栈、单输入、双传输面、SQLite、缓存和撤回政策冻结；remote 核查；`upstream` push 禁用且 dry-run 在联网前以 128 失败 | 无 | `completed` |
 | Stage 1 | [正式验收记录](docs/validation/stage1-acceptance.md)；实现提交 `f8d58f2`；安装前后环境基线；自有 `pyproject.toml`、可重复 hash lock、TOML；editable `--no-deps --no-build-isolation`；provider-neutral DTO 与 `0.1.0-draft` Schema；规范 JSON/哈希/时钟；构造级规则成熟度防线；SQLite 状态/准入、精确子集 pin、内容寻址缓存和独立审计重放；共享环境及全新锁定环境均为 `194 passed, 3 skipped`；GitHub Actions run `30636576903` 的 Windows/Linux 作业均成功 | 无 | `completed` |
-| Stage 2A | [正式验收记录](docs/validation/stage2a-acceptance.md)；实现提交 `01073c1`；固定 KB 提交 `58ed9c5` 的 20 个官方文件；provider canonical/catalog/reference fixture；Receipt/Observation/Retention Closure；SQLite v3 run-scoped confirmation、默认拒绝 authority、全闭包原子 pin、legacy quarantine、失败矩阵；GitHub Actions run `30744115034` 的 Windows/Linux 作业均成功 | 无；真实 HTTP/export/current-status transport 与 authority 启用属于 Stage 3，不是 Stage 2A 缺口 | `completed` |
+| Stage 2A | [正式验收记录](docs/validation/stage2a-acceptance.md)；实现提交 `01073c1`；固定 KB 提交 `58ed9c5` 的 20 个官方文件；provider canonical/catalog/reference fixture；Receipt/Observation/Retention Closure；SQLite v3 run-scoped confirmation、默认拒绝 authority、全闭包原子 pin、legacy quarantine、失败矩阵；GitHub Actions run `30744115034` 的 Windows/Linux 作业均成功 | 无；真实只读 transport 已由 Stage 3 关闭，authority 启用属于 Stage 6/7，不是 Stage 2A 缺口 | `completed` |
 | Stage 2B | [正式验收记录](docs/validation/stage2b-acceptance.md)；实现提交 `d5d6003`；22 项 approved 规则；24+10 fixture registry；E3.5/E4、四道门、利润桥/预期/估值、Manifest、DecisionRecord、Replay；`617 passed, 4 skipped`；两轮审阅 `P0=0 / P1=0` | 无；真实 transport、完整策略和 durable DecisionRecord 持久化不在本阶段完成范围 | `completed` |
-| Stage 3 | [3A 离线验收](docs/validation/stage3a-acceptance.md)、[3B 独立本机 HTTP 验收](docs/validation/stage3b-http-acceptance.md)、[3C 真实 tcloud HTTPS 验收](docs/validation/stage3c-tcloud-http-acceptance.md)与[3D 真实公网 Context Pack 验收](docs/validation/stage3d-context-pack-http-acceptance.md)；固定 KB `aab36fe` transport snapshot；正式 market-daily/Context Pack/Evidence Release、Manifest/Status/Schema/制品闭合；provider-neutral 映射和 validation-only `ABSTAIN` smoke；所有输出 `authority_eligible=false` | 新 run authority、RunReleaseStatusConfirmation 与 IS 自有原子持久化须另行授权和验收 | `in_progress / 3D completed_with_scope_limits` |
-| Stage 4 | [Stage 2 进入复核](docs/validation/stage2-reentry-audit.md)；[4B 正式验收](docs/validation/stage4-4b-acceptance.md)；14 项 P0 inventory、4A-1—4A-4 和独立 4B capability 均精确 approved；完整匿名合成编排、统一结论与 replay 已验收 | 无；真实 KB/生产运行与交易能力分别留在 Stage 3D、Stage 5 及后续阶段 | `completed_with_scope_limits` |
+| Stage 3 | [3A 离线验收](docs/validation/stage3a-acceptance.md)、[3B 独立本机 HTTP 验收](docs/validation/stage3b-http-acceptance.md)、[3C 真实 tcloud HTTPS 验收](docs/validation/stage3c-tcloud-http-acceptance.md)与[3D 真实公网 Context Pack 验收](docs/validation/stage3d-context-pack-http-acceptance.md)；固定 KB `aab36fe` transport snapshot；正式 market-daily/Context Pack/Evidence Release、Manifest/Status/Schema/制品闭合；provider-neutral 映射和 validation-only `ABSTAIN` smoke；所有输出 `authority_eligible=false` | 无 Stage 3 尾项；新 run authority、RunReleaseStatusConfirmation 与 IS 自有原子持久化属于 Stage 6/7 独立门 | `completed_with_scope_limits` |
+| Stage 4 | [Stage 2 进入复核](docs/validation/stage2-reentry-audit.md)；[4B 正式验收](docs/validation/stage4-4b-acceptance.md)；14 项 P0 inventory、4A-1—4A-4 和独立 4B capability 均精确 approved；完整匿名合成编排、统一结论与 replay 已验收 | 无；真实 KB 只读 smoke 已由 Stage 3D 关闭，生产运行与交易能力留在 Stage 5—7 及后续阶段 | `completed_with_scope_limits` |
 | Stage 5 | [5A 精确规则](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放精确规则包_v0.1.md)、[5A 批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5A成交组合账本与确定性回放批准记录_v0.1.md)、approved artifacts、capability guard、[5A 治理验收](docs/validation/stage5-5a-governance-acceptance.md)、[5B 市场/成交验收](docs/validation/stage5-5b-market-execution-acceptance.md)、[5C 组合/账本验收](docs/validation/stage5-5c-portfolio-ledger-acceptance.md)，以及 [5D 48 项精确规则](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)、[5D 批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化批准记录_v0.1.md)、approved bundle/approval record 和 capability guard；已实现部分仍止于 5C | 实现并验收 5D-1 纯内存完整回放；之后才可打开 5D-2 SQLite v4 原子持久化及 golden matrix | `in_progress / 5D_governance_approved / 5D-1_not_started` |
 | Stage 6 | 研究方法要求 | 预注册、正式历史验证和报告 | `not_started` |
 | Stage 7 | 运行目录占位 | 冻结版本、前瞻台账、paper 对账 | `not_started` |
@@ -908,7 +910,7 @@ Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/val
 Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为：
 
 1. Stage 4 已完成完整 synthetic golden/replay 验收；该结仓不自动进入 backtest 或 Stage 5。
-2. Stage 3D 真实 Context Pack/Evidence Published Release 的 provider-neutral 映射与 validation-only `ABSTAIN` smoke 已完成；KB 本轮没有剩余交付 blocker。新 run authority、确认和持久化仍关闭，只有 owner 另行授权并形成独立失败矩阵后才能推进；不得从本次 smoke 推导运行或交易权限。
+2. Stage 3 已按 `completed_with_scope_limits` 关闭，KB 本轮没有剩余交付 blocker；不得为补 authority 重新打开 Stage 3。新 run authority、确认和持久化仍关闭，只能在 Stage 6/7 获 owner 独立授权并形成失败矩阵后推进。
 3. Stage 5A 四十项和 Stage 5D 四十八项均已按各自 exact bundle 获批，5B 市场/成交与 5C 组合/内存账本已完成 scope-limited 合成验收；下一步实现并验收 5D-1 纯内存公司行动/NAV/二维 P&L/完整 replay，只有其独立通过后才进入 5D-2 SQLite v4 原子持久化，不得把批准谱系或预留事件写成业务完成。
 4. backtest、paper、shadow 或 live 均须到对应后续阶段另行批准；任何合成 capability 均不授予这些模式。
 
@@ -949,3 +951,4 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 | `v2.9` | 2026-08-09 | `active` | 记录 owner 原子批准 Stage 5D 第 13 节全部 48 项且仅授权 `stage5_synthetic_execution_validation`；保留规则 draft 与零权限 machine proposal 原始字节，新增精确批准记录、approved bundle、approval record 和 fail-closed capability verifier，绑定 48 项正文、Stage 5A identities 与 Stage 5C commit `7f64c584`。当前只打开 5D-1 实施门；5D-1 业务未实现，5D-2 persistence 仍未授权执行，全部真实/交易权限继续关闭。 |
 | `v3.0` | 2026-08-11 | `active` | 完成 Stage 3C：使用固定 `aab36fe` transport snapshot、真实公网 HTTPS 和短期只读凭据获取正式 `market_daily` Release/Manifest/Status/artifact，闭合响应哈希、`published` 状态、PIT、制品字节与强制响应头；保持 `authority_eligible=false`，未签发 `RunReleaseStatusConfirmation` 或写入 CAS/Observation。Stage 3 仍等待 3D 正式 Context Pack 策略 smoke。 |
 | `v3.1` | 2026-08-11 | `active` | 完成 Stage 3D scope-limited 验收：通过真实公网 HTTPS 消费正式 Context Pack/Evidence Release、两份 Manifest/Status、两份主制品和两份公开 Schema，闭合查询/制品等值、引用图、PIT、响应头与哈希；由 IS 构造 provider-neutral 输入、四制品 Receipt、三类 validation-only Observation 和 StrategyRunManifest，因真实规则未授权且材料保留缺口而正确 `ABSTAIN`。继续保持 `authority_eligible=false`、零持久化和无 `RunReleaseStatusConfirmation`；Stage 3 总体仍等待独立的新 run authority 门。 |
+| `v3.2` | 2026-08-12 | `active` | owner 批准按 scope-limited 边界正式关闭 Stage 3。3A—3D 已完成公共契约、独立 HTTP、真实 tcloud、正式 Context Pack/Evidence 映射和 validation-only `ABSTAIN` smoke；Stage 3 不再以 run authority、确认或持久化为尾项。上述能力继续为 `authority_eligible=false`；historical-validation admission 移交 Stage 6，当前 shadow/paper admission 移交 Stage 7，均须独立授权和验收。 |

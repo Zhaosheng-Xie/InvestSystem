@@ -1,7 +1,7 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3/3A—3C completed、3D completed_with_scope_limits without run authority；Stage 4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5C completed_with_scope_limits；Stage 5D governance approved、5D-1 not_started；完整生产策略未实现`
-PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-11`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3 completed_with_scope_limits（3A—3D accepted without run authority）；Stage 4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5C completed_with_scope_limits；Stage 5D governance approved、5D-1 not_started；完整生产策略未实现`
+PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-12`
 市场范围：`中国 A 股`
 当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 3D 只生成 validation-only 的真实 Context Pack StrategyRunManifest 并正确 ABSTAIN，不签发 KB current-status authority 或 RunReleaseStatusConfirmation；Stage 5D capability 只证明 48 项规则身份获批，不证明 evaluator、Ledger V2、NAV/P&L、SQLite 或完整 replay 已实现；Stage 5B synthetic fill 与 Stage 5C synthetic account/ledger 都不是交易授权；不授权 backtest/paper/shadow/live、真实仓位、真实账户、真实订单或券商接入`
 
@@ -35,7 +35,7 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-11`
 9. [Stage 2B 正式验收记录](../docs/validation/stage2b-acceptance.md)
    - 状态：`completed`；只证明最小合成 research-validation 路径可运行、可审计和可重放，不证明策略有效。
 10. [Stage 2 进入 Stage 4 复核](../docs/validation/stage2-reentry-audit.md)
-    - 状态：`passed_for_stage4_entry`；这是 Stage 4 开工证据，Stage 3 后续已恢复并完成 3A—3B。
+- 状态：`passed_for_stage4_entry`；这是 Stage 4 开工证据，Stage 3 后续已独立完成 3A—3D 并按 scope-limited 边界关闭。
 11. [Stage 4 完整 P0 规则清单与批准包 v0.1](03_规则与规格/Stage4完整P0规则清单与批准包_v0.1.md)
     - 状态：`all_14_p0_rules_approved`；4A-1—4A-4 均已批准并实现局部 evaluator，完整编排另由精确 4B capability 授权。
 12. [Stage 4 / 4A-1 上下文与产业映射规则包 v0.1](03_规则与规格/Stage4_4A1上下文与产业映射规则包_v0.1.md)
@@ -73,7 +73,7 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-11`
 28. [Stage 5 / 5D 公司行动、估值、P&L、完整回放与原子持久化精确规则包 v0.1](03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)
     - 状态：原 `draft_for_owner_approval` 字节保持不变；48 项已被 owner 整包原子批准，另建[批准记录](03_规则与规格/Stage5_5D公司行动估值P&L完整回放与原子持久化批准记录_v0.1.md)、[approved machine bundle](03_规则与规格/机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0.rule-bundle.json)和 [approval record](03_规则与规格/机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0.approval.json)。治理 capability 仍只有匿名合成 `research` 权限，不是 5D 业务实现或 SQLite migration。
 
-Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空，HTTP/export 都在 I/O 前失败关闭；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实 acquisition/current status、认证 transport 和原始响应留存归入 Stage 3，策略语义属于 Stage 2B 以后。
+Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实只读 acquisition/transport 已由 Stage 3 关闭，原始响应持久化和 run admission 移交 Stage 6/7，策略语义属于 Stage 2B 以后。
 
 Stage 2B 已完成并验收：精确批准规则、可信 fixture registry、E3.5/E4、四道门、利润桥、预期/估值、四类正常结果、pre-engine `BLOCKED`、DecisionRecord 和 replay 均有实现与测试。合成 `TRADE_READY` 与 `SHADOW_ONLY` 始终保持 `FLAT`、零权重、无 approver 且无仓位/订单权限；本批准不得推导为任何真实仓位或其他运行模式授权。
 

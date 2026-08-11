@@ -1,7 +1,7 @@
 # Stage 3D 真实公网 Context Pack 验收
 
 > 验收日期：`2026-08-11`
-> 结论：`completed_with_scope_limits`
+> 结论：`completed_with_scope_limits / Stage 3 closed by owner on 2026-08-12`
 > 分支：`codex/stage3d-context-pack`
 > 实现提交：`81c5101a0c7e43a9159edbac6a78df323f38da97`
 > 权限结论：`authority_eligible=false`
@@ -122,8 +122,10 @@ unrecoverable fields 均按原内容保留；本次实际 counterexample 数为 
 - `authority_eligible=false`，未签发 `RunReleaseStatusConfirmation`，没有写 CAS、
   Observation、SQLite 或任何业务运行状态。
 - 没有授权 backtest、paper、shadow、live、真实账户/仓位/订单、券商连接或资金部署。
-- Stage 3D 的真实传输、provider-neutral 映射和 validation-only smoke 已关闭；Stage 3
-  总体仍未获得新 run authority。若以后需要正式准入，必须另行实现并验收已认证状态证据、
-  run-scoped confirmation 和 IS 自有原子持久化，不能从本次 validation-only 对象推导权限。
+- Stage 3D 的真实传输、provider-neutral 映射和 validation-only smoke 已关闭。owner 于
+  `2026-08-12` 批准按该 scope-limited 边界正式关闭 Stage 3，不再以 run authority 为尾项。
+- 若以后需要正式准入，Stage 6 必须独立实现并验收 historical-validation admission、已认证
+  状态证据、run-scoped confirmation 和 IS 自有原子持久化；Stage 7 当前 shadow/paper
+  admission 另行过门。两者都不能从本次 validation-only 对象推导权限或回开 Stage 3。
 
 本轮短期 Token 已无继续用途；KB 会话应立即撤销该 Token。

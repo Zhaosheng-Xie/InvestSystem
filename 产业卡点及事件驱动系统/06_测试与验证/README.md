@@ -34,7 +34,7 @@
 - missing/conflict/counterexample/unrecoverable 信息不丢失，材料不足时正确 `ABSTAIN`；
 - `authority_eligible=false`、无确认、零持久化、零运行或交易权限。
 
-Stage 3D 专项为 `18 passed`，全仓为 `951 passed, 4 skipped`。该验收只证明正式 Context Pack 的只读 mapping/smoke，不证明策略有效，也不打开新 run authority。
+Stage 3D 专项为 `18 passed`，全仓为 `951 passed, 4 skipped`。owner 已按这一只读 mapping/smoke 边界关闭 Stage 3；该结论不证明策略有效，也不打开新 run authority。historical-validation admission 属于 Stage 6，当前 shadow/paper admission 属于 Stage 7。
 
 ## Stage 2B 已验收证据
 
