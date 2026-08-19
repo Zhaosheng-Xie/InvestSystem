@@ -1,0 +1,15 @@
+{
+  "approval_id": "rule_approval_stage6_6b_historical_admission_atomic_retention_v0_1_0",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage6_6b_historical_admission_atomic_retention",
+  "bundle_version": "0.1.0",
+  "bundle_hash": {
+    "algorithm": "sha256",
+    "value": "c8ee13e82bf3e91f7c5f948c71da5f6af21969caa5ca54792d10e5571c334414"
+  },
+  "approved_by": "repository_owner",
+  "approved_at": "2026-08-19T14:13:39.583064Z",
+  "approval_scope": "stage6_historical_admission_validation",
+  "approval_source_ref": "codex_task_owner_approval_stage6_6b_20260819",
+  "schema_version": "0.1.0-draft"
+}

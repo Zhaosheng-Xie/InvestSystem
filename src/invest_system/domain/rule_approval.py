@@ -138,6 +138,7 @@ class RuleApprovalScope(StrEnum):
     STAGE4_SYNTHETIC_RESEARCH_VALIDATION = "stage4_synthetic_research_validation"
     STAGE5_SYNTHETIC_EXECUTION_VALIDATION = "stage5_synthetic_execution_validation"
     STAGE6_HISTORICAL_VALIDATION_GOVERNANCE = "stage6_historical_validation_governance"
+    STAGE6_HISTORICAL_ADMISSION_VALIDATION = "stage6_historical_admission_validation"
 
 
 @dataclass(frozen=True, slots=True)

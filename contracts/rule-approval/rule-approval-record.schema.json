@@ -47,7 +47,8 @@
         "stage2b_synthetic_validation",
         "stage4_synthetic_research_validation",
         "stage5_synthetic_execution_validation",
-        "stage6_historical_validation_governance"
+        "stage6_historical_validation_governance",
+        "stage6_historical_admission_validation"
       ]
     },
     "approval_source_ref": {
