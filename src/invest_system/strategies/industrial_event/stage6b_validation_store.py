@@ -433,7 +433,15 @@ class Stage6BValidationStore:
                         "IMMUTABLE_IDENTITY_CONFLICT", "concurrent CAS bytes differ"
                     )
             else:
-                os.replace(temporary, target)
+                try:
+                    os.link(temporary, target)
+                except OSError:
+                    if not target.exists():
+                        raise
+                    if sha256(target.read_bytes()).hexdigest() != expected_sha256:
+                        raise Stage6BValidationStoreError(
+                            "IMMUTABLE_IDENTITY_CONFLICT", "concurrent CAS bytes differ"
+                        ) from None
             if temporary.exists():
                 temporary.unlink()
         finally:
