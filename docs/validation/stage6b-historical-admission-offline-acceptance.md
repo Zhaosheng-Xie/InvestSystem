@@ -1,5 +1,7 @@
 # Stage 6B 历史准入离线实现验收记录
 
+真实 HTTPS validation-only seal 尚未执行；已准备的严格入口、handoff 约束和操作步骤见 [Stage 6B 真实 HTTPS validation-only seal 运行手册](stage6b-live-https-validation-runbook.md)。该入口存在不改变本文的离线验收结论，也不提前关闭 live validation gate。
+
 日期：`2026-08-19`
 
 分支：`codex/stage6-historical-validation`
