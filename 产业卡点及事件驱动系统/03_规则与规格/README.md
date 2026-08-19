@@ -44,6 +44,12 @@ Stage 6A 历史验证治理已完成 owner 原子批准登记：
 - [approved machine bundle](机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0.rule-bundle.json)与 [approval record](机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0.approval.json)：精确绑定 owner 审阅 draft，只签发 `stage6_historical_validation_governance` capability；
 - 该 capability 仅允许形成 6B 待审批草案；历史运行、确认、持久化、holdout 和交易权限全部为 false。PRD 的样本数、置信区间、回撤和最大赢家门槛继续保持 `hypothesis`。
 
+Stage 6B 已形成待 owner 审阅的 exact draft：
+
+- [Stage 6 / 6B 历史准入、状态确认与原子留存精确规则包](Stage6_6B历史准入状态确认与原子留存精确规则包_v0.1.md)及[零权限 machine proposal](机器制品/industrial_event_stage6_6b_historical_admission_atomic_retention_v0.1.0-draft.rule-bundle.json)：32 项全部 `pending`；
+- 草案固定单输入、完整 Release closure、真实 HTTPS status authority profile、run-scoped confirmation、admission envelope/seal、单事务原子可见、失败零权威写入、撤回 audit-only 与隔离验证库；
+- Stage 5D 已预留的 SQLite v4 不被复用。6B 正式 migration 版本/表前缀仍须 owner 另行决定；当前没有 approval record、runtime code、正式 state 迁移或 evaluator 权限。
+
 1. `KB输入引用与失败关闭规格_v0.1.md`
 2. `StrategyRunManifest与决策审计规格_v0.1.md`
 3. `E3.5_E4状态机与阻断规则_v0.1.md`

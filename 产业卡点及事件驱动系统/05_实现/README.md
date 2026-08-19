@@ -29,6 +29,8 @@ Stage 2B runner 只能从精确 canonical [machine rule bundle](../03_规则与�
 
 Stage 6A 的 35 项历史验证预注册治理规则已经 owner 原子批准；`stage6_governance.py` 只验证 exact draft/approved/approval lineage 并签发独立 `stage6_historical_validation_governance` capability。该 capability 唯一允许形成 6B 待审批草案，不实现 historical evaluator、Release confirmation、state persistence、walk-forward 或 holdout。
 
+Stage 6B 当前只有[历史准入、状态确认与原子留存 exact draft](../03_规则与规格/Stage6_6B历史准入状态确认与原子留存精确规则包_v0.1.md)和 machine proposal。现有 Stage 2A SQLite v3 pin/confirmation 仅是技术基础，不是 6B runtime authority；批准前不得新增 issuer、admission seal、正式状态库 migration 或 historical evaluator。草案还明确保留 Stage 5D 的 SQLite v4 语义，6B migration 版本未获 owner 决定前只能规划隔离临时验证库。
+
 Stage 2A 已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 按原始字节引入 20 个官方文件，并验收 provider canonical、契约 catalog、消费 Receipt/Observation、官方 reference fixture 验证/窄投影，以及 SQLite v3 的正式持久化、传递 source Release 留存闭包、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。该历史提交没有公共 transport 契约，所以 Stage 2A 无参数能力门继续在 I/O 前失败关闭。Stage 3A 曾以 `2c84277` 扩展快照启用 HTTP/export 协议实现，Stage 3B 已将其重固定到 `aab36fe`；3C—3D 已完成真实公网传输与 Context Pack mapping/smoke。上述 validation-only 结果仍无 authority，认证 acquisition 持久化和当前状态权威须另行授权与验收。
 
 根级采用 `src/` 包布局、GitHub Actions 和规范 JSON。本地实现使用工作站级 `E:\Conda\envs\Data_Analysis`（Python 3.12）作为共享开发解释器，但 InvestSystem 必须独立维护 `pyproject.toml`、`requirements-build.in`、带哈希的 runtime/dev lock、TOML 配置、`var/cache/kb-releases/`、`var/state/invest_system.sqlite3` 和运行目录。项目只以 editable `--no-deps --no-build-isolation` 注册；缺包安装前后保存环境基线并运行 `pip check`，不得未经确认改变既有共享包。CI 和可复现验收必须从 InvestSystem lock 创建干净环境。

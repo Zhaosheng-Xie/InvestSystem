@@ -27,6 +27,10 @@
 
 6A capability 只允许形成 6B 待审批草案，不执行历史数据、不打开 holdout、不签发 `RunReleaseStatusConfirmation`，也不授权 backtest/paper/shadow/live。批准专项 `38 passed`、治理相邻 `195 passed`、全仓 `978 passed, 4 skipped`，Ruff/format/mypy/compileall/diff-check 全部通过。这些结果只证明治理身份和权限边界，不能解释为策略有效性或 Stage 6 已完成。
 
+## Stage 6B 准入与原子留存草案
+
+[Stage 6 / 6B 历史准入、状态确认与原子留存精确规则包](../03_规则与规格/Stage6_6B历史准入状态确认与原子留存精确规则包_v0.1.md)及 machine draft 已形成，32 项仍全部 `pending`。治理测试只验证规则身份、零权限、authority profile、闭包、confirmation、seal、原子事务、撤回/audit 与 failure matrix 的机器表达；没有实际网络、状态写入、confirmation 签发、seal 或 evaluator。[6B 草案验收记录](../../docs/validation/stage6b-historical-admission-draft-acceptance.md)固定专项 `8 passed`、Stage 6 相邻 `46 passed`、全仓 `986 passed, 4 skipped` 及完整静态质量门。
+
 `TRADE_READY`、`SHADOW_ONLY`、`REJECT`、`ABSTAIN` 和 `BLOCKED` 案例必须共同入库；`BLOCKED` 使用独立失败 fixture，任何 `TRADE_READY` 合成正例必须先有对应 `approved` 规则，且不代表 paper/live 授权。
 
 ## Stage 3D 已验收证据

@@ -1,0 +1,433 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage6_6b_historical_admission_atomic_retention",
+  "bundle_version": "0.1.0-draft",
+  "declared_status": "draft",
+  "rules": {
+    "authorization_boundary": {
+      "proposed_approval_scope": "stage6_historical_admission_validation",
+      "allowed_run_modes": [],
+      "specification_validation_only": true,
+      "runtime_capability_issued": false,
+      "authorizes_implementation": false,
+      "authorizes_validation_only_public_https_read": false,
+      "authorizes_validation_only_confirmation": false,
+      "authorizes_validation_only_seal": false,
+      "authorizes_formal_historical_run": false,
+      "authorizes_strategy_evaluator": false,
+      "authorizes_development": false,
+      "authorizes_walk_forward": false,
+      "authorizes_holdout_open": false,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_positions": false,
+      "authorizes_orders": false,
+      "authorizes_broker_connection": false,
+      "authorizes_kb_internal_reads": false,
+      "authorizes_kb_writes": false,
+      "authorizes_funds_deployment": false,
+      "authority_eligible": false
+    },
+    "batch": {
+      "stage": "Stage 6",
+      "batch_id": "6B",
+      "purpose": "historical_admission_status_confirmation_atomic_retention_and_seal_contract_only",
+      "owner_approval_required": true,
+      "approval_items_required": 32,
+      "approved_items": 0,
+      "approved_machine_bundle_exists": false,
+      "approval_record_exists": false,
+      "runtime_code_exists": false,
+      "formal_storage_migration_exists": false,
+      "historical_evaluator_exists": false,
+      "formal_historical_run_exists": false,
+      "holdout_has_been_opened": false
+    },
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage6_6B历史准入状态确认与原子留存精确规则包_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "96ec47da0eb356f726db3ce1be8015366ad3a804cc3f93d63c5b1c3fc65e3f5a"
+      },
+      "traceability_only": true
+    },
+    "exact_upstream_dependencies": {
+      "plan_at_draft_formation": {
+        "path": "PLAN.md",
+        "version": "3.7",
+        "sha256": "da5fab0050c809e41ba43b1a041e595b3ad0d9a22ca54745999dda10c73300b8"
+      },
+      "industrial_prd": {
+        "path": "产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md",
+        "version": "0.3",
+        "sha256": "0f7e6489ee0c5c17d638534337a73c389e70794cf41b821eec7cc92a242c6b03"
+      },
+      "stage6a_approved_bundle": {
+        "path": "产业卡点及事件驱动系统/03_规则与规格/机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0.rule-bundle.json",
+        "raw_sha256": "4d933c04b341e454009f49ed9e912d22d4b62878473e02e47ebf51e956cdabee",
+        "canonical_bundle_sha256": "9a3f663936b0ad83795c7338c6b93fc9617d1f9ed6f4ccca6f92dd2fd06f6505",
+        "canonical_rules_sha256": "f1f42898fd61f21724d8bfe22158d2a22f6499b52c670d27e7c2f69800cbea80"
+      },
+      "stage6a_approval_record": {
+        "path": "产业卡点及事件驱动系统/03_规则与规格/机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0.approval.json",
+        "raw_sha256": "b5cae6779ab50a153f8aef37017f8ff3a59caa3f05642f169833edd04e0dedeb",
+        "canonical_record_sha256": "c81fca2c42a160b91a4ebbb2f2144b8e12ada28a270cb1f810104695bb0a3076"
+      },
+      "stage6a_acceptance": {
+        "path": "docs/validation/stage6a-historical-validation-governance-acceptance.md",
+        "sha256": "7a7dfa423714e9849a44f2bf08200b1beccd5741c4612d75ca66cd6ea8647919"
+      },
+      "implementation_entry_baseline": {
+        "commit_algorithm": "git-sha1",
+        "commit": "59e1edd80765dbd67635d1497b2fc008d08b21d9"
+      },
+      "kb_transport_snapshot": {
+        "path": "contracts/providers/investment_research_kb/stage6b-transport-v1/snapshot-lock.json",
+        "sha256": "02e0505f727552f7632eee807fedd27e6ce6d8dbde05f4482e99641f42b91169",
+        "source_commit": "aab36fe229104779b50ec71e2dc37a9fad81d285"
+      },
+      "kb_transport_support_matrix": {
+        "path": "contracts/providers/investment_research_kb/stage6b-transport-v1/support-matrix.json",
+        "sha256": "0c8cf05ff13196e8e1f7039f586229bdaea529c2ec9fffe7dfbed5c3592c5998"
+      },
+      "is_contracts": {
+        "artifact_consumption_receipt": {
+          "path": "contracts/artifact-consumption-receipt/artifact-consumption-receipt.schema.json",
+          "sha256": "3eb1fc5f7aa40951a129c846aa0ad2da4501e3deca73017913403b542d4d5290"
+        },
+        "consumption_observations": {
+          "path": "contracts/observations/consumption-observations.schema.json",
+          "sha256": "456b2444e37d7af7f9cd77a03616e771a643ba9bea44bdd64c8768891565630c"
+        },
+        "release_retention_closure": {
+          "path": "contracts/release-retention-closure/release-retention-closure.schema.json",
+          "sha256": "6265fbbc67be71102b3c2c716c5a4f04bdc7c8ef570a65b264a0b1290a6ae021"
+        },
+        "strategy_run_manifest": {
+          "path": "contracts/strategy-run-manifest/strategy-run-manifest.schema.json",
+          "sha256": "19f3475ea1ff02cc53a4391e88fa8674868bb1289dc21bb961f183ad8d16e630"
+        },
+        "run_release_status_confirmation": {
+          "path": "contracts/run-release-status-confirmation/run-release-status-confirmation.schema.json",
+          "sha256": "9f7f7096f48bb5100fac2c5f4a6bed829e4801d0b849b870875b433ad45a5175",
+          "status": "draft_requires_stage6b_versioned_promotion"
+        }
+      },
+      "is_implementation_sources": {
+        "status_confirmation.py": "f9a78218e439cc584db65f09cc87b1523611a1fa81f86b8fccb1285f30d79d41",
+        "storage.py": "9ff2f3a7705836e892640f73c8bbce62cb9919825d333cf7c7059da14cf2d233",
+        "consumption.py": "b1af0bdc40ace5459110a3643d37b2887c86791103c7797bbacb82a7812f26b4",
+        "retention.py": "c83fa531cb86e26969dbab0d31536af4338651441c1c2adba9b145b298eb54c9",
+        "storage_schema_version": 3,
+        "existing_implementation_is_technical_foundation_not_stage6b_authority": true
+      },
+      "identity_drift_outcome": "PRECHECK_BLOCKED_NEW_6B_VERSION_REQUIRED"
+    },
+    "phase_and_scope": {
+      "stage6a_capability_authorizes_forming_this_draft_only": true,
+      "stage6a_or_stage3_or_stage5_authority_reuse_forbidden": true,
+      "approved_6b_would_authorize_only_isolated_admission_validation": true,
+      "stage6c_and_stage6d_remain_independently_gated": true,
+      "formal_historical_run_requires_new_authority_after_6b_acceptance": true
+    },
+    "historical_admission_request": {
+      "content_addressed": true,
+      "strategy_input_ref_count": 1,
+      "latest_forbidden": true,
+      "required_identity_fields": [
+        "request_id",
+        "run_id",
+        "strategy_id",
+        "purpose",
+        "strategy_input_ref",
+        "stage6b_rule_bundle_hash",
+        "stage6b_approval_record_hash",
+        "stage6b_capability_hash",
+        "code_commit",
+        "runtime_environment_lock_hash",
+        "semantic_config_hash",
+        "injected_clock",
+        "historical_validation_preregistration_hash",
+        "transport_snapshot_hash",
+        "authority_contract_hash"
+      ],
+      "validation_fixture_requires": {
+        "validation_only": true,
+        "not_historical_evidence": true,
+        "isolated_state_and_cache": true
+      },
+      "formal_preregistration_with_missing_or_owner_decision_required_field": "PRECHECK_BLOCKED"
+    },
+    "release_closure": {
+      "receipt_identifies_root_payload": true,
+      "retention_closure_identifies_all_transitive_sources": true,
+      "root_matches_request_five_field_input_ref": true,
+      "release_order": "canonical_release_id_ascending",
+      "missing_extra_unreachable_cycle_or_same_id_different_bytes": "RECONCILIATION_BLOCKED",
+      "source_cutoff_not_after_parent_or_root_run_cutoff": true,
+      "manifest_artifact_schema_hash_size_and_cache_bytes_reverified": true,
+      "confirmation_items_pin_releases_and_closure_release_set_exactly_equal": true,
+      "caller_selected_artifact_subset_forbidden": true,
+      "source_releases_are_not_additional_strategy_input_refs": true
+    },
+    "authority_contract": {
+      "profile": {
+        "authority_id": "kb_public_https_status_v1",
+        "endpoint_origin": "https://82.157.112.120",
+        "status_path_template": "/api/v1/dataset-releases/{release_id}/status",
+        "transport_snapshot_sha256": "02e0505f727552f7632eee807fedd27e6ce6d8dbde05f4482e99641f42b91169",
+        "provider_snapshot_max_age_seconds": 300,
+        "max_clock_skew_seconds": 30,
+        "confirmation_ttl_seconds": 300,
+        "redirect_policy": "forbidden",
+        "tls_certificate_verification_required": true,
+        "credential_policy": "short_lived_read_only_process_memory_only"
+      },
+      "profile_canonical_sha256": "07d3e6a03aa45f38604ecd3728b2ad64b34c075dfc94032431a4486911692238",
+      "configuration_override_without_new_profile_forbidden": true,
+      "immutable_export_alone_proves_current_status": false
+    },
+    "credential_boundary": {
+      "token_in_process_memory_only": true,
+      "token_or_authorization_header_in_canonical_bytes_logs_db_cache_or_git_forbidden": true,
+      "read_only_least_privilege": true,
+      "credential_expiry_must_cover_confirmation_window": true,
+      "no_broker_or_kb_write_credentials": true
+    },
+    "status_evidence": {
+      "one_complete_history_per_closure_release": true,
+      "required_bindings": [
+        "release_id",
+        "response_bytes_sha256",
+        "allowed_response_headers",
+        "status_event_chain",
+        "current_status_event",
+        "provider_snapshot_at",
+        "checked_at",
+        "authority_contract_hash",
+        "schema_validation_result",
+        "authorization_result"
+      ],
+      "chain_starts_at_sequence_one_and_is_contiguous": true,
+      "previous_hash_and_event_self_hash_recomputed": true,
+      "current_event_is_chain_head": true,
+      "required_current_status": "published",
+      "withdrawn_is_terminal": true,
+      "unknown_fields_fail_closed": true,
+      "token_and_request_authorization_headers_are_not_evidence": true,
+      "raw_response_bytes_stored_in_is_content_addressed_cache": true,
+      "dynamic_meta_is_observation_not_release_or_manifest_semantic_identity": true
+    },
+    "freshness_and_pit": {
+      "status_recorded_at_lte_provider_snapshot_at": true,
+      "provider_snapshot_may_lead_consumer_by_at_most_seconds": 30,
+      "provider_snapshot_age_at_pin_lte_seconds": 300,
+      "checked_at_inside_request_confirm_window": true,
+      "confirmation_consumed_by_confirmed_at_plus_seconds": 300,
+      "equal_boundaries_pass": true,
+      "new_status_head_before_commit_invalidates_confirmation": true,
+      "future_or_unconfirmable_time": "STATUS_UNCONFIRMED"
+    },
+    "run_release_status_confirmation": {
+      "existing_contract_status": "0.1.0-draft_not_runtime_authority",
+      "stage6b_requires_new_versioned_approved_contract": true,
+      "issuer_recomputes_from_actual_response_bytes": true,
+      "caller_supplied_pass_forbidden": true,
+      "items_sorted_by_release_id": true,
+      "items_equal_complete_closure": true,
+      "identity_includes": [
+        "confirmation_id",
+        "run_id",
+        "root_release_id",
+        "receipt_hash",
+        "closure_hash",
+        "authority_id",
+        "authority_contract_hash",
+        "requested_at",
+        "confirmed_at",
+        "expires_at",
+        "all_item_five_field_input_refs",
+        "all_status_observation_ids",
+        "all_status_event_ids_hashes_sequences",
+        "all_provider_snapshot_and_checked_times",
+        "all_response_bytes_hashes",
+        "canonical_profile",
+        "confirmation_hash"
+      ],
+      "stage3_old_run_other_run_or_stage7_reuse_forbidden": true
+    },
+    "admission_envelope_and_seal": {
+      "envelope_identity_includes": [
+        "historical_admission_request",
+        "historical_validation_preregistration_hash",
+        "artifact_consumption_receipt",
+        "release_retention_closure",
+        "root_and_source_observations",
+        "strategy_run_manifest_canonical_bytes_hash",
+        "run_release_status_confirmation",
+        "canonical_pin_release_and_artifact_sets",
+        "transaction_profile",
+        "storage_schema_version",
+        "code_commit"
+      ],
+      "seal_required_fields": [
+        "run_id",
+        "envelope_hash",
+        "manifest_hash",
+        "confirmation_hash",
+        "closure_hash",
+        "commit_generation",
+        "transaction_id",
+        "committed_at",
+        "seal_hash"
+      ],
+      "seal_is_only_admission_completion_marker": true,
+      "evaluator_must_reload_and_reverify_seal": true,
+      "constructed_object_confirmation_or_boolean_cannot_substitute": true
+    },
+    "atomic_commit": {
+      "network_io_and_candidate_cas_before_database_write_transaction": true,
+      "network_io_while_holding_database_write_lock_forbidden": true,
+      "cas_is_non_authoritative_without_seal_reference": true,
+      "unreferenced_complete_cas_orphan_may_remain_after_failure": true,
+      "unreferenced_cas_orphan_is_not_run_pin_confirmation_or_admission_state": true,
+      "historically_referenced_cache_objects_never_auto_deleted": true,
+      "transaction": "BEGIN IMMEDIATE",
+      "transaction_revalidates_heads_freshness_canonical_bytes_and_complete_sets": true,
+      "atomic_write_or_link_order": [
+        "release_identities_manifest_and_artifact_cas_indexes",
+        "receipt_and_release_retention_closure",
+        "append_only_observations_and_heads",
+        "preregistration_binding",
+        "strategy_run_manifest",
+        "run_release_status_confirmation_and_items",
+        "full_closure_pin_releases_and_artifacts",
+        "confirmation_binding",
+        "historical_run_admission_envelope",
+        "historical_run_admission_seal_last"
+      ],
+      "any_failure_authoritative_state_rows": 0,
+      "any_failure_evaluator_calls": 0,
+      "partial_pin_manifest_confirmation_or_seal_forbidden": true
+    },
+    "idempotency_concurrency_and_recovery": {
+      "same_run_request_envelope_seal_same_bytes": "RETURN_EXISTING",
+      "same_identity_or_idempotency_key_different_bytes": "IMMUTABLE_IDENTITY_CONFLICT",
+      "successful_retry_must_not_overwrite_failure": true,
+      "concurrent_winner_count": 1,
+      "head_change_requires_full_admission_reconstruction": true,
+      "sql_only_retry_after_head_change_forbidden": true,
+      "wal_ioerr_full_busy_or_crash_visible_outcome": "COMPLETE_SEAL_OR_NO_SEAL",
+      "insert_or_replace_update_delete_head_rollback_and_child_injection_forbidden": true,
+      "sqlite_v2_quarantine": "PERMANENT_AUDIT_REPLAY_ONLY",
+      "stage5d_reserved_sqlite_v4_semantics_must_not_be_reused": true,
+      "stage6b_formal_migration_version_and_table_prefix": "OWNER_DECISION_REQUIRED_BEFORE_FORMAL_STATE_MIGRATION",
+      "temporary_isolated_validation_database_only_until_migration_approval": true
+    },
+    "withdrawal_read_and_audit": {
+      "any_unconfirmable_or_withdrawn_closure_release_blocks_new_seal": true,
+      "post_commit_withdrawal_does_not_rewrite_historical_seal_or_results": true,
+      "historical_material_after_withdrawal": "AUDIT_REPLAY_ONLY",
+      "audit_requires_exact_source_run_and_replay_hash": true,
+      "audit_displays_current_withdrawal": true,
+      "audit_only_and_all_authority_false": true,
+      "audit_state_writes": 0,
+      "audit_cannot_create_decision_approval_position_order_paper_or_live_action": true,
+      "normal_and_audit_reads_reverify_canonical_parent_child_indexes_cas_and_full_pin_closure": true,
+      "sqlite_projection_is_not_authoritative": true
+    },
+    "admission_result": {
+      "status_closed_world": [
+        "SEALED_VALIDATION_ONLY",
+        "PRECHECK_BLOCKED",
+        "STATUS_UNCONFIRMED",
+        "RECONCILIATION_BLOCKED",
+        "IMMUTABLE_IDENTITY_CONFLICT",
+        "ATOMIC_COMMIT_BLOCKED",
+        "AUDIT_REPLAY_ONLY"
+      ],
+      "formal_historical_authority_status": "NOT_AUTHORIZED",
+      "strategy_evaluator_calls": 0,
+      "authority_eligible": false,
+      "unknown_status_or_exception_to_pass_forbidden": true
+    },
+    "minimum_validation_matrix": {
+      "required": [
+        "exact_validation_only_happy_seal",
+        "every_closure_source",
+        "freshness_equal_and_over_boundary",
+        "clock_skew",
+        "broken_chain_withdrawn_and_non_published",
+        "response_tamper",
+        "missing_and_extra_closure_item",
+        "single_strategy_input_ref",
+        "manifest_receipt_observation_preregistration_drift",
+        "same_key_idempotency_and_conflict",
+        "concurrent_generation",
+        "failure_at_every_atomic_step",
+        "wal_and_crash_recovery",
+        "canonical_child_and_cas_tamper",
+        "sqlite_v2_quarantine",
+        "withdrawal_audit_replay",
+        "zero_strategy_evaluator_calls",
+        "repository_and_secret_isolation"
+      ],
+      "validation_store": "independent_temporary_investsystem_state_and_cache",
+      "production_state_database_modification": false,
+      "kb_modification": false
+    },
+    "owner_approval_atomicity": {
+      "all_32_required": true,
+      "partial_capability_forbidden": true,
+      "partial_implementation_authority_forbidden": true,
+      "authorization_predicate": "all(6B-01..6B-32==approved)",
+      "pending_rejected_missing_or_identity_drift_result": "draft_zero_runtime_authority"
+    },
+    "owner_approval_items": [
+      {"approval_item_id": "6B-01", "status": "pending", "rule_paths": ["/phase_and_scope"]},
+      {"approval_item_id": "6B-02", "status": "pending", "rule_paths": ["/authorization_boundary"]},
+      {"approval_item_id": "6B-03", "status": "pending", "rule_paths": ["/exact_upstream_dependencies"]},
+      {"approval_item_id": "6B-04", "status": "pending", "rule_paths": ["/cross_repository_and_strategy_isolation"]},
+      {"approval_item_id": "6B-05", "status": "pending", "rule_paths": ["/historical_admission_request"]},
+      {"approval_item_id": "6B-06", "status": "pending", "rule_paths": ["/historical_admission_request/validation_fixture_requires", "/historical_admission_request/formal_preregistration_with_missing_or_owner_decision_required_field"]},
+      {"approval_item_id": "6B-07", "status": "pending", "rule_paths": ["/release_closure"]},
+      {"approval_item_id": "6B-08", "status": "pending", "rule_paths": ["/release_closure/source_releases_are_not_additional_strategy_input_refs"]},
+      {"approval_item_id": "6B-09", "status": "pending", "rule_paths": ["/authority_contract"]},
+      {"approval_item_id": "6B-10", "status": "pending", "rule_paths": ["/authority_contract/profile/provider_snapshot_max_age_seconds", "/authority_contract/profile/max_clock_skew_seconds", "/authority_contract/profile/confirmation_ttl_seconds", "/freshness_and_pit/equal_boundaries_pass"]},
+      {"approval_item_id": "6B-11", "status": "pending", "rule_paths": ["/credential_boundary"]},
+      {"approval_item_id": "6B-12", "status": "pending", "rule_paths": ["/status_evidence"]},
+      {"approval_item_id": "6B-13", "status": "pending", "rule_paths": ["/freshness_and_pit"]},
+      {"approval_item_id": "6B-14", "status": "pending", "rule_paths": ["/status_evidence/raw_response_bytes_stored_in_is_content_addressed_cache", "/status_evidence/dynamic_meta_is_observation_not_release_or_manifest_semantic_identity"]},
+      {"approval_item_id": "6B-15", "status": "pending", "rule_paths": ["/run_release_status_confirmation"]},
+      {"approval_item_id": "6B-16", "status": "pending", "rule_paths": ["/run_release_status_confirmation/stage3_old_run_other_run_or_stage7_reuse_forbidden"]},
+      {"approval_item_id": "6B-17", "status": "pending", "rule_paths": ["/admission_envelope_and_seal/envelope_identity_includes"]},
+      {"approval_item_id": "6B-18", "status": "pending", "rule_paths": ["/admission_envelope_and_seal/seal_required_fields", "/admission_envelope_and_seal/seal_is_only_admission_completion_marker", "/admission_envelope_and_seal/evaluator_must_reload_and_reverify_seal"]},
+      {"approval_item_id": "6B-19", "status": "pending", "rule_paths": ["/atomic_commit/network_io_and_candidate_cas_before_database_write_transaction", "/atomic_commit/network_io_while_holding_database_write_lock_forbidden"]},
+      {"approval_item_id": "6B-20", "status": "pending", "rule_paths": ["/atomic_commit/cas_is_non_authoritative_without_seal_reference", "/atomic_commit/unreferenced_complete_cas_orphan_may_remain_after_failure", "/atomic_commit/historically_referenced_cache_objects_never_auto_deleted"]},
+      {"approval_item_id": "6B-21", "status": "pending", "rule_paths": ["/atomic_commit/transaction", "/atomic_commit/atomic_write_or_link_order"]},
+      {"approval_item_id": "6B-22", "status": "pending", "rule_paths": ["/atomic_commit/any_failure_authoritative_state_rows", "/atomic_commit/any_failure_evaluator_calls", "/atomic_commit/partial_pin_manifest_confirmation_or_seal_forbidden"]},
+      {"approval_item_id": "6B-23", "status": "pending", "rule_paths": ["/idempotency_concurrency_and_recovery/same_run_request_envelope_seal_same_bytes", "/idempotency_concurrency_and_recovery/same_identity_or_idempotency_key_different_bytes", "/idempotency_concurrency_and_recovery/successful_retry_must_not_overwrite_failure"]},
+      {"approval_item_id": "6B-24", "status": "pending", "rule_paths": ["/idempotency_concurrency_and_recovery/concurrent_winner_count", "/idempotency_concurrency_and_recovery/head_change_requires_full_admission_reconstruction", "/idempotency_concurrency_and_recovery/sql_only_retry_after_head_change_forbidden"]},
+      {"approval_item_id": "6B-25", "status": "pending", "rule_paths": ["/idempotency_concurrency_and_recovery/wal_ioerr_full_busy_or_crash_visible_outcome", "/idempotency_concurrency_and_recovery/insert_or_replace_update_delete_head_rollback_and_child_injection_forbidden"]},
+      {"approval_item_id": "6B-26", "status": "pending", "rule_paths": ["/idempotency_concurrency_and_recovery/sqlite_v2_quarantine"]},
+      {"approval_item_id": "6B-27", "status": "pending", "rule_paths": ["/idempotency_concurrency_and_recovery/stage5d_reserved_sqlite_v4_semantics_must_not_be_reused", "/idempotency_concurrency_and_recovery/stage6b_formal_migration_version_and_table_prefix", "/idempotency_concurrency_and_recovery/temporary_isolated_validation_database_only_until_migration_approval"]},
+      {"approval_item_id": "6B-28", "status": "pending", "rule_paths": ["/withdrawal_read_and_audit/any_unconfirmable_or_withdrawn_closure_release_blocks_new_seal", "/withdrawal_read_and_audit/post_commit_withdrawal_does_not_rewrite_historical_seal_or_results", "/withdrawal_read_and_audit/historical_material_after_withdrawal"]},
+      {"approval_item_id": "6B-29", "status": "pending", "rule_paths": ["/withdrawal_read_and_audit/normal_and_audit_reads_reverify_canonical_parent_child_indexes_cas_and_full_pin_closure", "/withdrawal_read_and_audit/sqlite_projection_is_not_authoritative"]},
+      {"approval_item_id": "6B-30", "status": "pending", "rule_paths": ["/admission_result/status_closed_world", "/minimum_validation_matrix"]},
+      {"approval_item_id": "6B-31", "status": "pending", "rule_paths": ["/minimum_validation_matrix/validation_store", "/minimum_validation_matrix/production_state_database_modification", "/minimum_validation_matrix/kb_modification", "/admission_result/authority_eligible"]},
+      {"approval_item_id": "6B-32", "status": "pending", "rule_paths": ["/owner_approval_atomicity"]}
+    ],
+    "cross_repository_and_strategy_isolation": {
+      "kb_public_contracts_and_published_release_surfaces_only": true,
+      "kb_sqlite_raw_staging_published_worktree_or_internal_package_reads_forbidden": true,
+      "kb_mutation_forbidden": true,
+      "shared_writable_cache_database_migration_or_runtime_forbidden": true,
+      "industrial_and_theme_strategy_signal_interchange": false,
+      "cross_strategy_request_receipt_closure_manifest_confirmation_seal_or_result_mixing_forbidden": true
+    },
+    "runtime_must_not_parse_markdown": true
+  }
+}
