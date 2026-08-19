@@ -278,6 +278,24 @@ class KBReadOnlyHTTPClient:
     def __repr__(self) -> str:
         return f"{type(self).__name__}(base_url={self._base_url!r}, bearer_token=<redacted>)"
 
+    @property
+    def base_url(self) -> str:
+        """Return the normalized public origin without exposing credentials."""
+
+        return self._base_url
+
+    @property
+    def contract_snapshot_lock_sha256(self) -> str:
+        """Return the verified transport snapshot identity used by this client."""
+
+        return self._catalog.snapshot_lock_sha256
+
+    @property
+    def contract_source_commit(self) -> str:
+        """Return the pinned provider transport-contract source commit."""
+
+        return self._catalog.source_commit
+
     def _request(self, path: str, *, max_bytes: int) -> KBHTTPRawResponse:
         request = KBHTTPRequest(
             method="GET",
