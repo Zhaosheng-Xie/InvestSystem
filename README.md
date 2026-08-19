@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v3.5](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 completed_with_scope_limits / Stage 4 completed_with_scope_limits / Stage 5B—5D-1 completed_with_scope_limits`。Stage 3 已按无 run authority 的边界关闭；historical-validation admission 移交 Stage 6，当前 shadow/paper admission 移交 Stage 7，均须独立授权。Stage 4 的 14 项 P0 规则和 4B 完整编排已通过匿名合成验收；Stage 5A 四十项规则已精确批准，Stage 5B—5C 已实现合成市场、组合和内存账本。[Stage 5D 首条回放预注册](docs/validation/stage5d-first-order-contract-replay-preregistration.md)现已按[受限验收](docs/validation/stage5d-first-order-contract-replay-acceptance.md)闭合 source-driven Ledger V2、mark/NAV、十八格 P&L 和 complete replay。该完成状态只覆盖固定 ENTER/BUY case；SELL、公司行动、外部现金流、持久化和真实交易继续失败关闭。完整生产策略仍不存在。
+- [InvestSystem 实施计划 v3.6](PLAN.md)：本仓库唯一正式实施路线图；PLAN v0.4 为批准基线，当前为 `Stage 0—2B completed / Stage 3 completed_with_scope_limits / Stage 4 completed_with_scope_limits / Stage 5B—5D-1 completed_with_scope_limits / Stage 6A governance draft`。Stage 6 已形成[历史验证预注册与准入精确规则草案](产业卡点及事件驱动系统/03_规则与规格/Stage6_6A历史验证预注册与准入精确规则包_v0.1.md)及[草案形成记录](docs/validation/stage6a-historical-validation-governance-draft-review.md)，但 35 项均待 owner 原子批准、运行模式为空且零权限；6B admission、6C walk-forward 和 6D frozen holdout 均未授权。Stage 5D 受限完成状态仍只覆盖固定 ENTER/BUY case；SELL、公司行动、外部现金流、持久化和真实交易继续失败关闭。完整生产策略仍不存在。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。

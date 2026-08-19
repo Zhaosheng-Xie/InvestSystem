@@ -1,0 +1,444 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage6_6a_historical_validation_preregistration",
+  "bundle_version": "0.1.0-draft",
+  "declared_status": "draft",
+  "rules": {
+    "authorization_boundary": {
+      "proposed_approval_scope": "stage6_historical_validation_governance",
+      "allowed_run_modes": [],
+      "specification_validation_only": true,
+      "runtime_capability_issued": false,
+      "authorizes_historical_run": false,
+      "authorizes_release_status_confirmation": false,
+      "authorizes_state_persistence": false,
+      "authorizes_holdout_open": false,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_positions": false,
+      "authorizes_orders": false,
+      "authorizes_broker_connection": false,
+      "authorizes_kb_internal_reads": false,
+      "authorizes_kb_writes": false,
+      "authorizes_funds_deployment": false
+    },
+    "batch": {
+      "stage": "Stage 6",
+      "batch_id": "6A",
+      "purpose": "historical_validation_preregistration_and_admission_governance_only",
+      "owner_approval_required": true,
+      "approval_items_required": 35,
+      "approved_items": 0,
+      "approved_machine_bundle_exists": false,
+      "approval_record_exists": false,
+      "runtime_code_exists": false,
+      "historical_evaluator_exists": false,
+      "release_confirmation_issuer_exists": false,
+      "holdout_has_been_opened": false
+    },
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage6_6A历史验证预注册与准入精确规则包_v0.1.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "7ef1126261ddbead37c016fe472a8d518cddb553fe3c3d1214f5c378a9b964df"
+      },
+      "traceability_only": true
+    },
+    "exact_upstream_dependencies": {
+      "plan": {
+        "path": "PLAN.md",
+        "version": "3.6",
+        "sha256": "2e5a2f7e757e68705024d235db03a5b41c45e1ef9bcaa79f43900d4ee253da9f"
+      },
+      "industrial_prd": {
+        "path": "产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md",
+        "version": "0.3",
+        "sha256": "0f7e6489ee0c5c17d638534337a73c389e70794cf41b821eec7cc92a242c6b03"
+      },
+      "stage3d_acceptance": {
+        "path": "docs/validation/stage3d-context-pack-http-acceptance.md",
+        "sha256": "17167cec816e5aa4f064ae6126f3a2fce574dd8050f98db7eacb4dfb53bc065c",
+        "authority_eligible": false,
+        "run_release_status_confirmation_issued": false
+      },
+      "stage5d_preregistration": {
+        "path": "docs/validation/stage5d-first-order-contract-replay-preregistration.md",
+        "sha256": "bd9e2f1d42fc42e308558136a7dd55967a2eba86561035fb0a9b38bb09c7680b"
+      },
+      "stage5d_acceptance": {
+        "path": "docs/validation/stage5d-first-order-contract-replay-acceptance.md",
+        "sha256": "d3a1400d9f11e5913c27d58363344ec58fb4d70c73d2716c67b5df010de0825f",
+        "completion_scope": "single_preregistered_enter_buy_order_contract_replay"
+      },
+      "stage5d_implementation_baseline": {
+        "commit_algorithm": "git-sha1",
+        "commit": "caf1e6702e2653e61c668508d32eb4f7c8f27783",
+        "scope_limited": true
+      },
+      "identity_drift_outcome": "PRECHECK_BLOCKED_NEW_PREREGISTRATION_REQUIRED"
+    },
+    "phase_model": {
+      "6A": {
+        "purpose": "preregistration_and_admission_governance",
+        "status": "draft_governance_only",
+        "next_gate": "owner_atomic_approval"
+      },
+      "6B": {
+        "purpose": "historical_admission_release_confirmation_and_atomic_run_retention",
+        "status": "not_authorized",
+        "next_gate": "independent_implementation_and_acceptance"
+      },
+      "6C": {
+        "purpose": "development_walk_forward_ablation_neighborhood_and_stress",
+        "status": "not_authorized",
+        "next_gate": "freeze_all_rules_before_holdout"
+      },
+      "6D": {
+        "purpose": "single_open_frozen_holdout_champion_challenge_and_report",
+        "status": "not_authorized",
+        "next_gate": "owner_go_revise_stop_or_insufficient_evidence"
+      },
+      "approval_or_completion_is_not_transitive": true
+    },
+    "preregistration_contract": {
+      "content_addressed": true,
+      "freeze_before_any_candidate_performance_is_read": true,
+      "required_identity_fields": [
+        "preregistration_id",
+        "version",
+        "canonical_hash",
+        "rule_bundle_hash",
+        "code_commit",
+        "environment_lock_hash",
+        "semantic_config_hash",
+        "data_population",
+        "calendar_range",
+        "security_scope",
+        "decision_time_rule",
+        "label_horizon",
+        "maximum_holding_period",
+        "purge",
+        "embargo",
+        "development_split",
+        "walk_forward_split",
+        "frozen_holdout_split",
+        "primary_estimand",
+        "secondary_metrics",
+        "baselines",
+        "competitors",
+        "statistical_method",
+        "stage5d_support_matrix_hash",
+        "minimum_coverage",
+        "minimum_effective_sample",
+        "success_thresholds",
+        "failure_thresholds",
+        "multiple_testing_family",
+        "random_seed",
+        "owner_approval_record_hash"
+      ],
+      "performance_visible_change_requires_new_version": true,
+      "missing_required_field_outcome": "PRECHECK_BLOCKED"
+    },
+    "sample_and_pit": {
+      "study_unit": "event_x_listed_company_x_decision_time_opportunity",
+      "candidate_registration_precedes_strategy_gates": true,
+      "candidate_outcome_closed_world": [
+        "TRADE_READY",
+        "SHADOW_ONLY",
+        "REJECT",
+        "ABSTAIN",
+        "BLOCKED",
+        "NO_FILL"
+      ],
+      "independence_must_not_be_inferred_from": [
+        "duplicate_disclosures",
+        "same_economic_event",
+        "same_company",
+        "same_risk_cluster"
+      ],
+      "availability_predicate": "available_at<=decision_time",
+      "revisions_withdrawals_and_corrections_are_append_only_at_actual_availability": true,
+      "split_order": [
+        "development",
+        "walk_forward",
+        "frozen_holdout"
+      ],
+      "random_time_mixing_forbidden": true,
+      "purge_covers_label_overlap": true,
+      "embargo_is_preregistered": true,
+      "owner_required_unset_fields": [
+        "population_start",
+        "population_end",
+        "development_end",
+        "walk_forward_windows",
+        "holdout_start",
+        "holdout_end",
+        "label_horizon",
+        "maximum_holding_period",
+        "purge_length",
+        "embargo_length",
+        "minimum_effective_sample"
+      ],
+      "unset_field_outcome": "PRECHECK_BLOCKED"
+    },
+    "historical_admission": {
+      "implementation_phase": "6B",
+      "requires_authenticated_transport": true,
+      "requires_fresh_public_release_status_evidence": true,
+      "run_scoped_confirmation_type": "RunReleaseStatusConfirmation",
+      "stage3d_validation_object_reuse_forbidden": true,
+      "stage7_authority_reuse_forbidden": true,
+      "required_checks": [
+        "release_published",
+        "release_not_withdrawn",
+        "schema_compatible",
+        "manifest_hash_chain_valid",
+        "artifact_hashes_valid",
+        "reference_closure_complete",
+        "strategy_input_ref_exactly_one"
+      ],
+      "atomic_is_state_owned_group": [
+        "raw_status_evidence",
+        "consumption_receipt",
+        "artifact_fetch_observations",
+        "release_status_observations",
+        "strategy_run_manifest",
+        "preregistration_identity",
+        "complete_release_retention_closure"
+      ],
+      "any_failure_evaluator_calls": 0,
+      "any_failure_state_writes": 0,
+      "withdrawn_or_unconfirmable_blocks_new_run": true,
+      "historical_material_after_withdrawal": "audit_replay_only"
+    },
+    "accounting_support_gate": {
+      "support_matrix_frozen_before_performance": true,
+      "current_stage5d_baseline": "single_enter_buy_bounded_replay_only",
+      "current_baseline_is_sufficient_for_formal_historical_population": false,
+      "unsupported_input_outcome": [
+        "BLOCKED",
+        "ABSTAIN"
+      ],
+      "partial_nav_or_pnl_forbidden": true,
+      "silent_exclusion_forbidden": true,
+      "post_outcome_selective_implementation_forbidden": true,
+      "unsupported_cases_remain_in_candidate_universe_and_coverage": true,
+      "coverage_below_preregistered_threshold": "INSUFFICIENT_EVIDENCE",
+      "support_expansion_requires_new_stage5_acceptance_and_new_stage6_preregistration": true
+    },
+    "champion_challenge": {
+      "hypothesis_closed_world": [
+        "H0_no_independent_alpha",
+        "no_trade",
+        "market_or_industry_matched",
+        "simple_e4_only",
+        "simple_valuation_threshold",
+        "full_system"
+      ],
+      "shared_research_conditions": [
+        "candidate_population",
+        "pit_information_set",
+        "execution_constraints",
+        "transaction_costs",
+        "holding_period_definition",
+        "risk_budget"
+      ],
+      "complexity_retention_rule": "full_system_stably_outperforms_best_simple_competitor_on_frozen_holdout",
+      "index_only_comparison_is_sufficient": false,
+      "winner_selected_after_holdout_forbidden": true
+    },
+    "metrics_and_statistics": {
+      "primary_estimand": {
+        "description": "portfolio_level_incremental_result_relative_to_preregistered_benchmark_after_all_trading_frictions",
+        "opportunity_level_contribution_traceable": true,
+        "exact_horizon": "OWNER_DECISION_REQUIRED",
+        "standardization": "OWNER_DECISION_REQUIRED"
+      },
+      "required_reporting": [
+        "absolute_return_or_pnl",
+        "benchmark_excess_return_or_pnl",
+        "coverage_rate",
+        "abstain_rate",
+        "blocked_rate",
+        "fill_rate",
+        "capacity",
+        "drawdown",
+        "tail_loss",
+        "largest_winner_contribution",
+        "risk_cluster_concentration",
+        "turnover",
+        "cost_sensitivity"
+      ],
+      "separate_attribution_required": [
+        "alpha_source",
+        "risk_filter",
+        "discovery_tool",
+        "execution_advantage"
+      ],
+      "dependence_aware_resampling_required": true,
+      "resampling_units_must_cover": [
+        "economic_event",
+        "company",
+        "risk_cluster",
+        "time_dependence"
+      ],
+      "random_seed_resample_count_and_implementation_frozen_before_holdout": true,
+      "multiple_testing": {
+        "all_hypotheses_parameters_features_ablations_and_metric_families_logged": true,
+        "confirmatory_family_preregistered": true,
+        "adjustment_method": "OWNER_DECISION_REQUIRED",
+        "unregistered_analysis_label": "exploratory_not_pass_evidence"
+      },
+      "prd_hypothesis_thresholds": {
+        "minimum_independent_trades": 30,
+        "net_mean_expectation": ">0",
+        "cluster_resampled_confidence_level": "95%",
+        "cluster_resampled_ci_lower_bound": ">0",
+        "maximum_out_of_sample_drawdown": "<=15%",
+        "largest_winner_share_of_total_net_profit": "<=25%",
+        "status": "hypothesis_not_runtime_rule"
+      },
+      "additional_owner_decisions_required": [
+        "minimum_material_increment_over_best_simple",
+        "minimum_coverage",
+        "minimum_effective_sample",
+        "cost_and_capacity_stress_scenarios",
+        "failure_tolerance"
+      ]
+    },
+    "parameter_and_bias_audit": {
+      "parameter_search_space_order_stop_rule_and_all_results_logged": true,
+      "parameter_selection_scope": [
+        "development",
+        "walk_forward"
+      ],
+      "holdout_tuning_forbidden": true,
+      "required_ablations": [
+        "E0_E7",
+        "four_gates",
+        "profit_bridge",
+        "valuation",
+        "exit",
+        "risk",
+        "execution"
+      ],
+      "parameter_neighborhood_stability_required": true,
+      "required_execution_stress": [
+        "fees",
+        "tax",
+        "slippage",
+        "impact",
+        "capacity",
+        "latency",
+        "gap",
+        "suspension",
+        "price_limit",
+        "non_execution"
+      ],
+      "required_bias_audit": [
+        "survivorship",
+        "lookahead",
+        "duplicate_event",
+        "selective_inclusion",
+        "non_execution",
+        "researcher_degrees_of_freedom"
+      ],
+      "required_concentration_disclosure": [
+        "largest_winner",
+        "single_company",
+        "single_risk_cluster",
+        "single_period"
+      ]
+    },
+    "result_and_replay": {
+      "result_status_closed_world": [
+        "PASS",
+        "FAIL",
+        "INSUFFICIENT_EVIDENCE",
+        "PRECHECK_BLOCKED",
+        "AUDIT_REPLAY_ONLY"
+      ],
+      "append_only_retention": [
+        "runs",
+        "candidates",
+        "rejections",
+        "abstains",
+        "blocked_cases",
+        "errors",
+        "parameter_searches",
+        "reports"
+      ],
+      "successful_rerun_must_not_overwrite_failure": true,
+      "deterministic_replay_identity_includes": [
+        "rules",
+        "code",
+        "configuration",
+        "preregistration",
+        "data_closure",
+        "random_seed"
+      ],
+      "holdout_report_owner_decisions": [
+        "go",
+        "revise",
+        "stop",
+        "insufficient_evidence"
+      ],
+      "historical_result_is_forward_or_live_evidence": false
+    },
+    "owner_approval_atomicity": {
+      "all_35_required": true,
+      "partial_capability_forbidden": true,
+      "partial_implementation_authority_forbidden": true,
+      "authorization_predicate": "all(6A-01..6A-35==approved)",
+      "pending_rejected_missing_or_identity_drift_result": "draft_zero_runtime_authority"
+    },
+    "owner_approval_items": [
+      {"approval_item_id": "6A-01", "status": "pending", "rule_paths": ["/phase_model"]},
+      {"approval_item_id": "6A-02", "status": "pending", "rule_paths": ["/authorization_boundary"]},
+      {"approval_item_id": "6A-03", "status": "pending", "rule_paths": ["/exact_upstream_dependencies"]},
+      {"approval_item_id": "6A-04", "status": "pending", "rule_paths": ["/cross_repository_and_strategy_isolation"]},
+      {"approval_item_id": "6A-05", "status": "pending", "rule_paths": ["/preregistration_contract"]},
+      {"approval_item_id": "6A-06", "status": "pending", "rule_paths": ["/sample_and_pit/study_unit", "/sample_and_pit/independence_must_not_be_inferred_from"]},
+      {"approval_item_id": "6A-07", "status": "pending", "rule_paths": ["/sample_and_pit/candidate_registration_precedes_strategy_gates", "/sample_and_pit/candidate_outcome_closed_world"]},
+      {"approval_item_id": "6A-08", "status": "pending", "rule_paths": ["/sample_and_pit/availability_predicate", "/sample_and_pit/revisions_withdrawals_and_corrections_are_append_only_at_actual_availability"]},
+      {"approval_item_id": "6A-09", "status": "pending", "rule_paths": ["/sample_and_pit/split_order", "/sample_and_pit/purge_covers_label_overlap", "/sample_and_pit/embargo_is_preregistered"]},
+      {"approval_item_id": "6A-10", "status": "pending", "rule_paths": ["/sample_and_pit/owner_required_unset_fields", "/sample_and_pit/unset_field_outcome"]},
+      {"approval_item_id": "6A-11", "status": "pending", "rule_paths": ["/preregistration_contract/performance_visible_change_requires_new_version"]},
+      {"approval_item_id": "6A-12", "status": "pending", "rule_paths": ["/historical_admission/requires_fresh_public_release_status_evidence", "/historical_admission/stage3d_validation_object_reuse_forbidden", "/historical_admission/stage7_authority_reuse_forbidden"]},
+      {"approval_item_id": "6A-13", "status": "pending", "rule_paths": ["/historical_admission/atomic_is_state_owned_group", "/historical_admission/any_failure_evaluator_calls", "/historical_admission/any_failure_state_writes"]},
+      {"approval_item_id": "6A-14", "status": "pending", "rule_paths": ["/historical_admission/withdrawn_or_unconfirmable_blocks_new_run", "/historical_admission/historical_material_after_withdrawal"]},
+      {"approval_item_id": "6A-15", "status": "pending", "rule_paths": ["/accounting_support_gate/support_matrix_frozen_before_performance", "/accounting_support_gate/current_stage5d_baseline"]},
+      {"approval_item_id": "6A-16", "status": "pending", "rule_paths": ["/accounting_support_gate/unsupported_input_outcome", "/accounting_support_gate/partial_nav_or_pnl_forbidden", "/accounting_support_gate/silent_exclusion_forbidden"]},
+      {"approval_item_id": "6A-17", "status": "pending", "rule_paths": ["/accounting_support_gate/coverage_below_preregistered_threshold"]},
+      {"approval_item_id": "6A-18", "status": "pending", "rule_paths": ["/champion_challenge/hypothesis_closed_world"]},
+      {"approval_item_id": "6A-19", "status": "pending", "rule_paths": ["/champion_challenge/shared_research_conditions", "/champion_challenge/complexity_retention_rule"]},
+      {"approval_item_id": "6A-20", "status": "pending", "rule_paths": ["/metrics_and_statistics/primary_estimand"]},
+      {"approval_item_id": "6A-21", "status": "pending", "rule_paths": ["/metrics_and_statistics/required_reporting"]},
+      {"approval_item_id": "6A-22", "status": "pending", "rule_paths": ["/metrics_and_statistics/separate_attribution_required"]},
+      {"approval_item_id": "6A-23", "status": "pending", "rule_paths": ["/metrics_and_statistics/dependence_aware_resampling_required", "/metrics_and_statistics/resampling_units_must_cover"]},
+      {"approval_item_id": "6A-24", "status": "pending", "rule_paths": ["/metrics_and_statistics/multiple_testing"]},
+      {"approval_item_id": "6A-25", "status": "pending", "rule_paths": ["/metrics_and_statistics/prd_hypothesis_thresholds"]},
+      {"approval_item_id": "6A-26", "status": "pending", "rule_paths": ["/metrics_and_statistics/additional_owner_decisions_required"]},
+      {"approval_item_id": "6A-27", "status": "pending", "rule_paths": ["/parameter_and_bias_audit/parameter_search_space_order_stop_rule_and_all_results_logged", "/parameter_and_bias_audit/holdout_tuning_forbidden"]},
+      {"approval_item_id": "6A-28", "status": "pending", "rule_paths": ["/parameter_and_bias_audit/required_ablations", "/parameter_and_bias_audit/parameter_neighborhood_stability_required"]},
+      {"approval_item_id": "6A-29", "status": "pending", "rule_paths": ["/parameter_and_bias_audit/required_execution_stress"]},
+      {"approval_item_id": "6A-30", "status": "pending", "rule_paths": ["/parameter_and_bias_audit/required_bias_audit", "/parameter_and_bias_audit/required_concentration_disclosure"]},
+      {"approval_item_id": "6A-31", "status": "pending", "rule_paths": ["/result_and_replay/result_status_closed_world"]},
+      {"approval_item_id": "6A-32", "status": "pending", "rule_paths": ["/result_and_replay/append_only_retention", "/result_and_replay/successful_rerun_must_not_overwrite_failure"]},
+      {"approval_item_id": "6A-33", "status": "pending", "rule_paths": ["/result_and_replay/deterministic_replay_identity_includes"]},
+      {"approval_item_id": "6A-34", "status": "pending", "rule_paths": ["/result_and_replay/holdout_report_owner_decisions", "/result_and_replay/historical_result_is_forward_or_live_evidence"]},
+      {"approval_item_id": "6A-35", "status": "pending", "rule_paths": ["/owner_approval_atomicity"]}
+    ],
+    "cross_repository_and_strategy_isolation": {
+      "kb_public_contracts_and_published_releases_only": true,
+      "kb_sqlite_raw_staging_published_worktree_or_internal_package_reads_forbidden": true,
+      "shared_writable_cache_database_or_migration_forbidden": true,
+      "industrial_and_theme_strategy_signal_interchange": false,
+      "cross_strategy_candidate_manifest_ledger_pnl_or_conclusion_mixing_forbidden": true
+    },
+    "runtime_must_not_parse_markdown": true
+  }
+}

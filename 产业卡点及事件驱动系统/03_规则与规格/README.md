@@ -36,7 +36,13 @@ Stage 5D 规则治理已完成 owner 原子批准登记：
 - [Stage 5 / 5D 公司行动、估值、P&L、完整回放与原子持久化精确规则包](Stage5_5D公司行动估值P&L完整回放与原子持久化精确规则包_v0.1.md)与[原零权限 draft machine proposal](机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0-draft.rule-bundle.json)保持原始字节不变；
 - [5D 批准记录](Stage5_5D公司行动估值P&L完整回放与原子持久化批准记录_v0.1.md)、[approved machine bundle](机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0.rule-bundle.json)和 [approval record](机器制品/industrial_event_stage5_5d_corporate_action_pnl_replay_persistence_v0.1.0.approval.json)精确绑定 48 项决定、Stage 5A approved identity、Stage 5C commit `7f64c584c5c7be5e2385a177fab9e5d31e3f665b` 和批准文档；
 - `require_stage5d_rule_capability` 只签发 `stage5_synthetic_execution_validation` 的匿名合成 `research` capability；全部真实/交易权限为 false，5D-2 durable persistence 仍未获当前阶段授权；
-- 当前没有 5D business evaluator、Ledger V2、公司行动、NAV/P&L、complete replay 或 SQLite v4 实现。规则获批不得冒充能力已实现。
+- 受限 5D-1 已实现并验收第一条预注册 ENTER/BUY 的 source-driven Ledger V2、mark/NAV、十八格 P&L 与 complete replay；SELL、公司行动、外部现金流和 SQLite v4 仍未实现。规则获批和单一 bounded replay 均不得冒充完整证券会计能力。
+
+Stage 6A 历史验证治理已形成待批准草案：
+
+- [Stage 6 / 6A 历史验证预注册与准入精确规则包](Stage6_6A历史验证预注册与准入精确规则包_v0.1.md)：35 项全部 `pending`，把 Stage 6 分为 6A 治理、6B admission/原子留存、6C development/walk-forward 和 6D frozen holdout 冠军挑战；
+- [6A draft machine proposal](机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0-draft.rule-bundle.json)：固定上游身份、候选全集、PIT/时间切分、支持矩阵、竞争假设、统计、多重检验和偏差审计；allowed run modes 为空，全部历史运行、确认、持久化、holdout 和交易权限为 false；
+- PRD 的样本数、置信区间、回撤和最大赢家门槛继续保持 `hypothesis`；owner 原子批准与后续 6B—6D 独立验收之前，不得执行历史数据。
 
 1. `KB输入引用与失败关闭规格_v0.1.md`
 2. `StrategyRunManifest与决策审计规格_v0.1.md`
@@ -50,4 +56,3 @@ Stage 5D 规则治理已完成 owner 原子批准登记：
 规则只有在标记为 `approved`、通过对应测试且 approval scope 明确包含目标运行模式时，才可进入该模式。本规则包的 scope 不包含回测。
 
 KB 只提供已发布事实、证据引用和 Context Pack，不提供 E0—E7、Gate、利润桥或估值结论。任何规则不得依赖 KB SQLite、`raw/`、`staging/` 或内部实现，也不得把策略判断写回 KB。
-
