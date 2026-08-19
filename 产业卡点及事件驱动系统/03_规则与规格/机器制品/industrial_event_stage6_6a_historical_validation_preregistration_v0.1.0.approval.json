@@ -1,0 +1,15 @@
+{
+  "approval_id": "rule_approval_stage6_6a_historical_validation_preregistration_v0_1_0",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage6_6a_historical_validation_preregistration",
+  "bundle_version": "0.1.0",
+  "bundle_hash": {
+    "algorithm": "sha256",
+    "value": "9a3f663936b0ad83795c7338c6b93fc9617d1f9ed6f4ccca6f92dd2fd06f6505"
+  },
+  "approved_by": "repository_owner",
+  "approved_at": "2026-08-19T13:20:26.292292Z",
+  "approval_scope": "stage6_historical_validation_governance",
+  "approval_source_ref": "codex_task_owner_approval_stage6_6a_20260819",
+  "schema_version": "0.1.0-draft"
+}

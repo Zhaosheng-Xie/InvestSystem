@@ -89,8 +89,12 @@ def test_stage6a_draft_has_strict_identity_and_exact_source_bindings(
     )
 
     dependencies = rules["exact_upstream_dependencies"]
+    assert dependencies["plan"] == {
+        "path": "PLAN.md",
+        "version": "3.6",
+        "sha256": "2e5a2f7e757e68705024d235db03a5b41c45e1ef9bcaa79f43900d4ee253da9f",
+    }
     for dependency in (
-        "plan",
         "industrial_prd",
         "stage3d_acceptance",
         "stage5d_preregistration",

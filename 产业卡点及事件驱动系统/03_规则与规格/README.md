@@ -38,11 +38,11 @@ Stage 5D 规则治理已完成 owner 原子批准登记：
 - `require_stage5d_rule_capability` 只签发 `stage5_synthetic_execution_validation` 的匿名合成 `research` capability；全部真实/交易权限为 false，5D-2 durable persistence 仍未获当前阶段授权；
 - 受限 5D-1 已实现并验收第一条预注册 ENTER/BUY 的 source-driven Ledger V2、mark/NAV、十八格 P&L 与 complete replay；SELL、公司行动、外部现金流和 SQLite v4 仍未实现。规则获批和单一 bounded replay 均不得冒充完整证券会计能力。
 
-Stage 6A 历史验证治理已形成待批准草案：
+Stage 6A 历史验证治理已完成 owner 原子批准登记：
 
-- [Stage 6 / 6A 历史验证预注册与准入精确规则包](Stage6_6A历史验证预注册与准入精确规则包_v0.1.md)：35 项全部 `pending`，把 Stage 6 分为 6A 治理、6B admission/原子留存、6C development/walk-forward 和 6D frozen holdout 冠军挑战；
-- [6A draft machine proposal](机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0-draft.rule-bundle.json)：固定上游身份、候选全集、PIT/时间切分、支持矩阵、竞争假设、统计、多重检验和偏差审计；allowed run modes 为空，全部历史运行、确认、持久化、holdout 和交易权限为 false；
-- PRD 的样本数、置信区间、回撤和最大赢家门槛继续保持 `hypothesis`；owner 原子批准与后续 6B—6D 独立验收之前，不得执行历史数据。
+- [Stage 6 / 6A 历史验证预注册与准入精确规则包](Stage6_6A历史验证预注册与准入精确规则包_v0.1.md)及[批准记录](Stage6_6A历史验证预注册与准入批准记录_v0.1.md)：35 项已整包原子批准；原 specification 和 [draft machine proposal](机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0-draft.rule-bundle.json)保持原始字节；
+- [approved machine bundle](机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0.rule-bundle.json)与 [approval record](机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0.approval.json)：精确绑定 owner 审阅 draft，只签发 `stage6_historical_validation_governance` capability；
+- 该 capability 仅允许形成 6B 待审批草案；历史运行、确认、持久化、holdout 和交易权限全部为 false。PRD 的样本数、置信区间、回撤和最大赢家门槛继续保持 `hypothesis`。
 
 1. `KB输入引用与失败关闭规格_v0.1.md`
 2. `StrategyRunManifest与决策审计规格_v0.1.md`

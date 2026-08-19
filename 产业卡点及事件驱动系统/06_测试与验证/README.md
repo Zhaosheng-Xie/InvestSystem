@@ -21,11 +21,11 @@
 - 成本、容量、跳空、相关性与回撤压力测试
 - 决策可重放与运行哈希一致性测试
 
-## Stage 6A 历史验证治理草案
+## Stage 6A 历史验证治理批准
 
-[Stage 6 / 6A 历史验证预注册与准入精确规则包](../03_规则与规格/Stage6_6A历史验证预注册与准入精确规则包_v0.1.md)已形成待 owner 审批草案。它冻结阶段拆分、候选全集、时间切分、PIT、historical-validation admission、Stage 5D 支持矩阵门、冠军挑战、统计/多重检验、参数搜索和偏差审计的建议合同；PRD 中所有数值通过线仍保持 `hypothesis`。
+[Stage 6 / 6A 历史验证预注册与准入精确规则包](../03_规则与规格/Stage6_6A历史验证预注册与准入精确规则包_v0.1.md)35 项已获 owner 原子批准。[正式治理验收](../../docs/validation/stage6a-historical-validation-governance-acceptance.md)固定了原 specification/draft、独立批准文档、approved bundle、approval record 和 fail-closed verifier；PRD 中所有数值通过线仍保持 `hypothesis`。
 
-本草案不执行历史数据、不打开 holdout、不签发 `RunReleaseStatusConfirmation`，也不授权 backtest/paper/shadow/live。[草案形成记录](../../docs/validation/stage6a-historical-validation-governance-draft-review.md)固定了制品身份和验证结果：Stage 6A 专项 `7 passed`、治理相邻 `164 passed`、全仓 `971 passed, 4 skipped`，Ruff/format/mypy/compileall/diff-check 全部通过。这些结果只证明 draft 字节、35 项 pending 和零权限机器边界，不能解释为策略有效性或 Stage 6 已完成。
+6A capability 只允许形成 6B 待审批草案，不执行历史数据、不打开 holdout、不签发 `RunReleaseStatusConfirmation`，也不授权 backtest/paper/shadow/live。批准专项 `38 passed`、治理相邻 `195 passed`、全仓 `978 passed, 4 skipped`，Ruff/format/mypy/compileall/diff-check 全部通过。这些结果只证明治理身份和权限边界，不能解释为策略有效性或 Stage 6 已完成。
 
 `TRADE_READY`、`SHADOW_ONLY`、`REJECT`、`ABSTAIN` 和 `BLOCKED` 案例必须共同入库；`BLOCKED` 使用独立失败 fixture，任何 `TRADE_READY` 合成正例必须先有对应 `approved` 规则，且不代表 paper/live 授权。
 

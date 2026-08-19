@@ -1,11 +1,11 @@
-# InvestSystem 实施计划（v3.6）
+# InvestSystem 实施计划（v3.7）
 
-> 计划版本：`v3.6`
+> 计划版本：`v3.7`
 > 基线日期：`2026-08-19`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 0—2B / completed；Stage 3 / completed_with_scope_limits（3A—3D accepted without run authority）；Stage 4 / completed_with_scope_limits；Stage 5 / in_progress（5A governance approved，5B—5D-1 completed_with_scope_limits）；Stage 6 / in_progress（6A governance draft only）`
-> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3a_pinned_transport_contract_and_offline_clients_completed / stage3b_independent_loopback_http_rc_accepted_without_authority / stage3c_real_tcloud_https_transport_accepted_without_authority / stage3d_real_context_pack_mapping_and_validation_smoke_accepted_without_authority / stage4_complete_synthetic_research_validation_engine_accepted / all_14_stage4_p0_rules_approved / stage5a_approved_rule_identity_and_capability_guard_completed / stage5b_historical_market_and_synthetic_fill_engine_accepted / stage5c_synthetic_portfolio_and_in_memory_ledger_accepted / stage5d_approved_rule_identity_and_capability_guard_completed / stage5d_first_order_contract_replay_completed_with_scope_limits / stage6a_historical_validation_preregistration_governance_draft_formed / full_production_strategy_not_implemented`
+> 当前阶段：`Stage 0—2B / completed；Stage 3 / completed_with_scope_limits（3A—3D accepted without run authority）；Stage 4 / completed_with_scope_limits；Stage 5 / in_progress（5A governance approved，5B—5D-1 completed_with_scope_limits）；Stage 6 / in_progress（6A governance approved，6B—6D not authorized）`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3a_pinned_transport_contract_and_offline_clients_completed / stage3b_independent_loopback_http_rc_accepted_without_authority / stage3c_real_tcloud_https_transport_accepted_without_authority / stage3d_real_context_pack_mapping_and_validation_smoke_accepted_without_authority / stage4_complete_synthetic_research_validation_engine_accepted / all_14_stage4_p0_rules_approved / stage5a_approved_rule_identity_and_capability_guard_completed / stage5b_historical_market_and_synthetic_fill_engine_accepted / stage5c_synthetic_portfolio_and_in_memory_ledger_accepted / stage5d_approved_rule_identity_and_capability_guard_completed / stage5d_first_order_contract_replay_completed_with_scope_limits / stage6a_approved_historical_validation_governance_capability_completed / full_production_strategy_not_implemented`
 > 当前授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均只允许各自精确批准范围内的匿名合成 research validation；Stage 5D 的 48 项规则继续作为长期治理上限，但当前 5D-1 完成门只覆盖第一条预注册“订单/合同事件”历史回放实际需要的 source-driven Ledger V2、结算/可用性、成本、mark/NAV、P&L 和 deterministic complete replay；未支持的证券会计或公司行动场景必须在生成金融结果前显式 BLOCKED/ABSTAIN，不能忽略、近似或冒充已实现；5D-2 persistence 当前仍未授权执行；不授权 backtest、paper、shadow、live、真实仓位、真实账户、真实订单、券商接入或资金部署`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
@@ -49,7 +49,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | Stage 3 | `completed_with_scope_limits` | KB 正式 Release 传输、provider-neutral 映射与只读策略 smoke | 3A—3D 已验收关闭；新 run authority、确认与持久化准入移交 Stage 6/7 独立授权门 |
 | Stage 4 | `completed_with_scope_limits` | 完整产业事件规格与策略引擎 | `4A-1—4A-4` 与 `4B` 均已批准并完成匿名合成完整编排、统一结论和 replay 验收；无真实/交易权限 |
 | Stage 5 | `in_progress / 5B—5D-1 completed_with_scope_limits` | 成交、组合与确定性回放 | 5A 治理、5B 历史市场/合成成交、5C 合成组合/内存账本和受限 5D-1 首条订单/合同 complete replay 已验收；5D-2 持久化未授权 |
-| Stage 6 | `in_progress / 6A governance draft only` | 历史验证与冠军挑战 | 6A 已形成零权限预注册与准入草案；待 owner 原子批准，6B—6D 均未授权 |
+| Stage 6 | `in_progress / 6A governance approved` | 历史验证与冠军挑战 | 6A 35 项已原子批准并形成零运行权限治理 capability；只允许形成 6B 待审批草案，6B—6D 均未授权 |
 | Stage 7 | `not_started` | 前瞻 shadow/paper 运行 | Stage 6、人工批准 |
 | Stage 8 | `optional` | 产业策略受控扩展；实盘仍需另行授权 | Stage 7、新批准 |
 
@@ -685,11 +685,11 @@ Stage 3A—3D 的证据分别见 [Stage 3A 离线传输消费者验收](docs/val
 
 ### Stage 6：历史验证与冠军挑战
 
-状态：`in_progress / 6A governance draft only`
+状态：`in_progress / 6A governance approved`
 
 目标：在严格 PIT、成交和成本约束下，检验完整系统是否比简单竞争假设提供稳定的样本外增量。
 
-当前 6A 已形成[历史验证预注册与准入精确规则草案](产业卡点及事件驱动系统/03_规则与规格/Stage6_6A历史验证预注册与准入精确规则包_v0.1.md)，把 Stage 6 拆为 6A 治理、6B admission/原子留存、6C development/walk-forward、6D frozen holdout 冠军挑战。草案的 35 项 owner 决策全部为 `pending`，machine proposal 运行模式为空且零权限；这不授权历史 run，也不把 PRD `hypothesis` 数值或受限 Stage 5D 单例支持范围实现成默认值。
+owner 已原子批准[历史验证预注册与准入精确规则](产业卡点及事件驱动系统/03_规则与规格/Stage6_6A历史验证预注册与准入精确规则包_v0.1.md)第 13 节全部 35 项；原 specification 与零权限 draft machine proposal 保持原始字节，独立[批准记录](产业卡点及事件驱动系统/03_规则与规格/Stage6_6A历史验证预注册与准入批准记录_v0.1.md)、approved bundle、approval record 和 fail-closed governance verifier 已形成并通过[正式治理验收](docs/validation/stage6a-historical-validation-governance-acceptance.md)。6A capability 只允许形成 6B 待审批草案，不授权历史 run、Release confirmation、状态写入、holdout、backtest 或交易；PRD `hypothesis` 数值仍不是 evaluator 规则。
 
 进入条件：Stage 3 已按 `completed_with_scope_limits` 关闭正式 Release E2E，Stage 5 的第一条预注册订单/合同回放切片已按 `completed_with_scope_limits` 独立验收；这里是两条并行分支的汇合门。Stage 3 的 validation-only 完成和 Stage 5D 的受限会计覆盖都不自动授予历史运行准入。
 
