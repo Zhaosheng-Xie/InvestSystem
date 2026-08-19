@@ -17,13 +17,15 @@ from pathlib import Path
 
 from invest_system.integrations.investment_research_kb import (
     KBReadOnlyHTTPClient,
-    Stage3DExpectation,
     load_kb_transport_contract_snapshot,
+)
+from invest_system.integrations.investment_research_kb.stage6b_handoff import (
+    Stage6BProducerHandoff,
 )
 from invest_system.models import HashDigest
 from invest_system.stage6b_live_validation import (
     execute_stage6b_live_validation,
-    prepare_stage6b_live_validation,
+    prepare_stage6b_producer_handoff_validation,
     read_stage6b_credential_env,
 )
 from invest_system.strategies.industrial_event.stage6b_validation_store import (
@@ -70,19 +72,21 @@ def _file_hash(path: Path) -> HashDigest:
     return HashDigest(algorithm="sha256", value=sha256(path.read_bytes()).hexdigest())
 
 
-def _preflight_output(expectation: Stage3DExpectation) -> dict[str, object]:
+def _preflight_output(handoff: Stage6BProducerHandoff) -> dict[str, object]:
     return {
         "acceptance": "preflight_passed",
         "network_requests": 0,
         "seal_created": False,
         "authority_eligible": False,
         "strategy_evaluator_calls": 0,
-        "handoff_sha256": expectation.handoff_sha256,
-        "base_url": expectation.base_url,
-        "context_release_id": expectation.context_release_id,
-        "evidence_release_id": expectation.evidence_release_id,
-        "knowledge_cutoff": expectation.strategy_input_ref.to_json_value()["knowledge_cutoff"],
-        "strategy_input_ref": expectation.strategy_input_ref.to_json_value(),
+        "handoff_sha256": handoff.handoff_sha256,
+        "base_url": handoff.base_url,
+        "root_release_id": handoff.root_release.release_id,
+        "source_release_ids": [release.release_id for release in handoff.source_releases],
+        "knowledge_cutoff": handoff.root_release.strategy_input_ref().to_json_value()[
+            "knowledge_cutoff"
+        ],
+        "strategy_input_ref": handoff.root_release.strategy_input_ref().to_json_value(),
         "note": "strict handoff and credential preflight only; no HTTPS or state write",
     }
 
@@ -90,11 +94,12 @@ def _preflight_output(expectation: Stage3DExpectation) -> dict[str, object]:
 def main() -> int:
     args = _arguments()
     repository_root = Path(__file__).resolve().parents[1]
-    expectation = Stage3DExpectation.from_handoff_bytes(
+    handoff = Stage6BProducerHandoff.from_bytes(
         args.handoff.read_bytes(),
         expected_sha256=args.handoff_sha256,
     )
-    if args.base_url != expectation.base_url:
+    handoff.verify_external_paths(credential_env_path=args.credential_env)
+    if args.base_url != handoff.base_url:
         raise SystemExit("base URL differs from the hash-locked handoff")
     if _GIT_COMMIT_RE.fullmatch(args.code_commit) is None:
         raise SystemExit("code-commit must be a full lowercase Git identity")
@@ -102,15 +107,9 @@ def main() -> int:
     try:
         if credential_base_url != args.base_url:
             raise SystemExit("credential base URL differs")
-        if not args.execute:
-            print(
-                json.dumps(
-                    _preflight_output(expectation), ensure_ascii=False, sort_keys=True, indent=2
-                )
-            )
-            return 0
-        if args.validation_root is None:
-            raise SystemExit("--validation-root is required with --execute")
+        observed_at = _timestamp(args.observed_at)
+        if observed_at >= handoff.credential_expires_at:
+            raise SystemExit("credential expired before Stage 6B validation")
         catalog = load_kb_transport_contract_snapshot(
             repository_root
             / "contracts"
@@ -118,17 +117,22 @@ def main() -> int:
             / "investment_research_kb"
             / "stage6b-transport-v1"
         )
+        if not args.execute:
+            print(
+                json.dumps(_preflight_output(handoff), ensure_ascii=False, sort_keys=True, indent=2)
+            )
+            return 0
+        if args.validation_root is None:
+            raise SystemExit("--validation-root is required with --execute")
         client = KBReadOnlyHTTPClient(
             base_url=args.base_url,
             bearer_token=token,
             catalog=catalog,
         )
-        observed_at = _timestamp(args.observed_at)
-        prepared = prepare_stage6b_live_validation(
+        prepared = prepare_stage6b_producer_handoff_validation(
             repository_root=repository_root,
             client=client,
-            catalog=catalog,
-            expectation=expectation,
+            handoff=handoff,
             observed_at=observed_at,
             code_commit=args.code_commit,
             runtime_environment_lock_hash=_file_hash(repository_root / "requirements.lock"),

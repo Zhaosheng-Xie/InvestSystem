@@ -1,8 +1,8 @@
 """Prepare and execute one isolated Stage 6B public-HTTPS validation seal.
 
-The producer handoff is parsed through the already pinned Stage 3D Context
-Pack contract.  Content is validated before the Stage 6B admission window;
-the existing Stage 6B orchestrator then performs fresh status reads for every
+The producer handoff permits only the pinned Release, Manifest, Status, and
+Artifact surfaces.  Content is validated before the Stage 6B admission
+window; the existing orchestrator then performs fresh status reads for every
 Release in the exact retention closure and writes only to an isolated
 validation store.
 """
@@ -37,13 +37,17 @@ from invest_system.integrations.investment_research_kb import (
     KBTransportContractCatalog,
     Stage3DArtifactExpectation,
     Stage3DExpectation,
-    Stage3DValidationResult,
     manifest_sha256,
     sealed_manifest_bytes,
     validate_stage3d_http_context_pack,
 )
 from invest_system.integrations.investment_research_kb.reference_fixture import (
     CONSUMER_CONTRACT_VERSION,
+)
+from invest_system.integrations.investment_research_kb.stage6b_handoff import (
+    Stage6BProducerArtifact,
+    Stage6BProducerHandoff,
+    Stage6BProducerRelease,
 )
 from invest_system.models import HashDigest, StrategyInputRef
 from invest_system.retention import (
@@ -99,7 +103,8 @@ class Stage6BLivePreparedAdmission:
     fetch_observation: ArtifactFetchObservation
     manifest_payloads: tuple[ReleaseManifestPayload, ...]
     artifact_payloads: tuple[ArtifactPayload, ...]
-    stage3d_validation: Stage3DValidationResult
+    content_response_sha256: tuple[tuple[str, str], ...]
+    content_artifact_sha256: tuple[tuple[str, str], ...]
     handoff_sha256: str
     validation_only: bool = True
     authority_eligible: bool = False
@@ -113,8 +118,13 @@ class Stage6BLivePreparedAdmission:
             raise ValueError("prepared admission must be validation-only")
         if type(self.authority_eligible) is not bool or self.authority_eligible:
             raise ValueError("prepared admission must remain authority-ineligible")
-        if self.stage3d_validation.authority_eligible:
-            raise ValueError("Stage 3D validation unexpectedly carried authority")
+        for field_name in ("content_response_sha256", "content_artifact_sha256"):
+            values = tuple(sorted(getattr(self, field_name)))
+            if not values or len({key for key, _ in values}) != len(values):
+                raise ValueError(f"{field_name} must be non-empty with unique keys")
+            if any(len(digest) != 64 for _, digest in values):
+                raise ValueError(f"{field_name} values must be SHA-256")
+            object.__setattr__(self, field_name, values)
         if len(self.handoff_sha256) != 64:
             raise ValueError("handoff_sha256 must be SHA-256")
 
@@ -179,11 +189,24 @@ def _json_object(path: Path) -> dict[str, Any]:
 
 
 def _derived_id(prefix: str, *, expectation: Stage3DExpectation, observed_at: datetime) -> str:
+    return _derived_handoff_id(
+        prefix,
+        handoff_sha256=expectation.handoff_sha256,
+        observed_at=observed_at,
+    )
+
+
+def _derived_handoff_id(
+    prefix: str,
+    *,
+    handoff_sha256: str,
+    observed_at: datetime,
+) -> str:
     digest = sha256(
         canonical_json_bytes(
             {
                 "prefix": prefix,
-                "handoff_sha256": expectation.handoff_sha256,
+                "handoff_sha256": handoff_sha256,
                 "observed_at": normalize_utc(observed_at, field_name="observed_at"),
             }
         )
@@ -439,8 +462,363 @@ def prepare_stage6b_live_validation(
         fetch_observation=fetch_observation,
         manifest_payloads=manifest_payloads,
         artifact_payloads=artifact_payloads,
-        stage3d_validation=stage3d,
+        content_response_sha256=tuple(stage3d.response_sha256.items()),
+        content_artifact_sha256=tuple(stage3d.artifact_sha256.items()),
         handoff_sha256=expectation.handoff_sha256,
+    )
+
+
+def _hash_value(value: object, *, field: str) -> str:
+    if not isinstance(value, dict) or set(value) != {"algorithm", "value"}:
+        raise Stage6BLiveValidationError(
+            "PUBLIC_CONTRACT_MISMATCH", f"{field} is not a SHA-256 object"
+        )
+    digest = value.get("value")
+    if value.get("algorithm") != "sha256" or not isinstance(digest, str) or len(digest) != 64:
+        raise Stage6BLiveValidationError(
+            "PUBLIC_CONTRACT_MISMATCH", f"{field} is not a SHA-256 object"
+        )
+    return digest
+
+
+def _manifest_artifact_map(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    raw_items = manifest.get("release_items")
+    if not isinstance(raw_items, list):
+        raise Stage6BLiveValidationError(
+            "MANIFEST_INVENTORY_MISMATCH", "Manifest release_items is not an array"
+        )
+    result: dict[str, dict[str, Any]] = {}
+    for raw in raw_items:
+        if not isinstance(raw, dict) or not isinstance(raw.get("artifact_id"), str):
+            raise Stage6BLiveValidationError(
+                "MANIFEST_INVENTORY_MISMATCH", "Manifest artifact descriptor is invalid"
+            )
+        artifact_id = raw["artifact_id"]
+        if artifact_id in result:
+            raise Stage6BLiveValidationError(
+                "MANIFEST_INVENTORY_MISMATCH", "Manifest artifact ID is duplicated"
+            )
+        result[artifact_id] = raw
+    return result
+
+
+def _require_producer_artifact_descriptor(
+    actual: dict[str, Any],
+    expected: Stage6BProducerArtifact,
+) -> None:
+    if (
+        actual.get("artifact_id") != expected.artifact_id
+        or actual.get("item_type") != expected.item_type
+        or actual.get("size_bytes") != expected.size_bytes
+        or actual.get("media_type") != expected.content_type
+        or actual.get("record_schema_id") != expected.schema_id
+        or actual.get("record_schema_version") != expected.schema_version
+        or _hash_value(actual.get("artifact_hash"), field="artifact_hash") != expected.sha256
+        or _hash_value(actual.get("record_schema_hash"), field="record_schema_hash")
+        != expected.record_schema_hash
+    ):
+        raise Stage6BLiveValidationError(
+            "MANIFEST_INVENTORY_MISMATCH",
+            f"Manifest artifact differs: {expected.artifact_id}",
+        )
+
+
+def _status_head(bundle: Any) -> dict[str, Any]:
+    head = bundle.status.data.get("current_status_event")
+    if not isinstance(head, dict):
+        raise Stage6BLiveValidationError("RELEASE_STATUS_MISMATCH", "public Status head is missing")
+    return head
+
+
+def _require_producer_release_bundle(
+    bundle: Any,
+    expected: Stage6BProducerRelease,
+) -> bytes:
+    _require_manifest_identity(
+        bundle.manifest.data,
+        release_id=expected.release_id,
+        manifest_hash=expected.manifest_hash,
+        knowledge_cutoff=expected.knowledge_cutoff,
+    )
+    if (
+        bundle.release.release_id != expected.release_id
+        or bundle.manifest.release_id != expected.release_id
+        or bundle.status.release_id != expected.release_id
+        or bundle.manifest.data.get("schema_version") != expected.manifest_schema_version
+    ):
+        raise Stage6BLiveValidationError(
+            "RELEASE_IDENTITY_MISMATCH", f"public Release differs: {expected.release_id}"
+        )
+    head = _status_head(bundle)
+    if (
+        head.get("status") != "published"
+        or head.get("event_id") != expected.status_event_id
+        or head.get("sequence") != expected.status_sequence
+        or _hash_value(head.get("event_hash"), field="status.event_hash")
+        != expected.status_event_hash
+        or normalize_utc(
+            datetime.fromisoformat(str(head.get("recorded_at")).replace("Z", "+00:00")),
+            field_name="status.recorded_at",
+        )
+        != expected.status_recorded_at
+    ):
+        raise Stage6BLiveValidationError(
+            "RELEASE_STATUS_MISMATCH", f"public Status differs: {expected.release_id}"
+        )
+    actual_artifacts = _manifest_artifact_map(bundle.manifest.data)
+    expected_ids = {artifact.artifact_id for artifact in expected.artifacts}
+    if set(actual_artifacts) != expected_ids:
+        raise Stage6BLiveValidationError(
+            "MANIFEST_INVENTORY_MISMATCH",
+            f"public artifact inventory differs: {expected.release_id}",
+        )
+    for artifact in expected.artifacts:
+        _require_producer_artifact_descriptor(actual_artifacts[artifact.artifact_id], artifact)
+    return sealed_manifest_bytes(bundle.manifest.data)
+
+
+def _context_source_releases(
+    content: bytes,
+    *,
+    root: Stage6BProducerRelease,
+    sources: tuple[Stage6BProducerRelease, ...],
+) -> None:
+    try:
+        value = json.loads(content)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise Stage6BLiveValidationError(
+            "CONTEXT_SOURCE_CLOSURE_MISMATCH", "root Context Pack is not JSON"
+        ) from exc
+    if not isinstance(value, dict):
+        raise Stage6BLiveValidationError(
+            "CONTEXT_SOURCE_CLOSURE_MISMATCH", "root Context Pack is not an object"
+        )
+    cutoff = root.knowledge_cutoff.isoformat(timespec="microseconds").replace("+00:00", "Z")
+    raw_sources = value.get("source_releases")
+    expected_sources = {
+        source.release_id: {
+            "release_id": source.release_id,
+            "knowledge_cutoff": source.knowledge_cutoff.isoformat(timespec="microseconds").replace(
+                "+00:00", "Z"
+            ),
+            "manifest_hash": {"algorithm": "sha256", "value": source.manifest_hash},
+        }
+        for source in sources
+    }
+    if (
+        value.get("schema_version") != "1.0.0"
+        or value.get("knowledge_cutoff") != cutoff
+        or not isinstance(raw_sources, list)
+        or {
+            item.get("release_id"): item
+            for item in raw_sources
+            if isinstance(item, dict) and isinstance(item.get("release_id"), str)
+        }
+        != expected_sources
+    ):
+        raise Stage6BLiveValidationError(
+            "CONTEXT_SOURCE_CLOSURE_MISMATCH",
+            "root Context Pack source Release closure differs",
+        )
+
+
+def _producer_artifact_item(
+    artifact: Stage6BProducerArtifact,
+) -> ArtifactReceiptItem:
+    return ArtifactReceiptItem(
+        artifact_id=artifact.artifact_id,
+        item_type=artifact.item_type,
+        artifact_hash=HashDigest(algorithm="sha256", value=artifact.sha256),
+        size_bytes=artifact.size_bytes,
+        record_count=1 if artifact.item_type in {"context_pack", "evidence_bundle"} else None,
+    )
+
+
+def _producer_retention_artifact(
+    artifact: Stage6BProducerArtifact,
+) -> RetentionArtifact:
+    item = _producer_artifact_item(artifact)
+    return RetentionArtifact(
+        artifact_id=item.artifact_id,
+        item_type=item.item_type,
+        artifact_hash=item.artifact_hash,
+        size_bytes=item.size_bytes,
+        record_count=item.record_count,
+    )
+
+
+def prepare_stage6b_producer_handoff_validation(
+    *,
+    repository_root: Path,
+    client: KBReadOnlyHTTPClient,
+    handoff: Stage6BProducerHandoff,
+    observed_at: datetime,
+    code_commit: str,
+    runtime_environment_lock_hash: HashDigest,
+    semantic_config_hash: HashDigest,
+) -> Stage6BLivePreparedAdmission:
+    """Validate a Stage 6B producer handoff without the Context Pack query API."""
+
+    observed = normalize_utc(observed_at, field_name="observed_at")
+    if handoff.base_url != STAGE6B_AUTHORITY_ORIGIN or client.base_url != handoff.base_url:
+        raise Stage6BLiveValidationError(
+            "AUTHORITY_ORIGIN_MISMATCH", "handoff or client origin differs"
+        )
+    if observed >= handoff.credential_expires_at:
+        raise Stage6BLiveValidationError(
+            "CREDENTIAL_EXPIRED", "producer credential expired before validation"
+        )
+
+    releases = (handoff.root_release, *handoff.source_releases)
+    manifest_bytes: dict[str, bytes] = {}
+    response_hashes: dict[str, str] = {}
+    artifact_hashes: dict[str, str] = {}
+    downloaded: dict[tuple[str, str], bytes] = {}
+    for release in releases:
+        bundle = client.get_release_bundle(release.release_id)
+        manifest_bytes[release.release_id] = _require_producer_release_bundle(bundle, release)
+        response_hashes.update(
+            {
+                f"{release.release_id}:release": bundle.release.response_sha256,
+                f"{release.release_id}:manifest": bundle.manifest.response_sha256,
+                f"{release.release_id}:status": bundle.status.response_sha256,
+            }
+        )
+        for expected in release.artifacts:
+            artifact = client.download_artifact(
+                release.release_id,
+                expected.artifact_id,
+                expected_sha256=expected.sha256,
+                expected_size_bytes=expected.size_bytes,
+            )
+            if (
+                artifact.release_id != release.release_id
+                or artifact.artifact_id != expected.artifact_id
+                or artifact.media_type != expected.content_type
+                or artifact.sha256 != expected.sha256
+                or artifact.size_bytes != expected.size_bytes
+                or artifact.authority_eligible
+            ):
+                raise Stage6BLiveValidationError(
+                    "ARTIFACT_IDENTITY_MISMATCH",
+                    f"public artifact differs: {expected.artifact_id}",
+                )
+            downloaded[(release.release_id, expected.artifact_id)] = artifact.content
+            artifact_hashes[f"{release.release_id}:{expected.artifact_id}"] = artifact.sha256
+
+    context_artifacts = tuple(
+        artifact
+        for artifact in handoff.root_release.artifacts
+        if artifact.item_type == "context_pack"
+    )
+    if len(context_artifacts) != 1:
+        raise Stage6BLiveValidationError(
+            "CONTEXT_SOURCE_CLOSURE_MISMATCH", "root must contain one Context Pack"
+        )
+    _context_source_releases(
+        downloaded[(handoff.root_release.release_id, context_artifacts[0].artifact_id)],
+        root=handoff.root_release,
+        sources=handoff.source_releases,
+    )
+
+    root_ref = handoff.root_release.strategy_input_ref()
+    root_items = tuple(
+        _producer_artifact_item(artifact) for artifact in handoff.root_release.artifacts
+    )
+    receipt = ArtifactConsumptionReceipt.create(
+        schema_version=ARTIFACT_CONSUMPTION_RECEIPT_SCHEMA_VERSION,
+        consumer_contract_version=CONSUMER_CONTRACT_VERSION,
+        strategy_input_ref=root_ref,
+        artifacts=root_items,
+    )
+    nodes = tuple(
+        ReleaseRetentionNode(
+            strategy_input_ref=release.strategy_input_ref(),
+            manifest_document_hash=_hash_file_bytes(manifest_bytes[release.release_id]),
+            manifest_size_bytes=len(manifest_bytes[release.release_id]),
+            artifacts=tuple(
+                _producer_retention_artifact(artifact) for artifact in release.artifacts
+            ),
+            dependency_release_ids=(
+                tuple(source.release_id for source in handoff.source_releases)
+                if release.release_id == handoff.root_release.release_id
+                else ()
+            ),
+        )
+        for release in releases
+    )
+    closure = ReleaseRetentionClosure.create(root_strategy_input_ref=root_ref, releases=nodes)
+
+    document = rule_bundle_document_from_json_value(
+        _json_object(repository_root / _APPROVED_BUNDLE)
+    )
+    approval = rule_approval_record_from_json_value(
+        _json_object(repository_root / _APPROVAL_RECORD)
+    )
+    capability = require_stage6b_admission_validation_capability(
+        document, registry=RuleApprovalRegistry((approval,))
+    )
+    preregistration = Stage6BValidationPreregistration.create(
+        preregistration_id=_derived_handoff_id(
+            "prereg_stage6b_validation",
+            handoff_sha256=handoff.handoff_sha256,
+            observed_at=observed,
+        ),
+        frozen_at=observed,
+    )
+    request = Stage6BHistoricalAdmissionRequest.create(
+        request_id=_derived_handoff_id(
+            "request_stage6b_validation",
+            handoff_sha256=handoff.handoff_sha256,
+            observed_at=observed,
+        ),
+        run_id=_derived_handoff_id(
+            "run_stage6b_validation",
+            handoff_sha256=handoff.handoff_sha256,
+            observed_at=observed,
+        ),
+        strategy_input_ref=root_ref,
+        capability=capability,
+        code_commit=code_commit,
+        runtime_environment_lock_hash=runtime_environment_lock_hash,
+        semantic_config_hash=semantic_config_hash,
+        injected_clock=observed,
+        preregistration=preregistration,
+    )
+    fetch_observation = ArtifactFetchObservation(
+        schema_version=CONSUMPTION_OBSERVATION_SCHEMA_VERSION,
+        observation_id=_derived_handoff_id(
+            "fetch_stage6b_validation",
+            handoff_sha256=handoff.handoff_sha256,
+            observed_at=observed,
+        ),
+        release_id=handoff.root_release.release_id,
+        strategy_input_ref=root_ref,
+        observed_at=observed,
+        transport=DeliveryTransport.READ_ONLY_HTTP_API,
+        source_endpoint=handoff.base_url,
+        schema_validation_result=SchemaValidationResult.PASSED,
+        receipt_hash=receipt.receipt_hash,
+        artifact_ids=tuple(item.artifact_id for item in receipt.artifacts),
+        local_cache_keys=tuple(f"sha256:{item.artifact_hash.value}" for item in receipt.artifacts),
+    )
+    return Stage6BLivePreparedAdmission(
+        preregistration=preregistration,
+        request=request,
+        receipt=receipt,
+        closure=closure,
+        fetch_observation=fetch_observation,
+        manifest_payloads=tuple(
+            ReleaseManifestPayload(release_id=release_id, content=content)
+            for release_id, content in sorted(manifest_bytes.items())
+        ),
+        artifact_payloads=tuple(
+            ArtifactPayload(release_id=release_id, artifact_id=artifact_id, content=content)
+            for (release_id, artifact_id), content in sorted(downloaded.items())
+        ),
+        content_response_sha256=tuple(response_hashes.items()),
+        content_artifact_sha256=tuple(artifact_hashes.items()),
+        handoff_sha256=handoff.handoff_sha256,
     )
 
 
@@ -475,8 +853,8 @@ def execute_stage6b_live_validation(
     )
     return Stage6BLiveValidationResult(
         admission=admission,
-        content_response_sha256=tuple(prepared.stage3d_validation.response_sha256.items()),
-        content_artifact_sha256=tuple(prepared.stage3d_validation.artifact_sha256.items()),
+        content_response_sha256=prepared.content_response_sha256,
+        content_artifact_sha256=prepared.content_artifact_sha256,
         handoff_sha256=prepared.handoff_sha256,
     )
 
@@ -487,5 +865,6 @@ __all__ = [
     "Stage6BLiveValidationResult",
     "execute_stage6b_live_validation",
     "prepare_stage6b_live_validation",
+    "prepare_stage6b_producer_handoff_validation",
     "read_stage6b_credential_env",
 ]
