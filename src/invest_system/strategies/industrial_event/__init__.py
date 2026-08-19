@@ -514,6 +514,13 @@ from .stage6b_governance import (
     Stage6BApprovalCompatibilityError,
     require_stage6b_admission_validation_capability,
 )
+from .stage6b_validation_store import (
+    STAGE6B_VALIDATION_SEAL_SCHEMA_VERSION,
+    STAGE6B_VALIDATION_STORAGE_SCHEMA_VERSION,
+    Stage6BHistoricalRunAdmissionSeal,
+    Stage6BValidationStore,
+    Stage6BValidationStoreError,
+)
 
 __all__ = [
     "CASE_MATERIAL_HASH_PREDICATE",
@@ -647,6 +654,8 @@ __all__ = [
     "STAGE6B_STATUS_PATH_TEMPLATE",
     "STAGE6B_TRANSACTION_PROFILE",
     "STAGE6B_TRANSPORT_SNAPSHOT_SHA256",
+    "STAGE6B_VALIDATION_SEAL_SCHEMA_VERSION",
+    "STAGE6B_VALIDATION_STORAGE_SCHEMA_VERSION",
     "STAGE6_6B_APPROVAL_DOCUMENT_SHA256",
     "STAGE6_6B_APPROVAL_SCOPE",
     "STAGE6_6B_AUTHORITY_CONTRACT_SHA256",
@@ -756,11 +765,14 @@ __all__ = [
     "Stage6BApprovalCompatibilityError",
     "Stage6BHistoricalAdmissionEnvelope",
     "Stage6BHistoricalAdmissionRequest",
+    "Stage6BHistoricalRunAdmissionSeal",
     "Stage6BRunReleaseStatusConfirmation",
     "Stage6BStatusEvidence",
     "Stage6BStatusEvidenceProjection",
     "Stage6BStatusResponsePayload",
     "Stage6BValidationPreregistration",
+    "Stage6BValidationStore",
+    "Stage6BValidationStoreError",
     "Stage5DApprovalCompatibilityError",
     "Stage5DBoundedMark",
     "Stage5DBoundedPnl",

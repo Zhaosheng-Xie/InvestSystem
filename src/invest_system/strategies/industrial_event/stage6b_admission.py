@@ -763,7 +763,7 @@ def issue_stage6b_validation_confirmation(
         raise Stage6BAdmissionError(
             "ROOT_INPUT_MISMATCH", "request, receipt, and closure root differ"
         )
-    normalized = tuple(evidences)
+    normalized = tuple(sorted(evidences, key=lambda item: item.release_id))
     if any(type(item) is not Stage6BStatusEvidence for item in normalized):
         raise TypeError("evidences must contain only issuer-created status evidence")
     closure_ids = tuple(node.release_id for node in closure.releases)

@@ -41,6 +41,8 @@ from invest_system.models import (
     StrategyRunManifest,
 )
 from invest_system.retention import (
+    ArtifactPayload,
+    ReleaseManifestPayload,
     ReleaseRetentionClosure,
     ReleaseRetentionNode,
     RetentionArtifact,
@@ -81,7 +83,9 @@ TRANSPORT_FIXTURE = Path(
 CODE_COMMIT = "a" * 40
 RUNTIME_LOCK = HashDigest(algorithm="sha256", value="b" * 64)
 SEMANTIC_CONFIG = HashDigest(algorithm="sha256", value="c" * 64)
-ARTIFACT_HASH = HashDigest(algorithm="sha256", value="d" * 64)
+ARTIFACT_CONTENT = b"stage6b validation artifact bytes\n"
+MANIFEST_CONTENT = b"stage6b validation manifest bytes\n"
+ARTIFACT_HASH = HashDigest(algorithm="sha256", value=sha256(ARTIFACT_CONTENT).hexdigest())
 MANIFEST_HASH = HashDigest(algorithm="sha256", value="e" * 64)
 
 
@@ -138,6 +142,19 @@ def _verified_status_document(
     )
 
 
+def _rehash_status_response(response: dict[str, Any]) -> None:
+    previous_hash: str | None = None
+    events = response["data"]["events"]
+    for event in events:
+        event["previous_event_hash"] = (
+            None if previous_hash is None else {"algorithm": "sha256", "value": previous_hash}
+        )
+        unsigned = {key: value for key, value in event.items() if key != "event_hash"}
+        previous_hash = sha256(provider_canonical_json_bytes(unsigned)).hexdigest()
+        event["event_hash"] = {"algorithm": "sha256", "value": previous_hash}
+    response["data"]["current_status_event"] = deepcopy(events[-1])
+
+
 def _projection(repository_root: Path, *, checked_at: datetime) -> Any:
     return project_stage6b_status_evidence(
         _verified_status_document(repository_root),
@@ -147,7 +164,11 @@ def _projection(repository_root: Path, *, checked_at: datetime) -> Any:
     )
 
 
-def _complete_admission(repository_root: Path) -> dict[str, Any]:
+def _complete_admission(
+    repository_root: Path,
+    *,
+    request_id: str = "stage6b_admission_request",
+) -> dict[str, Any]:
     capability = _capability(repository_root)
     strategy_input_ref = _strategy_input_ref()
     preregistration = Stage6BValidationPreregistration.create(
@@ -155,7 +176,7 @@ def _complete_admission(repository_root: Path) -> dict[str, Any]:
         frozen_at=datetime(2026, 8, 1, 0, 3, tzinfo=UTC),
     )
     request = Stage6BHistoricalAdmissionRequest.create(
-        request_id="stage6b_admission_request",
+        request_id=request_id,
         run_id="stage6b_validation_run",
         strategy_input_ref=strategy_input_ref,
         capability=capability,
@@ -169,7 +190,7 @@ def _complete_admission(repository_root: Path) -> dict[str, Any]:
         artifact_id="market-daily-v1",
         item_type="market_daily",
         artifact_hash=ARTIFACT_HASH,
-        size_bytes=100,
+        size_bytes=len(ARTIFACT_CONTENT),
         record_count=1,
     )
     receipt = ArtifactConsumptionReceipt.create(
@@ -182,8 +203,10 @@ def _complete_admission(repository_root: Path) -> dict[str, Any]:
         releases=(
             ReleaseRetentionNode(
                 strategy_input_ref=strategy_input_ref,
-                manifest_document_hash=HashDigest(algorithm="sha256", value="f" * 64),
-                manifest_size_bytes=200,
+                manifest_document_hash=HashDigest(
+                    algorithm="sha256", value=sha256(MANIFEST_CONTENT).hexdigest()
+                ),
+                manifest_size_bytes=len(MANIFEST_CONTENT),
                 artifacts=(
                     RetentionArtifact(
                         artifact_id=artifact.artifact_id,
@@ -294,6 +317,22 @@ def _complete_admission(repository_root: Path) -> dict[str, Any]:
         "admission_observation": admission_observation,
         "manifest": manifest,
         "envelope": envelope,
+        "manifest_payloads": (
+            ReleaseManifestPayload(
+                release_id=strategy_input_ref.dataset_release_id,
+                content=MANIFEST_CONTENT,
+            ),
+        ),
+        "artifact_payloads": (
+            ArtifactPayload(
+                release_id=strategy_input_ref.dataset_release_id,
+                artifact_id=artifact.artifact_id,
+                content=ARTIFACT_CONTENT,
+            ),
+        ),
+        "status_payloads": {
+            strategy_input_ref.dataset_release_id: projection.payload,
+        },
     }
 
 
@@ -343,6 +382,31 @@ def test_status_projection_fails_closed_on_bytes_identity_chain_and_time(
             checked_at=datetime(2026, 8, 1, 0, 4, tzinfo=UTC)
             + STAGE6B_PROVIDER_SNAPSHOT_MAX_AGE
             + timedelta(microseconds=1),
+        )
+
+    assert _projection(
+        repository_root,
+        checked_at=datetime(2026, 8, 1, 0, 9, tzinfo=UTC),
+    ).evidence.provider_snapshot_at == datetime(2026, 8, 1, 0, 4, tzinfo=UTC)
+    assert _projection(
+        repository_root,
+        checked_at=datetime(2026, 8, 1, 0, 3, 30, tzinfo=UTC),
+    ).evidence.checked_at == datetime(2026, 8, 1, 0, 3, 30, tzinfo=UTC)
+    with pytest.raises(Stage6BAdmissionError, match="STATUS_CLOCK_SKEW"):
+        _projection(
+            repository_root,
+            checked_at=datetime(2026, 8, 1, 0, 3, 30, tzinfo=UTC) - timedelta(microseconds=1),
+        )
+
+    withdrawn = _fixture_response(repository_root)
+    withdrawn["data"]["events"][-1]["status"] = "withdrawn"
+    _rehash_status_response(withdrawn)
+    with pytest.raises(Stage6BAdmissionError, match="STATUS_NOT_PUBLISHED"):
+        project_stage6b_status_evidence(
+            _verified_status_document(repository_root, response=withdrawn),
+            strategy_input_ref=_strategy_input_ref(),
+            checked_at=datetime(2026, 8, 1, 0, 4, 30, tzinfo=UTC),
+            status_observation_id="status_observation_stage6b_root",
         )
 
 
