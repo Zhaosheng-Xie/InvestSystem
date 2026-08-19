@@ -29,7 +29,9 @@
 
 ## Stage 6B 准入与原子留存治理
 
-[Stage 6 / 6B 历史准入、状态确认与原子留存精确规则包](../03_规则与规格/Stage6_6B历史准入状态确认与原子留存精确规则包_v0.1.md)32 项已由 owner 原子批准；原 specification/draft 保持不变，独立 approved bundle、approval record 和 fail-closed validation capability 已形成。[6B 治理批准验收记录](../../docs/validation/stage6b-historical-admission-governance-acceptance.md)验证 exact lineage、部分批准拒绝、scope 隔离、正式历史/migration/交易权限扩张失败关闭。当前没有 actual network、confirmation issuer、seal runtime 或 evaluator；runtime 验收仍是下一门。
+[Stage 6 / 6B 历史准入、状态确认与原子留存精确规则包](../03_规则与规格/Stage6_6B历史准入状态确认与原子留存精确规则包_v0.1.md)32 项已由 owner 原子批准；原 specification/draft 保持不变，独立 approved bundle、approval record 和 fail-closed validation capability 已形成。[6B 治理批准验收记录](../../docs/validation/stage6b-historical-admission-governance-acceptance.md)验证 exact lineage、部分批准拒绝、scope 隔离、正式历史/migration/交易权限扩张失败关闭。
+
+[6B 离线实现验收](../../docs/validation/stage6b-historical-admission-offline-acceptance.md)已闭合纯 contracts/issuer、KB provider status adapter、根级 HTTP/封存编排、隔离 validation state/cache、完整闭包原子 seal、失败零写、并发幂等和架构隔离；全仓 `1014 passed, 4 skipped`。旧 Stage 3 Token 已撤销，尚未形成本轮真实 HTTPS validation-only confirmation/seal，因此 6B 仍是 `in_progress`，不授权 evaluator、正式 migration、6C/6D 或任何交易模式。
 
 `TRADE_READY`、`SHADOW_ONLY`、`REJECT`、`ABSTAIN` 和 `BLOCKED` 案例必须共同入库；`BLOCKED` 使用独立失败 fixture，任何 `TRADE_READY` 合成正例必须先有对应 `approved` 规则，且不代表 paper/live 授权。
 

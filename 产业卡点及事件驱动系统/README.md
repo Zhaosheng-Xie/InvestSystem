@@ -1,6 +1,6 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3—4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5D-1 completed_with_scope_limits；Stage 6A—6B governance approved；Stage 6B runtime pending；完整生产策略未实现`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3—4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5D-1 completed_with_scope_limits；Stage 6B offline implementation accepted / live HTTPS validation-only seal pending；完整生产策略未实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-19`
 市场范围：`中国 A 股`
 当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 3D 不签发 KB current-status authority 或 RunReleaseStatusConfirmation；Stage 5D 当前只覆盖第一条预注册 ENTER/BUY bounded replay；Stage 6B capability 仅授权隔离临时库 admission 实现、只读 HTTPS status validation 与 validation-only confirmation/seal。正式 historical run、策略 evaluator、正式 migration、6C/6D、backtest/paper/shadow/live、真实仓位、账户、订单或券商接入仍未授权`
