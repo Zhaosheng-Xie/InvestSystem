@@ -24,6 +24,9 @@ from invest_system.integrations.investment_research_kb.http_client import (
     KBHTTPClientError,
     KBReadOnlyHTTPClient,
 )
+from invest_system.integrations.investment_research_kb.stage6b_status import (
+    project_stage6b_status_evidence,
+)
 from invest_system.integrations.investment_research_kb.transport_contracts import (
     TRANSPORT_SOURCE_COMMIT,
 )
@@ -38,8 +41,7 @@ from invest_system.retention import (
     ReleaseManifestPayload,
     ReleaseRetentionClosure,
 )
-
-from .stage6b_admission import (
+from invest_system.strategies.industrial_event.stage6b_admission import (
     STAGE6B_AUTHORITY_ORIGIN,
     STAGE6B_TRANSPORT_SNAPSHOT_SHA256,
     Stage6BAdmissionError,
@@ -49,16 +51,15 @@ from .stage6b_admission import (
     Stage6BStatusResponsePayload,
     Stage6BValidationPreregistration,
     issue_stage6b_validation_confirmation,
-    project_stage6b_status_evidence,
 )
-from .stage6b_governance import (
+from invest_system.strategies.industrial_event.stage6b_governance import (
     STAGE6_6B_APPROVAL_SCOPE,
     STAGE6_6B_RULE_APPROVAL_ID,
     STAGE6_6B_RULE_BUNDLE_ID,
     STAGE6_6B_RULE_BUNDLE_VERSION,
     STAGE6_STRATEGY_ID,
 )
-from .stage6b_validation_store import (
+from invest_system.strategies.industrial_event.stage6b_validation_store import (
     Stage6BHistoricalRunAdmissionSeal,
     Stage6BValidationStore,
 )

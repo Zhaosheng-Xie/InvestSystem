@@ -16,6 +16,9 @@ from invest_system.integrations.investment_research_kb.http_client import (
 from invest_system.integrations.investment_research_kb.provider_canonical import (
     canonical_json_bytes as provider_canonical_json_bytes,
 )
+from invest_system.integrations.investment_research_kb.stage6b_status import (
+    project_stage6b_status_evidence,
+)
 from invest_system.models import HashDigest, StrategyInputRef
 from invest_system.retention import (
     ArtifactPayload,
@@ -27,7 +30,6 @@ from invest_system.retention import (
 from invest_system.strategies.industrial_event.stage6b_admission import (
     Stage6BHistoricalAdmissionEnvelope,
     issue_stage6b_validation_confirmation,
-    project_stage6b_status_evidence,
 )
 from invest_system.strategies.industrial_event.stage6b_validation_store import (
     Stage6BAdmissionStatus,

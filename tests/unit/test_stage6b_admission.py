@@ -32,6 +32,9 @@ from invest_system.integrations.investment_research_kb.http_client import (
 from invest_system.integrations.investment_research_kb.provider_canonical import (
     canonical_json_bytes as provider_canonical_json_bytes,
 )
+from invest_system.integrations.investment_research_kb.stage6b_status import (
+    project_stage6b_status_evidence,
+)
 from invest_system.models import (
     STRATEGY_RUN_MANIFEST_SCHEMA_VERSION,
     HashDigest,
@@ -55,7 +58,6 @@ from invest_system.strategies.industrial_event.stage6b_admission import (
     Stage6BHistoricalAdmissionRequest,
     Stage6BValidationPreregistration,
     issue_stage6b_validation_confirmation,
-    project_stage6b_status_evidence,
     stage6b_status_response_payloads,
 )
 from invest_system.strategies.industrial_event.stage6b_governance import (

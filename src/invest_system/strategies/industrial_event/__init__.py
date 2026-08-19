@@ -490,7 +490,6 @@ from .stage6b_admission import (
     Stage6BStatusResponsePayload,
     Stage6BValidationPreregistration,
     issue_stage6b_validation_confirmation,
-    project_stage6b_status_evidence,
     stage6b_status_response_payloads,
 )
 from .stage6b_governance import (
@@ -513,11 +512,6 @@ from .stage6b_governance import (
     STAGE6_6B_SPECIFICATION_SHA256,
     Stage6BApprovalCompatibilityError,
     require_stage6b_admission_validation_capability,
-)
-from .stage6b_http_admission import (
-    Stage6BHTTPValidationAdmissionResult,
-    execute_stage6b_public_https_validation_admission,
-    fetch_stage6b_closure_status_evidence,
 )
 from .stage6b_validation_store import (
     STAGE6B_VALIDATION_SEAL_SCHEMA_VERSION,
@@ -771,7 +765,6 @@ __all__ = [
     "Stage6BHistoricalAdmissionEnvelope",
     "Stage6BHistoricalAdmissionRequest",
     "Stage6BHistoricalRunAdmissionSeal",
-    "Stage6BHTTPValidationAdmissionResult",
     "Stage6BRunReleaseStatusConfirmation",
     "Stage6BStatusEvidence",
     "Stage6BStatusEvidenceProjection",
@@ -923,9 +916,6 @@ __all__ = [
     "require_stage6a_governance_capability",
     "require_stage6b_admission_validation_capability",
     "issue_stage6b_validation_confirmation",
-    "execute_stage6b_public_https_validation_admission",
-    "fetch_stage6b_closure_status_evidence",
-    "project_stage6b_status_evidence",
     "stage6b_status_response_payloads",
     "bind_stage5_artifact",
     "bind_stage5_submission_constraint_candidate",

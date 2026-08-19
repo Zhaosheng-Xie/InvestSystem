@@ -19,13 +19,13 @@ from invest_system.integrations.investment_research_kb import (
 from invest_system.integrations.investment_research_kb.provider_canonical import (
     canonical_json_bytes as provider_canonical_json_bytes,
 )
+from invest_system.stage6b_http_admission import (
+    execute_stage6b_public_https_validation_admission,
+    fetch_stage6b_closure_status_evidence,
+)
 from invest_system.strategies.industrial_event.stage6b_admission import (
     STAGE6B_AUTHORITY_ORIGIN,
     Stage6BAdmissionError,
-)
-from invest_system.strategies.industrial_event.stage6b_http_admission import (
-    execute_stage6b_public_https_validation_admission,
-    fetch_stage6b_closure_status_evidence,
 )
 from invest_system.strategies.industrial_event.stage6b_validation_store import (
     Stage6BValidationStore,
