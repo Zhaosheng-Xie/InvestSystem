@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v3.10](PLAN.md)：本仓库唯一正式实施路线图；当前为 `Stage 0—2B completed / Stage 3 completed_with_scope_limits / Stage 4 completed_with_scope_limits / Stage 5B—5D-1 completed_with_scope_limits / Stage 6B offline implementation accepted`。6B 的 contracts/issuer、provider status adapter、隔离临时库 admission/seal 和 failure matrix 已通过[离线实现验收](docs/validation/stage6b-historical-admission-offline-acceptance.md)，但仍缺新的短期只读凭据完成真实 HTTPS validation-only seal。正式状态库迁移、historical run、策略 evaluator、6C walk-forward 和 6D holdout 均未授权。Stage 5D 仍只覆盖固定 ENTER/BUY case，完整生产策略仍不存在。
+- [InvestSystem 实施计划 v3.11](PLAN.md)：本仓库唯一正式实施路线图；当前为 `Stage 0—2B completed / Stage 3 completed_with_scope_limits / Stage 4 completed_with_scope_limits / Stage 5B—5D-1 completed_with_scope_limits / Stage 6B completed_with_scope_limits`。6B 的 contracts/issuer、provider status adapter、隔离临时库 admission/seal 和 failure matrix 已通过[离线实现验收](docs/validation/stage6b-historical-admission-offline-acceptance.md)，并已通过[真实 HTTPS validation-only seal 验收](docs/validation/stage6b-live-https-acceptance.md)。正式状态库迁移、historical run、策略 evaluator、6C walk-forward 和 6D holdout 均未授权。Stage 5D 仍只覆盖固定 ENTER/BUY case，完整生产策略仍不存在。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。

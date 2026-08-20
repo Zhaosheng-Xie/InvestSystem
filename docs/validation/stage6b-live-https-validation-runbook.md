@@ -1,8 +1,8 @@
 # Stage 6B 真实 HTTPS validation-only seal 运行手册
 
-文档状态：`prepared_not_executed`
+文档状态：`executed_and_accepted / 2026-08-20`
 
-本手册只说明如何在 KB producer handoff 到达后执行 Stage 6B 的真实公网验收。当前尚未读取 KB 临时目录、尚未发起公网请求、尚未创建 validation seal，也未完成 Stage 6B 真实 HTTPS 验收。
+本手册说明如何依据 KB producer handoff 执行 Stage 6B 的真实公网验收。`2026-08-20` 已按本流程完成一次验收，结果见 [Stage 6B 真实 HTTPS validation-only seal 验收](stage6b-live-https-acceptance.md)。
 
 ## 1. 固定边界
 
@@ -39,7 +39,6 @@ validation_evidence[producer report path + SHA-256]
 
 ```powershell
 $python = "E:\Conda\envs\Data_Analysis\python.exe"
-$env:PYTHONPATH = (Resolve-Path .\src).Path
 $handoff = "<KB 提供的绝对 handoff JSON 路径>"
 $credential = "<KB 提供的绝对临时 env 路径>"
 $handoffSha256 = "<KB 提供的 handoff SHA-256>"
