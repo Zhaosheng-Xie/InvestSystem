@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v3.14](PLAN.md)：本仓库唯一正式实施路线图；当前为 `Stage 0—2B completed / Stage 3 completed_with_scope_limits / Stage 4 completed_with_scope_limits / Stage 5B—5D-1 completed_with_scope_limits / Stage 6B completed_with_scope_limits / Stage 6C v0.2 governance approved`。6B 的离线实现和[真实 HTTPS validation-only seal](docs/validation/stage6b-live-https-acceptance.md)均已验收；[6C v0.2 全部 40 项](产业卡点及事件驱动系统/03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战精确规则包_v0.2.md)已获 owner 原子批准并通过[治理验收](docs/validation/stage6c-v02-governance-acceptance.md)。批准只开放匿名合成 kernel 实施门；正式状态库迁移、historical run、真实 6C 执行和 6D holdout 均未授权。Stage 5D 仍只覆盖固定 ENTER/BUY case，完整生产策略仍不存在。
+- [InvestSystem 实施计划 v3.15](PLAN.md)：本仓库唯一正式实施路线图；当前为 `Stage 0—2B completed / Stage 3 completed_with_scope_limits / Stage 4 completed_with_scope_limits / Stage 5B—5D-1 completed_with_scope_limits / Stage 6B completed_with_scope_limits / Stage 6C v0.2 governance approved / first synthetic kernel slice completed_with_scope_limits`。6C v0.2 全部 40 项已获 owner 原子批准；[第一 kernel 切片](docs/validation/stage6c-synthetic-kernel-slice-acceptance.md)只实现匿名合成 holdout isolation、exact TWR/benchmark 和 replay。正式状态库迁移、historical run、真实 6C 执行和 6D holdout 均未授权。Stage 5D 仍只覆盖固定 ENTER/BUY case，完整生产策略仍不存在。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。
