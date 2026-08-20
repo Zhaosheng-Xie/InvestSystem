@@ -43,6 +43,8 @@
 
 [IS Stage 5D outcome-blind 静态支持 census](../../docs/validation/stage5d-outcome-blind-static-support-census-v0.1.md)现已完成代码支持面盘点：20 项分为 `6 bounded complete / 4 ledger-only / 4 fail-closed / 4 not implemented / 2 not evaluable`。它确认 SELL/FIFO/卖出资金结算已有底层验收，但没有一般化 EXIT complete replay、daily NAV 或完整 P&L；候选分母、coverage、selection-bias 和 completed-trade 数全部保持 `null`。该 census 不读取收益、label、holdout 或 KB 内部数据，也不授予正式 Stage 6C 权限。
 
+[Stage 5D 普通证券完整生命周期与全量 EXIT 回放预注册](../../docs/validation/stage5d-normal-lifecycle-exit-replay-preregistration-v0.1.md)已冻结连续 BUY lineage、全量 EXIT、61 点 valuation path、60 returns、59 个 canonical mark memo events、结算尾部和完整 P&L 重分类 golden。它明确禁止把既有 partial SELL fixture 冒充 completed trade，并要求 target/peer 将来复用同一证券中立 valuation seam。当前状态为 `frozen_for_input_materialization_review`：必须先物化并冻结 exit/calendar/mark/rule inputs，复核后才可另行批准 evaluator。
+
 ## Stage 3D 已验收证据
 
 [Stage 3D 真实公网 Context Pack 验收](../../docs/validation/stage3d-context-pack-http-acceptance.md)固定了正式 Context Pack/Evidence Release、两份主制品和两份公开 Schema，并验证：
