@@ -1,11 +1,11 @@
-# InvestSystem 实施计划（v3.12）
+# InvestSystem 实施计划（v3.13）
 
-> 计划版本：`v3.12`
+> 计划版本：`v3.13`
 > 基线日期：`2026-08-20`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 0—2B / completed；Stage 3 / completed_with_scope_limits（3A—3D accepted without run authority）；Stage 4 / completed_with_scope_limits；Stage 5 / in_progress（5A governance approved，5B—5D-1 completed_with_scope_limits）；Stage 6 / in_progress（6A governance approved，6B completed_with_scope_limits，6C exact draft pending owner approval，6D not authorized）`
-> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3a_pinned_transport_contract_and_offline_clients_completed / stage3b_independent_loopback_http_rc_accepted_without_authority / stage3c_real_tcloud_https_transport_accepted_without_authority / stage3d_real_context_pack_mapping_and_validation_smoke_accepted_without_authority / stage4_complete_synthetic_research_validation_engine_accepted / all_14_stage4_p0_rules_approved / stage5a_approved_rule_identity_and_capability_guard_completed / stage5b_historical_market_and_synthetic_fill_engine_accepted / stage5c_synthetic_portfolio_and_in_memory_ledger_accepted / stage5d_approved_rule_identity_and_capability_guard_completed / stage5d_first_order_contract_replay_completed_with_scope_limits / stage6a_approved_historical_validation_governance_capability_completed / stage6b_offline_admission_and_atomic_validation_seal_accepted / stage6b_live_https_validation_seal_accepted_without_historical_run_authority / stage6c_exact_zero_authority_draft_formed / full_production_strategy_not_implemented`
+> 当前阶段：`Stage 0—2B / completed；Stage 3 / completed_with_scope_limits（3A—3D accepted without run authority）；Stage 4 / completed_with_scope_limits；Stage 5 / in_progress（5A governance approved，5B—5D-1 completed_with_scope_limits）；Stage 6 / in_progress（6A governance approved，6B completed_with_scope_limits，6C v0.2 exact draft pending owner approval，6D not authorized）`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3a_pinned_transport_contract_and_offline_clients_completed / stage3b_independent_loopback_http_rc_accepted_without_authority / stage3c_real_tcloud_https_transport_accepted_without_authority / stage3d_real_context_pack_mapping_and_validation_smoke_accepted_without_authority / stage4_complete_synthetic_research_validation_engine_accepted / all_14_stage4_p0_rules_approved / stage5a_approved_rule_identity_and_capability_guard_completed / stage5b_historical_market_and_synthetic_fill_engine_accepted / stage5c_synthetic_portfolio_and_in_memory_ledger_accepted / stage5d_approved_rule_identity_and_capability_guard_completed / stage5d_first_order_contract_replay_completed_with_scope_limits / stage6a_approved_historical_validation_governance_capability_completed / stage6b_offline_admission_and_atomic_validation_seal_accepted / stage6b_live_https_validation_seal_accepted_without_historical_run_authority / stage6c_v02_methodology_risks_closed_in_zero_authority_draft / full_production_strategy_not_implemented`
 > 当前授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均只允许各自精确批准范围内的匿名合成 research validation；Stage 5D 的 48 项规则继续作为长期治理上限，但当前 5D-1 完成门只覆盖第一条预注册“订单/合同事件”历史回放实际需要的 source-driven Ledger V2、结算/可用性、成本、mark/NAV、P&L 和 deterministic complete replay；未支持的证券会计或公司行动场景必须在生成金融结果前显式 BLOCKED/ABSTAIN，不能忽略、近似或冒充已实现；5D-2 persistence 当前仍未授权执行；不授权 backtest、paper、shadow、live、真实仓位、真实账户、真实订单、券商接入或资金部署`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
@@ -49,7 +49,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | Stage 3 | `completed_with_scope_limits` | KB 正式 Release 传输、provider-neutral 映射与只读策略 smoke | 3A—3D 已验收关闭；新 run authority、确认与持久化准入移交 Stage 6/7 独立授权门 |
 | Stage 4 | `completed_with_scope_limits` | 完整产业事件规格与策略引擎 | `4A-1—4A-4` 与 `4B` 均已批准并完成匿名合成完整编排、统一结论和 replay 验收；无真实/交易权限 |
 | Stage 5 | `in_progress / 5B—5D-1 completed_with_scope_limits` | 成交、组合与确定性回放 | 5A 治理、5B 历史市场/合成成交、5C 合成组合/内存账本和受限 5D-1 首条订单/合同 complete replay 已验收；5D-2 持久化未授权 |
-| Stage 6 | `in_progress / 6B completed_with_scope_limits / 6C draft` | 历史验证与冠军挑战 | 6A/6B 已批准且 6B 已验收；6C 40 项精确草案待 owner 原子审阅，当前零 capability；正式 historical run、migration、6C 执行与 6D 未授权 |
+| Stage 6 | `in_progress / 6B completed_with_scope_limits / 6C v0.2 draft` | 历史验证与冠军挑战 | 6A/6B 已批准且 6B 已验收；6C v0.2 关闭五项重大方法风险，40 项待 owner 原子审阅且当前零 capability；正式 historical run、migration、6C 执行与 6D 未授权 |
 | Stage 7 | `not_started` | 前瞻 shadow/paper 运行 | Stage 6、人工批准 |
 | Stage 8 | `optional` | 产业策略受控扩展；实盘仍需另行授权 | Stage 7、新批准 |
 
@@ -697,6 +697,8 @@ owner 已原子批准[6B 历史准入、状态确认与原子留存精确规则]
 
 [6C 开发样本、Walk-Forward 与冠军挑战精确规则草案](产业卡点及事件驱动系统/03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战精确规则包_v0.1.md)已形成 40 项待批准决定，并通过[草案形成验收](docs/validation/stage6c-development-walk-forward-draft-acceptance.md)：固定 2019—2021 development、2022—2025 四个 walk-forward folds、60-session 主 horizon、coverage/样本/统计/压力/冠军门和未打开的 2026 holdout。草案明确当前受限 5D-1 不满足正式 6C，且 6B validation-only seal 不是正式 run authority；没有 approved bundle、approval record、evaluator 或任何 holdout 访问。
 
+方法复核发现 v0.1 的 holdout 仅逻辑隔离、adjusted inference 未进入同一完成门、portfolio/bootstrap 层次不唯一、coverage 无法排除可观察选择偏差及 TWR/benchmark 公式不完整。[6C v0.2 修订草案](产业卡点及事件驱动系统/03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战精确规则包_v0.2.md)及[修订验收](docs/validation/stage6c-v02-methodology-revision-acceptance.md)已集中关闭这五项；v0.1 保留为 traceability-only。v0.2 40 项仍全部 pending，没有 approved bundle、capability 或 runtime。
+
 进入条件：Stage 3 已按 `completed_with_scope_limits` 关闭正式 Release E2E，Stage 5 的第一条预注册订单/合同回放切片已按 `completed_with_scope_limits` 独立验收；这里是两条并行分支的汇合门。Stage 3 的 validation-only 完成和 Stage 5D 的受限会计覆盖都不自动授予历史运行准入。
 
 工作内容：
@@ -908,7 +910,7 @@ owner 已原子批准[6B 历史准入、状态确认与原子留存精确规则]
 | Stage 3 | [3A 离线验收](docs/validation/stage3a-acceptance.md)、[3B 独立本机 HTTP 验收](docs/validation/stage3b-http-acceptance.md)、[3C 真实 tcloud HTTPS 验收](docs/validation/stage3c-tcloud-http-acceptance.md)与[3D 真实公网 Context Pack 验收](docs/validation/stage3d-context-pack-http-acceptance.md)；固定 KB `aab36fe` transport snapshot；正式 market-daily/Context Pack/Evidence Release、Manifest/Status/Schema/制品闭合；provider-neutral 映射和 validation-only `ABSTAIN` smoke；所有输出 `authority_eligible=false` | 无 Stage 3 尾项；新 run authority、RunReleaseStatusConfirmation 与 IS 自有原子持久化属于 Stage 6/7 独立门 | `completed_with_scope_limits` |
 | Stage 4 | [Stage 2 进入复核](docs/validation/stage2-reentry-audit.md)；[4B 正式验收](docs/validation/stage4-4b-acceptance.md)；14 项 P0 inventory、4A-1—4A-4 和独立 4B capability 均精确 approved；完整匿名合成编排、统一结论与 replay 已验收 | 无；真实 KB 只读 smoke 已由 Stage 3D 关闭，生产运行与交易能力留在 Stage 5—7 及后续阶段 | `completed_with_scope_limits` |
 | Stage 5 | [5A 治理验收](docs/validation/stage5-5a-governance-acceptance.md)、[5B 市场/成交验收](docs/validation/stage5-5b-market-execution-acceptance.md)、[5C 组合/账本验收](docs/validation/stage5-5c-portfolio-ledger-acceptance.md)、5D 48 项批准谱系、[首条回放预注册](docs/validation/stage5d-first-order-contract-replay-preregistration.md)和[受限 5D-1 验收](docs/validation/stage5d-first-order-contract-replay-acceptance.md)；同次 Stage 5C 重算、期初 opening、五事件 V2、mark/NAV、十八格 P&L 与 complete/audit replay 已闭合 | 5D-2 持久化须另行授权；SELL、公司行动、外部现金流和全量证券会计继续 fail closed | `in_progress / 5B—5D-1 completed_with_scope_limits` |
-| Stage 6 | 6A/6B exact 批准谱系；6B [离线实现](docs/validation/stage6b-historical-admission-offline-acceptance.md)与[真实 HTTPS seal](docs/validation/stage6b-live-https-acceptance.md)；[6C 40 项精确草案](产业卡点及事件驱动系统/03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战精确规则包_v0.1.md)与零权限 machine proposal | owner 审阅 6C；正式 migration/run authority、足够 PIT 数据、Stage 5D 支持、6C evaluator 和 6D 均未关闭 | `in_progress / 6B completed_with_scope_limits / 6C draft` |
+| Stage 6 | 6A/6B exact 批准谱系；6B [离线实现](docs/validation/stage6b-historical-admission-offline-acceptance.md)与[真实 HTTPS seal](docs/validation/stage6b-live-https-acceptance.md)；[6C v0.2 40 项草案](产业卡点及事件驱动系统/03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战精确规则包_v0.2.md)及[五项方法风险修订验收](docs/validation/stage6c-v02-methodology-revision-acceptance.md) | owner 审阅 v0.2；正式 migration/run authority、足够 PIT 数据、Stage 5D 支持、6C evaluator 和 6D 均未关闭 | `in_progress / 6B completed_with_scope_limits / 6C v0.2 draft` |
 | Stage 7 | 运行目录占位 | 冻结版本、前瞻台账、paper 对账 | `not_started` |
 | Stage 8 | 无 | 新授权及各分支独立完成门 | `optional` |
 | 题材 deferred track | 独立研究建档 | 独立授权、PLAN/PRD、数据审计、规则和验证 | `deferred` |
@@ -921,7 +923,7 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 
 1. Stage 4 已完成完整 synthetic golden/replay 验收；该结仓不自动进入 backtest 或 Stage 5。
 2. Stage 3 已按 `completed_with_scope_limits` 关闭，KB 本轮没有剩余交付 blocker；不得为补 authority 重新打开 Stage 3。新 run authority、确认和持久化仍关闭，只能在 Stage 6/7 获 owner 独立授权并形成失败矩阵后推进。
-3. Stage 6A/6B 与真实 validation-only seal 已完成；6C 40 项精确草案已经形成。下一步由 owner 原子批准或调整 6C 数值和边界；批准前不得实现 kernel，批准后也必须先做匿名合成 kernel 验收，正式 historical run 仍需另行授权、正式 seal、PIT readiness 和 Stage 5D 支持。
+3. Stage 6A/6B 与真实 validation-only seal 已完成；6C v0.2 已关闭五项重大方法风险。下一步由 owner 原子批准或调整 v0.2 的 40 项；批准前不得实现 kernel，批准后也必须先做匿名合成 kernel 验收，正式 historical run 仍需另行授权、正式 seal、PIT readiness 和 Stage 5D 支持。
 4. backtest、paper、shadow 或 live 均须到对应后续阶段另行批准；任何合成 capability 均不授予这些模式。
 
 ---
@@ -972,3 +974,4 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 | `v3.10` | 2026-08-19 | `active` | 完成 6B contracts/issuer、provider status adapter、根级 HTTP 编排、隔离 validation state/cache、完整闭包原子 seal、失败矩阵和架构边界修复；离线实现验收为 `1014 passed, 4 skipped`。旧 Stage 3 Token 已撤销，6B 仍等待新短期只读凭据完成真实 HTTPS validation-only seal；正式 migration、historical run、6C/6D 和交易继续关闭。 |
 | `v3.11` | 2026-08-20 | `active` | 完成 6B 真实公网 validation-only seal：专用 producer handoff 严格固定根与 Source Release 全闭包，只调用 Release/Manifest/Status/Artifact 公网面，下载并验证 10 个制品，在新的 Status 窗口内签发隔离 confirmation/seal；`authority_eligible=false`、策略 evaluator 调用为零、正式状态/缓存未修改。全仓 `1018 passed, 4 skipped`；正式 migration、historical run、6C/6D 和交易继续关闭。 |
 | `v3.12` | 2026-08-20 | `active` | 形成 6C development/walk-forward/champion challenge 40 项精确待批准草案与零权限 machine proposal：固定时间切分、60-session 主 horizon、PIT/coverage/样本、五模型竞争、bootstrap/Holm、消融/压力、留存和 6D 移交。当前受限 5D-1 和 6B validation-only seal 均不能支撑正式 6C；没有 capability、evaluator、holdout 访问或交易权限。 |
+| `v3.13` | 2026-08-20 | `active` | 形成 superseding 6C v0.2：保留 v0.1 字节，新增 development projection/opaque holdout commitment 与 ACL/canary、三路径 CI + Holm 统一门、source-driven portfolio 与精确 block/wild bootstrap、outcome-blind coverage selection audit、252-session TWR/benchmark 公式。40 项仍 pending，零 capability/runtime/holdout 权限。 |
