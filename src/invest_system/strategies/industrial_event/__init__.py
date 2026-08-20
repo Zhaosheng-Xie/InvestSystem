@@ -605,6 +605,12 @@ from .stage6c_peer_experiments import (
     build_stage6c_peer_basket,
     build_stage6c_peer_basket_set,
 )
+from .stage6c_phase import (
+    Stage6CSyntheticPhaseSeal,
+    Stage6CSyntheticPhaseSourceBundle,
+    Stage6CSyntheticPhaseStatus,
+    evaluate_stage6c_synthetic_phase,
+)
 from .stage6c_synthetic_kernel import (
     STAGE6C_DECIMAL_CONTEXT_ID,
     STAGE6C_HOLDOUT_END_EXCLUSIVE,
@@ -936,6 +942,9 @@ __all__ = [
     "Stage6CSyntheticChampionStatus",
     "Stage6CSyntheticCompletionAttestation",
     "Stage6CSyntheticFrictionAttestation",
+    "Stage6CSyntheticPhaseSeal",
+    "Stage6CSyntheticPhaseSourceBundle",
+    "Stage6CSyntheticPhaseStatus",
     "Stage6CSyntheticKernelCase",
     "Stage6CSyntheticKernelResult",
     "Stage6CSyntheticKernelStatus",
@@ -1100,6 +1109,7 @@ __all__ = [
     "evaluate_stage6c_synthetic_champion_gate",
     "evaluate_stage6c_holm_family",
     "evaluate_stage6c_synthetic_inference",
+    "evaluate_stage6c_synthetic_phase",
     "build_stage6c_experiment_ledger",
     "build_stage6c_peer_basket",
     "build_stage6c_peer_basket_set",
