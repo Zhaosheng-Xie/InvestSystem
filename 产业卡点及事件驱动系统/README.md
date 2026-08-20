@@ -92,6 +92,8 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
     - 状态：`completed_with_scope_limits`；实现 PIT peer snapshot、三层 fallback、target exclusion、最少五 peers、exact 1/N 权重及 8 ablation + 16 stress 预注册台账。真实 peer returns/experiment 和 phase seal 未实现。
 38. [Stage 6 / 6C 匿名合成 Phase Seal 第六纵向切片验收](../docs/validation/stage6c-synthetic-phase-seal-acceptance.md)
     - 状态：`completed_with_scope_limits / synthetic_kernel_complete`；从 raw synthetic sources 同次重算 peer、experiment 和 champion，生成强制 `not_ready_for_6d_freeze=true` 的 zero-authority seal。正式 6C 与 6D 未授权。
+39. [Stage 6 / 6C 正式执行 Readiness 审计 v0.1](../docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)
+    - 状态：`BLOCKED_FOR_FORMAL_STAGE6C_EXECUTION`；34 项为 `9 READY / 22 MISSING / 1 BLOCKED / 2 NOT_REQUIRED_WITH_JUSTIFICATION`。下一动作只允许 KB 公共交付 census、IS outcome-blind Stage 5D support census 和 owner 架构决定，不授权正式历史运行、holdout 或 6D。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实只读 acquisition/transport 已由 Stage 3 关闭，原始响应持久化和 run admission 移交 Stage 6/7，策略语义属于 Stage 2B 以后。
 

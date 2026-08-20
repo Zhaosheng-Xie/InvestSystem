@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v3.20](PLAN.md)：本仓库唯一正式路线图；当前为 `Stage 6B completed_with_scope_limits / Stage 6C v0.2 anonymous synthetic kernel completed_with_scope_limits`。六条切片已由[统一 synthetic phase seal 验收](docs/validation/stage6c-synthetic-phase-seal-acceptance.md)闭合；该 seal 强制 `not_ready_for_6d_freeze=true`，不是真实 Stage 6C 或 6D 权限。正式状态库迁移、historical run、真实 6C 执行和 holdout 均未授权。
+- [InvestSystem 实施计划 v3.21](PLAN.md)：本仓库唯一正式路线图；当前为 `Stage 6B completed_with_scope_limits / Stage 6C v0.2 anonymous synthetic kernel completed_with_scope_limits / formal execution blocked`。六条切片已由[统一 synthetic phase seal 验收](docs/validation/stage6c-synthetic-phase-seal-acceptance.md)闭合；[正式 Readiness 审计](docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)为 `9 READY / 22 MISSING / 1 BLOCKED / 2 N/R`，结论 `NO_GO`。正式状态库迁移、historical run、真实 6C 执行和 holdout 均未授权。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。

@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0.0",
+  "audit_id": "stage6c_formal_execution_readiness_audit_v0.1",
+  "strategy_id": "industrial_event_strategy",
+  "as_of": "2026-08-20",
+  "baseline_commit": "4b786142fc3c584868f011d39fcf03f3bc2859a8",
+  "document_binding": {
+    "path": "docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md",
+    "sha256": "9a688aa35df347ce7c9cf4e24e212c7e07f83dc761bc0b980b5f30576a13ca4b"
+  },
+  "overall_status": "BLOCKED_FOR_FORMAL_STAGE6C_EXECUTION",
+  "decision": "NO_GO_FOR_FORMAL_STAGE6C_EXECUTION",
+  "authority_eligible": false,
+  "allowed_next_actions": [
+    "public_kb_delivery_readiness_census",
+    "investsystem_stage5d_support_census",
+    "formal_migration_design",
+    "holdout_custody_design",
+    "owner_review"
+  ],
+  "authorizations": {
+    "authorizes_formal_stage6c_execution": false,
+    "authorizes_development_run": false,
+    "authorizes_walk_forward_run": false,
+    "authorizes_holdout_read": false,
+    "authorizes_6d": false,
+    "authorizes_formal_migration": false,
+    "authorizes_backtest": false,
+    "authorizes_paper": false,
+    "authorizes_shadow": false,
+    "authorizes_live": false,
+    "authorizes_positions": false,
+    "authorizes_orders": false,
+    "authorizes_broker_connectivity": false,
+    "authorizes_kb_internal_read": false,
+    "authorizes_kb_write": false
+  },
+  "status_counts": {
+    "READY": 9,
+    "MISSING": 22,
+    "BLOCKED": 1,
+    "NOT_REQUIRED_WITH_JUSTIFICATION": 2,
+    "total": 34
+  },
+  "evidence_paths": [
+    "docs/validation/stage6b-live-https-acceptance.md",
+    "docs/validation/stage6c-v02-governance-acceptance.md",
+    "docs/validation/stage6c-synthetic-kernel-slice-acceptance.md",
+    "docs/validation/stage6c-candidate-fold-coverage-slice-acceptance.md",
+    "docs/validation/stage6c-inference-holm-slice-acceptance.md",
+    "docs/validation/stage6c-synthetic-champion-gate-acceptance.md",
+    "docs/validation/stage6c-peer-experiment-ledger-slice-acceptance.md",
+    "docs/validation/stage6c-synthetic-phase-seal-acceptance.md",
+    "docs/validation/stage5d-first-order-contract-replay-acceptance.md"
+  ],
+  "items": [
+    {"id":"R-01","category":"governance","status":"READY","owner":"IS/owner","exit_criterion":"Exact Stage 6C v0.2 40-item synthetic governance approval exists."},
+    {"id":"R-02","category":"governance","status":"READY","owner":"IS","exit_criterion":"Six anonymous synthetic slices and the zero-authority phase seal are accepted."},
+    {"id":"R-03","category":"governance","status":"MISSING","owner":"owner","exit_criterion":"Separately approve exact formal development/walk-forward execution scope."},
+    {"id":"R-04","category":"governance","status":"MISSING","owner":"IS/owner","exit_criterion":"Define and approve a formal Stage 6C result and issuer contract."},
+    {"id":"R-05","category":"governance","status":"NOT_REQUIRED_WITH_JUSTIFICATION","owner":"owner","exit_criterion":"Holdout open remains an independent Stage 6D gate."},
+    {"id":"R-06","category":"governance","status":"NOT_REQUIRED_WITH_JUSTIFICATION","owner":"owner","exit_criterion":"Historical validation requires no paper, shadow, live, position, or order authority."},
+    {"id":"R-07","category":"admission","status":"READY","owner":"IS","exit_criterion":"Pinned public transport contract and snapshot lock remain exact."},
+    {"id":"R-08","category":"admission","status":"READY","owner":"IS/KB","exit_criterion":"Root and source Releases and ten artifacts have public-HTTPS closure."},
+    {"id":"R-09","category":"admission","status":"READY","owner":"IS","exit_criterion":"Validation-only admission and seal remain isolated and zero-authority."},
+    {"id":"R-10","category":"admission","status":"MISSING","owner":"IS/owner","exit_criterion":"Approve and implement a formal HistoricalRunAdmissionSeal."},
+    {"id":"R-11","category":"admission","status":"MISSING","owner":"IS/owner","exit_criterion":"Approve a non-conflicting formal Stage 6 storage migration and table prefix."},
+    {"id":"R-12","category":"admission","status":"MISSING","owner":"IS","exit_criterion":"Implement atomic formal run envelope and seal persistence."},
+    {"id":"R-13","category":"admission","status":"MISSING","owner":"IS","exit_criterion":"Accept formal withdrawal, crash, concurrency, and audit-replay failure cases."},
+    {"id":"R-14","category":"historical_data","status":"READY","owner":"KB/IS","exit_criterion":"One formal Context Pack/Evidence cutoff is publicly delivered and closed."},
+    {"id":"R-15","category":"historical_data","status":"MISSING","owner":"KB/IS","exit_criterion":"Produce a content-addressed 2019-2025 candidate-source population census."},
+    {"id":"R-16","category":"historical_data","status":"MISSING","owner":"KB","exit_criterion":"Prove PIT completeness for every historical decision time."},
+    {"id":"R-17","category":"historical_data","status":"MISSING","owner":"KB","exit_criterion":"Prove historical revision, withdrawal, and correction visibility lineage."},
+    {"id":"R-18","category":"historical_data","status":"MISSING","owner":"KB/IS","exit_criterion":"Close 2019-2025 calendars, MarketRuleSets, and security-state coverage."},
+    {"id":"R-19","category":"historical_data","status":"MISSING","owner":"KB/IS","exit_criterion":"Close legal 20/60/120-session marks, stale states, and conflicts."},
+    {"id":"R-20","category":"historical_data","status":"MISSING","owner":"KB/IS","exit_criterion":"Include survivors, delistings, failures, rejects, ABSTAIN, and BLOCKED candidates."},
+    {"id":"R-21","category":"historical_data","status":"MISSING","owner":"KB/IS","exit_criterion":"Validate cross-artifact historical join coverage and duplicate rates."},
+    {"id":"R-22","category":"stage5d_support","status":"READY","owner":"IS","exit_criterion":"The first bounded source-driven ENTER/BUY replay remains accepted."},
+    {"id":"R-23","category":"stage5d_support","status":"MISSING","owner":"IS/owner","exit_criterion":"Implement the minimum EXIT/SELL lifecycle needed for completed trades."},
+    {"id":"R-24","category":"stage5d_support","status":"MISSING","owner":"IS/owner","exit_criterion":"Census corporate-action, external-flow, and special-settlement support needed for coverage."},
+    {"id":"R-25","category":"stage5d_support","status":"MISSING","owner":"IS","exit_criterion":"Bind a formal support matrix and per-candidate unsupported reasons."},
+    {"id":"R-26","category":"stage5d_support","status":"MISSING","owner":"IS/KB","exit_criterion":"Validate source-driven fee, tax, slippage, impact, capacity, and 1.5x friction replay."},
+    {"id":"R-27","category":"peer_experiment_holdout","status":"READY","owner":"IS","exit_criterion":"Peer construction rules and anonymous synthetic kernel are accepted."},
+    {"id":"R-28","category":"peer_experiment_holdout","status":"MISSING","owner":"KB/IS","exit_criterion":"Deliver PIT industry, float-market-cap, Beta, and peer-universe inputs."},
+    {"id":"R-29","category":"peer_experiment_holdout","status":"MISSING","owner":"IS/KB","exit_criterion":"Produce peer return and NAV under the same execution and cost model."},
+    {"id":"R-30","category":"peer_experiment_holdout","status":"READY","owner":"IS","exit_criterion":"Anonymous holdout isolation contracts and kernel are accepted."},
+    {"id":"R-31","category":"peer_experiment_holdout","status":"MISSING","owner":"owner/IS","exit_criterion":"Assign an independent custodian and implement ACL, credential, canary, access-log, and unlock controls."},
+    {"id":"R-32","category":"peer_experiment_holdout","status":"MISSING","owner":"IS","exit_criterion":"Produce real experiment, friction, completion, and bias-audit sources."},
+    {"id":"R-33","category":"peer_experiment_holdout","status":"MISSING","owner":"IS/owner","exit_criterion":"Define and approve a formal READY_FOR_6D_FREEZE issuer and handoff."},
+    {"id":"R-34","category":"overall_gate","status":"BLOCKED","owner":"owner/IS","exit_criterion":"All carrying missing gates are closed and independently re-audited before formal execution."}
+  ],
+  "critical_path": [
+    "Run a public-delivery-only KB historical-data census without strategy logic.",
+    "Run an outcome-blind InvestSystem Stage 5D support census without return selection.",
+    "Decide the minimum Stage 5D lifecycle, formal storage migration, and holdout custodian.",
+    "Only then draft a separate formal Stage 6C execution approval."
+  ],
+  "responsibility_boundary": {
+    "kb": "Immutable PIT facts, events, market/reference data, public schemas, Releases, Manifests, and evidence lineage only.",
+    "investsystem": "Candidate inventory, PIT filtering, support census, peer matching, execution, ledger, statistics, experiments, bias audit, and conclusions."
+  },
+  "audit_limitations": [
+    "No network or holdout access was performed.",
+    "No KB SQLite, raw, staging, published worktree, internal package, or temporary runtime data was read.",
+    "No historical row count, missingness rate, or coverage percentage was invented without a delivered dataset profile."
+  ]
+}
