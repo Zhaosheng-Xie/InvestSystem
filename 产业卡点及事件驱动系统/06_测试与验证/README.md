@@ -41,6 +41,8 @@
 
 审计没有实际历史数据 profile，因此不报告虚构的行数、缺失率或 coverage。下一次 readiness 更新必须由 KB 公共交付 census 与 IS outcome-blind Stage 5D support census 提供真实、内容寻址的证据。
 
+[IS Stage 5D outcome-blind 静态支持 census](../../docs/validation/stage5d-outcome-blind-static-support-census-v0.1.md)现已完成代码支持面盘点：20 项分为 `6 bounded complete / 4 ledger-only / 4 fail-closed / 4 not implemented / 2 not evaluable`。它确认 SELL/FIFO/卖出资金结算已有底层验收，但没有一般化 EXIT complete replay、daily NAV 或完整 P&L；候选分母、coverage、selection-bias 和 completed-trade 数全部保持 `null`。该 census 不读取收益、label、holdout 或 KB 内部数据，也不授予正式 Stage 6C 权限。
+
 ## Stage 3D 已验收证据
 
 [Stage 3D 真实公网 Context Pack 验收](../../docs/validation/stage3d-context-pack-http-acceptance.md)固定了正式 Context Pack/Evidence Release、两份主制品和两份公开 Schema，并验证：

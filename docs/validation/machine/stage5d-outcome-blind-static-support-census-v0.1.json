@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0.0",
+  "audit_id": "stage5d_outcome_blind_static_support_census_v0.1",
+  "census_kind": "STATIC_CODE_SUPPORT_ONLY",
+  "strategy_id": "industrial_event_strategy",
+  "as_of": "2026-08-21",
+  "baseline_commit": "8ea60895f7ebc42d5e58494711365f6305864889",
+  "document_binding": {
+    "path": "docs/validation/stage5d-outcome-blind-static-support-census-v0.1.md",
+    "sha256": "546a7c49e840fa3fd4a6a00a043af4bde13e4ff44443aa511919b90f7eb9a8be"
+  },
+  "overall_status": "STATIC_CODE_SUPPORT_CENSUS_COMPLETE_REAL_CANDIDATE_COVERAGE_PENDING",
+  "decision": "PROCEED_WITH_MINIMAL_SELL_COMPLETE_REPLAY_PREREGISTRATION",
+  "authority_eligible": false,
+  "observed_inputs": {
+    "candidate_inventory_read": false,
+    "outcomes_read": false,
+    "labels_read": false,
+    "holdout_read": false,
+    "network_accessed": false,
+    "kb_internal_state_read": false,
+    "persists_state": false
+  },
+  "authorizations": {
+    "authorizes_formal_stage6c_execution": false,
+    "authorizes_historical_run": false,
+    "authorizes_development_walk_forward": false,
+    "authorizes_holdout_read": false,
+    "authorizes_6d": false,
+    "authorizes_migration": false,
+    "authorizes_backtest": false,
+    "authorizes_paper": false,
+    "authorizes_shadow": false,
+    "authorizes_live": false,
+    "authorizes_positions": false,
+    "authorizes_orders": false,
+    "authorizes_broker_connectivity": false,
+    "authorizes_kb_write": false
+  },
+  "status_counts": {
+    "ACCEPTED_BOUNDED_SLICE": 6,
+    "ACCEPTED_LEDGER_ONLY": 4,
+    "FAILS_CLOSED": 4,
+    "NOT_IMPLEMENTED": 4,
+    "NOT_EVALUABLE_WITHOUT_HISTORICAL_CANDIDATES": 2,
+    "total": 20
+  },
+  "evidence_bindings": [
+    {
+      "path": "src/invest_system/strategies/industrial_event/stage5d_ledger_v2.py",
+      "sha256": "71962ed8326b6a764f136f988019637557c0199e4b8f7830b0731f9ca1dd4abf",
+      "symbols": ["Stage5DV2EventType", "replay_stage5d_v2_slice"]
+    },
+    {
+      "path": "src/invest_system/strategies/industrial_event/stage5d_stage5c_adapter.py",
+      "sha256": "53bf4169d78e7ca94495a7e32844016cd1cfbdfa50a887155e1109edf81961e4",
+      "symbols": ["Stage5DSourceDrivenSliceStatus", "evaluate_stage5d_source_driven_ledger_slice"]
+    },
+    {
+      "path": "src/invest_system/strategies/industrial_event/stage5d_bounded_replay.py",
+      "sha256": "aa96dc38ee965fc777fdf8ad3bbffccbc32ac86f33412245197fe71c1d96f3fe",
+      "symbols": ["Stage5DBoundedReplayStatus", "evaluate_stage5d_bounded_complete_replay"]
+    },
+    {
+      "path": "tests/unit/test_stage5d_source_driven_ledger_slice.py",
+      "sha256": "92a4179efbae2839f64e8d13a4f17d77309f79cbb3936f8e7d7b1d1925d959d8",
+      "symbols": [
+        "test_source_driven_buy_recomputes_stage5c_and_replays_v2",
+        "test_source_driven_sell_uses_exact_continuation_and_fifo_components",
+        "test_sell_cash_settlement_and_availability_do_not_leak_at_fill_time",
+        "test_explicit_rejected_no_fill_replays_only_source_bound_opening"
+      ]
+    },
+    {
+      "path": "tests/unit/test_stage5d_bounded_replay.py",
+      "sha256": "560128708423add5b267c4186dcd75d262375a05b893013e0e49fccf245a4a95",
+      "symbols": [
+        "test_preregistered_buy_closes_mark_nav_pnl_and_complete_replay",
+        "test_unsupported_inputs_block_before_financial_output",
+        "test_complete_coverage_without_eligible_mark_abstains_after_ledger_replay",
+        "test_sell_case_is_not_silently_widened_into_the_bounded_replay"
+      ]
+    },
+    {
+      "path": "docs/validation/stage5d-first-order-contract-replay-preregistration.md",
+      "sha256": "bd9e2f1d42fc42e308558136a7dd55967a2eba86561035fb0a9b38bb09c7680b",
+      "symbols": []
+    },
+    {
+      "path": "docs/validation/stage5d-first-order-contract-replay-acceptance.md",
+      "sha256": "d3a1400d9f11e5913c27d58363344ec58fb4d70c73d2716c67b5df010de0825f",
+      "symbols": []
+    },
+    {
+      "path": "docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md",
+      "sha256": "9a688aa35df347ce7c9cf4e24e212c7e07f83dc761bc0b980b5f30576a13ca4b",
+      "symbols": []
+    },
+    {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战精确规则包_v0.2.md",
+      "sha256": "3886580f1785d4545b02d76ca81ce449577ba406cf1d829efb8b5d4f4e55d368",
+      "symbols": []
+    }
+  ],
+  "capability_items": [
+    {"id":"S5D-01","capability":"same_call_stage5c_recompute","layer":"bounded_complete_replay","status":"ACCEPTED_BOUNDED_SLICE","limitation":"Exact preregistered ENTER/BUY case only."},
+    {"id":"S5D-02","capability":"source_driven_buy_trade","layer":"bounded_complete_replay","status":"ACCEPTED_BOUNDED_SLICE","limitation":"Ordinary synthetic security and exact rules only."},
+    {"id":"S5D-03","capability":"buy_cash_and_security_settlement","layer":"bounded_complete_replay","status":"ACCEPTED_BOUNDED_SLICE","limitation":"No special settlement exception."},
+    {"id":"S5D-04","capability":"security_sellability_transition","layer":"bounded_complete_replay","status":"ACCEPTED_BOUNDED_SLICE","limitation":"Exact ordinary synthetic settlement terms only."},
+    {"id":"S5D-05","capability":"fixed_enter_buy_mark_nav_pnl","layer":"bounded_complete_replay","status":"ACCEPTED_BOUNDED_SLICE","limitation":"One fixed mark, security, account, and horizon."},
+    {"id":"S5D-06","capability":"fixed_enter_buy_complete_audit_replay","layer":"bounded_complete_replay","status":"ACCEPTED_BOUNDED_SLICE","limitation":"Not a general historical batch replay."},
+    {"id":"S5D-07","capability":"sell_continuation_opening_attribution","layer":"source_driven_ledger","status":"ACCEPTED_LEDGER_ONLY","limitation":"Not connected to bounded complete replay."},
+    {"id":"S5D-08","capability":"sell_fifo_trade_cost_components","layer":"source_driven_ledger","status":"ACCEPTED_LEDGER_ONLY","limitation":"No complete realized and unrealized P&L matrix."},
+    {"id":"S5D-09","capability":"sell_cash_settlement_availability","layer":"source_driven_ledger","status":"ACCEPTED_LEDGER_ONLY","limitation":"No complete valuation or replay."},
+    {"id":"S5D-10","capability":"explicit_rejected_no_fill_source_replay","layer":"source_driven_ledger","status":"ACCEPTED_LEDGER_ONLY","limitation":"Bounded complete case is not generalized."},
+    {"id":"S5D-11","capability":"generalized_sell_exit_complete_replay","layer":"complete_replay","status":"NOT_IMPLEMENTED","limitation":"Cannot yet produce a Stage 6 completed trade."},
+    {"id":"S5D-12","capability":"multi_session_20_60_120_marks_nav","layer":"valuation","status":"NOT_IMPLEMENTED","limitation":"Only one fixed beginning and ending valuation exists."},
+    {"id":"S5D-13","capability":"nonempty_corporate_actions","layer":"complete_replay","status":"FAILS_CLOSED","limitation":"Dividend, distribution, split, rights, and delisting are not implemented."},
+    {"id":"S5D-14","capability":"nonempty_external_cash_flows","layer":"complete_replay","status":"FAILS_CLOSED","limitation":"No deposit or withdrawal P&L neutralization."},
+    {"id":"S5D-15","capability":"special_settlement_exceptions","layer":"settlement","status":"FAILS_CLOSED","limitation":"Must not be inferred from ordinary settlement."},
+    {"id":"S5D-16","capability":"generalized_mark_stale_correction_matrix","layer":"valuation","status":"FAILS_CLOSED","limitation":"Fixed-mark controls are not a general mark engine."},
+    {"id":"S5D-17","capability":"multi_security_peer_portfolio_complete_replay","layer":"complete_replay","status":"NOT_IMPLEMENTED","limitation":"Formal peer return and NAV remain unavailable."},
+    {"id":"S5D-18","capability":"durable_stage5d_persistence","layer":"persistence","status":"NOT_IMPLEMENTED","limitation":"Pure in-memory only; migration remains unauthorized."},
+    {"id":"S5D-19","capability":"real_candidate_total_and_annual_coverage","layer":"future_candidate_census","status":"NOT_EVALUABLE_WITHOUT_HISTORICAL_CANDIDATES","limitation":"No frozen candidate denominator was read."},
+    {"id":"S5D-20","capability":"real_completed_trade_count","layer":"future_candidate_census","status":"NOT_EVALUABLE_WITHOUT_HISTORICAL_CANDIDATES","limitation":"No candidate execution or outcome was read."}
+  ],
+  "real_candidate_metrics": {
+    "candidate_denominator": null,
+    "aggregate_coverage": null,
+    "annual_coverage": null,
+    "selection_smd": null,
+    "categorical_gap": null,
+    "material_category_coverage": null,
+    "completed_trades": null,
+    "completed_trades_by_fold": null
+  },
+  "future_candidate_census_contract": {
+    "grain": "candidate_id x economic_event_id x listed_company_id x decision_time",
+    "candidate_statuses": ["SUPPORTED", "UNSUPPORTED", "INDETERMINATE", "PRECHECK_BLOCKED"],
+    "summary_statuses": ["COVERAGE_READY", "INSUFFICIENT_EVIDENCE", "PRECHECK_BLOCKED"],
+    "support_reason_codes": [
+      "HISTORICAL_INPUT_JOIN_INCOMPLETE",
+      "CALENDAR_MARKET_RULE_SECURITY_STATE_UNSUPPORTED",
+      "ENTRY_OR_NO_FILL_EXECUTION_UNSUPPORTED",
+      "LIFECYCLE_LEDGER_UNSUPPORTED",
+      "MARK_COVERAGE_UNSUPPORTED",
+      "VALUATION_PNL_UNSUPPORTED",
+      "CORPORATE_ACTION_PROFILE_UNSUPPORTED",
+      "EXTERNAL_FLOW_PROFILE_UNSUPPORTED",
+      "SPECIAL_SETTLEMENT_PROFILE_UNSUPPORTED",
+      "FRACTIONAL_ENTITLEMENT_PROFILE_UNSUPPORTED",
+      "COST_IMPACT_CAPACITY_PROFILE_UNSUPPORTED",
+      "BENCHMARK_COMPONENT_PROFILE_UNSUPPORTED"
+    ],
+    "precheck_reason_codes": [
+      "CANDIDATE_INVENTORY_IDENTITY_MISMATCH",
+      "CANDIDATE_RESEARCH_UNIT_DUPLICATE",
+      "SUPPORT_PROFILE_IDENTITY_MISMATCH",
+      "PIT_UPPER_BOUND_UNPROVEN",
+      "OUTCOME_FIELD_PRESENT",
+      "HOLDOUT_CONTENT_PRESENT",
+      "CENSUS_RECOMPUTATION_MISMATCH"
+    ],
+    "forbidden_outcome_fields": [
+      "future_return",
+      "benchmark_return",
+      "excess_return",
+      "nav",
+      "pnl",
+      "contribution",
+      "winner_label",
+      "realized_pnl",
+      "unrealized_pnl",
+      "actual_exit_price",
+      "actual_exit_type",
+      "completed_trade_flag",
+      "champion_status",
+      "p_value",
+      "holm_result",
+      "holdout_payload"
+    ],
+    "support_flags_freeze_before_outcomes": true,
+    "reject_abstain_blocked_no_fill_delisted_remain_in_denominator": true,
+    "indeterminate_counts_as_unsupported": true
+  },
+  "recommended_next_slice": {
+    "name": "minimal_ordinary_enter_buy_to_full_exit_sell_complete_replay",
+    "requires_preregistration": true,
+    "scope": [
+      "single_security_single_account",
+      "ordinary_market_rules_and_settlement",
+      "no_corporate_actions",
+      "no_external_cash_flows",
+      "no_special_settlement",
+      "full_exit_only",
+      "holding_period_daily_marks",
+      "source_driven_realized_unrealized_pnl",
+      "complete_and_audit_replay"
+    ]
+  }
+}
