@@ -20,14 +20,14 @@
 ## 2. 固定 Golden
 
 - comparison：`full_vs_market_or_industry_matched`
-- inference case hash：`7bf31962d8757fe1a1351fa40cd32b1c7ba884bd08ec9036c12156722b6ebd9e`
-- inference replay hash：`49306ecc9b78b4d3e33da72b843773bf3562f9556837a7e9252e645fff24866a`
+- inference case hash：`25136fff3428ba65b91c3bfbc2168b5da153c9ce248f1ad7a33d285adb479e93`
+- inference replay hash：`c4c4613600faa44418767c11fbb0eef47b58c9e20268e4f5ef3b7260047f3b4b`
 - calendar raw p-value：`0.0000999900009999000099990000999900009999000099990001`
-- company CI lower：`0.00068`
-- risk CI lower：`0.0006`
+- company CI lower：`0.00045`
+- risk CI lower：`0.0004`
 - Holm status：`ADJUSTED_INFERENCE_READY`
 - 每项 adjusted p-value：`0.0004999500049995000499950004999500049995000499950005`
-- Holm replay hash：`807c717389f5d8540a2577dd87605c09b1c33851bc3288418fef17f72fc0a643`
+- Holm replay hash：`ce0c8738247012be2ae9f13ab7898c78a2a4467d648c703bd8b013979304b383`
 
 这些数字只验证匿名合成 resampling/Holm 公式，不是任何真实 Alpha 或显著性证据。
 

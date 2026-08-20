@@ -76,12 +76,40 @@ def _sources(
     return capability, inventory, folds, coverage, twr_case, twr_result
 
 
+def _comparison_twr_sources(
+    capability: ApprovedRuleCapability, *, factor: int = 2
+) -> tuple[
+    tuple[Stage6CSyntheticKernelCase, ...],
+    tuple[Stage6CSyntheticKernelResult, ...],
+]:
+    base = _base_twr_case(nav_points=_constant_factor_nav_points(factor=factor))
+    cases = tuple(
+        Stage6CSyntheticKernelCase.create(
+            case_id=f"stage6c_twr_{comparison_id.value}",
+            projection=base.projection,
+            holdout_commitment=base.holdout_commitment,
+            isolation_evidence=base.isolation_evidence,
+            nav_points=base.nav_points,
+        )
+        for comparison_id in Stage6CComparisonId
+    )
+    results = tuple(
+        evaluate_stage6c_synthetic_twr_kernel(case, capability=capability) for case in cases
+    )
+    return cases, results
+
+
 def _contributions(
     inventory: Stage6CCandidateInventory,
 ) -> tuple[Stage6CPairedContribution, ...]:
     values: list[Stage6CPairedContribution] = []
     for index, candidate in enumerate(inventory.candidates):
-        contribution = "100" if candidate.disposition.value == "TRADE_READY" else "0"
+        contribution = (
+            "100"
+            if candidate.disposition.value == "TRADE_READY"
+            and candidate.calendar_year in {2022, 2023, 2024, 2025}
+            else "0"
+        )
         values.append(
             Stage6CPairedContribution(
                 candidate_id=candidate.candidate_id,
@@ -103,8 +131,12 @@ def _inference_case(
     twr_case: Stage6CSyntheticKernelCase,
     twr_result: Stage6CSyntheticKernelResult,
     contributions: tuple[Stage6CPairedContribution, ...] | None = None,
-    full_ending_pnl: str = "3200",
+    full_ending_pnl: str | None = None,
 ) -> Stage6CInferenceCase:
+    source_contributions = contributions or _contributions(inventory)
+    ending_pnl = full_ending_pnl or str(
+        sum(Decimal(value.full_net_contribution) for value in source_contributions)
+    )
     return Stage6CInferenceCase.create(
         inference_case_id=f"stage6c_inference_{comparison_id.value}",
         comparison_id=comparison_id,
@@ -114,9 +146,9 @@ def _inference_case(
         twr_case_hash=twr_case.case_hash,
         twr_replay_hash=twr_result.replay_hash,
         fold_beginning_nav="100000",
-        full_ending_pnl=full_ending_pnl,
+        full_ending_pnl=ending_pnl,
         comparator_ending_pnl="0",
-        contributions=contributions or _contributions(inventory),
+        contributions=source_contributions,
     )
 
 
@@ -197,7 +229,7 @@ def test_stage6c_inference_blocks_contribution_reconciliation_drift(
         coverage=coverage,
         twr_case=twr_case,
         twr_result=twr_result,
-        full_ending_pnl="3199",
+        full_ending_pnl="2399",
     )
     result = evaluate_stage6c_synthetic_inference(
         case,
@@ -235,7 +267,7 @@ def test_stage6c_inference_blocks_nontrading_candidate_contribution(
         twr_case=twr_case,
         twr_result=twr_result,
         contributions=tuple(contributions),
-        full_ending_pnl="3201",
+        full_ending_pnl="2401",
     )
     result = evaluate_stage6c_synthetic_inference(
         case,
@@ -255,24 +287,25 @@ def test_stage6c_holm_recomputes_exact_five_case_family_and_passes(
     repository_root: Path,
 ) -> None:
     capability, inventory, folds, coverage, twr_case, twr_result = _sources(repository_root)
+    twr_cases, twr_results = _comparison_twr_sources(capability)
     cases = tuple(
         _inference_case(
             comparison_id,
             inventory=inventory,
             folds=folds,
             coverage=coverage,
-            twr_case=twr_case,
-            twr_result=twr_result,
+            twr_case=twr_cases[index],
+            twr_result=twr_results[index],
         )
-        for comparison_id in Stage6CComparisonId
+        for index, comparison_id in enumerate(Stage6CComparisonId)
     )
     result = evaluate_stage6c_holm_family(
         cases,
         inventory=inventory,
         fold_plans=folds,
         coverage=coverage,
-        twr_case=twr_case,
-        twr_result=twr_result,
+        twr_cases=twr_cases,
+        twr_results=twr_results,
         capability=capability,
     )
 
@@ -296,14 +329,15 @@ def test_stage6c_holm_rejects_incomplete_or_duplicate_family(repository_root: Pa
         twr_case=twr_case,
         twr_result=twr_result,
     )
+    twr_cases, twr_results = _comparison_twr_sources(capability)
     with pytest.raises(ValueError, match="every comparison exactly once"):
         evaluate_stage6c_holm_family(
             (one, one, one, one, one),
             inventory=inventory,
             fold_plans=folds,
             coverage=coverage,
-            twr_case=twr_case,
-            twr_result=twr_result,
+            twr_cases=twr_cases,
+            twr_results=twr_results,
             capability=capability,
         )
 
@@ -314,6 +348,7 @@ def test_stage6c_holm_fails_when_calendar_path_has_no_positive_evidence(
     capability, inventory, folds, coverage, twr_case, twr_result = _sources(
         repository_root, factor=1
     )
+    twr_cases, twr_results = _comparison_twr_sources(capability, factor=1)
     contributions = tuple(
         replace(value, full_net_contribution="0") for value in _contributions(inventory)
     )
@@ -323,20 +358,20 @@ def test_stage6c_holm_fails_when_calendar_path_has_no_positive_evidence(
             inventory=inventory,
             folds=folds,
             coverage=coverage,
-            twr_case=twr_case,
-            twr_result=twr_result,
+            twr_case=twr_cases[index],
+            twr_result=twr_results[index],
             contributions=contributions,
             full_ending_pnl="0",
         )
-        for comparison_id in Stage6CComparisonId
+        for index, comparison_id in enumerate(Stage6CComparisonId)
     )
     result = evaluate_stage6c_holm_family(
         cases,
         inventory=inventory,
         fold_plans=folds,
         coverage=coverage,
-        twr_case=twr_case,
-        twr_result=twr_result,
+        twr_cases=twr_cases,
+        twr_results=twr_results,
         capability=capability,
     )
 
@@ -352,7 +387,18 @@ def test_stage6c_inference_input_drift_changes_replay_identity(
     sources = _evaluate_one(repository_root)
     baseline = sources[-1]
     contributions = list(_contributions(sources[1]))
-    contributions[0] = replace(contributions[0], full_net_contribution="101")
+    evaluation_ids = {
+        candidate_id for fold in sources[2].folds for candidate_id in fold.evaluation_candidate_ids
+    }
+    changed_index = next(
+        index
+        for index, contribution in enumerate(contributions)
+        if contribution.candidate_id in evaluation_ids
+        and contribution.full_net_contribution == "100"
+    )
+    contributions[changed_index] = replace(
+        contributions[changed_index], full_net_contribution="101"
+    )
     changed_case = _inference_case(
         Stage6CComparisonId.FULL_VS_MARKET_OR_INDUSTRY_MATCHED,
         inventory=sources[1],
@@ -361,7 +407,7 @@ def test_stage6c_inference_input_drift_changes_replay_identity(
         twr_case=sources[4],
         twr_result=sources[5],
         contributions=tuple(contributions),
-        full_ending_pnl="3201",
+        full_ending_pnl="2401",
     )
     changed = evaluate_stage6c_synthetic_inference(
         changed_case,

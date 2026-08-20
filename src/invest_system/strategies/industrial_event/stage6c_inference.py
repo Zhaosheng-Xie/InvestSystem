@@ -600,6 +600,9 @@ def evaluate_stage6c_synthetic_inference(
     if case.inventory_hash != inventory.inventory_hash or case.twr_case_hash != twr_case.case_hash:
         reasons.append("CASE_SOURCE_HASH_MISMATCH")
     candidate_by_id = {candidate.candidate_id: candidate for candidate in inventory.candidates}
+    evaluation_candidate_ids = {
+        candidate_id for fold in fold_plans.folds for candidate_id in fold.evaluation_candidate_ids
+    }
     contribution_ids = tuple(value.candidate_id for value in case.contributions)
     if contribution_ids != tuple(sorted(candidate_by_id)):
         reasons.append("CONTRIBUTION_CANDIDATE_SET_MISMATCH")
@@ -609,6 +612,11 @@ def evaluate_stage6c_synthetic_inference(
             continue
         if contribution.listed_company_id != candidate.listed_company_id:
             reasons.append("CONTRIBUTION_COMPANY_MISMATCH")
+        if contribution.candidate_id not in evaluation_candidate_ids and (
+            _decimal(contribution.full_net_contribution) != 0
+            or _decimal(contribution.comparator_net_contribution) != 0
+        ):
+            reasons.append("NON_EVALUATION_CANDIDATE_CONTRIBUTION_NONZERO")
         if candidate.disposition is not Stage6CCandidateDisposition.TRADE_READY and (
             _decimal(contribution.full_net_contribution) != 0
             or _decimal(contribution.comparator_net_contribution) != 0
@@ -690,32 +698,43 @@ def evaluate_stage6c_synthetic_inference(
     return Stage6CInferenceResult(**payload, replay_hash=_hash(payload))
 
 
-def evaluate_stage6c_holm_family(
+def _evaluate_stage6c_holm_family_details(
     cases: tuple[Stage6CInferenceCase, ...],
     *,
     inventory: Stage6CCandidateInventory,
     fold_plans: Stage6CFoldPlanSet,
     coverage: Stage6CCoverageAuditResult,
-    twr_case: Stage6CSyntheticKernelCase,
-    twr_result: Stage6CSyntheticKernelResult,
+    twr_cases: tuple[Stage6CSyntheticKernelCase, ...],
+    twr_results: tuple[Stage6CSyntheticKernelResult, ...],
     capability: ApprovedRuleCapability,
-) -> Stage6CHolmResult:
+) -> tuple[tuple[Stage6CInferenceResult, ...], Stage6CHolmResult]:
     """Recompute five raw cases and apply Holm without trusting caller results."""
 
     require_stage6c_synthetic_capability(capability)
     case_values = tuple(cases)
+    twr_case_values = tuple(twr_cases)
+    twr_result_values = tuple(twr_results)
     expected_ids = tuple(Stage6CComparisonId)
     case_by_id = {case.comparison_id: case for case in case_values}
     if len(case_values) != 5 or set(case_by_id) != set(expected_ids):
         raise ValueError("Holm family must contain every comparison exactly once")
+    if (
+        len(twr_case_values) != 5
+        or len(twr_result_values) != 5
+        or len({value.case_hash for value in twr_case_values}) != 5
+        or len({value.replay_hash for value in twr_result_values}) != 5
+    ):
+        raise ValueError("Holm family requires five distinct TWR sources")
+    twr_case_by_id = dict(zip(expected_ids, twr_case_values, strict=True))
+    twr_result_by_id = dict(zip(expected_ids, twr_result_values, strict=True))
     values = tuple(
         evaluate_stage6c_synthetic_inference(
             case_by_id[comparison_id],
             inventory=inventory,
             fold_plans=fold_plans,
             coverage=coverage,
-            twr_case=twr_case,
-            twr_result=twr_result,
+            twr_case=twr_case_by_id[comparison_id],
+            twr_result=twr_result_by_id[comparison_id],
             capability=capability,
         )
         for comparison_id in expected_ids
@@ -786,7 +805,31 @@ def evaluate_stage6c_holm_family(
         "holdout_artifact_read": False,
         "authority_eligible": False,
     }
-    return Stage6CHolmResult(**payload, replay_hash=_hash(payload))
+    holm = Stage6CHolmResult(**payload, replay_hash=_hash(payload))
+    return values, holm
+
+
+def evaluate_stage6c_holm_family(
+    cases: tuple[Stage6CInferenceCase, ...],
+    *,
+    inventory: Stage6CCandidateInventory,
+    fold_plans: Stage6CFoldPlanSet,
+    coverage: Stage6CCoverageAuditResult,
+    twr_cases: tuple[Stage6CSyntheticKernelCase, ...],
+    twr_results: tuple[Stage6CSyntheticKernelResult, ...],
+    capability: ApprovedRuleCapability,
+) -> Stage6CHolmResult:
+    """Recompute five raw cases and return only the exact Holm result."""
+
+    return _evaluate_stage6c_holm_family_details(
+        cases,
+        inventory=inventory,
+        fold_plans=fold_plans,
+        coverage=coverage,
+        twr_cases=twr_cases,
+        twr_results=twr_results,
+        capability=capability,
+    )[1]
 
 
 __all__ = [
