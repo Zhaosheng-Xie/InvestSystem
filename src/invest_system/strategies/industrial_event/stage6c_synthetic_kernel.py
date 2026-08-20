@@ -648,7 +648,7 @@ class Stage6CSyntheticKernelResult(CanonicalModel):
         }
 
 
-def _require_capability(capability: ApprovedRuleCapability) -> None:
+def require_stage6c_synthetic_capability(capability: ApprovedRuleCapability) -> None:
     if not isinstance(capability, ApprovedRuleCapability):
         raise TypeError("capability must be ApprovedRuleCapability")
     actual = (
@@ -745,7 +745,7 @@ def evaluate_stage6c_synthetic_twr_kernel(
 
     if not isinstance(case, Stage6CSyntheticKernelCase):
         raise TypeError("case must be Stage6CSyntheticKernelCase")
-    _require_capability(capability)
+    require_stage6c_synthetic_capability(capability)
     failure = _failure(case)
     if failure:
         return _build_result(
@@ -793,4 +793,5 @@ __all__ = [
     "Stage6CSyntheticKernelStatus",
     "Stage6DHoldoutCommitment",
     "evaluate_stage6c_synthetic_twr_kernel",
+    "require_stage6c_synthetic_capability",
 ]
