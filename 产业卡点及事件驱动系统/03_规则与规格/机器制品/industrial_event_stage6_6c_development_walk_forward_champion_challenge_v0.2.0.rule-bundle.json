@@ -1,0 +1,908 @@
+{
+  "schema_version": "0.1.0-draft",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage6_6c_development_walk_forward_champion_challenge",
+  "bundle_version": "0.2.0",
+  "declared_status": "approved",
+  "rules": {
+    "exact_upstream_dependencies": {
+      "plan_at_draft_formation": {
+        "path": "PLAN.md",
+        "version": "3.11",
+        "sha256": "b2b330494a90fc3930f26194b976c651af2f2dd738fd4701cb80c35d4193058e"
+      },
+      "industrial_prd": {
+        "path": "产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md",
+        "version": "0.3",
+        "sha256": "0f7e6489ee0c5c17d638534337a73c389e70794cf41b821eec7cc92a242c6b03"
+      },
+      "stage6a_approved_bundle": {
+        "path": "产业卡点及事件驱动系统/03_规则与规格/机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0.rule-bundle.json",
+        "raw_sha256": "4d933c04b341e454009f49ed9e912d22d4b62878473e02e47ebf51e956cdabee"
+      },
+      "stage6a_approval_record": {
+        "path": "产业卡点及事件驱动系统/03_规则与规格/机器制品/industrial_event_stage6_6a_historical_validation_preregistration_v0.1.0.approval.json",
+        "raw_sha256": "b5cae6779ab50a153f8aef37017f8ff3a59caa3f05642f169833edd04e0dedeb"
+      },
+      "stage6a_acceptance": {
+        "path": "docs/validation/stage6a-historical-validation-governance-acceptance.md",
+        "sha256": "7a7dfa423714e9849a44f2bf08200b1beccd5741c4612d75ca66cd6ea8647919"
+      },
+      "stage6b_approved_bundle": {
+        "path": "产业卡点及事件驱动系统/03_规则与规格/机器制品/industrial_event_stage6_6b_historical_admission_atomic_retention_v0.1.0.rule-bundle.json",
+        "raw_sha256": "c39d06fc822beeec1a78627c67c7ecb82909cf6f3a279786052f74013ebc06a8"
+      },
+      "stage6b_approval_record": {
+        "path": "产业卡点及事件驱动系统/03_规则与规格/机器制品/industrial_event_stage6_6b_historical_admission_atomic_retention_v0.1.0.approval.json",
+        "raw_sha256": "a1a28288a13245ad7cd420033a6a11f64906c97498b8451a0fe07675d6abbc3d"
+      },
+      "stage6b_offline_acceptance": {
+        "path": "docs/validation/stage6b-historical-admission-offline-acceptance.md",
+        "sha256": "3cccfbf040cf797263452c41129e92e1c99646c779ef387538d44af2314fbcba"
+      },
+      "stage6b_live_acceptance": {
+        "path": "docs/validation/stage6b-live-https-acceptance.md",
+        "sha256": "5ddb28f76a4a9304b39131be0adda7650d22fa901e264ab0c392bbd691dbed0a"
+      },
+      "stage5d_preregistration": {
+        "path": "docs/validation/stage5d-first-order-contract-replay-preregistration.md",
+        "sha256": "bd9e2f1d42fc42e308558136a7dd55967a2eba86561035fb0a9b38bb09c7680b"
+      },
+      "stage5d_acceptance": {
+        "path": "docs/validation/stage5d-first-order-contract-replay-acceptance.md",
+        "sha256": "d3a1400d9f11e5913c27d58363344ec58fb4d70c73d2716c67b5df010de0825f"
+      },
+      "stage5d_implementation_baseline": {
+        "commit_algorithm": "git-sha1",
+        "commit": "caf1e6702e2653e61c668508d32eb4f7c8f27783"
+      },
+      "kb_transport_snapshot": {
+        "path": "contracts/providers/investment_research_kb/stage6b-transport-v1/snapshot-lock.json",
+        "sha256": "02e0505f727552f7632eee807fedd27e6ce6d8dbde05f4482e99641f42b91169",
+        "source_commit": "aab36fe229104779b50ec71e2dc37a9fad81d285"
+      }
+    },
+    "phase_and_scope": {
+      "phase": "6C",
+      "development_and_walk_forward_only": true,
+      "holdout_phase": "6D",
+      "stage6_final_result_not_issued": true,
+      "approved_first_implementation_if_authorized": "anonymous_synthetic_candidate_fold_statistics_replay_kernel",
+      "formal_execution_requires_separate_owner_authorization": true,
+      "strategy_or_trading_authority": false
+    },
+    "formal_execution_preconditions": {
+      "owner_approved_complete_preregistration_without_pending_fields": true,
+      "formal_historical_run_admission_seal_required": true,
+      "stage6b_validation_only_seal_is_not_formal_run_authority": true,
+      "historical_data_readiness_receipt_required": true,
+      "stage5d_support_for_primary_horizon_and_complete_closed_trades_required": true,
+      "holdout_non_access_evidence_required": true,
+      "missing_precondition_result": [
+        "PRECHECK_BLOCKED",
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "missing_precondition_strategy_evaluator_calls": 0
+    },
+    "temporal_preregistration": {
+      "timezone": "Asia/Shanghai",
+      "canonical_instant_timezone": "UTC",
+      "interval_semantics": "LEFT_CLOSED_RIGHT_OPEN",
+      "population": {
+        "start_inclusive": "2018-12-31T16:00:00.000000Z",
+        "end_exclusive": "2026-07-28T16:00:00.000000Z",
+        "knowledge_cutoff_inclusive_cap": "2026-07-28T14:13:31.303929Z"
+      },
+      "development": {
+        "start_inclusive_local_date": "2019-01-01",
+        "end_exclusive_local_date": "2022-01-01"
+      },
+      "walk_forward_evaluation_folds": [
+        {
+          "fold_id": "WF-2022",
+          "start_inclusive_local_date": "2022-01-01",
+          "end_exclusive_local_date": "2023-01-01"
+        },
+        {
+          "fold_id": "WF-2023",
+          "start_inclusive_local_date": "2023-01-01",
+          "end_exclusive_local_date": "2024-01-01"
+        },
+        {
+          "fold_id": "WF-2024",
+          "start_inclusive_local_date": "2024-01-01",
+          "end_exclusive_local_date": "2025-01-01"
+        },
+        {
+          "fold_id": "WF-2025",
+          "start_inclusive_local_date": "2025-01-01",
+          "end_exclusive_local_date": "2026-01-01"
+        }
+      ],
+      "frozen_holdout": {
+        "start_inclusive_local_date": "2026-01-01",
+        "end_exclusive_local_date": "2026-07-29",
+        "identity_only_in_6c": true,
+        "result_count_summary_or_performance_read_forbidden": true,
+        "technical_isolation_profile": "Stage6DHoldoutCommitment_v0.2"
+      },
+      "primary_horizon_trading_sessions": 60,
+      "secondary_exploratory_horizons_trading_sessions": [
+        20,
+        120
+      ],
+      "maximum_purge_trading_sessions": 120,
+      "embargo_trading_sessions": 20,
+      "training_label_end_before_evaluation_start_required": true,
+      "caller_selected_training_ids_forbidden": true
+    },
+    "candidate_and_pit": {
+      "research_unit": "economic_event_id_x_listed_company_id_x_decision_time",
+      "candidate_inventory_frozen_before_strategy_gates": true,
+      "candidate_statuses_retained": [
+        "TRADE_READY",
+        "SHADOW_ONLY",
+        "REJECT",
+        "ABSTAIN",
+        "BLOCKED",
+        "NO_FILL"
+      ],
+      "delisted_rejected_and_failed_candidates_retained": true,
+      "duplicate_materials_or_same_economic_event_not_independent": true,
+      "pit_predicate": "effective_at<=decision_time and available_at<=decision_time and decision_time<=knowledge_cutoff",
+      "current_context_snapshot_backfill_forbidden": true
+    },
+    "data_readiness_and_support": {
+      "historical_data_readiness_report_required_before_performance_read": true,
+      "report_content_addressed": true,
+      "report_includes_candidate_ids_not_only_counts": true,
+      "required_coverage_dimensions": [
+        "release_manifest_schema",
+        "pit_history",
+        "trading_calendar",
+        "market_rules",
+        "benchmark",
+        "marks",
+        "exit_and_sell",
+        "corporate_actions",
+        "external_cash_flows",
+        "settlement"
+      ],
+      "stage5d_support_matrix_bound_to_exact_implementation": true,
+      "current_bounded_stage5d_profile_satisfies_formal_6c": false,
+      "support_expansion_requires_new_stage5d_acceptance_and_preregistration": true,
+      "unsupported_result": [
+        "ABSTAIN",
+        "BLOCKED"
+      ],
+      "partial_nav_or_pnl_forbidden": true,
+      "unsupported_in_coverage_denominator": true,
+      "aggregate_coverage_gte": "0.80",
+      "each_walk_forward_year_coverage_gte": "0.70",
+      "coverage_failure_result": "INSUFFICIENT_EVIDENCE",
+      "coverage_selection_audit_required": true
+    },
+    "sample_sufficiency": {
+      "minimum_independent_executable_completed_reconciled_trades": 30,
+      "minimum_per_walk_forward_fold": 5,
+      "subgroup_confirmatory_minimum": 15,
+      "subgroup_below_minimum": "DESCRIPTIVE_ONLY",
+      "abstain_blocked_and_no_fill_are_not_zero_return_trades": true,
+      "insufficient_sample_result": "INSUFFICIENT_EVIDENCE"
+    },
+    "competition_models": {
+      "closed_world": [
+        "no_trade",
+        "market_or_industry_matched",
+        "simple_e4_only",
+        "simple_valuation_threshold",
+        "full_system"
+      ],
+      "statistical_null": "H0_no_independent_alpha",
+      "exact_model_semantics": {
+        "no_trade": "cash_only_zero_risk_asset_target",
+        "market_or_industry_matched": {
+          "pit_dimensions": [
+            "level_1_industry",
+            "float_market_cap_quintile",
+            "prior_120_legal_session_beta_quintile"
+          ],
+          "target_company_excluded": true,
+          "minimum_peers": 5,
+          "weighting": "equal_risk_budget",
+          "fallback_order": [
+            "same_industry_size_beta",
+            "same_size_beta_all_a_share",
+            "same_size_all_a_share"
+          ],
+          "fallback_level_recorded": true
+        },
+        "simple_e4_only": "approved_e4_public_plus_shared_execution_risk_and_fixed_60_session_exit",
+        "simple_valuation_threshold": "approved_e4_public_plus_preexisting_approved_valuation_odds_gate_plus_shared_execution_risk_and_fixed_60_session_exit",
+        "full_system": "preexisting_approved_e0_e7_gates_profit_bridge_valuation_execution_and_risk_chain"
+      },
+      "shared_candidate_pit_horizon_execution_cost_capacity_risk_and_clock": true,
+      "best_simple_candidates": [
+        "market_or_industry_matched",
+        "simple_e4_only",
+        "simple_valuation_threshold"
+      ],
+      "full_system_uses_single_preexisting_approved_configuration": true,
+      "stage6c_business_rule_threshold_search_forbidden": true,
+      "best_simple_selection": {
+        "selection_data": "development_2019_2021_only",
+        "selection_metric": "primary_estimator",
+        "frozen_before_any_walk_forward_summary_read": true,
+        "tie_break_low_to_high_complexity": [
+          "market_or_industry_matched",
+          "simple_e4_only",
+          "simple_valuation_threshold"
+        ],
+        "same_frozen_identity_for_all_walk_forward_folds": true,
+        "per_fold_or_post_hoc_reselection_forbidden": true
+      }
+    },
+    "execution_and_golden": {
+      "golden_before_bulk_performance_read": true,
+      "required": [
+        "stage2b_stage4_stage5_regression",
+        "exact_stage5d_supported_profile_golden",
+        "future_information_and_revision_backfill_failure",
+        "withdrawal_failure",
+        "duplicate_candidate_failure",
+        "unexecutable_failure",
+        "cost_failure",
+        "mark_missing_or_conflict_failure",
+        "input_order_metamorphic_replay",
+        "same_identity_repeat_determinism"
+      ],
+      "golden_failure_bulk_evaluator_calls": 0
+    },
+    "metrics_and_entry_gates": {
+      "primary_estimator": {
+        "external_cash_flow": "0",
+        "cash_return": "0",
+        "daily_strategy_return": "NAV_t/NAV_t_minus_1-1",
+        "daily_benchmark_return": "benchmark_NAV_t/benchmark_NAV_t_minus_1-1",
+        "daily_excess_factor": "(1+strategy_return_t)/(1+benchmark_return_t)",
+        "gross_excess_factor": "product(all_daily_excess_factors)",
+        "annualized_net_excess_percentage_points": "(gross_excess_factor**(252/N)-1)*100",
+        "annualization_sessions": 252,
+        "minimum_fold_sessions_for_confirmatory_entry": 126,
+        "n_is_complete_pinned_legal_trading_session_count": true,
+        "nonpositive_nav_zero_denominator_calendar_mismatch_or_missing_day_result": "RECONCILIATION_BLOCKED",
+        "cash_only_days_retained": true,
+        "full_precision_determines_gates": true,
+        "benchmark_nav": {
+          "uses_v0_1_pit_peer_matched_fallback": true,
+          "same_entry_time_cash_occupancy_risk_budget_and_exit_clock": true,
+          "same_fee_tax_slippage_impact_capacity_and_unexecutable_constraints": true,
+          "rebalance_only_on_target_establishment_quantity_change_or_exit": true,
+          "benchmark_security_stage5d_support_required": true,
+          "unsupported_benchmark_candidate_remains_in_coverage_denominator": true,
+          "frictionless_index_substitution_forbidden": true
+        }
+      },
+      "required_metrics": [
+        "absolute_return",
+        "benchmark_excess_return",
+        "opportunity_contributions",
+        "coverage",
+        "abstain_blocked_no_fill",
+        "fill_rate",
+        "capacity",
+        "maximum_drawdown",
+        "expected_shortfall_95",
+        "largest_winner_share",
+        "company_risk_cluster_period_concentration",
+        "turnover",
+        "cost",
+        "cash_share",
+        "exposure"
+      ],
+      "ready_for_6d_all_required": {
+        "full_system_annualized_net_benchmark_excess_gt": "0",
+        "full_system_cluster_bootstrap_95_ci_lower_gt": "0",
+        "full_vs_best_simple_annualized_net_increment_gte_percentage_points": "2.0",
+        "full_vs_best_simple_95_ci_lower_gt": "0",
+        "positive_walk_forward_folds_gte": 3,
+        "walk_forward_fold_count": 4,
+        "worst_fold_net_excess_gte_percentage_points": "-10.0",
+        "maximum_drawdown_lte": "0.15",
+        "largest_winner_share_of_total_net_profit_lte": "0.25",
+        "nonpositive_total_net_profit_fails_largest_winner_gate": true,
+        "one_point_five_x_friction_net_benchmark_excess_gte": "0",
+        "p0_bias_or_reconciliation_failures": 0,
+        "v0_2_adjusted_and_three_path_inference_gate": true
+      },
+      "unrounded_values_determine_gates": true
+    },
+    "inference_and_multiple_testing": {
+      "adjusted_entry_gate": {
+        "comparisons_requiring_three_inference_paths": [
+          "full_vs_market_or_industry_matched",
+          "full_vs_frozen_best_simple"
+        ],
+        "required_inference_paths": [
+          "calendar_block_portfolio",
+          "company_cluster_sensitivity",
+          "risk_cluster_sensitivity"
+        ],
+        "each_path_two_sided_95_ci_lower_gt": "0",
+        "confirmatory_family": [
+          "full_vs_no_trade",
+          "full_vs_market_or_industry_matched",
+          "full_vs_simple_e4_only",
+          "full_vs_simple_valuation_threshold",
+          "full_vs_frozen_best_simple_material_increment"
+        ],
+        "holm_bonferroni_family_wise_alpha": "0.05",
+        "every_adjusted_p_value_lte": "0.05",
+        "raw_ci_without_adjusted_and_sensitivity_pass_cannot_enter_6d": true,
+        "required_inference_trail": [
+          "raw_ci",
+          "raw_p_value",
+          "holm_sort_order",
+          "holm_threshold",
+          "adjusted_p_value",
+          "reject_or_not_reject"
+        ]
+      },
+      "portfolio_fact_and_bootstrap": {
+        "canonical_source_driven_portfolio_fact": {
+          "recompute_from_raw_candidates_rules_execution_risk_ledger_and_marks": true,
+          "caller_supplied_return_nav_contribution_or_pass_trusted": false,
+          "required_outputs": [
+            "canonical_daily_nav",
+            "canonical_daily_benchmark_nav",
+            "reconciled_opportunity_contributions"
+          ],
+          "contribution_reconciliation": "sum(contributions)==ending_nav-beginning_nav-external_flow",
+          "external_flow_required": "0",
+          "nonzero_external_flow_result": "PRECHECK_BLOCKED"
+        },
+        "primary_calendar_block_bootstrap": {
+          "input": "canonical_daily_excess_return",
+          "block": "complete_pinned_trading_sessions_within_natural_calendar_quarter",
+          "sample_blocks_with_replacement": true,
+          "preserve_within_block_order": true,
+          "concatenate_until_original_session_count_and_deterministically_truncate_last": true,
+          "opportunity_contributions_resampled_or_summed_as_portfolio_nav": false,
+          "creates_new_ledger_or_historical_fact": false,
+          "resamples": 10000,
+          "seed": 20260820,
+          "sampled_block_ids_and_statistics_persisted": true
+        },
+        "company_cluster_sensitivity": {
+          "input": "reconciled_opportunity_contributions",
+          "paired_delta_rate": "(full_net_contribution_i-comparator_net_contribution_i)/fold_beginning_nav",
+          "non_trading_model_contribution": "0_candidate_retained",
+          "estimator": "mean(paired_delta_rate_over_all_frozen_candidates)",
+          "cluster_key": "listed_company_id",
+          "algorithm": "RADEMACHER_CLUSTER_WILD_BOOTSTRAP",
+          "residual": "paired_delta_rate_i-mean_paired_delta_rate",
+          "draw": "mean_paired_delta_rate+mean(cluster_multiplier_i*residual_i)",
+          "ci": "two_sided_percentile_95",
+          "null_p_value_draw": "mean(cluster_multiplier_i*residual_i)",
+          "one_multiplier_per_cluster": true,
+          "resamples": 10000,
+          "seed": 20260821
+        },
+        "risk_cluster_sensitivity": {
+          "input": "reconciled_opportunity_contributions",
+          "paired_delta_rate": "(full_net_contribution_i-comparator_net_contribution_i)/fold_beginning_nav",
+          "non_trading_model_contribution": "0_candidate_retained",
+          "estimator": "mean(paired_delta_rate_over_all_frozen_candidates)",
+          "cluster_key": "risk_cluster_id",
+          "algorithm": "RADEMACHER_CLUSTER_WILD_BOOTSTRAP",
+          "residual": "paired_delta_rate_i-mean_paired_delta_rate",
+          "draw": "mean_paired_delta_rate+mean(cluster_multiplier_i*residual_i)",
+          "ci": "two_sided_percentile_95",
+          "null_p_value_draw": "mean(cluster_multiplier_i*residual_i)",
+          "one_multiplier_per_cluster": true,
+          "resamples": 10000,
+          "seed": 20260822
+        },
+        "sensitivity_does_not_replace_primary_portfolio_estimator": true,
+        "contribution_drift_result": "RECONCILIATION_BLOCKED"
+      }
+    },
+    "ablation_and_stress": {
+      "ablation_is_diagnostic_not_champion_search": true,
+      "ablation_layers": [
+        "event_semantics",
+        "industry_company_mapping",
+        "gates",
+        "profit_bridge",
+        "valuation",
+        "exit",
+        "portfolio_risk",
+        "execution"
+      ],
+      "friction_multipliers": [
+        "1.0",
+        "1.5",
+        "2.0"
+      ],
+      "delay_trading_sessions": [
+        0,
+        1,
+        2
+      ],
+      "starting_nav_cny_primary": "100000",
+      "starting_nav_cny_capacity_stress": "300000",
+      "capacity_stress_does_not_change_risk_percentages": true,
+      "unexecutable_scenarios": [
+        "gap",
+        "suspension",
+        "price_limit",
+        "no_opposing_liquidity",
+        "half_capacity"
+      ],
+      "mark_scenarios": [
+        "missing",
+        "stale",
+        "same_time_conflict"
+      ],
+      "post_hoc_favorable_scenario_selection_forbidden": true
+    },
+    "retention_and_replay": {
+      "append_only": true,
+      "failed_run_cannot_be_overwritten_by_success": true,
+      "each_fold_atomic_artifacts": [
+        "formal_admission_seal_ref",
+        "preregistration",
+        "candidate_inventory",
+        "support_matrix",
+        "golden_receipt",
+        "model_inputs_outputs",
+        "opportunity_contributions",
+        "journal_nav_pnl",
+        "experiment_ledger",
+        "stress_and_ablation",
+        "statistics",
+        "failures",
+        "run_manifest"
+      ],
+      "replay_identity_fields": [
+        "formal_admission_seal_hash",
+        "preregistration_hash",
+        "candidate_inventory_hash",
+        "support_matrix_hash",
+        "rules_code_config_runtime_lock",
+        "calendar_benchmark_market_rule_identities",
+        "model_id",
+        "fold_id",
+        "random_seed",
+        "canonical_outputs"
+      ],
+      "dynamic_network_meta_in_deterministic_identity": false,
+      "unregistered_parameter_search_forbidden": true,
+      "exploratory_experiment_requires_pre_run_id_and_parent": true,
+      "exploratory_result_may_enter_current_champion": false
+    },
+    "phase_outcome_and_handoff": {
+      "closed_world": [
+        "READY_FOR_6D_FREEZE",
+        "REVISE_NEW_PREREGISTRATION",
+        "INSUFFICIENT_EVIDENCE",
+        "PRECHECK_BLOCKED",
+        "AUDIT_REPLAY_ONLY"
+      ],
+      "ready_for_6d_is_not_stage6_final_pass": true,
+      "ready_for_6d_is_not_runtime_or_trading_authority": true,
+      "six_d_accepts_exactly_one_frozen_champion": true,
+      "six_d_requires_complete_6c_seal_set": true,
+      "six_d_requires_unopened_holdout_identity": true,
+      "post_6c_load_bearing_change_invalidates_handoff": true
+    },
+    "authorization_boundary": {
+      "approval_scope": "stage6_development_walk_forward_validation",
+      "allowed_run_modes": [],
+      "validation_capability_issued": true,
+      "authorizes_implementation": true,
+      "authorizes_synthetic_kernel_validation": true,
+      "authorizes_formal_historical_admission": false,
+      "authorizes_formal_development_run": false,
+      "authorizes_walk_forward_run": false,
+      "authorizes_holdout_commitment_read": false,
+      "authorizes_holdout_artifact_read": false,
+      "authorizes_holdout_open": false,
+      "authorizes_stage6_final_pass": false,
+      "authorizes_formal_state_migration": false,
+      "authorizes_backtest": false,
+      "authorizes_paper": false,
+      "authorizes_shadow": false,
+      "authorizes_live": false,
+      "authorizes_positions": false,
+      "authorizes_orders": false,
+      "authorizes_broker_connection": false,
+      "authorizes_kb_internal_reads": false,
+      "authorizes_kb_writes": false,
+      "authorizes_funds_deployment": false,
+      "authority_eligible": false
+    },
+    "batch": {
+      "stage": "Stage 6",
+      "batch_id": "6C-v0.2",
+      "purpose": "approved_anonymous_synthetic_walk_forward_kernel_validation",
+      "owner_approval_required": true,
+      "approval_items_required": 40,
+      "approved_items": 40,
+      "approved_machine_bundle_exists": true,
+      "approval_record_exists": true,
+      "validation_capability_verifier_exists": true,
+      "runtime_code_exists": false,
+      "formal_historical_run_exists": false,
+      "walk_forward_results_exist": false,
+      "holdout_has_been_opened": false
+    },
+    "approval_source_binding": {
+      "specification_path": "产业卡点及事件驱动系统/03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战精确规则包_v0.2.md",
+      "specification_raw_sha256": "3886580f1785d4545b02d76ca81ce449577ba406cf1d829efb8b5d4f4e55d368",
+      "draft_proposal_path": "产业卡点及事件驱动系统/03_规则与规格/机器制品/industrial_event_stage6_6c_development_walk_forward_champion_challenge_v0.2.0-draft.rule-bundle.json",
+      "draft_raw_sha256": "6f2663feb8b8cef5fd969d2791d2505b82e31ff42071872df0350c2196007afd",
+      "draft_bundle_sha256": "a45396cde1e23ab6c05ea03111cf9f72044031a57d6a91dce554e15d6979a72c",
+      "draft_rules_sha256": "c64f2b6057355c5e0bca9d597c01ed9f39ae0fd483ee469de86f7c964d8879c8",
+      "draft_owner_items_sha256": "7e3eee1c02a8d16e27ec3180379d221302ff3ca1741bb43300f145063f910bd6",
+      "v0_1_specification_sha256": "bcf77c5608eb09fd3e591f0bd92a3e0e71a27c42c18123e26e98080db9609383",
+      "v0_1_draft_raw_sha256": "03e6717ab0de1b2c595e46b7a2a25c5cd3947ba9942a6e939f21636ce114e881",
+      "accepted_rule_source": "exact_v0_1_rules_plus_exact_v0_2_replacements",
+      "complete_rules_materialized": true,
+      "runtime_delta_or_markdown_merge_forbidden": true,
+      "source_files_remain_immutable": true
+    },
+    "document_binding": {
+      "path": "产业卡点及事件驱动系统/03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战批准记录_v0.2.md",
+      "hash": {
+        "algorithm": "sha256",
+        "value": "d68c6dca0963469e1a0f06e030f3400a534653b372b5a78c229170577c5d653f"
+      },
+      "traceability_only": true
+    },
+    "phase_authority": {
+      "6A": "approved_governance_only",
+      "6B": "completed_with_scope_limits_validation_only",
+      "6C_rules": "approved",
+      "6C_synthetic_kernel": "authorized_for_implementation_and_validation",
+      "6C_formal_execution": "not_authorized",
+      "6D": "not_authorized",
+      "formal_state_migration": "not_authorized",
+      "approval_or_completion_is_not_transitive": true,
+      "next_allowed_action": "implement_and_accept_anonymous_synthetic_stage6c_kernel"
+    },
+    "holdout_technical_isolation": {
+      "development_projection": {
+        "type": "Stage6CDevelopmentProjection",
+        "decision_time_strictly_before": "2025-12-31T16:00:00.000000Z",
+        "binds_source_release_closure_hash": true,
+        "binds_projection_rule_version_code_config_and_hash": true,
+        "contains_holdout_records": false,
+        "contains_holdout_count_summary_schema_cardinality_or_performance_proxy": false,
+        "generated_by_independent_custodian_before_6c_runtime": true
+      },
+      "holdout_commitment": {
+        "type": "Stage6DHoldoutCommitment",
+        "fields": [
+          "holdout_start_inclusive",
+          "holdout_end_exclusive_and_knowledge_cutoff_cap",
+          "source_release_closure_hash",
+          "opaque_holdout_artifact_commitment",
+          "custodian_identity",
+          "generation_code_hash",
+          "generation_config_hash",
+          "sealed_at",
+          "commitment_hash"
+        ],
+        "record_count_candidate_ids_returns_status_distribution_coverage_or_size_forbidden": true,
+        "allows_6c_artifact_read": false
+      },
+      "access_control": {
+        "separate_cas_namespace_or_immutable_package": true,
+        "different_os_acl_or_read_only_credential": true,
+        "six_c_process_user_container_workdir_cache_and_token_have_no_read_access": true,
+        "holdout_mount_copy_symlink_or_junction_into_6c_forbidden": true,
+        "mixed_pre_2026_and_holdout_artifact_requires_custodian_projection": true,
+        "non_sensitive_holdout_canary_read_must_be_denied": true,
+        "holdout_audit_read_count": 0,
+        "any_failure_result": "PRECHECK_BLOCKED",
+        "any_failure_evaluator_calls": 0
+      },
+      "six_d_unlock": {
+        "independent_capability_required": true,
+        "different_credential_required": true,
+        "owner_explicit_approval_required": true
+      },
+      "evidence_label": "LOCKED_HISTORICAL_HOLDOUT_NOT_STRICTLY_UNKNOWN_SAMPLE",
+      "true_unknown_evidence_stage": "STAGE_7"
+    },
+    "coverage_selection_audit": {
+      "frozen_before_any_return_label_or_performance_summary_read": true,
+      "support_flag_outcome_blind": true,
+      "allowed_predecision_features": [
+        "calendar_year",
+        "level_1_industry",
+        "event_type",
+        "e4_state",
+        "float_market_cap",
+        "prior_20_session_adv",
+        "prior_120_session_beta",
+        "suspension_or_price_limit_state",
+        "support_failure_category"
+      ],
+      "future_return_exit_final_corporate_action_or_label_features_forbidden": true,
+      "inherited_quantity_gates": {
+        "aggregate_coverage_gte": "0.80",
+        "each_walk_forward_year_coverage_gte": "0.70"
+      },
+      "continuous_absolute_standardized_mean_difference_lte": {
+        "float_market_cap": "0.10",
+        "prior_20_session_adv": "0.10",
+        "prior_120_session_beta": "0.10"
+      },
+      "categorical_material_category_absolute_proportion_difference_lte": "0.10",
+      "material_category": {
+        "population_share_gte": "0.05",
+        "candidate_count_gte": 15
+      },
+      "each_material_category_coverage_gte": "0.60",
+      "unsupported_count_lt_15": "MANDATORY_CAVEAT_NOT_PROOF_OF_NO_SELECTION_BIAS",
+      "empty_denominator_missing_feature_or_unmatchable_not_silently_skipped": true,
+      "failure_result": "INSUFFICIENT_EVIDENCE",
+      "audit_cannot_prove_unobserved_missingness_absent": true
+    },
+    "exact_primary_estimator_and_benchmark": {
+      "external_cash_flow": "0",
+      "cash_return": "0",
+      "daily_strategy_return": "NAV_t/NAV_t_minus_1-1",
+      "daily_benchmark_return": "benchmark_NAV_t/benchmark_NAV_t_minus_1-1",
+      "daily_excess_factor": "(1+strategy_return_t)/(1+benchmark_return_t)",
+      "gross_excess_factor": "product(all_daily_excess_factors)",
+      "annualized_net_excess_percentage_points": "(gross_excess_factor**(252/N)-1)*100",
+      "annualization_sessions": 252,
+      "minimum_fold_sessions_for_confirmatory_entry": 126,
+      "n_is_complete_pinned_legal_trading_session_count": true,
+      "nonpositive_nav_zero_denominator_calendar_mismatch_or_missing_day_result": "RECONCILIATION_BLOCKED",
+      "cash_only_days_retained": true,
+      "full_precision_determines_gates": true,
+      "benchmark_nav": {
+        "uses_v0_1_pit_peer_matched_fallback": true,
+        "same_entry_time_cash_occupancy_risk_budget_and_exit_clock": true,
+        "same_fee_tax_slippage_impact_capacity_and_unexecutable_constraints": true,
+        "rebalance_only_on_target_establishment_quantity_change_or_exit": true,
+        "benchmark_security_stage5d_support_required": true,
+        "unsupported_benchmark_candidate_remains_in_coverage_denominator": true,
+        "frictionless_index_substitution_forbidden": true
+      }
+    },
+    "minimum_validation_matrix": {
+      "required": [
+        "all_40_pending_items",
+        "append_only_failure_retention",
+        "benchmark_calendar_cost_and_support_reconciliation",
+        "bootstrap_seed_and_block_determinism",
+        "calendar_block_order_and_truncation_determinism",
+        "candidate_inventory_completeness",
+        "categorical_balance_and_material_stratum_boundaries",
+        "commitment_contains_no_count_size_or_performance_proxy",
+        "company_or_risk_sensitivity_fail_rejected",
+        "continuous_smd_boundaries",
+        "contribution_rows_not_summed_as_portfolio_bootstrap",
+        "coverage_quantity_boundaries",
+        "daily_return_and_252_annualization_golden",
+        "exact_dependency_hashes",
+        "holdout_canary_denied_and_zero_read_audit",
+        "holdout_non_access",
+        "holm_family_closed_world",
+        "metric_gate_equalities",
+        "minimum_126_session_boundary",
+        "mixed_artifact_rejected",
+        "outcome_feature_or_late_support_flag_rejected",
+        "pit_future_and_revision_failures",
+        "purge_and_embargo",
+        "raw_ci_pass_adjusted_p_fail_rejected",
+        "replay_metamorphic_identity",
+        "sample_count_boundaries",
+        "shared_model_conditions",
+        "six_c_holdout_path_acl_denied",
+        "source_driven_nav_and_contribution_reconciliation",
+        "stress_closed_world",
+        "strict_draft_identity",
+        "strict_v0_2_identity_and_v0_1_supersession",
+        "support_coverage_failures",
+        "temporal_boundary_equalities",
+        "unregistered_search_failure",
+        "zero_io_zero_authority_draft",
+        "zero_io_zero_authority_kernel",
+        "zero_runtime_authority"
+      ],
+      "formal_historical_run": false,
+      "holdout_artifact_read": false,
+      "kb_modification": false
+    },
+    "owner_approval_items": [
+      {
+        "approval_item_id": "6C-01",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-02",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-03",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-04",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-05",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-06",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-07",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-08",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-09",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-10",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-11",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-12",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-13",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-14",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-15",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-16",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-17",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-18",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-19",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-20",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-21",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-22",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-23",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-24",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-25",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-26",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-27",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-28",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-29",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-30",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-31",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-32",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-33",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-34",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-35",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-36",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-37",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-38",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-39",
+        "status": "approved"
+      },
+      {
+        "approval_item_id": "6C-40",
+        "status": "approved"
+      }
+    ],
+    "owner_approval_atomicity": {
+      "all_40_required": true,
+      "authorization_predicate": "all(v0.2_6C-01..6C-40==approved)",
+      "same_exact_bundle_and_approval_record_required": true,
+      "partial_capability_forbidden": true,
+      "partial_implementation_authority_forbidden": true
+    },
+    "approved_semantic_guards": {
+      "complete_v0_1_plus_v0_2_rules_materialized": true,
+      "holdout_artifact_inaccessible_to_6c": true,
+      "holdout_commitment_contains_no_performance_proxy": true,
+      "adjusted_and_three_path_inference_required": true,
+      "canonical_source_driven_portfolio_fact_required": true,
+      "contribution_rows_cannot_be_summed_as_portfolio_bootstrap": true,
+      "outcome_blind_coverage_selection_audit_required": true,
+      "exact_252_session_twr_and_benchmark_required": true,
+      "current_stage5d_profile_does_not_satisfy_formal_6c": true,
+      "stage6b_validation_seal_is_not_formal_run_authority": true,
+      "formal_execution_and_holdout_require_separate_owner_approval": true,
+      "all_outputs_authority_eligible_false": true
+    },
+    "runtime_must_not_parse_markdown_or_delta_bundle": true
+  }
+}

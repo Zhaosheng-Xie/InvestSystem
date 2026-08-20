@@ -1,6 +1,6 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3—4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5D-1 completed_with_scope_limits；Stage 6B completed_with_scope_limits；Stage 6C v0.2 draft pending owner approval；完整生产策略未实现`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3—4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5D-1 completed_with_scope_limits；Stage 6B completed_with_scope_limits；Stage 6C v0.2 governance approved / kernel not implemented；完整生产策略未实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
 市场范围：`中国 A 股`
 当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 3D 不签发 KB current-status authority 或 RunReleaseStatusConfirmation；Stage 5D 当前只覆盖第一条预注册 ENTER/BUY bounded replay；Stage 6B capability 仅授权隔离临时库 admission 实现、只读 HTTPS status validation 与 validation-only confirmation/seal。正式 historical run、策略 evaluator、正式 migration、6C/6D、backtest/paper/shadow/live、真实仓位、账户、订单或券商接入仍未授权`
@@ -79,7 +79,7 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
 31. [Stage 6 / 6C 开发样本、Walk-Forward 与冠军挑战精确规则包 v0.1](03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战精确规则包_v0.1.md)
     - 状态：`superseded_by_v0.2 / traceability_only`；初始 40 项草案及[草案形成验收](../docs/validation/stage6c-development-walk-forward-draft-acceptance.md)保留原始字节，不再作为待批准目标。
 32. [Stage 6 / 6C 开发样本、Walk-Forward 与冠军挑战精确规则包 v0.2](03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战精确规则包_v0.2.md)
-    - 状态：`draft_for_owner_approval`；集中关闭 holdout 技术隔离、adjusted inference、portfolio/bootstrap、coverage selection bias 和 TWR/benchmark 五项方法风险；40 项仍全部 pending、零 capability。详见 [v0.2 修订验收](../docs/validation/stage6c-v02-methodology-revision-acceptance.md)。
+    - 状态：`approved / anonymous synthetic kernel implementation only`；40 项已整包原子批准，集中关闭 holdout 技术隔离、adjusted inference、portfolio/bootstrap、coverage selection bias 和 TWR/benchmark 五项方法风险。独立[批准记录](03_规则与规格/Stage6_6C开发样本WalkForward与冠军挑战批准记录_v0.2.md)和[治理验收](../docs/validation/stage6c-v02-governance-acceptance.md)已形成；正式 run、holdout 和交易仍未授权。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实只读 acquisition/transport 已由 Stage 3 关闭，原始响应持久化和 run admission 移交 Stage 6/7，策略语义属于 Stage 2B 以后。
 

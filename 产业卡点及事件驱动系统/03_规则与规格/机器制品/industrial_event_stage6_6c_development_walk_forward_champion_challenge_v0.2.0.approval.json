@@ -1,0 +1,15 @@
+{
+  "approval_id": "rule_approval_stage6_6c_development_walk_forward_v0_2_0",
+  "strategy_id": "industrial_bottleneck_event",
+  "bundle_id": "industrial_event_stage6_6c_development_walk_forward_champion_challenge",
+  "bundle_version": "0.2.0",
+  "bundle_hash": {
+    "algorithm": "sha256",
+    "value": "6ce5a6bd3cc892540be8f3ed5cec900388dbaa6f8ccbe0b7be7eb801d530e11a"
+  },
+  "approved_by": "repository_owner",
+  "approved_at": "2026-08-20T13:13:12.270950Z",
+  "approval_scope": "stage6_development_walk_forward_validation",
+  "approval_source_ref": "codex_task_owner_unified_approval_stage6c_v02_20260820",
+  "schema_version": "0.1.0-draft"
+}
