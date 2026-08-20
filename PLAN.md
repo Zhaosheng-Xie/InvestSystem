@@ -1,11 +1,11 @@
-# InvestSystem 实施计划（v3.16）
+# InvestSystem 实施计划（v3.17）
 
-> 计划版本：`v3.16`
+> 计划版本：`v3.17`
 > 基线日期：`2026-08-20`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
-> 当前阶段：`Stage 0—2B / completed；Stage 3 / completed_with_scope_limits；Stage 4 / completed_with_scope_limits；Stage 5 / in_progress（5B—5D-1 completed_with_scope_limits）；Stage 6 / in_progress（6B completed_with_scope_limits，6C v0.2 governance approved / first two synthetic kernel slices completed_with_scope_limits，6D not authorized）`
-> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3_completed_without_run_authority / stage4_complete_synthetic_research_validation_engine_accepted / stage5d_first_order_contract_replay_completed_with_scope_limits / stage6b_live_https_validation_seal_accepted_without_historical_run_authority / stage6c_v02_approved_governance_capability_guard_completed / stage6c_synthetic_holdout_twr_replay_slice_completed / stage6c_synthetic_candidate_fold_coverage_slice_completed / full_production_strategy_not_implemented`
+> 当前阶段：`Stage 0—2B / completed；Stage 3—4 / completed_with_scope_limits；Stage 5 / in_progress（5B—5D-1 completed_with_scope_limits）；Stage 6 / in_progress（6B completed_with_scope_limits，6C v0.2 governance approved / first three synthetic kernel slices completed_with_scope_limits，6D not authorized）`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3_completed_without_run_authority / stage4_complete_synthetic_research_validation_engine_accepted / stage5d_first_order_contract_replay_completed_with_scope_limits / stage6b_live_https_validation_seal_accepted_without_historical_run_authority / stage6c_v02_approved_governance_capability_guard_completed / stage6c_synthetic_holdout_twr_replay_slice_completed / stage6c_synthetic_candidate_fold_coverage_slice_completed / stage6c_synthetic_bootstrap_cluster_holm_slice_completed / full_production_strategy_not_implemented`
 > 当前授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均只允许各自精确批准范围内的匿名合成 research validation；Stage 5D 当前只覆盖第一条订单/合同 bounded replay，5D-2 未授权；Stage 6C v0.2 只授权匿名合成 holdout/TWR/candidate/fold/coverage/statistics kernel 的实现与验收，当前仅前两条切片完成，不授权正式 historical run、真实 development/walk-forward、holdout、6D 或 migration；全项目不授权 backtest、paper、shadow、live、真实仓位、账户、订单、券商接入或资金部署`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
@@ -49,7 +49,7 @@ KB 协调背景来自会话 `019f8f72-81ac-7182-84d7-2572e988d841` 及其侧边�
 | Stage 3 | `completed_with_scope_limits` | KB 正式 Release 传输、provider-neutral 映射与只读策略 smoke | 3A—3D 已验收关闭；新 run authority、确认与持久化准入移交 Stage 6/7 独立授权门 |
 | Stage 4 | `completed_with_scope_limits` | 完整产业事件规格与策略引擎 | `4A-1—4A-4` 与 `4B` 均已批准并完成匿名合成完整编排、统一结论和 replay 验收；无真实/交易权限 |
 | Stage 5 | `in_progress / 5B—5D-1 completed_with_scope_limits` | 成交、组合与确定性回放 | 5A 治理、5B 历史市场/合成成交、5C 合成组合/内存账本和受限 5D-1 首条订单/合同 complete replay 已验收；5D-2 持久化未授权 |
-| Stage 6 | `in_progress / 6B completed_with_scope_limits / 6C first two slices completed_with_scope_limits` | 历史验证与冠军挑战 | 第一切片完成 holdout/TWR/replay；第二切片完成 outcome-blind candidate/fold/coverage selection；bootstrap/Holm/champion 未完成，正式 run、migration 与 6D 未授权 |
+| Stage 6 | `in_progress / 6B completed_with_scope_limits / 6C first three slices completed_with_scope_limits` | 历史验证与冠军挑战 | 前三切片完成 holdout/TWR、candidate/fold/coverage 和 bootstrap/cluster/Holm；champion gate 未完成，正式 run、migration 与 6D 未授权 |
 | Stage 7 | `not_started` | 前瞻 shadow/paper 运行 | Stage 6、人工批准 |
 | Stage 8 | `optional` | 产业策略受控扩展；实盘仍需另行授权 | Stage 7、新批准 |
 
@@ -705,6 +705,8 @@ owner 随后按明确指令原子批准 v0.2 全部 40 项；独立[批准记录
 
 [6C candidate/fold/coverage 第二切片](docs/validation/stage6c-candidate-fold-coverage-slice-acceptance.md)已完成 outcome-blind candidate inventory、2022—2025 fold planner、120-session label/purge、20-session embargo、总/年度 coverage、continuous SMD 与 material categorical balance；40-candidate golden 为总体 `0.8`、四年各 `0.75`、replay `09ad4af…7202`。晚 2025 label 仍留在 coverage 分母但不进入 evaluation，防止 holdout 泄漏。
 
+[6C bootstrap/cluster/Holm 第三切片](docs/validation/stage6c-inference-holm-slice-acceptance.md)已完成 source-recomputed daily calendar-block bootstrap、company/risk paired-contribution wild bootstrap 与五项 Holm family；三组固定 seed/10,000 draws 均可重放。匿名 golden inference replay 为 `49306ecc…866a`，Holm replay 为 `807c7173…a643`，但只证明统计 kernel 公式与失败语义。
+
 进入条件：Stage 3 已按 `completed_with_scope_limits` 关闭正式 Release E2E，Stage 5 的第一条预注册订单/合同回放切片已按 `completed_with_scope_limits` 独立验收；这里是两条并行分支的汇合门。Stage 3 的 validation-only 完成和 Stage 5D 的受限会计覆盖都不自动授予历史运行准入。
 
 工作内容：
@@ -916,7 +918,7 @@ owner 随后按明确指令原子批准 v0.2 全部 40 项；独立[批准记录
 | Stage 3 | [3A 离线验收](docs/validation/stage3a-acceptance.md)、[3B 独立本机 HTTP 验收](docs/validation/stage3b-http-acceptance.md)、[3C 真实 tcloud HTTPS 验收](docs/validation/stage3c-tcloud-http-acceptance.md)与[3D 真实公网 Context Pack 验收](docs/validation/stage3d-context-pack-http-acceptance.md)；固定 KB `aab36fe` transport snapshot；正式 market-daily/Context Pack/Evidence Release、Manifest/Status/Schema/制品闭合；provider-neutral 映射和 validation-only `ABSTAIN` smoke；所有输出 `authority_eligible=false` | 无 Stage 3 尾项；新 run authority、RunReleaseStatusConfirmation 与 IS 自有原子持久化属于 Stage 6/7 独立门 | `completed_with_scope_limits` |
 | Stage 4 | [Stage 2 进入复核](docs/validation/stage2-reentry-audit.md)；[4B 正式验收](docs/validation/stage4-4b-acceptance.md)；14 项 P0 inventory、4A-1—4A-4 和独立 4B capability 均精确 approved；完整匿名合成编排、统一结论与 replay 已验收 | 无；真实 KB 只读 smoke 已由 Stage 3D 关闭，生产运行与交易能力留在 Stage 5—7 及后续阶段 | `completed_with_scope_limits` |
 | Stage 5 | [5A 治理验收](docs/validation/stage5-5a-governance-acceptance.md)、[5B 市场/成交验收](docs/validation/stage5-5b-market-execution-acceptance.md)、[5C 组合/账本验收](docs/validation/stage5-5c-portfolio-ledger-acceptance.md)、5D 48 项批准谱系、[首条回放预注册](docs/validation/stage5d-first-order-contract-replay-preregistration.md)和[受限 5D-1 验收](docs/validation/stage5d-first-order-contract-replay-acceptance.md)；同次 Stage 5C 重算、期初 opening、五事件 V2、mark/NAV、十八格 P&L 与 complete/audit replay 已闭合 | 5D-2 持久化须另行授权；SELL、公司行动、外部现金流和全量证券会计继续 fail closed | `in_progress / 5B—5D-1 completed_with_scope_limits` |
-| Stage 6 | 6B 验收；6C v0.2 批准/治理验收；[第一切片](docs/validation/stage6c-synthetic-kernel-slice-acceptance.md)与[第二切片](docs/validation/stage6c-candidate-fold-coverage-slice-acceptance.md)；`1060 passed, 4 skipped` | bootstrap/Holm/champion kernel；正式 migration/run authority、PIT readiness、Stage 5D 支持和 6D | `in_progress / 6C first two slices completed_with_scope_limits` |
+| Stage 6 | 6B 验收；6C v0.2 批准/治理验收；[第一](docs/validation/stage6c-synthetic-kernel-slice-acceptance.md)、[第二](docs/validation/stage6c-candidate-fold-coverage-slice-acceptance.md)、[第三切片](docs/validation/stage6c-inference-holm-slice-acceptance.md)；`1068 passed, 4 skipped` | champion/sample/fold/material/drawdown/winner/friction gate；正式 migration/run authority、PIT readiness、Stage 5D 支持和 6D | `in_progress / 6C first three slices completed_with_scope_limits` |
 | Stage 7 | 运行目录占位 | 冻结版本、前瞻台账、paper 对账 | `not_started` |
 | Stage 8 | 无 | 新授权及各分支独立完成门 | `optional` |
 | 题材 deferred track | 独立研究建档 | 独立授权、PLAN/PRD、数据审计、规则和验证 | `deferred` |
@@ -929,7 +931,7 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 
 1. Stage 4 已完成完整 synthetic golden/replay 验收；该结仓不自动进入 backtest 或 Stage 5。
 2. Stage 3 已按 `completed_with_scope_limits` 关闭，KB 本轮没有剩余交付 blocker；不得为补 authority 重新打开 Stage 3。新 run authority、确认和持久化仍关闭，只能在 Stage 6/7 获 owner 独立授权并形成失败矩阵后推进。
-3. Stage 6A/6B 与真实 validation-only seal 已完成；6C v0.2 已批准，前两条匿名合成切片已验收。下一步只实现 calendar-block bootstrap、company/risk cluster sensitivity 与 Holm adjusted inference；正式 historical run 仍需另行授权和全部真实前置证据。
+3. Stage 6A/6B 与真实 validation-only seal 已完成；6C v0.2 已批准，前三条匿名合成切片已验收。下一步只实现 sample/fold/material-increment/drawdown/winner/friction champion gate，并形成统一但仍 zero-authority 的 6C phase result；正式 historical run 仍需另行授权和全部真实前置证据。
 4. backtest、paper、shadow 或 live 均须到对应后续阶段另行批准；任何合成 capability 均不授予这些模式。
 
 ---
@@ -984,3 +986,4 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 | `v3.14` | 2026-08-20 | `active` | owner 原子批准 6C v0.2 全部 40 项；保留 v0.1/v0.2 draft，新增完整物化 approved bundle、approval record、批准记录与 fail-closed capability verifier。只授权匿名合成 kernel 实现/验收；正式 admission、development/walk-forward、holdout、migration 和交易均继续关闭。 |
 | `v3.15` | 2026-08-20 | `active` | 完成 6C 第一匿名合成 kernel 切片：typed development projection/opaque holdout commitment/isolation evidence，精确批准日期、零外部现金流、252-session TWR/benchmark 和 content-addressed replay；失败不发布 partial TWR。candidate/fold/coverage/bootstrap/Holm/champion 与全部正式权限继续关闭。 |
 | `v3.16` | 2026-08-20 | `active` | 完成 6C 第二匿名合成切片：outcome-blind candidate inventory、研究单位去重、2022—2025 folds、120-session purge、20-session embargo、holdout-label 排除、coverage 80%/70%、SMD 与 material categorical selection audit。收益/bootstrap/Holm/champion 和正式权限继续关闭。 |
+| `v3.17` | 2026-08-20 | `active` | 完成 6C 第三匿名合成切片：内部重算 fold/coverage/TWR，calendar-quarter daily factor bootstrap、company/risk paired-contribution wild bootstrap、五项 Holm adjusted family 与完整 inference trail。champion/6D 和全部正式权限继续关闭。 |
