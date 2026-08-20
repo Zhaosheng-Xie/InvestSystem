@@ -1,6 +1,6 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3—4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5D-1 completed_with_scope_limits；Stage 6B completed_with_scope_limits；Stage 6C v0.2 governance approved / first four synthetic kernel slices completed_with_scope_limits；完整生产策略未实现`
+项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3—4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5D-1 completed_with_scope_limits；Stage 6B completed_with_scope_limits；Stage 6C v0.2 governance approved / first five synthetic kernel slices completed_with_scope_limits；完整生产策略未实现`
 PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
 市场范围：`中国 A 股`
 当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 3D 不签发 KB current-status authority 或 RunReleaseStatusConfirmation；Stage 5D 当前只覆盖第一条预注册 ENTER/BUY bounded replay；Stage 6B capability 仅授权隔离临时库 admission 实现、只读 HTTPS status validation 与 validation-only confirmation/seal。正式 historical run、策略 evaluator、正式 migration、6C/6D、backtest/paper/shadow/live、真实仓位、账户、订单或券商接入仍未授权`
@@ -88,6 +88,8 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
     - 状态：`completed_with_scope_limits`；实现 source-recomputed calendar-quarter bootstrap、company/risk paired-contribution sensitivity 与五项 Holm family。sample/material/drawdown/winner/friction champion gate 尚未实现，正式权限仍为零。
 36. [Stage 6 / 6C 匿名合成 Champion Gate 第四纵向切片验收](../docs/validation/stage6c-synthetic-champion-gate-acceptance.md)
     - 状态：`completed_with_scope_limits`；统一前三切片并实现 completed trade/fold/material increment/drawdown/winner/friction/Holm/P0 audit 公式门；明确 `GATE_FORMULA_PASSED` 不是真实 6D 资格。
+37. [Stage 6 / 6C Peer Benchmark 与 Experiment Ledger 第五纵向切片验收](../docs/validation/stage6c-peer-experiment-ledger-slice-acceptance.md)
+    - 状态：`completed_with_scope_limits`；实现 PIT peer snapshot、三层 fallback、target exclusion、最少五 peers、exact 1/N 权重及 8 ablation + 16 stress 预注册台账。真实 peer returns/experiment 和 phase seal 未实现。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实只读 acquisition/transport 已由 Stage 3 关闭，原始响应持久化和 run admission 移交 Stage 6/7，策略语义属于 Stage 2B 以后。
 
