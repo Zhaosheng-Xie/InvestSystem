@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.1.0",
+  "input_lock_id": "stage5d_normal_lifecycle_full_exit_inputs_v0_1_0",
+  "status": "MATERIALIZED_INPUTS_FROZEN_EVALUATOR_UNAUTHORIZED",
+  "materialized_on": "2026-08-24",
+  "baseline_commit": "f8454ba85064f3a20a623bb63f0df009cc14725a",
+  "preregistration": {
+    "path": "tests/fixtures/stage5d/normal-lifecycle-exit-replay-preregistration.v0.1.0.json",
+    "raw_sha256": "67f707e5e2f5cdfca4af45a71639ce91df222f7b5149125e654bfe9d1355a72b"
+  },
+  "input_contract": {
+    "path": "src/invest_system/strategies/industrial_event/stage5d_lifecycle_inputs.py",
+    "raw_sha256": "ce7be6923eaa02c8e460437d577cbabf24fc73474d7ee2196c2d5cc03befff52",
+    "schema_version": "0.1.0",
+    "materializer": "tests/unit/test_stage5d_lifecycle_input_materialization.py::_materialized_inputs"
+  },
+  "materialized_input_hashes": {
+    "full_exit_stage5c_case_sha256": "c7dab6721b8c6299af5d8f4f53fb468ca5da2e302838b3d820d175dd2279334e",
+    "synthetic_calendar_sha256": "346325ae94464daca7f1c6b87c9105567b0fd82e74c6761edbf33441281bae42",
+    "mark_observation_set_sha256": "742fca3fe0aacf4f31c6177ed162b2d03d844f2ab6c6897c6c7991a742387f1d",
+    "mark_coverage_set_sha256": "cc78b0c7dd21a504e27fdf5d2e67e783651df51f6e5b1e0dcdbb035b0d96bece",
+    "validation_horizon_exit_mandate_sha256": "9db68c853d1fe00e2e53b0e7dfb7f0cdda4fe40bfff2c62ed64de58e3b3ad23c",
+    "exit_market_rule_cost_impact_settlement_closure_sha256": "c35194068e45b2508a941181cad5153aeb91d7ecef47e503738a71c7a92230a7",
+    "input_set_sha256": "60cad84334d110e910be897179bf76409f59c59b3bcd45fd733d29cf67829e30"
+  },
+  "exit_rule_closure": {
+    "stage5_market_rule_hashes": [
+      "ed30db846ee2477eba55c59df375c13676d2290b1b87ff66708755c896054239"
+    ],
+    "stage5_trading_calendar_hash": "347b0a94621ac536dfd0fef5324993b14898f226f29fc6a917408dcab5574181",
+    "stage5_cost_schedule_hashes": [
+      "ad672b01b207a171ab70046fda6daf6f0e48214fb2af80f77f44beda8d400600"
+    ],
+    "stage5_impact_curve_hashes": [
+      "17bc27eda3ade46db5aa418c6d32d9db3234896007c975cc3968daf15343b434"
+    ],
+    "stage5_settlement_terms_hashes": [
+      "9b9fe59653aab596040d224b74c043e8f024093c2112989de8082c2d60544807"
+    ]
+  },
+  "materialized_facts": {
+    "strategy_id": "industrial_bottleneck_event",
+    "security_id": "600000.SH",
+    "account_fixture_id": "anonymous_account_001",
+    "exit_origin": "STAGE6C_VALIDATION_HORIZON_LIQUIDATION",
+    "exit_action_intent": "EXIT",
+    "approved_quantity": 200,
+    "opening_quantity": 200,
+    "opening_sellable_quantity": 200,
+    "opening_full_cost": "1613.23",
+    "calendar_session_count": 60,
+    "calendar_first_date": "2025-01-20",
+    "calendar_last_date": "2025-04-11",
+    "mark_count": 59,
+    "mark_price": "8",
+    "mark_unadjusted": true,
+    "mark_executable": false,
+    "mark_coverage_complete": true,
+    "contains_future_mark": false,
+    "corporate_actions_explicitly_empty": true,
+    "external_cash_flows_explicitly_empty": true,
+    "special_settlement_forbidden": true,
+    "exit_account_snapshot_crosscheck_only": true
+  },
+  "existing_stage5c_input_validation": {
+    "called_existing_stage5c_evaluator_only": true,
+    "lifecycle_evaluator_called": false,
+    "status": "FILLED",
+    "side": "SELL",
+    "quantity": 200,
+    "benchmark_vwap": "8",
+    "fill_price": "7.96",
+    "gross_notional": "1592",
+    "cost_total": "6.82",
+    "cash_effect": "1585.18",
+    "ending_quantity": 0
+  },
+  "implementation_derived_hashes": {
+    "full_exit_stage5c_result_sha256": null,
+    "full_exit_order_sha256": null,
+    "full_exit_fill_sha256": null,
+    "sell_event_set_sha256": null,
+    "ending_journal_head_sha256": null,
+    "valuation_series_sha256": null,
+    "ending_pnl_sha256": null,
+    "completed_trade_sha256": null,
+    "complete_replay_sha256": null,
+    "audit_replay_sha256": null,
+    "implementation_code_sha256": null,
+    "implementation_config_sha256": null
+  },
+  "authorization_boundary": {
+    "evaluator_implementation_authorized": false,
+    "lifecycle_evaluator_exists": false,
+    "authority_eligible": false,
+    "authorizes_formal_historical_run": false,
+    "authorizes_candidate_coverage": false,
+    "authorizes_peer_basket": false,
+    "authorizes_migration": false,
+    "authorizes_backtest": false,
+    "authorizes_paper": false,
+    "authorizes_shadow": false,
+    "authorizes_live": false,
+    "authorizes_positions": false,
+    "authorizes_orders": false,
+    "connects_broker": false,
+    "persists_state": false,
+    "reads_kb_internal_state": false,
+    "writes_kb": false
+  },
+  "next_gate": "SEPARATE_OWNER_APPROVAL_REQUIRED_BEFORE_LIFECYCLE_EVALUATOR"
+}

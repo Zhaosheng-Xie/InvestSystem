@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v3.23](PLAN.md)：本仓库唯一正式路线图；当前为 `Stage 6B completed_with_scope_limits / Stage 6C v0.2 anonymous synthetic kernel completed_with_scope_limits / formal execution blocked`。[正式 Readiness 审计](docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)结论 `NO_GO`；[Stage 5D 静态支持 census](docs/validation/stage5d-outcome-blind-static-support-census-v0.1.md)确认 SELL 底层已存在，[完整生命周期 EXIT 预注册](docs/validation/stage5d-normal-lifecycle-exit-replay-preregistration-v0.1.md)冻结连续 journal 与 60-session valuation seam，但当前仅待审阅输入物化，未授权 evaluator。正式状态库迁移、historical run、真实 6C 执行和 holdout 均未授权。
+- [InvestSystem 实施计划 v3.24](PLAN.md)：本仓库唯一正式路线图；当前为 `Stage 6B completed_with_scope_limits / Stage 6C synthetic kernel completed_with_scope_limits / formal execution blocked`。[Stage 5D full-EXIT 输入物化验收](docs/validation/stage5d-normal-lifecycle-input-materialization-acceptance.md)已冻结 raw exit/calendar/marks/mandate/rule closure 六个 hashes；lifecycle evaluator、complete replay、真实 candidate coverage 和正式 Stage 6C 仍未授权或实现。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。
