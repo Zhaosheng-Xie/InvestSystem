@@ -49,6 +49,8 @@
 
 [Stage 5D 普通证券完整生命周期 evaluator 验收](../../docs/validation/stage5d-normal-lifecycle-evaluator-acceptance.md)已完成精确 input-set gated 的同次 entry/EXIT 重算、8-event financial V2、59 mark memo、61-point valuation、十八格 P&L、synthetic completed-trade 与 audit replay。机器 complete replay 为 `277181e9…79ba`；专项 `9 passed`、相邻 `133 passed`、全仓 `1129 passed, 4 skipped`。它不读取真实候选或 KB 内部数据，不授权 formal Stage 6C 或交易。
 
+[Stage 6 KB 历史公共数据 handoff 验收 runbook](../../docs/validation/stage6-kb-historical-handoff-acceptance-runbook-v0.1.md)已固定交付身份、真实 Published Release、数据域/引用、PIT/lineage 和 holdout/outcome 五道门；当前所有 observed-input 和 authority 字段均为 false。Windows CI 的 `Asia/Shanghai` 时区数据已加入直接 hash-locked `tzdata` runtime dependency，避免依赖 runner 系统数据库。
+
 ## Stage 3D 已验收证据
 
 [Stage 3D 真实公网 Context Pack 验收](../../docs/validation/stage3d-context-pack-http-acceptance.md)固定了正式 Context Pack/Evidence Release、两份主制品和两份公开 Schema，并验证：

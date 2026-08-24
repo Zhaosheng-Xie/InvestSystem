@@ -102,6 +102,8 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
     - 状态：`completed_with_scope_limits / lifecycle_evaluator_unauthorized`；full-EXIT raw Stage 5C case、60-session calendar、59 marks/coverage、exit mandate 和 rule closure 已物化为 input-set `60cad843…9e30`。只验证输入可全量卖出，不包含 lifecycle journal、daily NAV/P&L 或 completed trade。
 43. [Stage 5D 普通证券完整生命周期 Evaluator 验收](../docs/validation/stage5d-normal-lifecycle-evaluator-acceptance.md)
     - 状态：`completed_with_scope_limits / anonymous_synthetic_only`；精确 input-set 下连续重放 BUY→full SELL、8+59 journal、61 点 NAV、十八格 P&L、completed-trade 和 audit replay。该 completed trade 不是真实样本，不进入 coverage、30 笔门或正式 Stage 6C。
+44. [Stage 6 KB 历史公共数据 Handoff 验收 Runbook v0.1](../docs/validation/stage6-kb-historical-handoff-acceptance-runbook-v0.1.md)
+    - 状态：`prepared_for_future_handoff / no_kb_data_consumed`；固定 2019—2025 公共 Release/artifact/PIT/lineage/holdout 验收步骤、三类结果和 24 个失败原因。未实现 parser、candidate、coverage 或历史 run。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实只读 acquisition/transport 已由 Stage 3 关闭，原始响应持久化和 run admission 移交 Stage 6/7，策略语义属于 Stage 2B 以后。
 
