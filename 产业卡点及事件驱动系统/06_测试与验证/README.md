@@ -47,6 +47,8 @@
 
 [Stage 5D full-EXIT 承重输入物化验收](../../docs/validation/stage5d-normal-lifecycle-input-materialization-acceptance.md)现已固定六个输入 component hashes 与总 input-set `60cad843…9e30`；现有 Stage 5C 只用于证明 raw input 可完成 `SELL 200` 并归零持仓。新增合同没有 `evaluate_*`、I/O 或持久化入口，全部 result/replay hashes 仍为 `null`。专项 `14 passed`、Stage 5C/5D 相邻 `94 passed`、全仓 `1120 passed, 4 skipped`。
 
+[Stage 5D 普通证券完整生命周期 evaluator 验收](../../docs/validation/stage5d-normal-lifecycle-evaluator-acceptance.md)已完成精确 input-set gated 的同次 entry/EXIT 重算、8-event financial V2、59 mark memo、61-point valuation、十八格 P&L、synthetic completed-trade 与 audit replay。机器 complete replay 为 `277181e9…79ba`；专项 `9 passed`、相邻 `133 passed`、全仓 `1129 passed, 4 skipped`。它不读取真实候选或 KB 内部数据，不授权 formal Stage 6C 或交易。
+
 ## Stage 3D 已验收证据
 
 [Stage 3D 真实公网 Context Pack 验收](../../docs/validation/stage3d-context-pack-http-acceptance.md)固定了正式 Context Pack/Evidence Release、两份主制品和两份公开 Schema，并验证：

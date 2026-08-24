@@ -1,12 +1,12 @@
-# InvestSystem 实施计划（v3.24）
+# InvestSystem 实施计划（v3.25）
 
-> 计划版本：`v3.24`
+> 计划版本：`v3.25`
 > 基线日期：`2026-08-20`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
 > 当前阶段：`Stage 0—2B / completed；Stage 3—4 / completed_with_scope_limits；Stage 5 / in_progress（5B—5D-1 completed_with_scope_limits）；Stage 6 / in_progress（6B completed_with_scope_limits，6C v0.2 anonymous synthetic kernel completed_with_scope_limits / formal execution not authorized，6D not authorized）`
-> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3_completed_without_run_authority / stage4_complete_synthetic_research_validation_engine_accepted / stage5d_first_order_contract_replay_completed_with_scope_limits / stage5d_static_support_census_completed_without_real_candidate_coverage / stage5d_normal_lifecycle_full_exit_inputs_materialized / stage5d_normal_lifecycle_evaluator_not_authorized / stage6b_live_https_validation_seal_accepted_without_historical_run_authority / stage6c_v02_approved_governance_capability_guard_completed / stage6c_anonymous_synthetic_phase_kernel_completed_with_scope_limits / stage6c_formal_execution_readiness_blocked / full_production_strategy_not_implemented`
-> 当前授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均只允许各自精确批准范围内的匿名合成 research validation；Stage 5D 当前业务只覆盖第一条订单/合同 bounded replay，full-EXIT 六类承重输入已物化但 lifecycle evaluator 与 5D-2 均未授权；Stage 6C v0.2 的六条匿名合成 kernel 切片已完成，但正式 Readiness 审计为 NO_GO，不授权正式 historical run、真实 development/walk-forward、holdout、6D 或 migration；全项目不授权 backtest、paper、shadow、live、真实仓位、账户、订单、券商接入或资金部署`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3_completed_without_run_authority / stage4_complete_synthetic_research_validation_engine_accepted / stage5d_first_order_contract_replay_completed_with_scope_limits / stage5d_static_support_census_completed_without_real_candidate_coverage / stage5d_normal_lifecycle_full_exit_inputs_materialized / stage5d_normal_lifecycle_evaluator_completed_with_scope_limits / stage6b_live_https_validation_seal_accepted_without_historical_run_authority / stage6c_v02_approved_governance_capability_guard_completed / stage6c_anonymous_synthetic_phase_kernel_completed_with_scope_limits / stage6c_formal_execution_readiness_blocked / full_production_strategy_not_implemented`
+> 当前授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均只允许各自精确批准范围内的匿名合成 research validation；Stage 5D 当前新增普通单证券 full-EXIT lifecycle evaluator，但只消费精确 input-set 且 completed trade 明确非真实，5D-2 未授权；Stage 6C v0.2 的六条匿名合成 kernel 切片已完成，但正式 Readiness 审计为 NO_GO，不授权正式 historical run、真实 development/walk-forward、holdout、6D 或 migration；全项目不授权 backtest、paper、shadow、live、真实仓位、账户、订单、券商接入或资金部署`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
 
@@ -721,6 +721,8 @@ owner 随后按明确指令原子批准 v0.2 全部 40 项；独立[批准记录
 
 [完整生命周期承重输入物化验收](docs/validation/stage5d-normal-lifecycle-input-materialization-acceptance.md)现已冻结 full-EXIT raw Stage 5C case、60-session calendar、59-mark set/coverage、validation-horizon exit mandate 与 rule/cost/impact/settlement closure 六个非空 hash；完整 input-set hash 为 `60cad843…9e30`。既有 Stage 5C 校验确认 `SELL 200 @ 7.96`、净回款 `1585.18`、期末数量零，但这只证明输入可执行；lifecycle evaluator 不存在，全部 result/replay hashes 仍为 `null`。
 
+[普通证券完整生命周期 Evaluator 验收](docs/validation/stage5d-normal-lifecycle-evaluator-acceptance.md)现已只消费上述精确 input-set，同次重算 entry/EXIT，形成 8 个 financial events、59 个 mark memo events、61 点 valuation series、十八格 P&L、synthetic completed-trade record 与 deterministic complete/audit replay；complete replay 为 `277181e9…79ba`。这只关闭单证券普通规则 synthetic 生命周期，不提供真实 coverage、30 笔交易、peer/portfolio NAV 或正式 Stage 6C 权限。
+
 进入条件：Stage 3 已按 `completed_with_scope_limits` 关闭正式 Release E2E，Stage 5 的第一条预注册订单/合同回放切片已按 `completed_with_scope_limits` 独立验收；这里是两条并行分支的汇合门。Stage 3 的 validation-only 完成和 Stage 5D 的受限会计覆盖都不自动授予历史运行准入。
 
 工作内容：
@@ -931,7 +933,7 @@ owner 随后按明确指令原子批准 v0.2 全部 40 项；独立[批准记录
 | Stage 2B | [正式验收记录](docs/validation/stage2b-acceptance.md)；实现提交 `d5d6003`；22 项 approved 规则；24+10 fixture registry；E3.5/E4、四道门、利润桥/预期/估值、Manifest、DecisionRecord、Replay；`617 passed, 4 skipped`；两轮审阅 `P0=0 / P1=0` | 无；真实 transport、完整策略和 durable DecisionRecord 持久化不在本阶段完成范围 | `completed` |
 | Stage 3 | [3A 离线验收](docs/validation/stage3a-acceptance.md)、[3B 独立本机 HTTP 验收](docs/validation/stage3b-http-acceptance.md)、[3C 真实 tcloud HTTPS 验收](docs/validation/stage3c-tcloud-http-acceptance.md)与[3D 真实公网 Context Pack 验收](docs/validation/stage3d-context-pack-http-acceptance.md)；固定 KB `aab36fe` transport snapshot；正式 market-daily/Context Pack/Evidence Release、Manifest/Status/Schema/制品闭合；provider-neutral 映射和 validation-only `ABSTAIN` smoke；所有输出 `authority_eligible=false` | 无 Stage 3 尾项；新 run authority、RunReleaseStatusConfirmation 与 IS 自有原子持久化属于 Stage 6/7 独立门 | `completed_with_scope_limits` |
 | Stage 4 | [Stage 2 进入复核](docs/validation/stage2-reentry-audit.md)；[4B 正式验收](docs/validation/stage4-4b-acceptance.md)；14 项 P0 inventory、4A-1—4A-4 和独立 4B capability 均精确 approved；完整匿名合成编排、统一结论与 replay 已验收 | 无；真实 KB 只读 smoke 已由 Stage 3D 关闭，生产运行与交易能力留在 Stage 5—7 及后续阶段 | `completed_with_scope_limits` |
-| Stage 5 | [5A 治理验收](docs/validation/stage5-5a-governance-acceptance.md)、[5B 市场/成交验收](docs/validation/stage5-5b-market-execution-acceptance.md)、[5C 组合/账本验收](docs/validation/stage5-5c-portfolio-ledger-acceptance.md)、5D 48 项批准谱系、[受限 5D-1 验收](docs/validation/stage5d-first-order-contract-replay-acceptance.md)、[静态支持 census](docs/validation/stage5d-outcome-blind-static-support-census-v0.1.md)、[完整生命周期 EXIT 预注册](docs/validation/stage5d-normal-lifecycle-exit-replay-preregistration-v0.1.md)及[输入物化验收](docs/validation/stage5d-normal-lifecycle-input-materialization-acceptance.md)；六个 full-EXIT input hashes 已冻结 | lifecycle evaluator、SELL complete journal/daily NAV/P&L 尚未实现；5D-2、公司行动、外部现金流仍须另行授权 | `in_progress / bounded 5D-1 completed_with_scope_limits / full-EXIT inputs materialized / evaluator unauthorized` |
+| Stage 5 | 5A—5C 验收、5D 48 项治理、[受限 BUY replay](docs/validation/stage5d-first-order-contract-replay-acceptance.md)、[静态支持 census](docs/validation/stage5d-outcome-blind-static-support-census-v0.1.md)、[full-EXIT 输入物化](docs/validation/stage5d-normal-lifecycle-input-materialization-acceptance.md)及[普通生命周期 evaluator 验收](docs/validation/stage5d-normal-lifecycle-evaluator-acceptance.md)；单证券 60-session BUY→full-SELL journal/NAV/P&L 已闭合 | 真实 candidate/peer/portfolio 批量编排、公司行动、外部现金流和 5D-2 仍未实现或授权 | `in_progress / normal-lifecycle evaluator completed_with_scope_limits` |
 | Stage 6 | 6B 验收；6C v0.2 批准谱系、[统一 synthetic phase seal 验收](docs/validation/stage6c-synthetic-phase-seal-acceptance.md)、[正式执行 Readiness 审计](docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)及[Stage 5D 静态支持 census](docs/validation/stage5d-outcome-blind-static-support-census-v0.1.md)；静态 SELL Ledger 已存在但 complete lifecycle 未实现 | 正式 execution authorization/admission/migration、2019—2025 PIT readiness、SELL complete replay/daily NAV、真实 candidate coverage、peer support、real experiment/audit/custody 和 6D | `in_progress / synthetic kernel completed_with_scope_limits / formal execution blocked` |
 | Stage 7 | 运行目录占位 | 冻结版本、前瞻台账、paper 对账 | `not_started` |
 | Stage 8 | 无 | 新授权及各分支独立完成门 | `optional` |
@@ -945,7 +947,7 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 
 1. Stage 4 已完成完整 synthetic golden/replay 验收；该结仓不自动进入 backtest 或 Stage 5。
 2. Stage 3 已按 `completed_with_scope_limits` 关闭，KB 本轮没有剩余交付 blocker；不得为补 authority 重新打开 Stage 3。新 run authority、确认和持久化仍关闭，只能在 Stage 6/7 获 owner 独立授权并形成失败矩阵后推进。
-3. Stage 6A/6B 与真实 validation-only seal 已完成；6C v0.2 anonymous synthetic kernel 与统一 phase seal 已验收。[正式 Readiness 审计](docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)结论为 `NO_GO`；IS Stage 5D census 与[full-EXIT 输入物化](docs/validation/stage5d-normal-lifecycle-input-materialization-acceptance.md)已完成。下一步必须由 owner 单独批准只消费精确 input-set `60cad843…9e30` 的匿名合成 lifecycle evaluator；并行等待 KB 公共候选总体后另建真实 support census，不得先启动正式 Stage 6C。
+3. Stage 6A/6B 与真实 validation-only seal 已完成；6C synthetic kernel 已验收但正式 Readiness 仍为 `NO_GO`。[Stage 5D 普通生命周期 evaluator](docs/validation/stage5d-normal-lifecycle-evaluator-acceptance.md)已关闭一笔匿名合成 completed trade 和 daily NAV 技术接缝。下一步等待 KB 公共候选总体后形成真实 outcome-blind support census，或先形成 peer 复用的独立设计；不得把单条 golden 计入真实 30 笔门，也不得先启动正式 Stage 6C。
 4. backtest、paper、shadow 或 live 均须到对应后续阶段另行批准；任何合成 capability 均不授予这些模式。
 
 ---
@@ -1008,3 +1010,4 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 | `v3.22` | 2026-08-21 | `active` | 完成 IS outcome-blind Stage 5D 静态支持 census：确认固定 BUY complete replay 与 SELL Ledger/FIFO/结算的分层边界，所有真实 coverage 指标保持 null；下一条最小工程门收敛为无公司行动/外部流/特殊结算的一次全量 EXIT complete replay 预注册。 |
 | `v3.23` | 2026-08-21 | `active` | 经全局路径比较冻结普通证券完整生命周期与全量 EXIT 预注册：复用既有 SELL 底层但不拼接 partial fixture，要求连续 BUY→SELL journal、59 个 mark memo events、61 点 valuation path、session 60 全量清仓与 session 61 结算；先待 owner 批准承重输入物化，input hashes 复核后才可另行批准 evaluator。 |
 | `v3.24` | 2026-08-24 | `active` | 完成 full-EXIT 六类承重输入物化：typed raw Stage 5C case、60-session synthetic calendar、59 marks/coverage、Stage 6 validation-horizon mandate 与 Stage 5 rule/cost/impact/settlement closure 均内容寻址；Stage 5C 仅验证输入可全量卖出，lifecycle evaluator 与全部正式权限继续关闭。 |
+| `v3.25` | 2026-08-24 | `active` | 完成精确 input-set gated 普通证券 lifecycle evaluator：连续重放 BUY→full SELL、8+59 canonical journal、61 点 NAV、十八格 lifetime/EXIT P&L、completed-trade 与 audit replay；结果仍为匿名 synthetic，不能计入真实 coverage/30 笔门或打开 Stage 6C。 |

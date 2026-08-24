@@ -1,0 +1,70 @@
+{
+  "schema_version": "0.1.0",
+  "golden_id": "stage5d_normal_lifecycle_evaluator_golden_v0_1_0",
+  "status": "ANONYMOUS_SYNTHETIC_LIFECYCLE_COMPLETE",
+  "input_lock_raw_sha256": "ba3b810be7a632ad1b909a7e0e0b942e0de9fb47010e9e3a5c80f77b60c6e8bc",
+  "input_set_sha256": "60cad84334d110e910be897179bf76409f59c59b3bcd45fd733d29cf67829e30",
+  "identities": {
+    "case_sha256": "dd632889fa2758d528882007028f9e7790677df293c79a6c247df13faceba53d",
+    "entry_fill_sha256": "18b198a25001a41dc9a566f236d37234469a8725edc9f2f63473bcdf372af020",
+    "exit_fill_sha256": "49909ab35da405ddacd34cc1adb84d9986a64280fd62c36e5a0df9b5cf0b3d64",
+    "exit_stage5c_result_sha256": "eaaa6fd52cf8afc483192a4eadf9cd8504c614c8f0e10294abfd1884ad8158e0",
+    "exit_source_slice_sha256": "2b1a0c5f8f93f659a4664543a158f14fc4192cbc97eb1c4f8d42d38f5ab8e30a",
+    "financial_replay_sha256": "a1acee56e4c2a01f829968929d0758a3c05fa9477b3b8c185b8ddb32a5704957",
+    "final_journal_head_sha256": "255c184be2d8603980f177e759430fc3e7b0697e2068a12e72000ef3657850a7",
+    "first_valuation_sha256": "88fab025b03298d7d6fa37abf6ea2acbcc32c63ae0244cf5e7ab7ffe1cd6de40",
+    "holding_valuation_sha256": "709cdaf57de3ffff90e567cfe868bbbd34fc3353aa6c4533e1b035cf2da93610",
+    "exit_valuation_sha256": "d2a5ad606448a02d5c618ee32e9f7c570e47a361fc00e7c202fe573c18839d0d",
+    "valuation_series_sha256": "4ca978ac6ad020eca50035631c244027fc525ad254231dae516d01634c4d57cc",
+    "pnl_sha256": "62485e7160bc60314733157c856978b6b885dc842dadc785f151f95c61555549",
+    "completed_trade_sha256": "a5707fa08d6da2a20ef9540bd5c6b0fc20373d5534c7f72f5f63b116f895b07b",
+    "complete_replay_sha256": "277181e9bc406de860e8d98dd23cc27be74f950d3b170bdc5e199f661c5f79ba"
+  },
+  "inventory": {
+    "financial_event_count": 8,
+    "mark_memo_event_count": 59,
+    "full_journal_entry_count": 67,
+    "valuation_point_count": 61,
+    "daily_return_count": 60,
+    "completed_trade_count": 1
+  },
+  "economic_golden": {
+    "baseline_nav": "100000",
+    "holding_nav": "99986.77",
+    "exit_nav": "99971.95",
+    "exit_session_available_cash": "98386.77",
+    "exit_session_receivable": "1585.18",
+    "settlement_tail_available_cash": "99971.95",
+    "lifetime_pnl": "-28.05",
+    "exit_period_pnl": "-14.82",
+    "ending_quantity": 0,
+    "position_closed_at": "2025-04-11T02:31:00.000000Z",
+    "ledger_settled_at": "2025-04-14T02:11:00.000000Z"
+  },
+  "authority_boundary": {
+    "synthetic": true,
+    "validation_only": true,
+    "not_a_real_completed_trade": true,
+    "authority_eligible": false,
+    "external_state_mutated": false,
+    "persists_state": false,
+    "authorizes_backtest": false,
+    "authorizes_paper": false,
+    "authorizes_shadow": false,
+    "authorizes_live": false,
+    "authorizes_positions": false,
+    "authorizes_orders": false,
+    "connects_broker": false,
+    "reads_kb_internal_state": false,
+    "writes_kb": false
+  },
+  "not_claimed": [
+    "real_candidate_coverage",
+    "thirty_completed_trades",
+    "peer_benchmark_nav",
+    "portfolio_nav",
+    "formal_stage6c_execution",
+    "migration",
+    "trading_authority"
+  ]
+}
