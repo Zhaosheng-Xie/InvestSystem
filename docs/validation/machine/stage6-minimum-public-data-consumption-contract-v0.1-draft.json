@@ -1,0 +1,280 @@
+{
+  "schema_version": "1.0.0-draft",
+  "contract_id": "stage6_minimum_historical_public_data_consumption_v0_1",
+  "status": "DRAFT_FOR_OWNER_CONFIRMATION_ZERO_RUNTIME_AUTHORITY",
+  "formed_on": "2026-08-24",
+  "baseline_commit": "7e294f2d48498d94c4c5063e23a144c606fe106f",
+  "document_binding": {
+    "path": "docs/validation/stage6-minimum-public-data-consumption-contract-draft-v0.1.md",
+    "sha256": "205a0c7d403d9fbadd988f2c3081882cb61594a5e4c36a6d4cc6db559e253182"
+  },
+  "declared_kb_census_context": {
+    "branch": "codex/stage6-historical-census",
+    "commit": "857c86787ed46d34e4f4f17eefa4bbde78089d15",
+    "commit_pushed": false,
+    "census_conclusion": "NOT_READY",
+    "scope_eligible_release_count": 0,
+    "scope_eligible_artifact_count": 0,
+    "handoff_json_exists": false,
+    "token_exists": false,
+    "new_release_exists": false,
+    "independently_verified_by_is": false
+  },
+  "date_scope": {
+    "start_inclusive": "2019-01-01",
+    "end_inclusive": "2025-12-31",
+    "contains_2026_holdout": false
+  },
+  "single_root_release": {
+    "required": true,
+    "release_family": "historical-stage6-public-input-2019-2025.v1",
+    "reason": "ADR-0001 permits exactly one strategy_input_ref per run",
+    "source_family_count": 3
+  },
+  "recommended_source_families": [
+    {
+      "family": "historical-public-evidence-2019-2025.v1",
+      "roles": [
+        "documents_spans_facts_events_evidence",
+        "event_company_security_links",
+        "pit_revision_conflict_missing_lineage"
+      ]
+    },
+    {
+      "family": "historical-security-market-reference-2019-2025.v1",
+      "roles": [
+        "security_master_and_history",
+        "calendar_market_rules_security_states",
+        "unadjusted_marks_and_corporate_actions",
+        "benchmark_total_return_basis",
+        "adv20_beta120_factor_artifacts"
+      ]
+    },
+    {
+      "family": "historical-public-financials-2019-2025.v1",
+      "roles": [
+        "financial_statements_and_metrics",
+        "report_announcement_available_times",
+        "restatement_revision_lineage"
+      ]
+    }
+  ],
+  "release_architecture_decision": {
+    "merge_common_reference_factors_into_market_reference": "RECOMMENDED_PENDING_OWNER",
+    "evidence_family_remains_separate": true,
+    "financial_family_remains_separate": true,
+    "optional_fourth_factor_child_release_allowed": true,
+    "multiple_strategy_input_refs_forbidden": true
+  },
+  "p0_required_domains": [
+    "public_evidence_and_historical_pit",
+    "company_security_effective_mapping",
+    "listing_delisting_st_code_change_history",
+    "complete_exchange_calendar",
+    "effective_dated_market_rule_sets",
+    "security_session_states",
+    "unadjusted_daily_marks_volume_turnover",
+    "corporate_actions_and_total_return_basis",
+    "pit_financial_statements_and_metrics",
+    "pit_primary_industry",
+    "pit_float_market_cap",
+    "benchmark_daily_total_return_basis",
+    "adv20_raw_basis_and_versioned_factor",
+    "beta120_raw_basis_and_versioned_factor",
+    "revision_withdrawal_correction_supersedes_lineage",
+    "declared_missing_unrecoverable_population"
+  ],
+  "postponable_domains": [
+    "full_tick_or_order_book_depth",
+    "precomputed_20_120_session_horizon_returns",
+    "secondary_tertiary_industry_taxonomy",
+    "style_factors_not_used_by_approved_rules",
+    "bse_universe_pending_owner",
+    "corporate_action_detail_not_hit_by_candidate_or_peer",
+    "financial_metrics_not_used_by_stage4_5_6",
+    "intraday_beta"
+  ],
+  "universe_recommendation": {
+    "exchanges": ["SSE", "SZSE"],
+    "security_type": "ORDINARY_CNY_A_SHARE",
+    "bse": "DEFERRED_PENDING_OWNER",
+    "retain_st_star_st": true,
+    "retain_delisted_failed": true,
+    "retain_code_name_changes": true,
+    "retain_newly_listed_with_incomplete_factor": true,
+    "exclude_from_base_universe": ["FUND", "BOND", "PREFERRED_SHARE", "B_SHARE"],
+    "strategy_ineligible_securities_remain_in_denominator": true
+  },
+  "adv20_recommendation": {
+    "artifact_variant": "adv20.v1",
+    "measure": "CNY_TURNOVER",
+    "window": "PREVIOUS_EXACTLY_20_EXCHANGE_SESSIONS",
+    "includes_decision_session": false,
+    "denominator_sessions": 20,
+    "proven_full_day_suspension_turnover": "ZERO_INCLUDED",
+    "missing_or_unknown_state": "INCOMPLETE_NOT_ZERO",
+    "limit_session": "ACTUAL_TURNOVER_INCLUDED",
+    "available_at": "MAX_BASIS_AVAILABLE_AT_AND_FACTOR_PUBLISHED_AT",
+    "basis_hashes_required": true
+  },
+  "beta120_recommendation": {
+    "artifact_variant": "beta120.v1",
+    "benchmark": "BROAD_MARKET_TOTAL_RETURN_ID_PENDING_OWNER",
+    "preferred_benchmark_class": "CHINA_A_SHARE_ALL_MARKET_TOTAL_RETURN",
+    "frequency": "DAILY",
+    "window": "PREVIOUS_EXACTLY_120_EXCHANGE_SESSIONS",
+    "includes_decision_session": false,
+    "estimator": "OLS_SLOPE_WITH_INTERCEPT",
+    "return_basis": "PIT_ONE_SESSION_TOTAL_RETURN",
+    "future_backward_adjustment_forbidden": true,
+    "proven_full_day_suspension": "CARRY_FORWARD_ZERO_RETURN_ALLOWED",
+    "missing_or_unknown_state": "INCOMPLETE_NOT_IMPUTED",
+    "limit_session": "ACTUAL_CLOSE_RETURN_INCLUDED",
+    "short_listing_history": "INCOMPLETE_NO_SHORTENED_WINDOW",
+    "benchmark_zero_variance": "INCOMPLETE",
+    "paired_basis_hashes_required": true
+  },
+  "corporate_action_minimum": [
+    "CASH_DIVIDEND",
+    "SHARE_DISTRIBUTION",
+    "SPLIT_OR_CONSOLIDATION",
+    "RIGHTS_OR_ALLOTMENT",
+    "DELISTING_OR_CASH_OUT"
+  ],
+  "hard_data_delivery_gates": {
+    "release_manifest_schema_dependency_identity": "100_PERCENT",
+    "calendar_market_rule_session_intervals": "100_PERCENT",
+    "security_entity_lifecycle_identified": "100_PERCENT",
+    "survivor_only_forbidden": true,
+    "missing_reasons_required_per_security_session_candidate": true
+  },
+  "later_is_candidate_gates": {
+    "aggregate_support_minimum": "0.80",
+    "annual_fold_support_minimum": "0.70",
+    "material_category_support_minimum": "0.60",
+    "selected_peer_count_minimum": 5,
+    "target_and_all_selected_peers_must_be_supported": true,
+    "real_completed_trades_minimum": 30,
+    "real_completed_trades_per_fold_minimum": 5,
+    "synthetic_completed_trades_count": 0
+  },
+  "proposed_artifact_schemas": [
+    "historical-public-evidence.v1@1.0.0",
+    "company-security-history.v1@1.0.0",
+    "trading-calendar.v1@1.0.0",
+    "market-rule-set.v1@1.0.0",
+    "security-session-state.v1@1.0.0",
+    "unadjusted-market-daily.v1@1.0.0",
+    "corporate-action.v1@1.0.0",
+    "historical-public-financials.v1@1.0.0",
+    "benchmark-total-return-daily.v1@1.0.0",
+    "common-reference-factor.v1@1.0.0",
+    "historical-stage6-public-input-manifest.v1@1.0.0"
+  ],
+  "transport_version_recommendation": {
+    "existing_transport_source_commit": "aab36fe229104779b50ec71e2dc37a9fad81d285",
+    "existing_snapshot_lock_sha256": "02e0505f727552f7632eee807fedd27e6ce6d8dbde05f4482e99641f42b91169",
+    "keep_existing_transport_protocol_v1_if_envelope_endpoints_headers_auth_unchanged": true,
+    "new_historical_contract_commit_required": true,
+    "new_schema_catalog_fixture_lock_required": true,
+    "transport_v2_only_if_transport_semantics_change": true
+  },
+  "is_repin_gate_order": [
+    "SOURCE_FAMILIES_AND_ROOT_RELEASE_CANDIDATE_MATERIALIZED",
+    "SCHEMA_CATALOG_FIXTURES_COMMITTED",
+    "PRODUCER_VALIDATION_PASSED",
+    "NO_REAL_HANDOFF_TOKEN_ISSUED_YET",
+    "IS_REBUILDS_VENDOR_SNAPSHOT_AND_CATALOG_LOCK",
+    "REAL_HTTPS_HANDOFF_ONLY_AFTER_REPIN"
+  ],
+  "provider_neutral_contract_fields": [
+    "schema_version",
+    "contract_id",
+    "contract_hash",
+    "strategy_input_ref",
+    "root_release_id",
+    "root_manifest_hash",
+    "knowledge_cutoff",
+    "transport_source_commit",
+    "historical_contract_commit",
+    "snapshot_lock",
+    "source_releases",
+    "artifacts",
+    "domain_profiles",
+    "universe_identity",
+    "market_basis_identity",
+    "factor_identity",
+    "financial_identity",
+    "declared_missing_items",
+    "unrecoverable_items",
+    "contains_holdout_content",
+    "contains_outcome_content",
+    "authority_eligible"
+  ],
+  "blockers": [
+    {"priority":1,"id":"P0-ROOT-RELEASE","status":"BLOCKED"},
+    {"priority":2,"id":"P0-PIT-LINEAGE","status":"BLOCKED"},
+    {"priority":3,"id":"P0-MARK-STATE-RULE","status":"BLOCKED"},
+    {"priority":4,"id":"P0-SECURITY-LIFECYCLE","status":"BLOCKED"},
+    {"priority":5,"id":"P0-CORPORATE-ACTION","status":"BLOCKED"},
+    {"priority":6,"id":"P0-FINANCIAL-PIT","status":"BLOCKED"},
+    {"priority":7,"id":"P0-REFERENCE-FACTOR","status":"BLOCKED"},
+    {"priority":8,"id":"P1-COVERAGE-PROFILE","status":"MISSING"},
+    {"priority":9,"id":"P1-PRODUCER-VALIDATION","status":"MISSING"},
+    {"priority":10,"id":"P1-IS-REPIN-HANDOFF","status":"MISSING"}
+  ],
+  "owner_decisions": [
+    {"id":"S6DATA-01","status":"pending","recommendation":"SSE_SZSE_ORDINARY_A_SHARES_BSE_DEFERRED"},
+    {"id":"S6DATA-02","status":"pending","recommendation":"FIX_ONE_BROAD_MARKET_TOTAL_RETURN_BENCHMARK"},
+    {"id":"S6DATA-03","status":"pending","recommendation":"BETA_EXACT_120_DAILY_PAIRS_OLS_NO_IMPUTATION"},
+    {"id":"S6DATA-04","status":"pending","recommendation":"ADV_PREVIOUS_20_SESSION_CNY_TURNOVER_MEAN"},
+    {"id":"S6DATA-05","status":"pending","recommendation":"KB_PUBLISH_RAW_BASIS_AND_VERSIONED_FACTORS_IS_RECOMPUTES"},
+    {"id":"S6DATA-06","status":"pending","recommendation":"MERGE_COMMON_FACTORS_INTO_MARKET_REFERENCE_FAMILY"},
+    {"id":"S6DATA-07","status":"pending","recommendation":"ADD_SINGLE_ROOT_AGGREGATE_RELEASE"},
+    {"id":"S6DATA-08","status":"pending","recommendation":"P0_CORPORATE_ACTIONS_MATCH_STAGE5D_FIVE_TYPES"},
+    {"id":"S6DATA-09","status":"pending","recommendation":"ENTITY_CALENDAR_RULE_IDENTITY_COVERAGE_100_PERCENT"},
+    {"id":"S6DATA-10","status":"pending","recommendation":"KEEP_TRANSPORT_V1_UNLESS_TRANSPORT_SEMANTICS_CHANGE"}
+  ],
+  "kb_next_implementation_order": [
+    "FREEZE_SECURITY_ENTITY_LIFECYCLE_UNIVERSE",
+    "BACKFILL_MARKET_REFERENCE_PIT_LINEAGE",
+    "BUILD_BENCHMARK_AND_ADV_BETA_FACTORS",
+    "BACKFILL_EVIDENCE_AND_FINANCIAL_PIT_LINEAGE",
+    "PUBLISH_AND_VALIDATE_THREE_SOURCE_FAMILIES",
+    "PUBLISH_SINGLE_ROOT_AGGREGATE_RELEASE",
+    "FREEZE_PUBLIC_CONTRACT_COMMIT_SCHEMAS_CATALOG_FIXTURES",
+    "IS_REPIN_BEFORE_TOKEN",
+    "GENERATE_HANDOFF_AND_SHORT_LIVED_READ_TOKEN_LAST"
+  ],
+  "observed_inputs": {
+    "kb_repository_read": false,
+    "kb_database_read": false,
+    "kb_artifact_read": false,
+    "handoff_read": false,
+    "token_read": false,
+    "network_accessed_for_kb_data": false,
+    "holdout_read": false,
+    "candidate_inventory_created": false,
+    "returns_read": false,
+    "coverage_calculated": false,
+    "historical_run_started": false,
+    "persists_state": false
+  },
+  "authorization_boundary": {
+    "authority_eligible": false,
+    "authorizes_real_handoff": false,
+    "authorizes_candidate_projection": false,
+    "authorizes_coverage": false,
+    "authorizes_formal_stage6c": false,
+    "authorizes_6d": false,
+    "authorizes_migration": false,
+    "authorizes_backtest": false,
+    "authorizes_paper": false,
+    "authorizes_shadow": false,
+    "authorizes_live": false,
+    "authorizes_positions": false,
+    "authorizes_orders": false,
+    "writes_kb": false
+  },
+  "next_gate": "OWNER_CONFIRMS_S6DATA_01_THROUGH_S6DATA_10_BEFORE_KB_BACKFILL_CONTRACT_FREEZE"
+}

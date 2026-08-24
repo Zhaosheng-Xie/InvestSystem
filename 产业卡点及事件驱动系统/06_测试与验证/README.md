@@ -51,6 +51,8 @@
 
 [Stage 6 KB 历史公共数据 handoff 验收 runbook](../../docs/validation/stage6-kb-historical-handoff-acceptance-runbook-v0.1.md)已固定交付身份、真实 Published Release、数据域/引用、PIT/lineage 和 holdout/outcome 五道门；当前所有 observed-input 和 authority 字段均为 false。Windows CI 的 `Asia/Shanghai` 时区数据已加入直接 hash-locked `tzdata` runtime dependency，避免依赖 runner 系统数据库。
 
+[Stage 6 最小历史公共数据消费契约草案](../../docs/validation/stage6-minimum-public-data-consumption-contract-draft-v0.1.md)现已把 KB NOT_READY 声明转成 provider-neutral P0/P1 需求、ADV20/Beta120 推荐口径、universe/coverage 门、单 root Release 和 Schema/repin 方案。草案未读取 KB 数据，十项 owner decision 全部 pending，不构成 handoff、candidate 或 coverage capability。
+
 ## Stage 3D 已验收证据
 
 [Stage 3D 真实公网 Context Pack 验收](../../docs/validation/stage3d-context-pack-http-acceptance.md)固定了正式 Context Pack/Evidence Release、两份主制品和两份公开 Schema，并验证：
