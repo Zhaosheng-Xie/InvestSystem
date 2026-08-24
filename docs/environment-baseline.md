@@ -70,3 +70,7 @@ New-Item -ItemType Directory -Force -Path $baseline | Out-Null
 状态，把共享环境中原已存在的其他 editable 项在“本地路径”和“Git URL + commit”之间换一种
 显示方式；这不表示本项目改装了这些包，也不构成依赖。安装后的 `pip check` 与安装前相同，仍只
 报告上述既有 OpenCV/NumPy 冲突。项目导入解析到本仓库的 `src/invest_system/__init__.py`。
+
+## Stage 6 Windows 时区依赖说明
+
+`2026-08-24` 只读检查确认共享环境已存在 `tzdata==2023.3`，来源为 pandas/arrow 依赖；本轮未对共享环境执行任何 pip 安装、升级、降级或卸载。为使没有系统 IANA timezone database 的 Windows CI 也能解析 `ZoneInfo("Asia/Shanghai")`，项目直接依赖范围新增 `tzdata>=2023.3,<2027`，隔离 runtime/dev lock 固定 `tzdata==2026.3`。共享环境现有版本满足项目声明，本地依赖状态没有发生改变。

@@ -35,6 +35,8 @@ Stage 2A 已从固定 KB 公共契约提交 `58ed9c5cb5302e3e719f1696bed83a03c5d
 
 根级采用 `src/` 包布局、GitHub Actions 和规范 JSON。本地实现使用工作站级 `E:\Conda\envs\Data_Analysis`（Python 3.12）作为共享开发解释器，但 InvestSystem 必须独立维护 `pyproject.toml`、`requirements-build.in`、带哈希的 runtime/dev lock、TOML 配置、`var/cache/kb-releases/`、`var/state/invest_system.sqlite3` 和运行目录。项目只以 editable `--no-deps --no-build-isolation` 注册；缺包安装前后保存环境基线并运行 `pip check`，不得未经确认改变既有共享包。CI 和可复现验收必须从 InvestSystem lock 创建干净环境。
 
+`2026-08-24` 的 Windows GitHub Actions 暴露出标准库 `zoneinfo` 在无系统 IANA 数据时无法加载 `Asia/Shanghai`；Linux runner 因系统 tzdata 可用而不受影响。InvestSystem 现将 `tzdata>=2023.3,<2027` 声明为直接 runtime dependency，并在 runtime/dev locks 中固定 `tzdata==2026.3` 及两个制品哈希。共享 `Data_Analysis` 原已由 pandas/arrow 依赖安装 `tzdata==2023.3`，满足声明下界，本次没有安装、升级或卸载共享包。
+
 禁止通过 KB SQLite、`raw/`、`staging/`、兄弟目录 `PYTHONPATH`、KB editable 包、submodule、符号链接或内部 Python import 获取输入；禁止共享 KB 数据库、缓存、迁移和部署 volume。
 
 KB Adapter 只面向已发布公共契约并使用只读权限。版本化 HTTP API 与不可变导出包是两个传输入口，但必须汇入相同的 Release validator、确定性 receipt 和 provider-neutral DTO。首版每个 run 只接受一个 `strategy_input_ref`。Manifest、制品哈希、Schema、撤回状态或知识截止时间任一不合格时，新 run 必须失败关闭为 `BLOCKED`。正式运行禁止解析 `latest`。
