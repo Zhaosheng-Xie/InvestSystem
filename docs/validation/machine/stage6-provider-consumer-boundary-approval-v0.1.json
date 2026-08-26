@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "approval_id": "stage6_provider_consumer_boundary_owner_approval_v0_1",
+  "approved_by": "repository_owner_via_conditional_delegation",
+  "approved_at": "2026-08-26T00:00:00.000000Z",
+  "approval_scope": "cross_repository_architecture_governance_only",
+  "approval_record_hash": "28e856cbc38ec42d40176ca06c654c469249b023fbcd75d39db6c8c165075d56",
+  "owner_sources": [
+    {
+      "source_ref": "owner_conditional_risk_delegation_20260826",
+      "text": "这两份待批准的文件可能会有很大的风险吗？如果风险不大，就可以帮我看着批准。"
+    },
+    {
+      "source_ref": "owner_continue_after_kb_fix_20260826",
+      "text": "KB那边修复完了，IS这边继续"
+    }
+  ],
+  "preconditions": {
+    "is_and_kb_architecture_audits_aligned": true,
+    "major_architecture_risk_found": false,
+    "kb_stage7_fix_main_commit": "6ae6c4c3c8ec9433ff63fddcb2bbb207a39e8cbe",
+    "kb_post_merge_main_ci_all_green": true,
+    "is_draft_formation_commit": "29f83eb",
+    "is_draft_full_repository_tests_passed": true
+  },
+  "approved_material": {
+    "decision_id": "KBIS-ADR-0002",
+    "adr": {
+      "path": "docs/adr/ADR-0002-kb-provider-contract-consumer-profile-boundary.md",
+      "raw_sha256": "e18e91423066589b636edd0ca793e6949f45dcf272ce0f81661aa33c3982f22e"
+    },
+    "consumer_profile_document": {
+      "path": "docs/validation/stage6-historical-public-data-consumer-profile-v0.3-draft.md",
+      "raw_sha256": "79abfe814577dd2da644f5a59310021e6151e1c3a585cc6fa69aa69424e6bbad"
+    },
+    "consumer_profile_machine": {
+      "path": "docs/validation/machine/stage6-historical-public-data-consumer-profile-v0.3.0-draft.json",
+      "raw_sha256": "2ea49cf7cd2cd100ecf6fde345b431a75a3f03c226d79fa4689cb0799fce8f6d",
+      "canonical_profile_sha256": "76c8d8eceab4c012dc957ac40edfd7d013a7d2a27a8b4edb997815ce81e3ebc0",
+      "pending_owner_items_sha256": "dd003f2688fa459bce537e7d1c560152494c7ffad120cdb383cc1e4f5e8d0a27"
+    }
+  },
+  "approved_decisions": [
+    {"id":"S6BOUND-01","status":"approved","decision":"SEPARATE_PROVIDER_CONTRACT_AND_CONSUMER_PROFILE_VERSION_SPACES"},
+    {"id":"S6BOUND-02","status":"approved","decision":"NEW_KB_CORE_SCHEMA_EXCLUDES_STRATEGY_INPUT_REF_AND_IS_RUN_FIELDS"},
+    {"id":"S6BOUND-03","status":"approved","decision":"IS_OWNS_AUTHORITY_HOLDOUT_OUTCOME_AND_RUN_PERMISSIONS"},
+    {"id":"S6BOUND-04","status":"approved","decision":"KB_GENERIC_AGGREGATE_CLOSURE_IS_RUN_SINGLE_ROOT_CONSTRAINT"},
+    {"id":"S6BOUND-05","status":"approved","decision":"GENERIC_BENCHMARK_FACTOR_SCHEMA_IS_SELECTS_H00985"},
+    {"id":"S6BOUND-06","status":"approved","decision":"KB_RAW_BASIS_AND_GENERIC_FACTOR_IS_RECOMPUTES_AND_ACCEPTS"},
+    {"id":"S6BOUND-07","status":"approved","decision":"V0_2_REMAINS_APPROVED_AS_IS_CONSUMER_ACCEPTANCE_PROFILE"},
+    {"id":"S6BOUND-08","status":"approved","decision":"LEGACY_STRATEGY_REF_AND_HANDOFFS_COMPATIBILITY_ONLY"},
+    {"id":"S6BOUND-09","status":"approved","decision":"ARTIFACT_SCHEMA_CHANGE_DOES_NOT_IMPLY_TRANSPORT_V2"},
+    {"id":"S6BOUND-10","status":"approved","decision":"ZERO_RUNTIME_AND_DATA_EXECUTION_AUTHORITY"}
+  ],
+  "approved_decisions_sha256": "feb9235b1c1f1379de6d100fd7f8fc5292b4448a7b443709a7766728160c0b92",
+  "approved_atomically": true,
+  "kb_counterpart": {
+    "same_decision_id_required": true,
+    "same_approved_decisions_sha256_required": true,
+    "kb_schema_implementation_approved_by_this_record": false,
+    "cross_repository_runtime_dependency_created": false
+  },
+  "authorization_boundary": {
+    "authority_eligible": false,
+    "authorizes_kb_schema_implementation": false,
+    "authorizes_backfill_or_release": false,
+    "authorizes_parser_or_repin": false,
+    "authorizes_handoff": false,
+    "authorizes_candidate_or_coverage": false,
+    "authorizes_historical_run_or_holdout": false,
+    "authorizes_migration_or_backtest": false,
+    "authorizes_paper_shadow_live": false,
+    "authorizes_positions_or_orders": false,
+    "writes_kb": false
+  },
+  "next_gate": "KB_FORMS_GENERIC_DRAFT_SCHEMA_REGISTRY_CATALOG_FIXTURE_UNDER_ITS_OWN_GOVERNANCE"
+}

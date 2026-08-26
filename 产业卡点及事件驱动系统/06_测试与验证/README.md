@@ -43,7 +43,9 @@
 
 ## Stage 6 提供方/消费者边界草案
 
-[ADR-0002 提议](../../docs/adr/ADR-0002-kb-provider-contract-consumer-profile-boundary.md)与 [Stage 6 消费与验收 Profile v0.3 草案](../../docs/validation/stage6-historical-public-data-consumer-profile-v0.3-draft.md)只形成待批准职责边界：KB 保持通用，IS 通过 Adapter 构造 `StrategyInputRef` 并持有 H00985/ADV/Beta、holdout、candidate/coverage 和 authority。[草案形成验收](../../docs/validation/stage6-consumer-boundary-draft-acceptance.md)固定 v0.2 字节与十项批准、验证十项 `S6BOUND` 全部 pending，并要求所有数据/运行权限为 false。
+[ADR-0002 提议](../../docs/adr/ADR-0002-kb-provider-contract-consumer-profile-boundary.md)与 [Stage 6 消费与验收 Profile v0.3 草案](../../docs/validation/stage6-historical-public-data-consumer-profile-v0.3-draft.md)在草案形成时只包含待批准职责边界：KB 保持通用，IS 通过 Adapter 构造 `StrategyInputRef` 并持有 H00985/ADV/Beta、holdout、candidate/coverage 和 authority。[草案形成验收](../../docs/validation/stage6-consumer-boundary-draft-acceptance.md)固定 v0.2 字节与十项批准、验证十项 `S6BOUND` 全部 pending，并要求所有数据/运行权限为 false。
+
+[Stage 6 提供方/消费者边界批准记录](../../docs/validation/stage6-provider-consumer-boundary-approval-v0.1.md)在两仓独立审计一致和 KB 修复后主干全绿的前提下原子批准 `S6BOUND-01—10`。[治理批准验收](../../docs/validation/stage6-consumer-boundary-governance-acceptance.md)证明 pending draft 字节保持不变，独立 machine approval record 固定条件授权；KB Schema 实现、IS Adapter/repin、数据和运行权限仍全部为 false。
 
 ## Stage 6C 正式执行 Readiness 审计
 
