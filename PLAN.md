@@ -1,11 +1,11 @@
-# InvestSystem 实施计划（v3.27）
+# InvestSystem 实施计划（v3.28）
 
-> 计划版本：`v3.27`
-> 基线日期：`2026-08-20`
+> 计划版本：`v3.28`
+> 基线日期：`2026-08-26`
 > 批准基线：`v0.4 / approved 2026-07-31`
 > 文档状态：`active / approved decisions integrated`
 > 当前阶段：`Stage 0—2B / completed；Stage 3—4 / completed_with_scope_limits；Stage 5 / in_progress（5B—5D-1 completed_with_scope_limits）；Stage 6 / in_progress（6B completed_with_scope_limits，6C v0.2 anonymous synthetic kernel completed_with_scope_limits / formal execution not authorized，6D not authorized）`
-> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3_completed_without_run_authority / stage4_complete_synthetic_research_validation_engine_accepted / stage5d_normal_lifecycle_evaluator_completed_with_scope_limits / stage6b_live_https_validation_seal_accepted_without_historical_run_authority / stage6c_anonymous_synthetic_phase_kernel_completed_with_scope_limits / stage6_kb_historical_handoff_runbook_prepared_without_data_consumption / stage6_minimum_public_data_contract_draft_pending_owner / stage6c_formal_execution_readiness_blocked / full_production_strategy_not_implemented`
+> 当前成熟度：`offline_release_admission_kernel_completed / stage2b_synthetic_research_validation_completed / stage3_completed_without_run_authority / stage4_complete_synthetic_research_validation_engine_accepted / stage5d_normal_lifecycle_evaluator_completed_with_scope_limits / stage6b_live_https_validation_seal_accepted_without_historical_run_authority / stage6c_anonymous_synthetic_phase_kernel_completed_with_scope_limits / stage6_kb_historical_handoff_runbook_prepared_without_data_consumption / stage6_minimum_public_data_contract_v0_2_owner_approved_zero_runtime_authority / stage6c_formal_execution_readiness_blocked / full_production_strategy_not_implemented`
 > 当前授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均只允许各自精确批准范围内的匿名合成 research validation；Stage 5D 当前新增普通单证券 full-EXIT lifecycle evaluator，但只消费精确 input-set 且 completed trade 明确非真实，5D-2 未授权；Stage 6C v0.2 的六条匿名合成 kernel 切片已完成，但正式 Readiness 审计为 NO_GO，不授权正式 historical run、真实 development/walk-forward、holdout、6D 或 migration；全项目不授权 backtest、paper、shadow、live、真实仓位、账户、订单、券商接入或资金部署`
 
 本文是 InvestSystem 仓库唯一正式实施路线图，负责说明阶段、依赖、完成门和验收证据。它不取代 ADR、PRD、规则规格、机器契约、代码、测试报告或运行记录，也不证明任何策略已经实现或有效。
@@ -725,7 +725,7 @@ owner 随后按明确指令原子批准 v0.2 全部 40 项；独立[批准记录
 
 [Stage 6 KB 历史公共数据 Handoff 验收 Runbook v0.1](docs/validation/stage6-kb-historical-handoff-acceptance-runbook-v0.1.md)已在未读取任何 KB handoff/Token/Release 的条件下形成：固定真实 HTTPS/export 边界、2019—2025 数据域、Release/artifact/PIT/lineage/holdout 五道门、三类结果和 24 个 closed-world failure reasons。它没有 parser、candidate、coverage 或运行能力；只有 owner 提供精确版本化 handoff 后才能进入下一验收。
 
-[Stage 6 最小历史公共数据消费契约草案 v0.1](docs/validation/stage6-minimum-public-data-consumption-contract-draft-v0.1.md)现已接受 KB `NOT_READY / eligible Release=0` 作为规划输入而非验收证据：冻结 P0/P1 数据域、ADV20/Beta120 推荐口径、SSE/SZSE universe、Stage 5D 五类公司行动、三个 source families + 单一 root aggregate Release、11 个新 artifact Schema 和 repin 时点。十项 owner 决定均为 `pending`，草案零 runtime authority。
+[Stage 6 最小历史公共数据消费契约 v0.2](docs/validation/stage6-minimum-public-data-consumption-contract-v0.2.md)已获 owner 原子批准：`S6DATA-01—10` 全部生效，Beta benchmark 精确固定为 `H00985`，其余采用 v0.1 推荐的 SSE/SZSE universe、ADV20/Beta120、Stage 5D 五类公司行动、三个 source families + 单一 root aggregate Release、11 个 artifact Schema 和 repin 时点。该批准只形成需求治理和审批谱系，仍为零 runtime authority；v0.1 draft 保持原始字节供追溯。
 
 进入条件：Stage 3 已按 `completed_with_scope_limits` 关闭正式 Release E2E，Stage 5 的第一条预注册订单/合同回放切片已按 `completed_with_scope_limits` 独立验收；这里是两条并行分支的汇合门。Stage 3 的 validation-only 完成和 Stage 5D 的受限会计覆盖都不自动授予历史运行准入。
 
@@ -951,7 +951,7 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 
 1. Stage 4 已完成完整 synthetic golden/replay 验收；该结仓不自动进入 backtest 或 Stage 5。
 2. Stage 3 已按 `completed_with_scope_limits` 关闭，KB 本轮没有剩余交付 blocker；不得为补 authority 重新打开 Stage 3。新 run authority、确认和持久化仍关闭，只能在 Stage 6/7 获 owner 独立授权并形成失败矩阵后推进。
-3. Stage 6 synthetic 与 Stage 5D normal lifecycle 技术接缝已完成；KB 声明当前无 2019—2025 eligible Release。[最小消费契约草案](docs/validation/stage6-minimum-public-data-consumption-contract-draft-v0.1.md)等待 owner 原子确认 `S6DATA-01—10`；确认后由 KB 依序 backfill 三个 source families 和单一 root Release。IS 只在 producer validation 后 repin，并在 Token 前完成；此前不实现真实 parser、coverage、migration 或 Stage 6C。
+3. Stage 6 synthetic 与 Stage 5D normal lifecycle 技术接缝已完成；KB 声明当前无 2019—2025 eligible Release。[最小消费契约 v0.2](docs/validation/stage6-minimum-public-data-consumption-contract-v0.2.md)已原子批准 `S6DATA-01—10`，其中 Beta benchmark 固定为 `H00985`。下一外部依赖是 KB 按该契约完成 draft Schema/pilot、backfill、三个 source families、单一 root Release 与 producer validation；IS 只在其后 repin，并在 Token 前完成。当前批准不授权真实 parser、coverage、migration、Stage 6C historical run 或 holdout。
 4. backtest、paper、shadow 或 live 均须到对应后续阶段另行批准；任何合成 capability 均不授予这些模式。
 
 ---
@@ -1017,3 +1017,4 @@ Stage 0、Stage 1、Stage 2A 与 Stage 2B 已完成。下一步执行顺序为�
 | `v3.25` | 2026-08-24 | `active` | 完成精确 input-set gated 普通证券 lifecycle evaluator：连续重放 BUY→full SELL、8+59 canonical journal、61 点 NAV、十八格 lifetime/EXIT P&L、completed-trade 与 audit replay；结果仍为匿名 synthetic，不能计入真实 coverage/30 笔门或打开 Stage 6C。 |
 | `v3.26` | 2026-08-24 | `active` | 准备 Stage 6 KB 历史公共数据 handoff 验收 runbook，固定真实发布面、2019—2025 数据域、PIT/lineage/holdout 门和零权限边界；同时补充 Windows `ZoneInfo("Asia/Shanghai")` 所需的直接 `tzdata` hash lock，不改变共享环境。 |
 | `v3.27` | 2026-08-24 | `active` | 基于 KB NOT_READY census 形成 Stage 6 最小消费契约草案：P0 历史证据/证券生命周期/mark-rule-state/actions/financials/peer factors，推荐 ADV20/Beta120 通用因子、三个 source families + 单一 root Release、artifact Schema v1 与 producer-validation 后 repin；十项 owner 决定保持 pending。 |
+| `v3.28` | 2026-08-26 | `active` | owner 原子批准 Stage 6 最小历史公共数据消费契约 `S6DATA-01—10`：Beta benchmark 精确固定 `H00985`，其余采用 v0.1 推荐口径；形成完整 v0.2 机器契约和独立审批谱系。批准只冻结 KB 后续交付需求，不授权真实 handoff/backfill/candidate/coverage/historical run/migration/holdout 或交易。 |

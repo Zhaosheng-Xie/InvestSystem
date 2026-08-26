@@ -35,6 +35,12 @@
 
 `TRADE_READY`、`SHADOW_ONLY`、`REJECT`、`ABSTAIN` 和 `BLOCKED` 案例必须共同入库；`BLOCKED` 使用独立失败 fixture，任何 `TRADE_READY` 合成正例必须先有对应 `approved` 规则，且不代表 paper/live 授权。
 
+## Stage 6 最小历史公共数据消费契约治理
+
+[Stage 6 最小历史公共数据消费契约 v0.2](../../docs/validation/stage6-minimum-public-data-consumption-contract-v0.2.md)已原子批准 `S6DATA-01—10`，Beta benchmark 固定为 CSI `H00985` 且禁止 fallback。[治理验收](../../docs/validation/stage6-minimum-public-data-consumption-contract-v0.2-acceptance.md)中的机器契约和独立 approval record 固定 v0.1 lineage、十项决定、三 source families + 单一 root、SSE/SZSE universe、ADV20/Beta120、五类公司行动、100% identity hard gates、transport v1 与 repin 顺序。
+
+该治理批准没有读取 KB 数据，也不授权真实 handoff、backfill、parser、candidate、coverage、historical run、migration 或 holdout。专项测试必须同时验证 v0.1 字节未变、v0.2 canonical/raw identity、十项原子批准、H00985 无 fallback 和所有权限为 false。
+
 ## Stage 6C 正式执行 Readiness 审计
 
 [Stage 6C 正式执行 Readiness 审计 v0.1](../../docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)在匿名 synthetic phase seal 后检查 34 个正式前置门，结论为 `NO_GO_FOR_FORMAL_STAGE6C_EXECUTION`。其中 `9 READY / 22 MISSING / 1 BLOCKED / 2 NOT_REQUIRED_WITH_JUSTIFICATION`；现有证据只能支持继续做只读 census 和方案设计，不能启动 development/walk-forward、读取 holdout、签发 6D 或创建正式 migration。

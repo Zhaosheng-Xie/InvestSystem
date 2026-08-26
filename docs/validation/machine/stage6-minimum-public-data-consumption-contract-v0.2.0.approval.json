@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0.0",
+  "approval_id": "stage6_minimum_public_data_contract_v0_2_0_owner_approval",
+  "approved_by": "repository_owner",
+  "approved_at": "2026-08-26T00:00:00.000000Z",
+  "approval_scope": "stage6_historical_public_data_requirements_governance",
+  "source_ref": "codex_owner_approval_s6data_01_10_h00985_20260826",
+  "source_text": "批准 S6DATA-01—10，S6DATA-02 固定 H00985，其余按 IS v0.1 推荐口径执行。仅授权形成 v0.2 正式消费契约和治理谱系，不授权真实 handoff、backfill、candidate、coverage、historical run、migration 或 holdout。",
+  "contract": {
+    "path": "docs/validation/machine/stage6-minimum-public-data-consumption-contract-v0.2.0.json",
+    "contract_id": "stage6_minimum_historical_public_data_consumption",
+    "contract_version": "0.2.0",
+    "contract_hash": "4063575384771228433fb8849c0fedd9fac2ba78f704ce5551bb4e23fe8c3557",
+    "raw_sha256": "a7fd65c0d955d4e3610dcbefbaf6a2ec600689986aee0aa80123d167f8c88f6a"
+  },
+  "document": {
+    "path": "docs/validation/stage6-minimum-public-data-consumption-contract-v0.2.md",
+    "sha256": "ea82f2e17b99ecaec0cafde7ce5fe0fdb5d6d6855f6348891369cd0b2f02db43"
+  },
+  "supersedes": {
+    "draft_document_sha256": "205a0c7d403d9fbadd988f2c3081882cb61594a5e4c36a6d4cc6db559e253182",
+    "draft_machine_raw_sha256": "65b9288b7bf2279b061174869181b6e92c85f76db567c6297ff67996e49a1359"
+  },
+  "approved_decision_ids": [
+    "S6DATA-01",
+    "S6DATA-02",
+    "S6DATA-03",
+    "S6DATA-04",
+    "S6DATA-05",
+    "S6DATA-06",
+    "S6DATA-07",
+    "S6DATA-08",
+    "S6DATA-09",
+    "S6DATA-10"
+  ],
+  "approved_decisions_hash": "211f046282cb31f046db2fa382af38457810cbb03c20dfd60fb41162c84c5da4",
+  "approved_atomically": true,
+  "exact_beta_benchmark": {
+    "benchmark_id": "H00985",
+    "provider": "CSI",
+    "return_type": "gross_total_return",
+    "fallback": null
+  },
+  "authorization_boundary": {
+    "authority_eligible": false,
+    "authorizes_real_handoff": false,
+    "authorizes_backfill": false,
+    "authorizes_candidate_projection": false,
+    "authorizes_coverage": false,
+    "authorizes_historical_run": false,
+    "authorizes_migration": false,
+    "authorizes_holdout_read": false,
+    "authorizes_backtest": false,
+    "authorizes_paper": false,
+    "authorizes_shadow": false,
+    "authorizes_live": false,
+    "authorizes_positions": false,
+    "authorizes_orders": false,
+    "writes_kb": false
+  },
+  "approval_record_hash": "4331087874dcbee885f71b2eb0fef5611dd6d24772a95cce10b3d7514fa603ec"
+}

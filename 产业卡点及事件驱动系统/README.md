@@ -106,6 +106,8 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
     - 状态：`prepared_for_future_handoff / no_kb_data_consumed`；固定 2019—2025 公共 Release/artifact/PIT/lineage/holdout 验收步骤、三类结果和 24 个失败原因。未实现 parser、candidate、coverage 或历史 run。
 45. [Stage 6 最小历史公共数据消费契约草案 v0.1](../docs/validation/stage6-minimum-public-data-consumption-contract-draft-v0.1.md)
     - 状态：`draft_for_owner_confirmation / zero_runtime_authority`；接受 KB 当前 NOT_READY，提出 P0 数据域、ADV20/Beta120、SSE/SZSE universe、三个 source families + 单一 root、Schema v1 和 repin 顺序。十项 owner 决定全部 pending。
+46. [Stage 6 最小历史公共数据消费契约 v0.2](../docs/validation/stage6-minimum-public-data-consumption-contract-v0.2.md)
+    - 状态：`owner_approved_governance_contract / zero_runtime_authority`；`S6DATA-01—10` 已整组批准，Beta benchmark 精确固定 `H00985`，其余采用 v0.1 推荐口径。完整机器契约、独立审批谱系和[治理验收](../docs/validation/stage6-minimum-public-data-consumption-contract-v0.2-acceptance.md)已形成，但不授权真实 handoff/backfill/parser/candidate/coverage/historical run/migration/holdout。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实只读 acquisition/transport 已由 Stage 3 关闭，原始响应持久化和 run admission 移交 Stage 6/7，策略语义属于 Stage 2B 以后。
 
