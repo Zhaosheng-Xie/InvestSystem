@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v3.28](PLAN.md)：本仓库唯一正式路线图；KB 历史公共数据 handoff runbook 已准备，[Stage 6 最小消费契约 v0.2](docs/validation/stage6-minimum-public-data-consumption-contract-v0.2.md)已原子批准 `S6DATA-01—10`，其中 Beta benchmark 固定 `H00985`。本批准只冻结消费需求和治理谱系；尚未消费 KB 数据，正式 handoff、coverage、historical run、migration、holdout 和 6D 继续 blocked。
+- [InvestSystem 实施计划 v3.29](PLAN.md)：本仓库唯一正式路线图；[Stage 6 最小消费契约 v0.2](docs/validation/stage6-minimum-public-data-consumption-contract-v0.2.md)继续原子批准 `S6DATA-01—10`。新的 [ADR-0002 提议](docs/adr/ADR-0002-kb-provider-contract-consumer-profile-boundary.md)与[消费者 Profile v0.3 草案](docs/validation/stage6-historical-public-data-consumer-profile-v0.3-draft.md)等待 owner 审核，负责把 KB 通用契约与 IS 的 H00985/ADV/Beta、holdout、candidate、coverage 和 authority 分离；当前无 parser、repin、handoff 或运行权限。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。

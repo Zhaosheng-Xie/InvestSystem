@@ -41,6 +41,10 @@
 
 该治理批准没有读取 KB 数据，也不授权真实 handoff、backfill、parser、candidate、coverage、historical run、migration 或 holdout。专项测试必须同时验证 v0.1 字节未变、v0.2 canonical/raw identity、十项原子批准、H00985 无 fallback 和所有权限为 false。
 
+## Stage 6 提供方/消费者边界草案
+
+[ADR-0002 提议](../../docs/adr/ADR-0002-kb-provider-contract-consumer-profile-boundary.md)与 [Stage 6 消费与验收 Profile v0.3 草案](../../docs/validation/stage6-historical-public-data-consumer-profile-v0.3-draft.md)只形成待批准职责边界：KB 保持通用，IS 通过 Adapter 构造 `StrategyInputRef` 并持有 H00985/ADV/Beta、holdout、candidate/coverage 和 authority。[草案形成验收](../../docs/validation/stage6-consumer-boundary-draft-acceptance.md)固定 v0.2 字节与十项批准、验证十项 `S6BOUND` 全部 pending，并要求所有数据/运行权限为 false。
+
 ## Stage 6C 正式执行 Readiness 审计
 
 [Stage 6C 正式执行 Readiness 审计 v0.1](../../docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)在匿名 synthetic phase seal 后检查 34 个正式前置门，结论为 `NO_GO_FOR_FORMAL_STAGE6C_EXECUTION`。其中 `9 READY / 22 MISSING / 1 BLOCKED / 2 NOT_REQUIRED_WITH_JUSTIFICATION`；现有证据只能支持继续做只读 census 和方案设计，不能启动 development/walk-forward、读取 holdout、签发 6D 或创建正式 migration。

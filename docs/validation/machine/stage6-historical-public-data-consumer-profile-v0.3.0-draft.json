@@ -1,0 +1,212 @@
+{
+  "schema_version": "1.0.0-draft",
+  "profile_id": "stage6_historical_public_data_consumer_profile",
+  "profile_version": "0.3.0-draft",
+  "declared_status": "draft",
+  "effective_scope": "investsystem_consumer_requirements_and_acceptance_only",
+  "profile_hash": "76c8d8eceab4c012dc957ac40edfd7d013a7d2a27a8b4edb997815ce81e3ebc0",
+  "document_binding": {
+    "path": "docs/validation/stage6-historical-public-data-consumer-profile-v0.3-draft.md",
+    "raw_sha256": "79abfe814577dd2da644f5a59310021e6151e1c3a585cc6fa69aa69424e6bbad"
+  },
+  "proposed_architecture_decision": {
+    "decision_id": "KBIS-ADR-0002",
+    "path": "docs/adr/ADR-0002-kb-provider-contract-consumer-profile-boundary.md",
+    "raw_sha256": "e18e91423066589b636edd0ca793e6949f45dcf272ce0f81661aa33c3982f22e",
+    "status": "proposed_pending_owner"
+  },
+  "preserved_v0_2_lineage": {
+    "document_path": "docs/validation/stage6-minimum-public-data-consumption-contract-v0.2.md",
+    "document_raw_sha256": "ea82f2e17b99ecaec0cafde7ce5fe0fdb5d6d6855f6348891369cd0b2f02db43",
+    "machine_path": "docs/validation/machine/stage6-minimum-public-data-consumption-contract-v0.2.0.json",
+    "machine_raw_sha256": "a7fd65c0d955d4e3610dcbefbaf6a2ec600689986aee0aa80123d167f8c88f6a",
+    "contract_hash": "4063575384771228433fb8849c0fedd9fac2ba78f704ce5551bb4e23fe8c3557",
+    "approval_raw_sha256": "ab40ae5392a8c9d22e507c59066d20d84df7cec78ffcc77ff4aac4ce4a616b31",
+    "approved_decisions_sha256": "211f046282cb31f046db2fa382af38457810cbb03c20dfd60fb41162c84c5da4",
+    "bytes_unchanged": true,
+    "approval_not_revoked": true,
+    "reinterpretation": "IS_CONSUMER_REQUIREMENTS_AND_ACCEPTANCE_PROFILE"
+  },
+  "preserved_s6data_decisions": [
+    {"id":"S6DATA-01","status":"approved","value":"SSE_SZSE_ORDINARY_A_SHARES_BSE_DEFERRED"},
+    {"id":"S6DATA-02","status":"approved","value":"BETA_BENCHMARK_H00985_CSI_ALL_SHARE_GROSS_TOTAL_RETURN"},
+    {"id":"S6DATA-03","status":"approved","value":"BETA_EXACT_120_DAILY_PAIRS_OLS_WITH_INTERCEPT_NO_IMPUTATION"},
+    {"id":"S6DATA-04","status":"approved","value":"ADV_PREVIOUS_20_EXCHANGE_SESSION_CNY_TURNOVER_MEAN"},
+    {"id":"S6DATA-05","status":"approved","value":"KB_PUBLISH_RAW_BASIS_AND_VERSIONED_FACTORS_IS_RECOMPUTES"},
+    {"id":"S6DATA-06","status":"approved","value":"MERGE_COMMON_FACTORS_INTO_MARKET_REFERENCE_FAMILY"},
+    {"id":"S6DATA-07","status":"approved","value":"ADD_SINGLE_ROOT_AGGREGATE_RELEASE"},
+    {"id":"S6DATA-08","status":"approved","value":"P0_CORPORATE_ACTIONS_MATCH_STAGE5D_FIVE_TYPES"},
+    {"id":"S6DATA-09","status":"approved","value":"ENTITY_CALENDAR_RULE_IDENTITY_COVERAGE_100_PERCENT"},
+    {"id":"S6DATA-10","status":"approved","value":"KEEP_TRANSPORT_V1_UNLESS_TRANSPORT_SEMANTICS_CHANGE"}
+  ],
+  "ownership": {
+    "kb_provider": [
+      "release",
+      "manifest",
+      "status_event_chain",
+      "artifact",
+      "schema",
+      "context_pack",
+      "generic_dependency_closure",
+      "pit_observed_available_source_revision_conflict_missing",
+      "company_security_calendar_market_rule_session_state_mark_corporate_action_financial_industry",
+      "generic_benchmark_identity_observation_methodology",
+      "generic_factor_definition_observation_and_raw_basis",
+      "generic_data_quality_profile",
+      "source_redistribution_eligibility"
+    ],
+    "investsystem_consumer": [
+      "strategy_input_ref",
+      "kb_adapter_and_provider_neutral_projection",
+      "strategy_run_manifest",
+      "receipt_observation_retention_confirmation",
+      "h00985_selection",
+      "adv20_beta120_acceptance_sampling_recomputation_and_strategy_use",
+      "development_scope_universe_and_holdout",
+      "candidate_coverage_historical_validation",
+      "e0_e7_gates_profit_bridge_valuation_and_decision",
+      "authority_eligible_abstain_blocked_and_run_permissions"
+    ]
+  },
+  "generic_kb_input": {
+    "release_identity_fields": [
+      "release_id",
+      "manifest_hash",
+      "knowledge_cutoff",
+      "release_manifest_schema_version"
+    ],
+    "dependency_closure_is_variable_length": true,
+    "artifact_identity_fields": [
+      "artifact_id",
+      "schema_id",
+      "schema_version",
+      "schema_hash",
+      "bytes_hash",
+      "size_bytes",
+      "record_count"
+    ],
+    "quality_profile_fields": [
+      "domain",
+      "grain",
+      "keys",
+      "date_range",
+      "required_missing",
+      "duplicate_count",
+      "orphan_count",
+      "pit_result",
+      "revision_result",
+      "declared_unrecoverable"
+    ],
+    "benchmark_contract": "benchmark_identities_and_observations",
+    "factor_contract": "factor_definitions_observations_completeness_and_raw_basis_hashes",
+    "corporate_action_types_are_extensible": true,
+    "industry_classification_levels_are_extensible": true
+  },
+  "adapter_projection": [
+    {"provider_input":"root_release_identity","is_output":"StrategyInputRef"},
+    {"provider_input":"generic_dependency_closure","is_output":"ReleaseRetentionClosure"},
+    {"provider_input":"artifact_descriptors_and_bytes","is_output":"ArtifactConsumptionReceipt"},
+    {"provider_input":"status_event_chain_and_response_bytes","is_output":"ReleaseStatusObservation"},
+    {"provider_input":"generic_data_quality_profile","is_output":"HistoricalDataReadinessReport"},
+    {"provider_input":"benchmark_identities","is_output":"H00985Selection"},
+    {"provider_input":"factor_definitions_and_raw_basis","is_output":"ADV20Beta120AcceptanceAndRecomputation"},
+    {"provider_input":"status_confirmation_and_approval_capability","is_output":"AuthorityAndAdmissionResult"}
+  ],
+  "consumer_requirements": {
+    "date_scope": {
+      "start_inclusive": "2019-01-01",
+      "end_inclusive": "2025-12-31",
+      "holdout_year": 2026
+    },
+    "target_universe": "SSE_SZSE_ORDINARY_CNY_A_SHARE_BSE_DEFERRED",
+    "benchmark_selection": {
+      "benchmark_id": "H00985",
+      "provider": "CSI",
+      "return_type": "gross_total_return",
+      "currency": "CNY",
+      "fallback": null
+    },
+    "beta120": {
+      "window": "PREVIOUS_EXACTLY_120_EXCHANGE_SESSIONS",
+      "includes_decision_session": false,
+      "estimator": "OLS_SLOPE_WITH_INTERCEPT",
+      "imputation": "NONE_EXCEPT_PROVEN_FULL_DAY_SUSPENSION",
+      "short_window": "INCOMPLETE"
+    },
+    "adv20": {
+      "window": "PREVIOUS_EXACTLY_20_EXCHANGE_SESSIONS",
+      "includes_decision_session": false,
+      "measure": "CNY_TURNOVER_ARITHMETIC_MEAN",
+      "unknown_session_state": "INCOMPLETE_NOT_ZERO"
+    },
+    "corporate_action_minimum": [
+      "CASH_DIVIDEND",
+      "SHARE_DISTRIBUTION",
+      "SPLIT_OR_CONSOLIDATION",
+      "RIGHTS_OR_ALLOTMENT",
+      "DELISTING_OR_CASH_OUT"
+    ],
+    "industry_selection": "PIT_PRIMARY_LEVEL_ONE_FOR_FIRST_IS_PROFILE",
+    "exactly_one_root_strategy_input_ref_per_run": true
+  },
+  "forbidden_in_new_kb_core_artifacts": [
+    "investsystem_or_stage6_specific_contract_identity",
+    "strategy_input_ref",
+    "strategy_run_manifest",
+    "authority_eligible",
+    "authorizes_fields",
+    "holdout_or_outcome_flags",
+    "single_h00985_identity_field",
+    "single_adv20_beta120_identity_field",
+    "h00985_constant_in_generic_benchmark_schema",
+    "closed_five_type_corporate_action_provider_ontology",
+    "closed_level_one_industry_provider_ontology",
+    "candidate_coverage_champion_decision_trading_fields",
+    "exactly_three_source_release_constraint",
+    "investsystem_snapshot_lock"
+  ],
+  "legacy_compatibility": {
+    "kb_strategy_input_ref_v1": "READ_ONLY_COMPATIBILITY_PRESERVED",
+    "stage3d_and_stage6b_specialized_handoffs": "HISTORICAL_VALIDATION_ONLY",
+    "v0_2_envelope": "AUDIT_LINEAGE_NOT_FUTURE_PROVIDER_TEMPLATE",
+    "silent_alias_or_fallback": false,
+    "runtime_cross_repository_read": false
+  },
+  "owner_confirmation_items": [
+    {"id":"S6BOUND-01","status":"pending","decision":"SEPARATE_PROVIDER_CONTRACT_AND_CONSUMER_PROFILE_VERSION_SPACES"},
+    {"id":"S6BOUND-02","status":"pending","decision":"NEW_KB_CORE_SCHEMA_EXCLUDES_STRATEGY_INPUT_REF_AND_IS_RUN_FIELDS"},
+    {"id":"S6BOUND-03","status":"pending","decision":"IS_OWNS_AUTHORITY_HOLDOUT_OUTCOME_AND_RUN_PERMISSIONS"},
+    {"id":"S6BOUND-04","status":"pending","decision":"KB_GENERIC_AGGREGATE_CLOSURE_IS_RUN_SINGLE_ROOT_CONSTRAINT"},
+    {"id":"S6BOUND-05","status":"pending","decision":"GENERIC_BENCHMARK_FACTOR_SCHEMA_IS_SELECTS_H00985"},
+    {"id":"S6BOUND-06","status":"pending","decision":"KB_RAW_BASIS_AND_GENERIC_FACTOR_IS_RECOMPUTES_AND_ACCEPTS"},
+    {"id":"S6BOUND-07","status":"pending","decision":"V0_2_REMAINS_APPROVED_AS_IS_CONSUMER_ACCEPTANCE_PROFILE"},
+    {"id":"S6BOUND-08","status":"pending","decision":"LEGACY_STRATEGY_REF_AND_HANDOFFS_COMPATIBILITY_ONLY"},
+    {"id":"S6BOUND-09","status":"pending","decision":"ARTIFACT_SCHEMA_CHANGE_DOES_NOT_IMPLY_TRANSPORT_V2"},
+    {"id":"S6BOUND-10","status":"pending","decision":"ZERO_RUNTIME_AND_DATA_EXECUTION_AUTHORITY"}
+  ],
+  "observed_inputs": {
+    "kb_release_or_artifact_read": false,
+    "kb_database_or_internal_path_read": false,
+    "handoff_or_token_read": false,
+    "network_data_access": false,
+    "holdout_read": false,
+    "candidate_or_coverage_created": false,
+    "historical_run_started": false,
+    "state_persisted": false
+  },
+  "authorization_boundary": {
+    "authority_eligible": false,
+    "authorizes_adr_or_profile_approval": false,
+    "authorizes_kb_schema_implementation": false,
+    "authorizes_backfill_or_release": false,
+    "authorizes_parser_or_repin": false,
+    "authorizes_handoff": false,
+    "authorizes_candidate_or_coverage": false,
+    "authorizes_historical_run_or_holdout": false,
+    "authorizes_migration_or_backtest": false,
+    "authorizes_paper_shadow_live": false,
+    "authorizes_positions_or_orders": false,
+    "writes_kb": false
+  },
+  "next_gate": "OWNER_ATOMICALLY_APPROVES_ADR_0002_S6BOUND_01_THROUGH_10_AND_CONSUMER_PROFILE_V0_3"
+}
