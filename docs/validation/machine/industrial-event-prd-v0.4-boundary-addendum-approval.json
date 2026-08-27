@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "approval_id": "industrial_event_prd_v0_4_boundary_addendum_owner_approval",
+  "approved_by": "repository_owner_via_conditional_risk_delegation",
+  "approved_at": "2026-08-28T00:00:00.000000Z",
+  "approval_scope": "prd_boundary_addendum_governance_only",
+  "approval_record_hash": "f2afa2d4199fd80e81906242a2a021b1f3e2fdb04186419551421ef8bd7c0465",
+  "owner_source": {
+    "source_ref": "owner_conditional_prd_v0_4_approval_20260828",
+    "text": "如果没有特别值得我注意的风险就批准"
+  },
+  "risk_assessment": {
+    "blocking_p0_or_p1_found": false,
+    "base_prd_bytes_preserved": true,
+    "legacy_compatibility_preserved": true,
+    "strategy_or_numeric_rules_changed": false,
+    "data_runtime_or_trading_authority_added": false,
+    "condition_satisfied": true
+  },
+  "approved_material": {
+    "base_prd": {
+      "path": "产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md",
+      "raw_sha256": "0f7e6489ee0c5c17d638534337a73c389e70794cf41b821eec7cc92a242c6b03"
+    },
+    "addendum_document": {
+      "path": "产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.4边界修订补充.md",
+      "raw_sha256": "3587f49786cd3425f5a9dc5dd9df1af364963a7369cb38b8c40511ce00501d36"
+    },
+    "machine_draft": {
+      "path": "docs/validation/machine/industrial-event-prd-v0.4-boundary-addendum-draft.json",
+      "raw_sha256": "f6dcef60682a2eaf7824fc9039e048e5f1730c0ffd27db55ebaf3a72fc77b79b",
+      "canonical_addendum_sha256": "da32630be2b2ca9d44a68b7dba5a23fcc92ed4223adc00b7e448e7f541a092c4",
+      "pending_owner_items_sha256": "72d79dd91c26129b1acdfa74371373522e164351833645b499e93b8995b46f03"
+    },
+    "draft_formation_commit": "1ec267363c746d74062635982f5cb8b47e86393b"
+  },
+  "approved_decisions": [
+    {"id":"PRD04-BND-01","status":"approved","decision":"V0_4_IS_BOUNDARY_ADDENDUM_WITHOUT_REWRITING_V0_3_BYTES"},
+    {"id":"PRD04-BND-02","status":"approved","decision":"IS_CONSTRUCTS_STRATEGY_INPUT_REF_FROM_VERIFIED_KB_RELEASE_REFERENCE"},
+    {"id":"PRD04-BND-03","status":"approved","decision":"KB_LEGACY_STRATEGY_INPUT_REF_V1_IS_READ_ONLY_COMPATIBILITY"},
+    {"id":"PRD04-BND-04","status":"approved","decision":"VERIFY_MANIFEST_BEFORE_PROJECTING_AND_BINDING_IS_INPUT_REFERENCE"},
+    {"id":"PRD04-BND-05","status":"approved","decision":"SINGLE_ROOT_INPUT_IS_IS_RUN_CONSTRAINT_NOT_KB_PUBLICATION_CONSTRAINT"},
+    {"id":"PRD04-BND-06","status":"approved","decision":"SPLIT_C1A_DRAFT_OFFLINE_COMPATIBILITY_FROM_C1B_PUBLISHED_CONSUMPTION"},
+    {"id":"PRD04-BND-07","status":"approved","decision":"IS_OWNS_H00985_FACTOR_ACCEPTANCE_HOLDOUT_AUTHORITY_CANDIDATE_COVERAGE"},
+    {"id":"PRD04-BND-08","status":"approved","decision":"ZERO_DATA_RUNTIME_AND_TRADING_AUTHORITY"}
+  ],
+  "approved_decisions_sha256": "497e915cb09330fbb1fa7dd5a1c25a1b33e115239020bc7c709d2def9003f1fa",
+  "approved_atomically": true,
+  "effective_prd": {
+    "base": "PRD_V0_3",
+    "boundary_addendum": "PRD_V0_4_BOUNDARY_ADDENDUM",
+    "addendum_precedence_only_for_listed_conflicts": true,
+    "unlisted_v0_3_requirements_remain_effective": true
+  },
+  "authorization_boundary": {
+    "authority_eligible": false,
+    "authorizes_stage6b_refactor": false,
+    "authorizes_root_spike_cleanup": false,
+    "authorizes_kb_data_backfill_or_release": false,
+    "authorizes_transport_repin_or_handoff": false,
+    "authorizes_candidate_coverage_historical_run_holdout": false,
+    "authorizes_migration_backtest_paper_shadow_live": false,
+    "authorizes_positions_or_orders": false,
+    "writes_kb": false
+  },
+  "next_gate": "WAIT_FOR_KB_DATA_SOURCE_LICENSE_PIT_AUDIT_AND_SEPARATE_OWNER_AUTHORIZATION"
+}

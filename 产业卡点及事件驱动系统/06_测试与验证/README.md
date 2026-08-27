@@ -51,6 +51,8 @@
 
 [产业 PRD v0.4 边界修订补充草案形成验收](../../docs/validation/industrial-event-prd-v0.4-boundary-addendum-draft-acceptance.md)固定 v0.3 原始 SHA-256、v0.4 文档/机器草案身份、四个 replacement、C1a/C1b 分离和八项 pending owner decision；同时证明补充不批准 Stage 6B 重构、spike 清理、数据、repin、handoff 或任何运行模式。
 
+[产业 PRD v0.4 边界修订批准记录](../01_需求/产业卡点及事件驱动系统_PRD_v0.4边界修订批准记录.md)按 owner 条件授权，在风险复核无阻塞 P0/P1 后原子批准 `PRD04-BND-01—08`。[治理批准验收](../../docs/validation/industrial-event-prd-v0.4-boundary-addendum-governance-acceptance.md)证明 pending draft 字节保持不变，独立 machine approval record 固定批准；Stage 6B 重构、spike 清理、数据、repin、handoff 和运行权限仍全部为 false。
+
 ## Stage 6C 正式执行 Readiness 审计
 
 [Stage 6C 正式执行 Readiness 审计 v0.1](../../docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)在匿名 synthetic phase seal 后检查 34 个正式前置门，结论为 `NO_GO_FOR_FORMAL_STAGE6C_EXECUTION`。其中 `9 READY / 22 MISSING / 1 BLOCKED / 2 NOT_REQUIRED_WITH_JUSTIFICATION`；现有证据只能支持继续做只读 census 和方案设计，不能启动 development/walk-forward、读取 holdout、签发 6D 或创建正式 migration。
