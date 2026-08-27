@@ -47,6 +47,8 @@
 
 [Stage 6 提供方/消费者边界批准记录](../../docs/validation/stage6-provider-consumer-boundary-approval-v0.1.md)在两仓独立审计一致和 KB 修复后主干全绿的前提下原子批准 `S6BOUND-01—10`。[治理批准验收](../../docs/validation/stage6-consumer-boundary-governance-acceptance.md)证明 pending draft 字节保持不变，独立 machine approval record 固定条件授权；KB Schema 实现、IS Adapter/repin、数据和运行权限仍全部为 false。
 
+[Stage 6 通用 KB 契约离线 Adapter 正式验收](../../docs/validation/stage6-generic-kb-offline-adapter-acceptance.md)固定 `snapshot-lock.json` 的 19 个 provider blobs，验证 16 个 active Schema、registry 和九类 synthetic examples；同时验证 root identity、四依赖 closure、客观 incomplete profile、H00985 无 fallback/许可阻塞、ADV20 complete hash-basis-only、Beta120 118-session incomplete，以及纯 Decimal 20/120 window 重算。未知字段、文件篡改、非规范 Decimal、负成交额、窗口不足和零方差均失败关闭；真实 Release、transport、candidate、coverage、holdout 和交易仍不在测试范围。
+
 ## Stage 6C 正式执行 Readiness 审计
 
 [Stage 6C 正式执行 Readiness 审计 v0.1](../../docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)在匿名 synthetic phase seal 后检查 34 个正式前置门，结论为 `NO_GO_FOR_FORMAL_STAGE6C_EXECUTION`。其中 `9 READY / 22 MISSING / 1 BLOCKED / 2 NOT_REQUIRED_WITH_JUSTIFICATION`；现有证据只能支持继续做只读 census 和方案设计，不能启动 development/walk-forward、读取 holdout、签发 6D 或创建正式 migration。

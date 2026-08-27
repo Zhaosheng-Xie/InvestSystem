@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:corporate-action-observation:v1",
+  "title": "Corporate Action Observation v1",
+  "description": "Extensible PIT corporate-action fact with registry-bound type and terms Schema identities.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "action_id", "company_id", "security_id",
+    "action_type", "action_type_registry", "terms_schema", "terms",
+    "terms_hash", "announcement_date", "record_date", "ex_date",
+    "payment_date", "delivery_date", "sellable_date", "effective_date",
+    "currency", "economic_at", "observed_at", "available_at",
+    "knowledge_cutoff", "availability_evidence", "source", "revision",
+    "content_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "action_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "company_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "security_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "action_type": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "action_type_registry": {"$ref": "#/$defs/registryRef"},
+    "terms_schema": {"$ref": "#/$defs/schemaRef"},
+    "terms": {"type": "object"},
+    "terms_hash": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+    },
+    "announcement_date": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"
+    },
+    "record_date": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"
+    },
+    "ex_date": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"
+    },
+    "payment_date": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"
+    },
+    "delivery_date": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"
+    },
+    "sellable_date": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"
+    },
+    "effective_date": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"
+    },
+    "currency": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableId"
+    },
+    "economic_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/economicTime"
+    },
+    "observed_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "available_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "knowledge_cutoff": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "availability_evidence": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/availabilityEvidence"
+    },
+    "source": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sourceRef"
+    },
+    "revision": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/revisionLineage"
+    },
+    "content_hash": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+    }
+  },
+  "$defs": {
+    "registryRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_id", "registry_version", "registry_hash"],
+      "properties": {
+        "registry_id": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        },
+        "registry_version": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+        },
+        "registry_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        }
+      }
+    },
+    "schemaRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_id", "schema_version", "schema_hash"],
+      "properties": {
+        "schema_id": {"type": "string", "format": "uri", "maxLength": 512},
+        "schema_version": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+        },
+        "schema_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        }
+      }
+    }
+  }
+}

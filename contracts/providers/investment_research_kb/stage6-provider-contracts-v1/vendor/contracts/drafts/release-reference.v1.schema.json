@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:release-reference:v1",
+  "title": "Release Reference v1",
+  "description": "Consumer-neutral immutable identity for one exact KB Dataset Release and Manifest.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "release_id", "manifest_schema_version",
+    "manifest_hash", "knowledge_cutoff"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "release_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "not": {"const": "latest"}
+    },
+    "manifest_schema_version": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+    },
+    "manifest_hash": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+    },
+    "knowledge_cutoff": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    }
+  }
+}

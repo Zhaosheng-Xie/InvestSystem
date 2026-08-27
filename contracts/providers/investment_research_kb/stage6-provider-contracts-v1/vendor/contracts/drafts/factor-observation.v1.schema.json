@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:factor-observation:v1",
+  "title": "Factor Observation v1",
+  "description": "PIT factor observation bound to an exact definition and auditable raw-basis component hashes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "factor_observation_id", "factor_definition",
+    "subject", "as_of_session", "value_decimal", "completeness",
+    "incomplete_reason_ids", "basis", "economic_at", "observed_at",
+    "available_at", "knowledge_cutoff", "availability_evidence",
+    "source", "revision", "content_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "factor_observation_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "factor_definition": {"$ref": "#/$defs/factorDefinitionRef"},
+    "subject": {"$ref": "#/$defs/subject"},
+    "as_of_session": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/date"
+    },
+    "value_decimal": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"
+    },
+    "completeness": {"type": "string", "enum": ["complete", "incomplete"]},
+    "incomplete_reason_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+      }
+    },
+    "basis": {"$ref": "#/$defs/basis"},
+    "economic_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/economicTime"
+    },
+    "observed_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "available_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "knowledge_cutoff": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "availability_evidence": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/availabilityEvidence"
+    },
+    "source": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sourceRef"
+    },
+    "revision": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/revisionLineage"
+    },
+    "content_hash": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"completeness": {"const": "complete"}}, "required": ["completeness"]},
+      "then": {
+        "properties": {
+          "value_decimal": {
+            "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/canonicalDecimal"
+          },
+          "incomplete_reason_ids": {"maxItems": 0}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"completeness": {"const": "incomplete"}}, "required": ["completeness"]},
+      "then": {
+        "properties": {
+          "value_decimal": {"type": "null"},
+          "incomplete_reason_ids": {"minItems": 1}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "factorDefinitionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["factor_definition_id", "definition_version", "definition_hash"],
+      "properties": {
+        "factor_definition_id": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        },
+        "definition_version": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+        },
+        "definition_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entity_type", "entity_id"],
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "enum": ["security", "company", "benchmark", "market", "other_declared"]
+        },
+        "entity_id": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        }
+      }
+    },
+    "basisComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "content_hash"],
+      "properties": {
+        "role": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        },
+        "content_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        }
+      }
+    },
+    "basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_count", "records_hash", "window_identity_hash",
+        "components", "latest_basis_available_at"
+      ],
+      "properties": {
+        "record_count": {"type": "integer", "minimum": 0},
+        "records_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        },
+        "window_identity_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        },
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/basisComponent"}
+        },
+        "latest_basis_available_at": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+        }
+      }
+    }
+  }
+}

@@ -65,6 +65,8 @@ Stage 2A 本轮在该骨架上新增：
 
 策略内核只依赖 provider-neutral DTO。E0—E7、四道门、利润桥、预期、估值、Decision、组合、执行和 P&L 全部属于 InvestSystem，不能回写 KB。
 
+Stage 6 通用 KB 契约离线 Adapter 已在 `integrations/investment_research_kb/provider_contracts_v1.py` 与 `stage6_generic_adapter.py` 实现：前者完整验证 IS 自有的 19 文件 Git-object snapshot、16 个 draft Schema、registry 和官方 synthetic fixture；后者从通用 ReleaseReference 构造 `StrategyInputRef`，投影可变 dependency closure/data profile，精确选择 H00985，验证 ADV20/Beta120 定义与 observation，并提供 exact 20/120 window 的纯 Decimal 重算。依赖更新只能显式运行 `scripts/vendor-kb-stage6-provider-contracts.py`，未来版本不得覆盖既有 snapshot。该实现不发现 KB 仓库、不访问网络或真实 Release，也不调用策略 evaluator。
+
 研究、风险和执行必须分层；任何研究 Agent 都不得访问交易凭证或直接提交订单。
 
 Stage 2B 已用 InvestSystem 自有、明确标记的合成策略 fixture 打通最小链路；真实 KB Context Pack 仍只做后续只读 smoke/E2E，允许正确结果为 `ABSTAIN`，不得要求 KB 为正例定制事实。当前 runner 只返回不可变审计对象，不写 SQLite；durable persistence 需在后续以独立契约和失败语义批准。

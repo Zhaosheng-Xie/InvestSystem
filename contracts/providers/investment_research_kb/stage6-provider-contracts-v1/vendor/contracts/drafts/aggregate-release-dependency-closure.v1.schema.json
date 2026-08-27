@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:contract:aggregate-release-dependency-closure:v1",
+  "title": "Aggregate Release Dependency Closure v1",
+  "description": "Flattened, variable-length, content-addressed dependency closure for a KB aggregate Release.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "closure_id", "created_at", "root_release",
+    "dependencies", "closure_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "closure_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "created_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "root_release": {
+      "$ref": "urn:investment-research-kb:contract:release-reference:v1"
+    },
+    "dependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/dependency"}
+    },
+    "closure_hash": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+    }
+  },
+  "$defs": {
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["release", "roles", "direct"],
+      "properties": {
+        "release": {
+          "$ref": "urn:investment-research-kb:contract:release-reference:v1"
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+          }
+        },
+        "direct": {"type": "boolean"}
+      }
+    }
+  }
+}

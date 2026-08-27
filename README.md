@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v3.30](PLAN.md)：本仓库唯一正式路线图；[Stage 6 最小消费契约 v0.2](docs/validation/stage6-minimum-public-data-consumption-contract-v0.2.md)继续原子批准 `S6DATA-01—10`。[ADR-0002/消费者 Profile v0.3 批准记录](docs/validation/stage6-provider-consumer-boundary-approval-v0.1.md)进一步批准 `S6BOUND-01—10`，把 KB 通用契约与 IS 的 H00985/ADV/Beta、holdout、candidate、coverage 和 authority 分离；当前仍无 KB Schema 实现、parser、repin、handoff 或运行权限。
+- [InvestSystem 实施计划 v3.31](PLAN.md)：本仓库唯一正式路线图；v0.2/S6DATA 与 ADR-0002/v0.3 边界继续有效。IS 已固定 KB `4352c10` 的通用 draft contract/registry/synthetic fixture，完成纯离线 Adapter 和重算内核；H00985 许可、真实 raw basis、Published Release、transport repin、handoff 与运行权限仍未关闭。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。

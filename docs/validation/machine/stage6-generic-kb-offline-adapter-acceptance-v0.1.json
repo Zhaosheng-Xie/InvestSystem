@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0.0",
+  "acceptance_id": "stage6_generic_kb_offline_adapter_v0_1",
+  "accepted_at": "2026-08-27T00:00:00.000000Z",
+  "status": "COMPLETED_WITH_SCOPE_LIMITS_SYNTHETIC_CONTRACT_ONLY",
+  "acceptance_hash": "7d7fcbb7cbdc93e8373810458016decbdfc0f9519befd254899c96719170268a",
+  "source": {
+    "provider": "InvestmentResearchKB",
+    "source_repository": "https://github.com/Zhaosheng-Xie/InvestmentResearchKB",
+    "provider_contract_commit": "50604ea46e14580be976e1cf46c349a2d3088740",
+    "merge_commit": "4352c10c6c639e25d4c190dfc9ec58ee9e76aa86",
+    "merge_commit_main_ci": "all_green",
+    "is_authorization_commit": "eb702559511083d2d0d603725be50997e0c22bbe"
+  },
+  "snapshot": {
+    "path": "contracts/providers/investment_research_kb/stage6-provider-contracts-v1",
+    "official_file_count": 19,
+    "active_schema_count": 16,
+    "snapshot_lock_raw_sha256": "513b3e8728fc299780bbd3205f0fa049a63bb4946b5eaa8193fc51447b5b333a",
+    "support_matrix_raw_sha256": "34f7f4055bb243ed4852f36074d44d31819f255ec524198f2f044d781db3cab8",
+    "reproduction_result": "BYTE_IDENTICAL",
+    "transport_protocol": "v1",
+    "transport_repinned": false
+  },
+  "implementation": {
+    "vendor_script_sha256": "83f29527f064d44ec7829cb1780c59e1a436289a9569cc808bbb25b789b3679e",
+    "catalog_loader_sha256": "bfe4eabbde2a63bb5648f0a2b0b656e44e1268f917d010cb8b4373c7a47f6c27",
+    "adapter_sha256": "f61ba783a3969db6ff434a23b623d93e86ebc78df87b97d7c3fde8db343f8d04",
+    "adapter_profile_id": "stage6-generic-kb-offline-adapter-v0.1",
+    "official_fixture_result_hash": "a9e43b70098be362b3795375f3eb597641416af5b83eed5a12a636c9e8e4c708"
+  },
+  "implemented_capabilities": [
+    "pinned_snapshot_physical_identity_validation",
+    "draft_schema_registry_and_official_fixture_validation",
+    "release_reference_to_strategy_input_ref_projection",
+    "variable_dependency_closure_projection",
+    "objective_release_data_profile_projection",
+    "exact_h00985_selection_without_fallback",
+    "adv20_and_beta120_definition_observation_binding",
+    "pure_exact_20_session_adv_recomputation",
+    "pure_exact_120_pair_beta_ols_recomputation",
+    "legacy_v1_compatibility_preservation",
+    "unknown_field_and_tamper_fail_closed"
+  ],
+  "official_fixture_findings": {
+    "data_profile": "PARTIALLY_READY_SYNTHETIC_PROFILE",
+    "h00985": "BLOCKED_PENDING_REDISTRIBUTION_PERMISSION",
+    "adv20": "DEFINITION_ACCEPTED_OBSERVATION_COMPLETE_HASH_BASIS_ONLY",
+    "beta120": "DEFINITION_ACCEPTED_OBSERVATION_INCOMPLETE_118_OF_120",
+    "numeric_recomputation": "BLOCKED_RAW_BASIS_RECORDS_NOT_PRESENT_IN_FIXTURE"
+  },
+  "blockers": [
+    "H00985_COMPLETE_HISTORY_PIT_AND_REDISTRIBUTION_PERMISSION_NOT_PROVEN",
+    "OFFICIAL_FIXTURE_RAW_BASIS_RECORDS_NOT_DELIVERED",
+    "NO_SCOPE_ELIGIBLE_PUBLISHED_HISTORICAL_RELEASE",
+    "REAL_HANDOFF_AND_TRANSPORT_REPIN_NOT_AUTHORIZED"
+  ],
+  "validation": {
+    "slice_tests": "15 passed",
+    "architecture_and_adjacent_tests": "60 passed, 1 skipped",
+    "full_pytest": "1179 passed, 4 skipped",
+    "ruff": "passed",
+    "format": "passed",
+    "mypy": "passed",
+    "compileall": "passed",
+    "diff_check": "passed"
+  },
+  "authorization_boundary": {
+    "authority_eligible": false,
+    "network_accessed": false,
+    "real_release_consumed": false,
+    "token_or_handoff_used": false,
+    "transport_repinned": false,
+    "candidate_or_coverage_created": false,
+    "historical_run_or_holdout_opened": false,
+    "backfill_or_migration": false,
+    "paper_shadow_live": false,
+    "positions_or_orders": false,
+    "writes_kb": false
+  },
+  "next_gate": "KB_SOURCE_PERMISSION_PIT_RAW_BASIS_AND_IMMUTABLE_RELEASE_RC_REQUIRE_SEPARATE_AUTHORIZATION"
+}

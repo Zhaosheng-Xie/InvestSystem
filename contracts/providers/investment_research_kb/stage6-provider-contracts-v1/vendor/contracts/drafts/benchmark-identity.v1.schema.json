@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:benchmark-identity:v1",
+  "title": "Benchmark Identity v1",
+  "description": "Versioned provider-neutral identity for a benchmark series, separate from observations and consumer selection.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "identity_version", "benchmark_id", "benchmark_name",
+    "provider_id", "provider_name", "provider_code", "return_type",
+    "currency", "redistribution", "identity_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "identity_version": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+    },
+    "benchmark_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "benchmark_name": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nonEmptyText"
+    },
+    "provider_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "provider_name": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nonEmptyText"
+    },
+    "provider_code": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "return_type": {
+      "type": "string",
+      "enum": ["price_return", "gross_total_return", "net_total_return", "other_declared"]
+    },
+    "currency": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "redistribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidence_hash", "limitations"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["allowed", "forbidden", "pending_explicit_permission", "unknown"]
+        },
+        "evidence_hash": {
+          "oneOf": [
+            {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"},
+            {"type": "null"}
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nonEmptyText"
+          }
+        }
+      }
+    },
+    "identity_hash": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+    }
+  }
+}

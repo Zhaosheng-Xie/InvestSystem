@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:benchmark-observation:v1",
+  "title": "Benchmark Observation v1",
+  "description": "Provider-neutral benchmark level or one-session return observation with methodology and PIT lineage.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "benchmark_observation_id", "benchmark", "session_date",
+    "level", "previous_level", "one_session_return", "return_basis",
+    "methodology", "calendar_record_id", "basis_hashes", "economic_at",
+    "observed_at", "available_at", "knowledge_cutoff", "availability_evidence",
+    "source", "revision", "content_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "benchmark_observation_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "benchmark": {"$ref": "urn:investment-research-kb:record:benchmark-identity:v1"},
+    "session_date": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/date"
+    },
+    "level": {
+      "oneOf": [
+        {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/positiveCanonicalDecimal"},
+        {"type": "null"}
+      ]
+    },
+    "previous_level": {
+      "oneOf": [
+        {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/positiveCanonicalDecimal"},
+        {"type": "null"}
+      ]
+    },
+    "one_session_return": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"
+    },
+    "return_basis": {
+      "type": "string",
+      "enum": ["provider_published_return", "derived_from_provider_levels", "both_verified"]
+    },
+    "methodology": {"$ref": "#/$defs/methodology"},
+    "calendar_record_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "basis_hashes": {"$ref": "#/$defs/basisHashes"},
+    "economic_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/economicTime"
+    },
+    "observed_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "available_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "knowledge_cutoff": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "availability_evidence": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/availabilityEvidence"
+    },
+    "source": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sourceRef"
+    },
+    "revision": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/revisionLineage"
+    },
+    "content_hash": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+    }
+  },
+  "anyOf": [
+    {"required": ["one_session_return"], "properties": {"one_session_return": {"type": "string"}}},
+    {
+      "required": ["level", "previous_level"],
+      "properties": {"level": {"type": "string"}, "previous_level": {"type": "string"}}
+    }
+  ],
+  "$defs": {
+    "methodology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "methodology_id", "methodology_version", "effective_from", "effective_to",
+        "methodology_hash", "return_construction", "adjustment_policy"
+      ],
+      "properties": {
+        "methodology_id": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        },
+        "methodology_version": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+        },
+        "effective_from": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/date"
+        },
+        "effective_to": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"
+        },
+        "methodology_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        },
+        "return_construction": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        },
+        "adjustment_policy": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        }
+      }
+    },
+    "basisHashes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["calendar_hash", "observation_basis_hash", "methodology_hash", "source_hash"],
+      "properties": {
+        "calendar_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        },
+        "observation_basis_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        },
+        "methodology_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        },
+        "source_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        }
+      }
+    }
+  }
+}

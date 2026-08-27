@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:trading-calendar:v1",
+  "title": "Trading Calendar Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "calendar_record_id", "exchange", "session_date",
+    "is_open", "previous_open_session", "rule_set_id", "economic_at",
+    "observed_at", "available_at", "knowledge_cutoff",
+    "availability_evidence", "source", "revision", "content_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "calendar_record_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "exchange": {"type": "string", "enum": ["SSE", "SZSE", "BSE"]},
+    "session_date": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/date"},
+    "is_open": {"type": "boolean"},
+    "previous_open_session": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"},
+    "rule_set_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableId"},
+    "economic_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/economicTime"},
+    "observed_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "available_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "knowledge_cutoff": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "availability_evidence": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/availabilityEvidence"},
+    "source": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sourceRef"},
+    "revision": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/revisionLineage"},
+    "content_hash": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"}
+  }
+}

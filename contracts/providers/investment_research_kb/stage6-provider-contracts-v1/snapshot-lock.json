@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0.0",
+  "provider": "InvestmentResearchKB",
+  "source_repository": "https://github.com/Zhaosheng-Xie/InvestmentResearchKB",
+  "source_commit": "4352c10c6c639e25d4c190dfc9ec58ee9e76aa86",
+  "source_commit_tree": "37ccff13f0f9cf420af8771c94c81f710cc2603d",
+  "provider_contract_commit": "50604ea46e14580be976e1cf46c349a2d3088740",
+  "retrieval_method": "git_object",
+  "selection": "provider catalog plus one supporting defs Schema, 15 active provider draft Schemas, one benchmark/factor registry, and one official synthetic fixture",
+  "catalog_path": "contracts/fixtures/provider-contract-catalog.v1.json",
+  "catalog_raw_sha256": "59a50eba88fb62f70a01df3d058ad15460d92004fc7cd83c864b3cb1fd901b7a",
+  "transport_protocol": "v1",
+  "transport_semantics_changed": false,
+  "runtime_authority": false,
+  "files": [
+    {
+      "path": "contracts/fixtures/provider-contract-catalog.v1.json",
+      "git_blob": "9a010f27e660d520baa72e4015485730c450c58d",
+      "size_bytes": 7343,
+      "sha256": "59a50eba88fb62f70a01df3d058ad15460d92004fc7cd83c864b3cb1fd901b7a"
+    },
+    {
+      "path": "contracts/drafts/aggregate-release-dependency-closure.v1.schema.json",
+      "git_blob": "3fc87627acc99d7dd30f9b1da62a2764baf9005d",
+      "size_bytes": 1685,
+      "sha256": "07cb63bb9ed4ed2bcf781935770e3d778c513cd4b9d2671b1e16a34b18e095c2"
+    },
+    {
+      "path": "contracts/drafts/benchmark-identity.v1.schema.json",
+      "git_blob": "22997d16351994cee33e4f2504f48772f292b35f",
+      "size_bytes": 2418,
+      "sha256": "993d8fbec03ca559d5bd70b1025b6c4288689574af65cbfaae1495e8faa96c6d"
+    },
+    {
+      "path": "contracts/drafts/benchmark-observation.v1.schema.json",
+      "git_blob": "8b5cf7bec43e5bc5cd5717547a15b737ed40fb0b",
+      "size_bytes": 5118,
+      "sha256": "6b561d6de45503378ac47c9fe00eb456167b95422c70edb889089ba3a5eaf2ae"
+    },
+    {
+      "path": "contracts/drafts/company-security-history-record.v1.schema.json",
+      "git_blob": "b7d139a43b1261f9a756b83c9b2d63a6f80acf69",
+      "size_bytes": 3199,
+      "sha256": "5220bddbec4792b8ca631f0874ca7835a52b54059f0f42efc1848603595043f4"
+    },
+    {
+      "path": "contracts/drafts/corporate-action-observation.v1.schema.json",
+      "git_blob": "9f149fac3286cbe19a53295ecb35b76796a0c2d6",
+      "size_bytes": 4526,
+      "sha256": "c949ba9427273dceb10c63a200ef7ccaaf297c8b2874a5aa5cf1a56e57397a09"
+    },
+    {
+      "path": "contracts/drafts/factor-definition.v1.schema.json",
+      "git_blob": "69aa2babab8cc78e2790cc35815089d8063b3e36",
+      "size_bytes": 3898,
+      "sha256": "ccb3653a1b70ac677a1eb52aa4742feb5a544478b18ba51ed8807f2b4ca8d01f"
+    },
+    {
+      "path": "contracts/drafts/factor-observation.v1.schema.json",
+      "git_blob": "8041dcdd530dca378d141351ea3166125546bdff",
+      "size_bytes": 5441,
+      "sha256": "8efb7880c1cf6faebbcd953215f7f9a561f395d53421d57e8743e8af96a4da54"
+    },
+    {
+      "path": "contracts/drafts/float-market-cap-daily-record.v1.schema.json",
+      "git_blob": "9c863eea45e99caaa5ac5c1c28cefefc61402f69",
+      "size_bytes": 3151,
+      "sha256": "90f5632e0dd46c972a6a15198d538b814c90aee8af98991b1a0fc789fe8c7935"
+    },
+    {
+      "path": "contracts/drafts/historical-common-defs.v1.schema.json",
+      "git_blob": "ae036651583cab4e78036ca6f05172a6750401a3",
+      "size_bytes": 4128,
+      "sha256": "5e1d978acd08fbc8ecced5100481de317238f2677c806de0882d243b6571cc3b"
+    },
+    {
+      "path": "contracts/drafts/industry-classification-history-record.v1.schema.json",
+      "git_blob": "a70c598c0af6f4c14b1ff0320a7da4cd336f6e0e",
+      "size_bytes": 2871,
+      "sha256": "4d573d77dc7245728352f2db5392be38c2e329e881b61bb1c07a92e194fbd8b9"
+    },
+    {
+      "path": "contracts/drafts/market-rule-set-record.v1.schema.json",
+      "git_blob": "c5900d96bf641a27533ade04cf490e0467ce48f6",
+      "size_bytes": 3377,
+      "sha256": "bc242a5def9dfda797c92d4c5cde5c42d0f2958951ed5e28ed9a4c15b78225e0"
+    },
+    {
+      "path": "contracts/drafts/release-data-profile.v1.schema.json",
+      "git_blob": "73e304675e0dc1ed191bf7acc31ed4cce920dbf4",
+      "size_bytes": 5191,
+      "sha256": "09f87e52893c4d554160a06d1c225da5694e99ebe534974c927c58a33c88ea24"
+    },
+    {
+      "path": "contracts/drafts/release-reference.v1.schema.json",
+      "git_blob": "d9508cecb78bfebd85d3122d27225a65710d791d",
+      "size_bytes": 1046,
+      "sha256": "e32ad96598329d85c1c440cc5cc8c643bea65c8bb2900ad410bbb8dc8de26719"
+    },
+    {
+      "path": "contracts/drafts/security-session-state-record.v1.schema.json",
+      "git_blob": "54f78acc64b9f8121cff1fb6c7b6ae7de734da6f",
+      "size_bytes": 2758,
+      "sha256": "1805473e0dfd21d80e208d3114a783a2971547858fd985baa17c19e4be5d6270"
+    },
+    {
+      "path": "contracts/drafts/trading-calendar-record.v1.schema.json",
+      "git_blob": "a370a027e2aa70e13e9798ce90bdcdc8e1b16443",
+      "size_bytes": 1948,
+      "sha256": "4a46af140835e40ef13eca7d4be84629dac342c8682c187167749245be6fec1a"
+    },
+    {
+      "path": "contracts/drafts/unadjusted-market-daily-record.v1.schema.json",
+      "git_blob": "47a4030fc43658740045d74dbf368527a3c4fd69",
+      "size_bytes": 4330,
+      "sha256": "11a85c9210d2f0e21dfc0911dd688bd67f784b922a5d9ac9c3b5023f256df978"
+    },
+    {
+      "path": "contracts/fixtures/provider-benchmark-factor-registry.v1.json",
+      "git_blob": "4b44ac18cb4880ddbd7f48198867eb3feacfbd39",
+      "size_bytes": 5308,
+      "sha256": "1dfd55b623827b5571abda492b12d2b4e582c605ade20e46bab1eefcd28d89ba"
+    },
+    {
+      "path": "contracts/fixtures/provider-contract-synthetic-fixtures.v1.json",
+      "git_blob": "16437f9b32e93cfcc0693e4617e6d064d2f2c0d1",
+      "size_bytes": 29671,
+      "sha256": "ccc2f4e245b0118d439fd6730523209cfac77c7415f6cd1459df4d839983b8a6"
+    }
+  ]
+}

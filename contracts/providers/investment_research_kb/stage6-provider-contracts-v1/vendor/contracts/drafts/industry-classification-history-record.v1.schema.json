@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:industry-classification-history:v1",
+  "title": "Industry Classification History Record v1",
+  "description": "Effective-dated, multi-level and taxonomy-versioned PIT industry classification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "industry_history_id", "company_id", "taxonomy_id",
+    "taxonomy_version", "classification_level", "is_primary", "industry_code",
+    "industry_name", "parent_industry_code", "valid_from", "valid_to",
+    "economic_at", "observed_at", "available_at", "knowledge_cutoff",
+    "availability_evidence", "source", "revision", "content_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "industry_history_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "company_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "taxonomy_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "taxonomy_version": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+    },
+    "classification_level": {"type": "integer", "minimum": 1},
+    "is_primary": {"type": "boolean"},
+    "industry_code": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "industry_name": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nonEmptyText"
+    },
+    "parent_industry_code": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableId"
+    },
+    "valid_from": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/date"
+    },
+    "valid_to": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"
+    },
+    "economic_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/economicTime"
+    },
+    "observed_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "available_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "knowledge_cutoff": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "availability_evidence": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/availabilityEvidence"
+    },
+    "source": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sourceRef"
+    },
+    "revision": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/revisionLineage"
+    },
+    "content_hash": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+    }
+  }
+}

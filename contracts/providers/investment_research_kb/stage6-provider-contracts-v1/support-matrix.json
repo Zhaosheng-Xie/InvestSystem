@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "provider": "InvestmentResearchKB",
+  "source_commit": "4352c10c6c639e25d4c190dfc9ec58ee9e76aa86",
+  "provider_contract_commit": "50604ea46e14580be976e1cf46c349a2d3088740",
+  "status": "PINNED_DRAFT_OFFLINE_VALIDATION_ONLY",
+  "snapshot": {
+    "official_file_count": 19,
+    "active_schema_count": 16,
+    "registry_count": 1,
+    "synthetic_fixture_count": 1,
+    "lock_file": "snapshot-lock.json"
+  },
+  "capabilities": {
+    "snapshot_physical_identity": "implemented",
+    "json_schema_registry_and_fixture_validation": "implemented",
+    "release_reference_to_strategy_input_ref": "implemented_offline",
+    "variable_dependency_closure_projection": "implemented_offline",
+    "release_data_profile_projection": "implemented_offline",
+    "h00985_exact_selection": "implemented_but_blocked_pending_redistribution_permission",
+    "adv20_definition_and_observation_acceptance": "implemented_offline_hash_basis_only",
+    "beta120_definition_and_incomplete_observation": "implemented_offline",
+    "pure_adv20_recomputation": "implemented_for_caller_supplied_exact_20_values",
+    "pure_beta120_recomputation": "implemented_for_caller_supplied_exact_120_pairs",
+    "official_fixture_numeric_recomputation": "blocked_raw_basis_records_not_present",
+    "legacy_strategy_input_ref_v1": "preserved_in_existing_v1_snapshot",
+    "transport_v1": "unchanged_not_repinned",
+    "network_or_real_release": "not_authorized"
+  },
+  "constraints": [
+    "The snapshot is a draft contract dependency, not a Published Release.",
+    "The Adapter must not discover or read a sibling KB checkout at runtime or in tests.",
+    "H00985 has no fallback and remains blocked for real consumption until redistribution permission and PIT are proven.",
+    "Provider-declared fixture hashes are synthetic values; IS produces separate projection hashes.",
+    "No candidate, coverage, historical run, holdout, backfill, migration, paper, shadow, live, position, or order authority is granted."
+  ]
+}

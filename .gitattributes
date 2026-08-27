@@ -15,3 +15,4 @@
 # Exact provider-published contract and fixture bytes. These files are
 # content-addressed evidence; Git must never rewrite their line endings.
 contracts/providers/investment_research_kb/v1/vendor/** -text
+contracts/providers/investment_research_kb/stage6-provider-contracts-v1/vendor/** -text

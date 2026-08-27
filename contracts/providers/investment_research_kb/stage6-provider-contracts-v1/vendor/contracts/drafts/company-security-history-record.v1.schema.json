@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:company-security-history:v1",
+  "title": "Company Security History Record v1",
+  "description": "Effective-dated company/security identity and lifecycle record. Strategy eligibility is deliberately excluded.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "history_record_id", "company_id", "security_id",
+    "exchange", "symbol", "security_name", "security_type", "valid_from",
+    "valid_to", "list_date", "delist_date", "list_status", "st_status",
+    "change_type", "economic_at", "observed_at", "available_at",
+    "knowledge_cutoff", "availability_evidence", "source", "revision",
+    "content_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "history_record_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "company_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "security_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "exchange": {"type": "string", "enum": ["SSE", "SZSE", "BSE"]},
+    "symbol": {"type": "string", "pattern": "^\\d{6}$"},
+    "security_name": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nonEmptyText"},
+    "security_type": {
+      "type": "string",
+      "enum": ["ordinary_cny_a_share", "b_share", "preferred_share", "fund", "bond", "other"]
+    },
+    "valid_from": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/date"},
+    "valid_to": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"},
+    "list_date": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"},
+    "delist_date": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"},
+    "list_status": {
+      "type": "string",
+      "enum": ["prelisted", "listed", "suspended_listing", "delisted", "failed_listing", "unknown"]
+    },
+    "st_status": {
+      "type": "string",
+      "enum": ["normal", "st", "star_st", "delisting_period", "unknown"]
+    },
+    "change_type": {
+      "type": "string",
+      "enum": ["initial", "name_change", "symbol_change", "status_change", "listing", "delisting", "correction"]
+    },
+    "economic_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/economicTime"},
+    "observed_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "available_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "knowledge_cutoff": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "availability_evidence": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/availabilityEvidence"},
+    "source": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sourceRef"},
+    "revision": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/revisionLineage"},
+    "content_hash": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"}
+  }
+}

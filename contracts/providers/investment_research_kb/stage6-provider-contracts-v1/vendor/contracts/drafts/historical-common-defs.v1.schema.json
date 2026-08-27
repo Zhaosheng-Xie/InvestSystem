@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:defs:historical-public:v1",
+  "title": "Historical Public Data Shared Definitions v1",
+  "type": "object",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^.*\\S.*$"
+    },
+    "canonicalDecimal": {
+      "type": "string",
+      "pattern": "^(?:0|-?[1-9]\\d*|-?(?:0|[1-9]\\d*)\\.\\d*[1-9])$"
+    },
+    "positiveCanonicalDecimal": {
+      "type": "string",
+      "pattern": "^(?:[1-9]\\d*|(?:0|[1-9]\\d*)\\.\\d*[1-9])$"
+    },
+    "yyyymmdd": {
+      "type": "string",
+      "pattern": "^\\d{8}$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$"
+    },
+    "economicTime": {
+      "oneOf": [
+        {"$ref": "#/$defs/utcTimestamp"},
+        {"$ref": "#/$defs/date"}
+      ]
+    },
+    "sha256Value": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sha256Ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": {"const": "sha256"},
+        "value": {"$ref": "#/$defs/sha256Value"}
+      }
+    },
+    "nullableId": {
+      "oneOf": [
+        {"$ref": "#/$defs/id"},
+        {"type": "null"}
+      ]
+    },
+    "nullableDate": {
+      "oneOf": [
+        {"$ref": "#/$defs/date"},
+        {"type": "null"}
+      ]
+    },
+    "nullableUtcTimestamp": {
+      "oneOf": [
+        {"$ref": "#/$defs/utcTimestamp"},
+        {"type": "null"}
+      ]
+    },
+    "nullableCanonicalDecimal": {
+      "oneOf": [
+        {"$ref": "#/$defs/canonicalDecimal"},
+        {"type": "null"}
+      ]
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_record_id",
+        "source_snapshot_id",
+        "provider",
+        "dataset",
+        "source_identity_hash",
+        "source_content_hash"
+      ],
+      "properties": {
+        "source_record_id": {"$ref": "#/$defs/id"},
+        "source_snapshot_id": {"$ref": "#/$defs/id"},
+        "provider": {"$ref": "#/$defs/id"},
+        "dataset": {"$ref": "#/$defs/id"},
+        "source_url": {
+          "oneOf": [
+            {"type": "string", "format": "uri", "maxLength": 2048},
+            {"type": "null"}
+          ]
+        },
+        "source_identity_hash": {"$ref": "#/$defs/sha256Ref"},
+        "source_content_hash": {"$ref": "#/$defs/sha256Ref"}
+      }
+    },
+    "revisionLineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision_id",
+        "supersedes_revision_id",
+        "status"
+      ],
+      "properties": {
+        "revision_id": {"$ref": "#/$defs/id"},
+        "supersedes_revision_id": {"$ref": "#/$defs/nullableId"},
+        "status": {
+          "type": "string",
+          "enum": ["active", "corrected", "superseded", "withdrawn"]
+        }
+      }
+    },
+    "availabilityEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_version", "evidence_type", "evidence_hash"],
+      "properties": {
+        "policy_version": {"$ref": "#/$defs/version"},
+        "evidence_type": {
+          "type": "string",
+          "enum": [
+            "official_timestamp",
+            "provider_timestamp",
+            "first_seen_fallback",
+            "ingest_time_proxy"
+          ]
+        },
+        "evidence_hash": {"$ref": "#/$defs/sha256Ref"},
+        "limitations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonEmptyText"}
+        }
+      }
+    }
+  }
+}

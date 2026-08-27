@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:unadjusted-market-daily:v1",
+  "title": "Unadjusted Market Daily Record v1",
+  "description": "Provider-neutral unadjusted daily mark with explicit session, status, observation, availability, and adjustment policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "mark_id", "security_id", "exchange", "session_date",
+    "calendar_record_id", "session_state_id", "rule_set_id",
+    "adjustment_policy", "currency", "open", "high", "low", "close",
+    "previous_close", "volume_shares", "turnover_cny", "data_status",
+    "economic_at", "observed_at", "available_at", "knowledge_cutoff",
+    "availability_evidence", "source", "revision", "content_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "mark_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "security_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "exchange": {"type": "string", "enum": ["SSE", "SZSE", "BSE"]},
+    "session_date": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/date"},
+    "calendar_record_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "session_state_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "rule_set_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "adjustment_policy": {"const": "unadjusted"},
+    "currency": {"const": "CNY"},
+    "open": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"},
+    "high": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"},
+    "low": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"},
+    "close": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"},
+    "previous_close": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"},
+    "volume_shares": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"},
+    "turnover_cny": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"},
+    "data_status": {
+      "type": "string",
+      "enum": ["observed", "proven_full_day_suspension", "missing", "unknown"]
+    },
+    "economic_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/economicTime"},
+    "observed_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "available_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "knowledge_cutoff": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "availability_evidence": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/availabilityEvidence"},
+    "source": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sourceRef"},
+    "revision": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/revisionLineage"},
+    "content_hash": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"data_status": {"const": "observed"}}, "required": ["data_status"]},
+      "then": {
+        "properties": {
+          "close": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/canonicalDecimal"},
+          "volume_shares": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/canonicalDecimal"},
+          "turnover_cny": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/canonicalDecimal"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"data_status": {"const": "proven_full_day_suspension"}}, "required": ["data_status"]},
+      "then": {
+        "properties": {
+          "open": {"type": "null"},
+          "high": {"type": "null"},
+          "low": {"type": "null"},
+          "close": {"type": "null"},
+          "volume_shares": {"const": "0"},
+          "turnover_cny": {"const": "0"}
+        }
+      }
+    }
+  ]
+}

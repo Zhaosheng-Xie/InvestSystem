@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0.0",
+  "registry_id": "irkb-provider-benchmark-factor-registry",
+  "registry_version": "1.0.0-draft",
+  "status": "DRAFT_ZERO_RUNTIME_AUTHORITY",
+  "benchmark_identity_schema_id": "urn:investment-research-kb:record:benchmark-identity:v1",
+  "benchmark_observation_schema_id": "urn:investment-research-kb:record:benchmark-observation:v1",
+  "factor_definition_schema_id": "urn:investment-research-kb:record:factor-definition:v1",
+  "factor_observation_schema_id": "urn:investment-research-kb:record:factor-observation:v1",
+  "benchmark_identities": [
+    {
+      "schema_version": "1.0.0",
+      "identity_version": "1.0.0",
+      "benchmark_id": "H00985",
+      "benchmark_name": "中证全指全收益指数",
+      "provider_id": "CSI",
+      "provider_name": "China Securities Index Co., Ltd.",
+      "provider_code": "H00985.CSI",
+      "return_type": "gross_total_return",
+      "currency": "CNY",
+      "redistribution": {
+        "status": "pending_explicit_permission",
+        "evidence_hash": null,
+        "limitations": ["complete historical PIT and redistribution permission remain unproven"]
+      },
+      "identity_hash": {
+        "algorithm": "sha256",
+        "value": "2222222222222222222222222222222222222222222222222222222222222222"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "identity_version": "1.0.0",
+      "benchmark_id": "SYNTH_GTR",
+      "benchmark_name": "Synthetic Gross Total Return Benchmark",
+      "provider_id": "SYNTH",
+      "provider_name": "Synthetic Fixture Provider",
+      "provider_code": "SYNTH_GTR.TEST",
+      "return_type": "gross_total_return",
+      "currency": "CNY",
+      "redistribution": {
+        "status": "allowed",
+        "evidence_hash": {
+          "algorithm": "sha256",
+          "value": "abababababababababababababababababababababababababababababababab"
+        },
+        "limitations": ["synthetic fixture bytes only"]
+      },
+      "identity_hash": {
+        "algorithm": "sha256",
+        "value": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+      }
+    }
+  ],
+  "factor_definitions": [
+    {
+      "schema_version": "1.0.0",
+      "factor_definition_id": "adv20-cny-turnover-mean",
+      "factor_kind": "average_turnover",
+      "definition_version": "1.0.0",
+      "window": {
+        "unit": "exchange_session",
+        "count": 20,
+        "includes_as_of_session": false
+      },
+      "calculation": {
+        "estimator_id": "arithmetic_mean",
+        "formula_version": "adv20.cny-turnover-mean.v1",
+        "measure_id": "cny_turnover",
+        "imputation_policy_id": "none_except_proven_full_day_suspension"
+      },
+      "benchmark_requirement": null,
+      "input_schema_ids": [
+        "urn:investment-research-kb:record:trading-calendar:v1",
+        "urn:investment-research-kb:record:security-session-state:v1",
+        "urn:investment-research-kb:record:unadjusted-market-daily:v1"
+      ],
+      "raw_basis_required": true,
+      "completeness_rule_ids": [
+        "exact_window_required",
+        "unknown_session_state_is_incomplete"
+      ],
+      "result_unit": "CNY",
+      "created_at": "2026-08-26T00:00:00.000000Z",
+      "definition_hash": {
+        "algorithm": "sha256",
+        "value": "1111111111111111111111111111111111111111111111111111111111111111"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "factor_definition_id": "beta120-h00985-gtr-ols",
+      "factor_kind": "market_beta",
+      "definition_version": "1.0.0",
+      "window": {
+        "unit": "exchange_session",
+        "count": 120,
+        "includes_as_of_session": false
+      },
+      "calculation": {
+        "estimator_id": "ols_slope_with_intercept",
+        "formula_version": "beta120.ols-with-intercept.v1",
+        "measure_id": "pit_one_session_total_return",
+        "imputation_policy_id": "none_except_proven_full_day_suspension"
+      },
+      "benchmark_requirement": {
+        "benchmark_id": "H00985",
+        "methodology_version": "provider-version-pending",
+        "return_type": "gross_total_return",
+        "identity_hash": {
+          "algorithm": "sha256",
+          "value": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "input_schema_ids": [
+        "urn:investment-research-kb:record:trading-calendar:v1",
+        "urn:investment-research-kb:record:security-session-state:v1",
+        "urn:investment-research-kb:record:unadjusted-market-daily:v1",
+        "urn:investment-research-kb:record:benchmark-observation:v1",
+        "urn:investment-research-kb:record:corporate-action-observation:v1"
+      ],
+      "raw_basis_required": true,
+      "completeness_rule_ids": [
+        "exact_window_required",
+        "paired_observations_required",
+        "nonzero_benchmark_variance_required",
+        "future_backward_adjustment_forbidden"
+      ],
+      "result_unit": "dimensionless",
+      "created_at": "2026-08-26T00:00:00.000000Z",
+      "definition_hash": {
+        "algorithm": "sha256",
+        "value": "3333333333333333333333333333333333333333333333333333333333333333"
+      }
+    }
+  ],
+  "authorization_boundary": {
+    "network_collection": false,
+    "backfill": false,
+    "database_write": false,
+    "published_release": false,
+    "consumer_acceptance": false
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:security-session-state:v1",
+  "title": "Security Session State Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "session_state_id", "security_id", "exchange",
+    "session_date", "calendar_record_id", "rule_set_id", "listing_state",
+    "trading_state", "limit_state", "mark_expected", "reason_codes",
+    "economic_at", "observed_at", "available_at", "knowledge_cutoff",
+    "availability_evidence", "source", "revision", "content_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "session_state_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "security_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "exchange": {"type": "string", "enum": ["SSE", "SZSE", "BSE"]},
+    "session_date": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/date"},
+    "calendar_record_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "rule_set_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "listing_state": {
+      "type": "string",
+      "enum": ["prelisted", "listed", "delisting_period", "delisted", "failed_listing", "unknown"]
+    },
+    "trading_state": {
+      "type": "string",
+      "enum": ["trading", "full_day_suspension", "partial_suspension", "not_scheduled", "unknown"]
+    },
+    "limit_state": {
+      "type": "string",
+      "enum": ["none", "limit_up_close", "limit_down_close", "no_price_limit", "not_applicable", "unknown"]
+    },
+    "mark_expected": {"type": "boolean"},
+    "reason_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"}
+    },
+    "economic_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/economicTime"},
+    "observed_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "available_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "knowledge_cutoff": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "availability_evidence": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/availabilityEvidence"},
+    "source": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sourceRef"},
+    "revision": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/revisionLineage"},
+    "content_hash": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"}
+  }
+}

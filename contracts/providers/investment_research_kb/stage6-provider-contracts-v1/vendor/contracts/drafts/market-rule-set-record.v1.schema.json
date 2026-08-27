@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:market-rule-set:v1",
+  "title": "Market Rule Set Record v1",
+  "description": "Effective-dated public exchange rules used to interpret security sessions. This is not an execution policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "rule_set_id", "exchange", "effective_from",
+    "effective_to", "scope", "rules", "economic_at", "observed_at",
+    "available_at", "knowledge_cutoff", "availability_evidence", "source",
+    "revision", "content_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "rule_set_id": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+    "exchange": {"type": "string", "enum": ["SSE", "SZSE", "BSE"]},
+    "effective_from": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/date"},
+    "effective_to": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableDate"},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["security_type", "board", "st_status", "listing_age_rule"],
+      "properties": {
+        "security_type": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"},
+        "board": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableId"},
+        "st_status": {
+          "oneOf": [
+            {"type": "string", "enum": ["normal", "st", "star_st", "delisting_period", "unknown"]},
+            {"type": "null"}
+          ]
+        },
+        "listing_age_rule": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableId"}
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "price_limit_up_pct", "price_limit_down_pct", "no_price_limit_days",
+        "currency", "price_unit", "volume_unit", "amount_unit"
+      ],
+      "properties": {
+        "price_limit_up_pct": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"},
+        "price_limit_down_pct": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/nullableCanonicalDecimal"},
+        "no_price_limit_days": {"type": "integer", "minimum": 0},
+        "currency": {"const": "CNY"},
+        "price_unit": {"const": "CNY_per_share"},
+        "volume_unit": {"const": "share"},
+        "amount_unit": {"const": "CNY"}
+      }
+    },
+    "economic_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/economicTime"},
+    "observed_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "available_at": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "knowledge_cutoff": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"},
+    "availability_evidence": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/availabilityEvidence"},
+    "source": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sourceRef"},
+    "revision": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/revisionLineage"},
+    "content_hash": {"$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"}
+  }
+}

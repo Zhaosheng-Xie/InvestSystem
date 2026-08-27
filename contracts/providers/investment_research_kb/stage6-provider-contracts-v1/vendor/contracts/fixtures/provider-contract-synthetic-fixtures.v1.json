@@ -1,0 +1,499 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "irkb-provider-contract-synthetic-fixtures",
+  "status": "DRAFT_SYNTHETIC_ONLY_ZERO_RUNTIME_AUTHORITY",
+  "examples": {
+    "drafts/release-reference.v1.schema.json": [
+      {
+        "schema_version": "1.0.0",
+        "release_id": "rel_synthetic_provider_root",
+        "manifest_schema_version": "1.0.0",
+        "manifest_hash": {"algorithm":"sha256","value":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+        "knowledge_cutoff": "2025-06-30T23:59:59.000000Z"
+      }
+    ],
+    "drafts/aggregate-release-dependency-closure.v1.schema.json": [
+      {
+        "schema_version": "1.0.0",
+        "closure_id": "closure_synthetic_provider_root",
+        "created_at": "2025-07-01T00:00:00.000000Z",
+        "root_release": {
+          "schema_version": "1.0.0",
+          "release_id": "rel_synthetic_provider_root",
+          "manifest_schema_version": "1.0.0",
+          "manifest_hash": {"algorithm":"sha256","value":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+          "knowledge_cutoff": "2025-06-30T23:59:59.000000Z"
+        },
+        "dependencies": [
+          {
+            "release": {
+              "schema_version": "1.0.0",
+              "release_id": "rel_synthetic_evidence",
+              "manifest_schema_version": "1.0.0",
+              "manifest_hash": {"algorithm":"sha256","value":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+              "knowledge_cutoff": "2025-06-29T23:59:59.000000Z"
+            },
+            "roles": ["public_evidence"],
+            "direct": true
+          },
+          {
+            "release": {
+              "schema_version": "1.0.0",
+              "release_id": "rel_synthetic_market_reference",
+              "manifest_schema_version": "1.0.0",
+              "manifest_hash": {"algorithm":"sha256","value":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+              "knowledge_cutoff": "2025-06-30T18:00:00.000000Z"
+            },
+            "roles": ["security_reference", "market_reference"],
+            "direct": true
+          },
+          {
+            "release": {
+              "schema_version": "1.0.0",
+              "release_id": "rel_synthetic_financials",
+              "manifest_schema_version": "1.0.0",
+              "manifest_hash": {"algorithm":"sha256","value":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+              "knowledge_cutoff": "2025-06-28T23:59:59.000000Z"
+            },
+            "roles": ["public_financials"],
+            "direct": true
+          },
+          {
+            "release": {
+              "schema_version": "1.0.0",
+              "release_id": "rel_synthetic_methodology",
+              "manifest_schema_version": "1.0.0",
+              "manifest_hash": {"algorithm":"sha256","value":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+              "knowledge_cutoff": "2025-01-01T00:00:00.000000Z"
+            },
+            "roles": ["methodology_registry"],
+            "direct": false
+          }
+        ],
+        "closure_hash": {"algorithm":"sha256","value":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}
+      }
+    ],
+    "drafts/release-data-profile.v1.schema.json": [
+      {
+        "schema_version": "1.0.0",
+        "profile_id": "profile_synthetic_provider_root",
+        "created_at": "2025-07-01T00:00:01.000000Z",
+        "release": {
+          "schema_version": "1.0.0",
+          "release_id": "rel_synthetic_provider_root",
+          "manifest_schema_version": "1.0.0",
+          "manifest_hash": {"algorithm":"sha256","value":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+          "knowledge_cutoff": "2025-06-30T23:59:59.000000Z"
+        },
+        "dependency_closure_hash": {"algorithm":"sha256","value":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"},
+        "domains": [
+          {
+            "domain_id": "security_lifecycle",
+            "artifact_ids": ["company_security_history"],
+            "grain": "one effective-dated company and security identity version",
+            "primary_keys": ["history_record_id"],
+            "date_range": {"start_inclusive":"2024-01-01","end_inclusive":"2025-06-30"},
+            "record_count": 8,
+            "required_missing_count": 0,
+            "duplicate_key_count": 0,
+            "orphan_reference_count": 0,
+            "pit_result": "passed",
+            "revision_lineage_result": "passed",
+            "population_status": "includes_inactive_failed_and_delisted",
+            "declared_missing_items": [],
+            "unrecoverable_items": []
+          },
+          {
+            "domain_id": "benchmark_observation",
+            "artifact_ids": ["benchmark_daily"],
+            "grain": "one benchmark identity and session",
+            "primary_keys": ["benchmark_observation_id"],
+            "date_range": {"start_inclusive":"2025-06-27","end_inclusive":"2025-06-30"},
+            "record_count": 2,
+            "required_missing_count": 0,
+            "duplicate_key_count": 0,
+            "orphan_reference_count": 0,
+            "pit_result": "incomplete",
+            "revision_lineage_result": "passed",
+            "population_status": "not_applicable",
+            "declared_missing_items": ["full historical continuity is not represented by this fixture"],
+            "unrecoverable_items": []
+          }
+        ],
+        "redistribution": {
+          "status": "allowed",
+          "evidence_hash": {"algorithm":"sha256","value":"1010101010101010101010101010101010101010101010101010101010101010"},
+          "limitations": ["synthetic fixture bytes only"]
+        },
+        "profile_hash": {"algorithm":"sha256","value":"1111111111111111111111111111111111111111111111111111111111111111"}
+      }
+    ],
+    "drafts/benchmark-identity.v1.schema.json": [
+      {
+        "schema_version": "1.0.0",
+        "identity_version": "1.0.0",
+        "benchmark_id": "H00985",
+        "benchmark_name": "中证全指全收益指数",
+        "provider_id": "CSI",
+        "provider_name": "China Securities Index Co., Ltd.",
+        "provider_code": "H00985.CSI",
+        "return_type": "gross_total_return",
+        "currency": "CNY",
+        "redistribution": {
+          "status": "pending_explicit_permission",
+          "evidence_hash": null,
+          "limitations": ["complete historical PIT and redistribution permission remain unproven"]
+        },
+        "identity_hash": {"algorithm":"sha256","value":"2222222222222222222222222222222222222222222222222222222222222222"}
+      },
+      {
+        "schema_version": "1.0.0",
+        "identity_version": "1.0.0",
+        "benchmark_id": "SYNTH_GTR",
+        "benchmark_name": "Synthetic Gross Total Return Benchmark",
+        "provider_id": "SYNTH",
+        "provider_name": "Synthetic Fixture Provider",
+        "provider_code": "SYNTH_GTR.TEST",
+        "return_type": "gross_total_return",
+        "currency": "CNY",
+        "redistribution": {
+          "status": "allowed",
+          "evidence_hash": {"algorithm":"sha256","value":"abababababababababababababababababababababababababababababababab"},
+          "limitations": ["synthetic fixture bytes only"]
+        },
+        "identity_hash": {"algorithm":"sha256","value":"cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"}
+      }
+    ],
+    "drafts/benchmark-observation.v1.schema.json": [
+      {
+        "schema_version": "1.0.0",
+        "benchmark_observation_id": "benchmark_H00985_20250630",
+        "benchmark": {
+          "schema_version": "1.0.0",
+          "identity_version": "1.0.0",
+          "benchmark_id": "H00985",
+          "benchmark_name": "中证全指全收益指数",
+          "provider_id": "CSI",
+          "provider_name": "China Securities Index Co., Ltd.",
+          "provider_code": "H00985.CSI",
+          "return_type": "gross_total_return",
+          "currency": "CNY",
+          "redistribution": {
+            "status": "pending_explicit_permission",
+            "evidence_hash": null,
+            "limitations": ["complete historical PIT and redistribution permission remain unproven"]
+          },
+          "identity_hash": {"algorithm":"sha256","value":"2222222222222222222222222222222222222222222222222222222222222222"}
+        },
+        "session_date": "2025-06-30",
+        "level": "8123.45",
+        "previous_level": "8082.63",
+        "one_session_return": "0.00505",
+        "return_basis": "both_verified",
+        "methodology": {
+          "methodology_id": "csi-all-share-gross-total-return",
+          "methodology_version": "2025.1",
+          "effective_from": "2025-01-01",
+          "effective_to": null,
+          "methodology_hash": {"algorithm":"sha256","value":"1212121212121212121212121212121212121212121212121212121212121212"},
+          "return_construction": "provider_published_gross_total_return_index_levels",
+          "adjustment_policy": "provider_methodology"
+        },
+        "calendar_record_id": "calendar_SSE_20250630",
+        "basis_hashes": {
+          "calendar_hash": {"algorithm":"sha256","value":"1313131313131313131313131313131313131313131313131313131313131313"},
+          "observation_basis_hash": {"algorithm":"sha256","value":"1414141414141414141414141414141414141414141414141414141414141414"},
+          "methodology_hash": {"algorithm":"sha256","value":"1212121212121212121212121212121212121212121212121212121212121212"},
+          "source_hash": {"algorithm":"sha256","value":"1515151515151515151515151515151515151515151515151515151515151515"}
+        },
+        "economic_at": "2025-06-30",
+        "observed_at": "2025-06-30T07:05:00.000000Z",
+        "available_at": "2025-06-30T07:10:00.000000Z",
+        "knowledge_cutoff": "2025-06-30T23:59:59.000000Z",
+        "availability_evidence": {
+          "policy_version": "provider-published-time.v1",
+          "evidence_type": "provider_timestamp",
+          "evidence_hash": {"algorithm":"sha256","value":"1616161616161616161616161616161616161616161616161616161616161616"},
+          "limitations": []
+        },
+        "source": {
+          "source_record_id": "source_H00985_20250630",
+          "source_snapshot_id": "snapshot_H00985_20250630",
+          "provider": "CSI",
+          "dataset": "benchmark_daily",
+          "source_url": "https://example.invalid/benchmark/H00985/2025-06-30",
+          "source_identity_hash": {"algorithm":"sha256","value":"1717171717171717171717171717171717171717171717171717171717171717"},
+          "source_content_hash": {"algorithm":"sha256","value":"1515151515151515151515151515151515151515151515151515151515151515"}
+        },
+        "revision": {"revision_id":"revision_H00985_20250630","supersedes_revision_id":null,"status":"active"},
+        "content_hash": {"algorithm":"sha256","value":"1818181818181818181818181818181818181818181818181818181818181818"}
+      },
+      {
+        "schema_version": "1.0.0",
+        "benchmark_observation_id": "benchmark_SYNTH_GTR_20250630",
+        "benchmark": {
+          "schema_version": "1.0.0",
+          "identity_version": "1.0.0",
+          "benchmark_id": "SYNTH_GTR",
+          "benchmark_name": "Synthetic Gross Total Return Benchmark",
+          "provider_id": "SYNTH",
+          "provider_name": "Synthetic Fixture Provider",
+          "provider_code": "SYNTH_GTR.TEST",
+          "return_type": "gross_total_return",
+          "currency": "CNY",
+          "redistribution": {
+            "status": "allowed",
+            "evidence_hash": {"algorithm":"sha256","value":"abababababababababababababababababababababababababababababababab"},
+            "limitations": ["synthetic fixture bytes only"]
+          },
+          "identity_hash": {"algorithm":"sha256","value":"cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"}
+        },
+        "session_date": "2025-06-30",
+        "level": null,
+        "previous_level": null,
+        "one_session_return": "0.001",
+        "return_basis": "provider_published_return",
+        "methodology": {
+          "methodology_id": "synthetic-gross-total-return",
+          "methodology_version": "1.0.0",
+          "effective_from": "2025-01-01",
+          "effective_to": null,
+          "methodology_hash": {"algorithm":"sha256","value":"1919191919191919191919191919191919191919191919191919191919191919"},
+          "return_construction": "synthetic_published_return",
+          "adjustment_policy": "synthetic_fixture"
+        },
+        "calendar_record_id": "calendar_SSE_20250630",
+        "basis_hashes": {
+          "calendar_hash": {"algorithm":"sha256","value":"1313131313131313131313131313131313131313131313131313131313131313"},
+          "observation_basis_hash": {"algorithm":"sha256","value":"2020202020202020202020202020202020202020202020202020202020202020"},
+          "methodology_hash": {"algorithm":"sha256","value":"1919191919191919191919191919191919191919191919191919191919191919"},
+          "source_hash": {"algorithm":"sha256","value":"2121212121212121212121212121212121212121212121212121212121212121"}
+        },
+        "economic_at": "2025-06-30",
+        "observed_at": "2025-06-30T07:00:00.000000Z",
+        "available_at": "2025-06-30T07:00:01.000000Z",
+        "knowledge_cutoff": "2025-06-30T23:59:59.000000Z",
+        "availability_evidence": {
+          "policy_version": "synthetic.v1",
+          "evidence_type": "provider_timestamp",
+          "evidence_hash": {"algorithm":"sha256","value":"2222222222222222222222222222222222222222222222222222222222222222"},
+          "limitations": ["synthetic fixture"]
+        },
+        "source": {
+          "source_record_id": "source_SYNTH_GTR_20250630",
+          "source_snapshot_id": "snapshot_SYNTH_GTR_20250630",
+          "provider": "SYNTH",
+          "dataset": "benchmark_daily",
+          "source_url": null,
+          "source_identity_hash": {"algorithm":"sha256","value":"2323232323232323232323232323232323232323232323232323232323232323"},
+          "source_content_hash": {"algorithm":"sha256","value":"2121212121212121212121212121212121212121212121212121212121212121"}
+        },
+        "revision": {"revision_id":"revision_SYNTH_GTR_20250630","supersedes_revision_id":null,"status":"active"},
+        "content_hash": {"algorithm":"sha256","value":"2424242424242424242424242424242424242424242424242424242424242424"}
+      }
+    ],
+    "drafts/factor-definition.v1.schema.json": [
+      {
+        "schema_version": "1.0.0",
+        "factor_definition_id": "adv20-cny-turnover-mean",
+        "factor_kind": "average_turnover",
+        "definition_version": "1.0.0",
+        "window": {"unit":"exchange_session","count":20,"includes_as_of_session":false},
+        "calculation": {
+          "estimator_id":"arithmetic_mean",
+          "formula_version":"adv20.cny-turnover-mean.v1",
+          "measure_id":"cny_turnover",
+          "imputation_policy_id":"none_except_proven_full_day_suspension"
+        },
+        "benchmark_requirement": null,
+        "input_schema_ids": ["urn:investment-research-kb:record:unadjusted-market-daily:v1"],
+        "raw_basis_required": true,
+        "completeness_rule_ids": ["exact_window_required"],
+        "result_unit": "CNY",
+        "created_at": "2025-01-01T00:00:00.000000Z",
+        "definition_hash": {"algorithm":"sha256","value":"1111111111111111111111111111111111111111111111111111111111111111"}
+      },
+      {
+        "schema_version": "1.0.0",
+        "factor_definition_id": "beta120-h00985-gtr-ols",
+        "factor_kind": "market_beta",
+        "definition_version": "1.0.0",
+        "window": {"unit":"exchange_session","count":120,"includes_as_of_session":false},
+        "calculation": {
+          "estimator_id":"ols_slope_with_intercept",
+          "formula_version":"beta120.ols-with-intercept.v1",
+          "measure_id":"pit_one_session_total_return",
+          "imputation_policy_id":"none_except_proven_full_day_suspension"
+        },
+        "benchmark_requirement": {
+          "benchmark_id":"H00985",
+          "methodology_version":"provider-version-pending",
+          "return_type":"gross_total_return",
+          "identity_hash":{"algorithm":"sha256","value":"2222222222222222222222222222222222222222222222222222222222222222"}
+        },
+        "input_schema_ids": [
+          "urn:investment-research-kb:record:unadjusted-market-daily:v1",
+          "urn:investment-research-kb:record:benchmark-observation:v1"
+        ],
+        "raw_basis_required": true,
+        "completeness_rule_ids": ["exact_window_required","paired_observations_required"],
+        "result_unit": "dimensionless",
+        "created_at": "2025-01-01T00:00:00.000000Z",
+        "definition_hash": {"algorithm":"sha256","value":"3333333333333333333333333333333333333333333333333333333333333333"}
+      }
+    ],
+    "drafts/factor-observation.v1.schema.json": [
+      {
+        "schema_version": "1.0.0",
+        "factor_observation_id": "factor_adv20_security_demo_20250630",
+        "factor_definition": {
+          "factor_definition_id":"adv20-cny-turnover-mean",
+          "definition_version":"1.0.0",
+          "definition_hash":{"algorithm":"sha256","value":"1111111111111111111111111111111111111111111111111111111111111111"}
+        },
+        "subject": {"entity_type":"security","entity_id":"security_demo"},
+        "as_of_session": "2025-06-30",
+        "value_decimal": "123456789.12",
+        "completeness": "complete",
+        "incomplete_reason_ids": [],
+        "basis": {
+          "record_count": 20,
+          "records_hash":{"algorithm":"sha256","value":"2525252525252525252525252525252525252525252525252525252525252525"},
+          "window_identity_hash":{"algorithm":"sha256","value":"2626262626262626262626262626262626262626262626262626262626262626"},
+          "components":[
+            {"role":"calendar_basis","content_hash":{"algorithm":"sha256","value":"2727272727272727272727272727272727272727272727272727272727272727"}},
+            {"role":"mark_basis","content_hash":{"algorithm":"sha256","value":"2828282828282828282828282828282828282828282828282828282828282828"}}
+          ],
+          "latest_basis_available_at": "2025-06-27T08:00:00.000000Z"
+        },
+        "economic_at": "2025-06-30",
+        "observed_at": "2025-06-30T08:01:00.000000Z",
+        "available_at": "2025-06-30T08:02:00.000000Z",
+        "knowledge_cutoff": "2025-06-30T23:59:59.000000Z",
+        "availability_evidence": {
+          "policy_version":"derived-factor.v1",
+          "evidence_type":"provider_timestamp",
+          "evidence_hash":{"algorithm":"sha256","value":"2929292929292929292929292929292929292929292929292929292929292929"},
+          "limitations":[]
+        },
+        "source": {
+          "source_record_id":"source_factor_adv20_demo",
+          "source_snapshot_id":"snapshot_factor_adv20_demo",
+          "provider":"IRKB",
+          "dataset":"factor_observation",
+          "source_url":null,
+          "source_identity_hash":{"algorithm":"sha256","value":"3030303030303030303030303030303030303030303030303030303030303030"},
+          "source_content_hash":{"algorithm":"sha256","value":"3131313131313131313131313131313131313131313131313131313131313131"}
+        },
+        "revision":{"revision_id":"revision_factor_adv20_demo","supersedes_revision_id":null,"status":"active"},
+        "content_hash":{"algorithm":"sha256","value":"3232323232323232323232323232323232323232323232323232323232323232"}
+      },
+      {
+        "schema_version": "1.0.0",
+        "factor_observation_id": "factor_beta120_security_demo_20250630",
+        "factor_definition": {
+          "factor_definition_id":"beta120-h00985-gtr-ols",
+          "definition_version":"1.0.0",
+          "definition_hash":{"algorithm":"sha256","value":"3333333333333333333333333333333333333333333333333333333333333333"}
+        },
+        "subject": {"entity_type":"security","entity_id":"security_demo"},
+        "as_of_session": "2025-06-30",
+        "value_decimal": null,
+        "completeness": "incomplete",
+        "incomplete_reason_ids": ["insufficient_paired_sessions"],
+        "basis": {
+          "record_count": 118,
+          "records_hash":{"algorithm":"sha256","value":"3434343434343434343434343434343434343434343434343434343434343434"},
+          "window_identity_hash":{"algorithm":"sha256","value":"3535353535353535353535353535353535353535353535353535353535353535"},
+          "components":[
+            {"role":"paired_return_basis","content_hash":{"algorithm":"sha256","value":"3636363636363636363636363636363636363636363636363636363636363636"}},
+            {"role":"benchmark_methodology","content_hash":{"algorithm":"sha256","value":"1212121212121212121212121212121212121212121212121212121212121212"}}
+          ],
+          "latest_basis_available_at": "2025-06-27T08:00:00.000000Z"
+        },
+        "economic_at": "2025-06-30",
+        "observed_at": "2025-06-30T08:03:00.000000Z",
+        "available_at": "2025-06-30T08:04:00.000000Z",
+        "knowledge_cutoff": "2025-06-30T23:59:59.000000Z",
+        "availability_evidence": {
+          "policy_version":"derived-factor.v1",
+          "evidence_type":"provider_timestamp",
+          "evidence_hash":{"algorithm":"sha256","value":"3737373737373737373737373737373737373737373737373737373737373737"},
+          "limitations":["synthetic incomplete observation"]
+        },
+        "source": {
+          "source_record_id":"source_factor_beta120_demo",
+          "source_snapshot_id":"snapshot_factor_beta120_demo",
+          "provider":"IRKB",
+          "dataset":"factor_observation",
+          "source_url":null,
+          "source_identity_hash":{"algorithm":"sha256","value":"3838383838383838383838383838383838383838383838383838383838383838"},
+          "source_content_hash":{"algorithm":"sha256","value":"3939393939393939393939393939393939393939393939393939393939393939"}
+        },
+        "revision":{"revision_id":"revision_factor_beta120_demo","supersedes_revision_id":null,"status":"active"},
+        "content_hash":{"algorithm":"sha256","value":"4040404040404040404040404040404040404040404040404040404040404040"}
+      }
+    ],
+    "drafts/corporate-action-observation.v1.schema.json": [
+      {
+        "schema_version":"1.0.0",
+        "action_id":"action_cash_dividend_demo",
+        "company_id":"company_demo",
+        "security_id":"security_demo",
+        "action_type":"cash_dividend",
+        "action_type_registry":{"registry_id":"corporate-action-types","registry_version":"1.0.0","registry_hash":{"algorithm":"sha256","value":"4141414141414141414141414141414141414141414141414141414141414141"}},
+        "terms_schema":{"schema_id":"urn:investment-research-kb:terms:cash-dividend:v1","schema_version":"1.0.0","schema_hash":{"algorithm":"sha256","value":"4242424242424242424242424242424242424242424242424242424242424242"}},
+        "terms":{"cash_per_share":"0.25"},
+        "terms_hash":{"algorithm":"sha256","value":"4343434343434343434343434343434343434343434343434343434343434343"},
+        "announcement_date":"2025-04-01","record_date":"2025-06-20","ex_date":"2025-06-23","payment_date":"2025-06-30","delivery_date":null,"sellable_date":null,"effective_date":"2025-06-23","currency":"CNY",
+        "economic_at":"2025-04-01","observed_at":"2025-04-01T08:00:00.000000Z","available_at":"2025-04-01T08:05:00.000000Z","knowledge_cutoff":"2025-06-30T23:59:59.000000Z",
+        "availability_evidence":{"policy_version":"announcement.v1","evidence_type":"official_timestamp","evidence_hash":{"algorithm":"sha256","value":"4444444444444444444444444444444444444444444444444444444444444444"},"limitations":[]},
+        "source":{"source_record_id":"source_action_cash_demo","source_snapshot_id":"snapshot_action_cash_demo","provider":"EXCHANGE","dataset":"corporate_action","source_url":"https://example.invalid/action/cash","source_identity_hash":{"algorithm":"sha256","value":"4545454545454545454545454545454545454545454545454545454545454545"},"source_content_hash":{"algorithm":"sha256","value":"4646464646464646464646464646464646464646464646464646464646464646"}},
+        "revision":{"revision_id":"revision_action_cash_demo","supersedes_revision_id":null,"status":"active"},
+        "content_hash":{"algorithm":"sha256","value":"4747474747474747474747474747474747474747474747474747474747474747"}
+      },
+      {
+        "schema_version":"1.0.0",
+        "action_id":"action_merger_exchange_demo",
+        "company_id":"company_demo",
+        "security_id":"security_demo",
+        "action_type":"merger_exchange",
+        "action_type_registry":{"registry_id":"corporate-action-types","registry_version":"1.0.0","registry_hash":{"algorithm":"sha256","value":"4141414141414141414141414141414141414141414141414141414141414141"}},
+        "terms_schema":{"schema_id":"urn:investment-research-kb:terms:merger-exchange:v1","schema_version":"1.0.0","schema_hash":{"algorithm":"sha256","value":"4848484848484848484848484848484848484848484848484848484848484848"}},
+        "terms":{"acquirer_security_id":"security_acquirer","exchange_ratio":"1.5"},
+        "terms_hash":{"algorithm":"sha256","value":"4949494949494949494949494949494949494949494949494949494949494949"},
+        "announcement_date":"2025-05-01","record_date":null,"ex_date":null,"payment_date":null,"delivery_date":"2025-06-30","sellable_date":"2025-07-01","effective_date":"2025-06-30","currency":null,
+        "economic_at":"2025-05-01","observed_at":"2025-05-01T08:00:00.000000Z","available_at":"2025-05-01T08:05:00.000000Z","knowledge_cutoff":"2025-06-30T23:59:59.000000Z",
+        "availability_evidence":{"policy_version":"announcement.v1","evidence_type":"official_timestamp","evidence_hash":{"algorithm":"sha256","value":"5050505050505050505050505050505050505050505050505050505050505050"},"limitations":["synthetic extensibility example"]},
+        "source":{"source_record_id":"source_action_merger_demo","source_snapshot_id":"snapshot_action_merger_demo","provider":"EXCHANGE","dataset":"corporate_action","source_url":"https://example.invalid/action/merger","source_identity_hash":{"algorithm":"sha256","value":"5151515151515151515151515151515151515151515151515151515151515151"},"source_content_hash":{"algorithm":"sha256","value":"5252525252525252525252525252525252525252525252525252525252525252"}},
+        "revision":{"revision_id":"revision_action_merger_demo","supersedes_revision_id":null,"status":"active"},
+        "content_hash":{"algorithm":"sha256","value":"5353535353535353535353535353535353535353535353535353535353535353"}
+      }
+    ],
+    "drafts/industry-classification-history-record.v1.schema.json": [
+      {
+        "schema_version":"1.0.0","industry_history_id":"industry_history_demo_l1","company_id":"company_demo","taxonomy_id":"taxonomy_demo","taxonomy_version":"2025.1","classification_level":1,"is_primary":true,"industry_code":"L1_TECH","industry_name":"Technology","parent_industry_code":null,"valid_from":"2025-01-01","valid_to":null,
+        "economic_at":"2025-01-01","observed_at":"2025-01-02T00:00:00.000000Z","available_at":"2025-01-02T00:01:00.000000Z","knowledge_cutoff":"2025-06-30T23:59:59.000000Z",
+        "availability_evidence":{"policy_version":"classification.v1","evidence_type":"provider_timestamp","evidence_hash":{"algorithm":"sha256","value":"5454545454545454545454545454545454545454545454545454545454545454"},"limitations":[]},
+        "source":{"source_record_id":"source_industry_demo_l1","source_snapshot_id":"snapshot_industry_demo","provider":"SYNTH","dataset":"industry_classification","source_url":null,"source_identity_hash":{"algorithm":"sha256","value":"5555555555555555555555555555555555555555555555555555555555555555"},"source_content_hash":{"algorithm":"sha256","value":"5656565656565656565656565656565656565656565656565656565656565656"}},
+        "revision":{"revision_id":"revision_industry_demo_l1","supersedes_revision_id":null,"status":"active"},
+        "content_hash":{"algorithm":"sha256","value":"5757575757575757575757575757575757575757575757575757575757575757"}
+      },
+      {
+        "schema_version":"1.0.0","industry_history_id":"industry_history_demo_l2","company_id":"company_demo","taxonomy_id":"taxonomy_demo","taxonomy_version":"2025.1","classification_level":2,"is_primary":true,"industry_code":"L2_HARDWARE","industry_name":"Hardware","parent_industry_code":"L1_TECH","valid_from":"2025-01-01","valid_to":null,
+        "economic_at":"2025-01-01","observed_at":"2025-01-02T00:00:00.000000Z","available_at":"2025-01-02T00:01:00.000000Z","knowledge_cutoff":"2025-06-30T23:59:59.000000Z",
+        "availability_evidence":{"policy_version":"classification.v1","evidence_type":"provider_timestamp","evidence_hash":{"algorithm":"sha256","value":"5858585858585858585858585858585858585858585858585858585858585858"},"limitations":[]},
+        "source":{"source_record_id":"source_industry_demo_l2","source_snapshot_id":"snapshot_industry_demo","provider":"SYNTH","dataset":"industry_classification","source_url":null,"source_identity_hash":{"algorithm":"sha256","value":"5959595959595959595959595959595959595959595959595959595959595959"},"source_content_hash":{"algorithm":"sha256","value":"6060606060606060606060606060606060606060606060606060606060606060"}},
+        "revision":{"revision_id":"revision_industry_demo_l2","supersedes_revision_id":null,"status":"active"},
+        "content_hash":{"algorithm":"sha256","value":"6161616161616161616161616161616161616161616161616161616161616161"}
+      }
+    ]
+  },
+  "authorization_boundary": {
+    "network_collection": false,
+    "backfill": false,
+    "database_write": false,
+    "published_release": false,
+    "consumer_runtime": false
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:investment-research-kb:record:factor-definition:v1",
+  "title": "Factor Definition v1",
+  "description": "Versioned, parameterized and consumer-neutral definition for a reproducible reference factor.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "factor_definition_id", "factor_kind", "definition_version",
+    "window", "calculation", "benchmark_requirement", "input_schema_ids",
+    "raw_basis_required", "completeness_rule_ids", "result_unit", "created_at",
+    "definition_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "factor_definition_id": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "factor_kind": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "definition_version": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+    },
+    "window": {"$ref": "#/$defs/window"},
+    "calculation": {"$ref": "#/$defs/calculation"},
+    "benchmark_requirement": {
+      "oneOf": [
+        {"$ref": "#/$defs/benchmarkRequirement"},
+        {"type": "null"}
+      ]
+    },
+    "input_schema_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "format": "uri", "maxLength": 512}
+    },
+    "raw_basis_required": {"const": true},
+    "completeness_rule_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+      }
+    },
+    "result_unit": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+    },
+    "created_at": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/utcTimestamp"
+    },
+    "definition_hash": {
+      "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+    }
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit", "count", "includes_as_of_session"],
+      "properties": {
+        "unit": {"type": "string", "enum": ["exchange_session", "calendar_day", "observation"]},
+        "count": {"type": "integer", "minimum": 1},
+        "includes_as_of_session": {"type": "boolean"}
+      }
+    },
+    "calculation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["estimator_id", "formula_version", "measure_id", "imputation_policy_id"],
+      "properties": {
+        "estimator_id": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        },
+        "formula_version": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+        },
+        "measure_id": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        },
+        "imputation_policy_id": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        }
+      }
+    },
+    "benchmarkRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "benchmark_id", "methodology_version", "return_type", "identity_hash"
+      ],
+      "properties": {
+        "benchmark_id": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/id"
+        },
+        "methodology_version": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/version"
+        },
+        "return_type": {
+          "type": "string",
+          "enum": ["price_return", "gross_total_return", "net_total_return", "other_declared"]
+        },
+        "identity_hash": {
+          "$ref": "urn:investment-research-kb:defs:historical-public:v1#/$defs/sha256Ref"
+        }
+      }
+    }
+  }
+}

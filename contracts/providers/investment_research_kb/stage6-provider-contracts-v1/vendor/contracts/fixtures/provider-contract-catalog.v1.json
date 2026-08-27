@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0.0",
+  "catalog_id": "irkb-provider-contract-catalog",
+  "catalog_version": "1.0.0-draft",
+  "status": "DRAFT_ZERO_RUNTIME_AUTHORITY",
+  "governance": {
+    "decision_id": "KBIS-ADR-0002",
+    "kb_baseline_commit": "6ae6c4c3c8ec9433ff63fddcb2bbb207a39e8cbe",
+    "is_approval_commit": "eb702559511083d2d0d603725be50997e0c22bbe",
+    "is_adr_raw_sha256": "e18e91423066589b636edd0ca793e6949f45dcf272ce0f81661aa33c3982f22e",
+    "is_consumer_profile_document_raw_sha256": "79abfe814577dd2da644f5a59310021e6151e1c3a585cc6fa69aa69424e6bbad",
+    "is_consumer_profile_machine_raw_sha256": "2ea49cf7cd2cd100ecf6fde345b431a75a3f03c226d79fa4689cb0799fce8f6d",
+    "approved_decisions_sha256": "feb9235b1c1f1379de6d100fd7f8fc5292b4448a7b443709a7766728160c0b92"
+  },
+  "supporting_schema": {
+    "path": "drafts/historical-common-defs.v1.schema.json",
+    "schema_id": "urn:investment-research-kb:defs:historical-public:v1",
+    "sha256": "5e1d978acd08fbc8ecced5100481de317238f2677c806de0882d243b6571cc3b",
+    "status": "reused_draft"
+  },
+  "active_provider_drafts": [
+    {"path":"drafts/release-reference.v1.schema.json","schema_id":"urn:investment-research-kb:contract:release-reference:v1","version":"1.0.0","origin":"new","sha256":"e32ad96598329d85c1c440cc5cc8c643bea65c8bb2900ad410bbb8dc8de26719"},
+    {"path":"drafts/aggregate-release-dependency-closure.v1.schema.json","schema_id":"urn:investment-research-kb:contract:aggregate-release-dependency-closure:v1","version":"1.0.0","origin":"new","sha256":"07cb63bb9ed4ed2bcf781935770e3d778c513cd4b9d2671b1e16a34b18e095c2"},
+    {"path":"drafts/release-data-profile.v1.schema.json","schema_id":"urn:investment-research-kb:contract:release-data-profile:v1","version":"1.0.0","origin":"new","sha256":"09f87e52893c4d554160a06d1c225da5694e99ebe534974c927c58a33c88ea24"},
+    {"path":"drafts/benchmark-identity.v1.schema.json","schema_id":"urn:investment-research-kb:record:benchmark-identity:v1","version":"1.0.0","origin":"new","sha256":"993d8fbec03ca559d5bd70b1025b6c4288689574af65cbfaae1495e8faa96c6d"},
+    {"path":"drafts/benchmark-observation.v1.schema.json","schema_id":"urn:investment-research-kb:record:benchmark-observation:v1","version":"1.0.0","origin":"new","sha256":"6b561d6de45503378ac47c9fe00eb456167b95422c70edb889089ba3a5eaf2ae"},
+    {"path":"drafts/factor-definition.v1.schema.json","schema_id":"urn:investment-research-kb:record:factor-definition:v1","version":"1.0.0","origin":"new","sha256":"ccb3653a1b70ac677a1eb52aa4742feb5a544478b18ba51ed8807f2b4ca8d01f"},
+    {"path":"drafts/factor-observation.v1.schema.json","schema_id":"urn:investment-research-kb:record:factor-observation:v1","version":"1.0.0","origin":"new","sha256":"8efb7880c1cf6faebbcd953215f7f9a561f395d53421d57e8743e8af96a4da54"},
+    {"path":"drafts/corporate-action-observation.v1.schema.json","schema_id":"urn:investment-research-kb:record:corporate-action-observation:v1","version":"1.0.0","origin":"new","sha256":"c949ba9427273dceb10c63a200ef7ccaaf297c8b2874a5aa5cf1a56e57397a09"},
+    {"path":"drafts/industry-classification-history-record.v1.schema.json","schema_id":"urn:investment-research-kb:record:industry-classification-history:v1","version":"1.0.0","origin":"new","sha256":"4d573d77dc7245728352f2db5392be38c2e329e881b61bb1c07a92e194fbd8b9"},
+    {"path":"drafts/company-security-history-record.v1.schema.json","schema_id":"urn:investment-research-kb:record:company-security-history:v1","version":"1.0.0","origin":"reused","sha256":"5220bddbec4792b8ca631f0874ca7835a52b54059f0f42efc1848603595043f4"},
+    {"path":"drafts/trading-calendar-record.v1.schema.json","schema_id":"urn:investment-research-kb:record:trading-calendar:v1","version":"1.0.0","origin":"reused","sha256":"4a46af140835e40ef13eca7d4be84629dac342c8682c187167749245be6fec1a"},
+    {"path":"drafts/market-rule-set-record.v1.schema.json","schema_id":"urn:investment-research-kb:record:market-rule-set:v1","version":"1.0.0","origin":"reused","sha256":"bc242a5def9dfda797c92d4c5cde5c42d0f2958951ed5e28ed9a4c15b78225e0"},
+    {"path":"drafts/security-session-state-record.v1.schema.json","schema_id":"urn:investment-research-kb:record:security-session-state:v1","version":"1.0.0","origin":"reused","sha256":"1805473e0dfd21d80e208d3114a783a2971547858fd985baa17c19e4be5d6270"},
+    {"path":"drafts/unadjusted-market-daily-record.v1.schema.json","schema_id":"urn:investment-research-kb:record:unadjusted-market-daily:v1","version":"1.0.0","origin":"reused","sha256":"11a85c9210d2f0e21dfc0911dd688bd67f784b922a5d9ac9c3b5023f256df978"},
+    {"path":"drafts/float-market-cap-daily-record.v1.schema.json","schema_id":"urn:investment-research-kb:record:float-market-cap-daily:v1","version":"1.0.0","origin":"reused","sha256":"90f5632e0dd46c972a6a15198d538b814c90aee8af98991b1a0fc789fe8c7935"}
+  ],
+  "superseded_never_published": [
+    {"path":"drafts/historical-stage6-public-input-manifest.v1.schema.json","sha256":"cc0e8addbe845d30b47812b066165b0bf15fb966b68246181a8df1bd09b14e55","replacement_paths":["drafts/release-reference.v1.schema.json","drafts/aggregate-release-dependency-closure.v1.schema.json","drafts/release-data-profile.v1.schema.json"]},
+    {"path":"drafts/benchmark-total-return-daily-record.v1.schema.json","sha256":"ca5d2bdbdeb3a060fc1759b59c3ea41960a94a7d1d840f09848ae5631f370213","replacement_paths":["drafts/benchmark-observation.v1.schema.json"]},
+    {"path":"drafts/common-reference-factor-record.v1.schema.json","sha256":"0cd0d277f9326f3175372a9d7b525e0030bba18d5fc4a8d8904d70ad558d300e","replacement_paths":["drafts/factor-definition.v1.schema.json","drafts/factor-observation.v1.schema.json"]},
+    {"path":"drafts/corporate-action-record.v1.schema.json","sha256":"c56ea55cc7bd3f1516af2c65e3c6a920d4936d714eeb89ce9649b9ac7a3f9baf","replacement_paths":["drafts/corporate-action-observation.v1.schema.json"]},
+    {"path":"drafts/primary-industry-history-record.v1.schema.json","sha256":"6d635703ab9553664a68b0e602bbc2b18be91f9979a07b2a9617daec0a06eb7c","replacement_paths":["drafts/industry-classification-history-record.v1.schema.json"]}
+  ],
+  "legacy_read_only_compatibility": [
+    {
+      "path": "strategy-input-ref.v1.schema.json",
+      "sha256": "55b381df48a80a046388c19c53bb27e924c25bd10294d7dba0d55097280f86b6",
+      "status": "locked_read_only_compatibility_not_new_producer_template"
+    }
+  ],
+  "registries": [
+    {
+      "path": "fixtures/provider-benchmark-factor-registry.v1.json",
+      "sha256": "1dfd55b623827b5571abda492b12d2b4e582c605ade20e46bab1eefcd28d89ba",
+      "status": "draft_no_global_default"
+    }
+  ],
+  "synthetic_fixture": {
+    "path": "fixtures/provider-contract-synthetic-fixtures.v1.json",
+    "sha256": "ccc2f4e245b0118d439fd6730523209cfac77c7415f6cd1459df4d839983b8a6"
+  },
+  "transport": {
+    "version": "v1",
+    "semantics_changed": false,
+    "contract_locks_v1_sha256": "5c782b81c05a50a85866be51b4b83fd8e3a9f9b2ab39bb381d72fcae573b9fff",
+    "stage6b_transport_lock_sha256": "d30bba912a20ddd084fdabc7c0813d4ca806e465e63ce67ae5ab0f7d77241fc0"
+  },
+  "authorization_boundary": {
+    "network_collection": false,
+    "backfill": false,
+    "database_or_migration": false,
+    "published_release": false,
+    "token": false,
+    "production": false,
+    "transport_repin": false,
+    "consumer_adapter": false,
+    "historical_run": false
+  }
+}
