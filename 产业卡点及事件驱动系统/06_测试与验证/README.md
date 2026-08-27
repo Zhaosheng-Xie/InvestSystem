@@ -49,6 +49,8 @@
 
 [Stage 6 通用 KB 契约离线 Adapter 正式验收](../../docs/validation/stage6-generic-kb-offline-adapter-acceptance.md)固定 `snapshot-lock.json` 的 19 个 provider blobs，验证 16 个 active Schema、registry 和九类 synthetic examples；同时验证 root identity、四依赖 closure、客观 incomplete profile、H00985 无 fallback/许可阻塞、ADV20 complete hash-basis-only、Beta120 118-session incomplete，以及纯 Decimal 20/120 window 重算。未知字段、文件篡改、非规范 Decimal、负成交额、窗口不足和零方差均失败关闭；真实 Release、transport、candidate、coverage、holdout 和交易仍不在测试范围。
 
+[产业 PRD v0.4 边界修订补充草案形成验收](../../docs/validation/industrial-event-prd-v0.4-boundary-addendum-draft-acceptance.md)固定 v0.3 原始 SHA-256、v0.4 文档/机器草案身份、四个 replacement、C1a/C1b 分离和八项 pending owner decision；同时证明补充不批准 Stage 6B 重构、spike 清理、数据、repin、handoff 或任何运行模式。
+
 ## Stage 6C 正式执行 Readiness 审计
 
 [Stage 6C 正式执行 Readiness 审计 v0.1](../../docs/validation/stage6c-formal-execution-readiness-audit-v0.1.md)在匿名 synthetic phase seal 后检查 34 个正式前置门，结论为 `NO_GO_FOR_FORMAL_STAGE6C_EXECUTION`。其中 `9 READY / 22 MISSING / 1 BLOCKED / 2 NOT_REQUIRED_WITH_JUSTIFICATION`；现有证据只能支持继续做只读 census 和方案设计，不能启动 development/walk-forward、读取 holdout、签发 6D 或创建正式 migration。

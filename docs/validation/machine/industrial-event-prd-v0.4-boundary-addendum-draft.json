@@ -1,0 +1,155 @@
+{
+  "schema_version": "1.0.0-draft",
+  "addendum_id": "industrial_event_prd_v0_4_boundary_addendum",
+  "addendum_version": "0.4.0-draft",
+  "declared_status": "draft_for_owner_confirmation",
+  "addendum_hash": "da32630be2b2ca9d44a68b7dba5a23fcc92ed4223adc00b7e448e7f541a092c4",
+  "document_binding": {
+    "path": "产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.4边界修订补充.md",
+    "raw_sha256": "3587f49786cd3425f5a9dc5dd9df1af364963a7369cb38b8c40511ce00501d36"
+  },
+  "base_prd": {
+    "path": "产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md",
+    "version": "0.3",
+    "status": "approved",
+    "raw_sha256": "0f7e6489ee0c5c17d638534337a73c389e70794cf41b821eec7cc92a242c6b03",
+    "bytes_unchanged": true
+  },
+  "approved_architecture_lineage": {
+    "adr_0002_raw_sha256": "e18e91423066589b636edd0ca793e6949f45dcf272ce0f81661aa33c3982f22e",
+    "consumer_profile_document_raw_sha256": "79abfe814577dd2da644f5a59310021e6151e1c3a585cc6fa69aa69424e6bbad",
+    "provider_consumer_approval_record_raw_sha256": "83d8053fa5dc0593a4c5ab7205560512f89eb39a7dbd61eb4157badb0a0046af",
+    "s6bound_decisions_sha256": "feb9235b1c1f1379de6d100fd7f8fc5292b4448a7b443709a7766728160c0b92"
+  },
+  "fixed_cross_repository_baseline": {
+    "kb_main_commit": "4352c10c6c639e25d4c190dfc9ec58ee9e76aa86",
+    "is_main_commit": "4fc55976181fc72737dd64bab5bbd59d2826a8b4",
+    "is_provider_snapshot_lock_sha256": "513b3e8728fc299780bbd3205f0fa049a63bb4946b5eaa8193fc51447b5b333a"
+  },
+  "supersession_scope": {
+    "mode": "BOUNDARY_CLAUSE_ADDENDUM_ONLY",
+    "full_prd_rewrite": false,
+    "unlisted_v0_3_requirements_remain_effective": true,
+    "listed_boundary_conflicts_use_v0_4_after_approval": true
+  },
+  "effective_replacements": [
+    {
+      "replacement_id": "PRD-V04-R01",
+      "v0_3_location": "section_5_1_first_paragraph",
+      "old_semantics": "RUN_BINDS_PROVIDER_OWNED_STRATEGY_INPUT_REF",
+      "new_semantics": "IS_CONSTRUCTS_ONE_STRATEGY_INPUT_REF_FROM_VERIFIED_KB_ROOT_RELEASE_REFERENCE"
+    },
+    {
+      "replacement_id": "PRD-V04-R02",
+      "v0_3_location": "section_5_3_step_3",
+      "old_semantics": "COMPARE_MANIFEST_TO_PREEXISTING_STRATEGY_INPUT_REF",
+      "new_semantics": "VERIFY_RELEASE_AND_MANIFEST_FIRST_THEN_PROJECT_AND_BIND_STRATEGY_INPUT_REF"
+    },
+    {
+      "replacement_id": "PRD-V04-R03",
+      "v0_3_location": "section_18_1_strategy_input_ref_ownership_row",
+      "old_semantics": "KB_OWNS_STRATEGY_INPUT_REF_SUBCONTRACT",
+      "new_semantics": "KB_OWNS_RELEASE_REFERENCE_IS_OWNS_STRATEGY_INPUT_REF_AND_ADAPTER"
+    },
+    {
+      "replacement_id": "PRD-V04-R04",
+      "v0_3_location": "section_22_stage_c1",
+      "old_semantics": "ONE_UNDIFFERENTIATED_KB_ADAPTER_COMPLETION_GATE",
+      "new_semantics": "C1A_DRAFT_OFFLINE_COMPATIBILITY_AND_C1B_PUBLISHED_RELEASE_CONSUMPTION"
+    }
+  ],
+  "object_ownership": {
+    "kb": [
+      "release_reference",
+      "release_manifest_status_artifact_schema_context_pack",
+      "variable_dependency_closure",
+      "release_data_profile",
+      "benchmark_and_factor_registry_observations_raw_basis",
+      "pit_fact_evidence_context"
+    ],
+    "investsystem": [
+      "strategy_input_ref",
+      "kb_adapter_and_provider_neutral_projection",
+      "receipt_observation_retention_confirmation_strategy_run_manifest",
+      "h00985_and_factor_acceptance_recomputation",
+      "holdout_candidate_coverage_authority_and_decision"
+    ]
+  },
+  "strategy_input_ref_construction": {
+    "source": "ONE_VERIFIED_ROOT_RELEASE_REFERENCE",
+    "fields": {
+      "schema_version": "IS_CONTRACT_VERSION",
+      "dataset_release_id": "release_reference.release_id",
+      "knowledge_cutoff": "release_reference.knowledge_cutoff",
+      "release_manifest_schema_version": "release_reference.manifest_schema_version",
+      "manifest_hash": "RECOMPUTED_AND_MATCHED_RELEASE_MANIFEST_HASH"
+    },
+    "legacy_strategy_input_ref_v1": "READ_ONLY_EQUALITY_CHECK_ONLY",
+    "provider_preconstructed_reference_trusted": false
+  },
+  "stage_c1": {
+    "c1a": {
+      "name": "DRAFT_CONTRACT_COMPATIBILITY",
+      "status": "COMPLETED_WITH_SCOPE_LIMITS_AT_IS_4FC5597",
+      "inputs": "PINNED_KB_GIT_OBJECT_SCHEMA_CATALOG_REGISTRY_SYNTHETIC_FIXTURE",
+      "published_release_required": false,
+      "runtime_authority": false
+    },
+    "c1b": {
+      "name": "PUBLISHED_RELEASE_CONSUMPTION",
+      "status": "NOT_STARTED",
+      "requires": [
+        "LEGAL_DATA_SOURCE",
+        "HISTORICAL_PIT",
+        "RAW_BASIS_RECORDS",
+        "IMMUTABLE_RELEASE_CANDIDATE",
+        "PRODUCER_VALIDATION",
+        "SEPARATE_OWNER_AUTHORIZATION"
+      ]
+    }
+  },
+  "preserved_v0_3_semantics": [
+    "STRATEGY_RUN_MANIFEST_STORES_STRATEGY_INPUT_REF",
+    "RECEIPT_OBSERVATION_DECISION_AND_RETENTION_BIND_STRATEGY_INPUT_REF",
+    "AVAILABLE_AT_LTE_KNOWLEDGE_CUTOFF_LTE_DECISION_AT",
+    "EXACTLY_ONE_ROOT_STRATEGY_INPUT_REF_PER_RUN",
+    "WITHDRAWN_OR_UNCONFIRMABLE_RELEASE_BLOCKS_NEW_RUN",
+    "KB_CANDIDATE_EVENT_IS_NOT_IS_EVENT_OR_INVESTMENT_CANDIDATE"
+  ],
+  "current_blockers": [
+    "H00985_COMPLETE_HISTORY_PIT_AND_REDISTRIBUTION_PERMISSION",
+    "OFFICIAL_FACTOR_RAW_BASIS_RECORDS",
+    "SCOPE_ELIGIBLE_PUBLISHED_HISTORICAL_RELEASE",
+    "REAL_HANDOFF_CANDIDATE_COVERAGE_HISTORICAL_RUN_AND_HOLDOUT"
+  ],
+  "owner_confirmation_items": [
+    {"id":"PRD04-BND-01","status":"pending","decision":"V0_4_IS_BOUNDARY_ADDENDUM_WITHOUT_REWRITING_V0_3_BYTES"},
+    {"id":"PRD04-BND-02","status":"pending","decision":"IS_CONSTRUCTS_STRATEGY_INPUT_REF_FROM_VERIFIED_KB_RELEASE_REFERENCE"},
+    {"id":"PRD04-BND-03","status":"pending","decision":"KB_LEGACY_STRATEGY_INPUT_REF_V1_IS_READ_ONLY_COMPATIBILITY"},
+    {"id":"PRD04-BND-04","status":"pending","decision":"VERIFY_MANIFEST_BEFORE_PROJECTING_AND_BINDING_IS_INPUT_REFERENCE"},
+    {"id":"PRD04-BND-05","status":"pending","decision":"SINGLE_ROOT_INPUT_IS_IS_RUN_CONSTRAINT_NOT_KB_PUBLICATION_CONSTRAINT"},
+    {"id":"PRD04-BND-06","status":"pending","decision":"SPLIT_C1A_DRAFT_OFFLINE_COMPATIBILITY_FROM_C1B_PUBLISHED_CONSUMPTION"},
+    {"id":"PRD04-BND-07","status":"pending","decision":"IS_OWNS_H00985_FACTOR_ACCEPTANCE_HOLDOUT_AUTHORITY_CANDIDATE_COVERAGE"},
+    {"id":"PRD04-BND-08","status":"pending","decision":"ZERO_DATA_RUNTIME_AND_TRADING_AUTHORITY"}
+  ],
+  "observed_inputs": {
+    "kb_data_or_release_read": false,
+    "network_or_token_used": false,
+    "holdout_read": false,
+    "candidate_or_coverage_created": false,
+    "runtime_state_persisted": false
+  },
+  "authorization_boundary": {
+    "authority_eligible": false,
+    "authorizes_prd_approval": false,
+    "authorizes_stage6b_refactor": false,
+    "authorizes_root_spike_cleanup": false,
+    "authorizes_kb_data_backfill_or_release": false,
+    "authorizes_transport_repin_or_handoff": false,
+    "authorizes_candidate_coverage_historical_run_holdout": false,
+    "authorizes_migration_backtest_paper_shadow_live": false,
+    "authorizes_positions_or_orders": false,
+    "writes_kb": false
+  },
+  "next_gate": "OWNER_ATOMICALLY_APPROVES_PRD04_BND_01_THROUGH_08"
+}

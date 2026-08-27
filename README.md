@@ -6,7 +6,7 @@
 
 ## 实施计划
 
-- [InvestSystem 实施计划 v3.31](PLAN.md)：本仓库唯一正式路线图；v0.2/S6DATA 与 ADR-0002/v0.3 边界继续有效。IS 已固定 KB `4352c10` 的通用 draft contract/registry/synthetic fixture，完成纯离线 Adapter 和重算内核；H00985 许可、真实 raw basis、Published Release、transport repin、handoff 与运行权限仍未关闭。
+- [InvestSystem 实施计划 v3.32](PLAN.md)：本仓库唯一正式路线图；v0.2/S6DATA 与 ADR-0002/v0.3 边界继续有效。IS 已固定 KB `4352c10` 并完成纯离线 Adapter；[产业 PRD v0.4 边界补充草案](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.4边界修订补充.md)正在修正 v0.3 中 `strategy_input_ref` 所有权，尚未批准，也不改变真实数据和运行权限。
 - `PLAN.md` 只管理阶段、依赖和完成门，不取代 PRD、规则规格、机器契约或测试报告。
 
 Stage 1 已通过[正式验收](docs/validation/stage1-acceptance.md)：独立包装、hash lock、TOML、InvestSystem 自有 draft 契约、provider-neutral DTO、构造级规则成熟度防线、SQLite/内容寻址缓存与准入骨架、合成测试和 Windows/Linux CI 均已验证。该验收只证明当时的工程骨架可安装、可测试、可审计，不应被回溯解释为后续策略能力已经存在。
@@ -25,6 +25,7 @@ Stage 5D 的[公司行动、估值、P&L、完整回放与原子持久化精确�
 
 - [产业卡点及事件驱动系统](产业卡点及事件驱动系统/README.md)：PRD v0.3 已于 `2026-07-31` 批准；Stage 2B 最小切片与 Stage 4 完整合成 research-validation 引擎均已验收，完整生产策略仍未实现。
   - 第一读物：[需求文档 v0.3](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.3.md)
+  - 边界修订草案：[PRD v0.4 补充](产业卡点及事件驱动系统/01_需求/产业卡点及事件驱动系统_PRD_v0.4边界修订补充.md)
   - 研究裁决：[框架审计与研究结论 v0.1](产业卡点及事件驱动系统/02_研究/框架审计与研究结论_v0.1.md)
 - [题材扩散与资金轮动系统](题材扩散与资金轮动系统/README.md)：独立、延后的研究轨道，需求与规则尚未冻结；默认不向产业策略提供信号。
   - 第一读物：[题材轮动独立立项评估 v0.1](题材扩散与资金轮动系统/02_研究/题材轮动独立立项评估_v0.1.md)

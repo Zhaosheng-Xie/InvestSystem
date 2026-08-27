@@ -1,7 +1,7 @@
 # 产业卡点及事件驱动系统
 
-项目状态：`PRD v0.3 approved；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3—4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5D-1 completed_with_scope_limits；Stage 6B completed_with_scope_limits；Stage 6C v0.2 anonymous synthetic kernel completed_with_scope_limits / formal execution not authorized；完整生产策略未实现`
-PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
+项目状态：`PRD v0.3 approved / v0.4 boundary addendum draft pending owner；Stage 1、Stage 2A、Stage 2B 已验收；Stage 3—4 completed_with_scope_limits；Stage 5A governance approved；Stage 5B—5D-1 completed_with_scope_limits；Stage 6B completed_with_scope_limits；Stage 6C v0.2 anonymous synthetic kernel completed_with_scope_limits / formal execution not authorized；完整生产策略未实现`
+PRD/需求基线日期：`2026-07-31`；边界草案形成：`2026-08-28`
 市场范围：`中国 A 股`
 当前已授权边界：`Stage 2B、Stage 4/4B 与 Stage 5A—5D 均仅在各自精确批准范围内进行匿名合成 research validation；Stage 3D 不签发 KB current-status authority 或 RunReleaseStatusConfirmation；Stage 5D 当前只覆盖第一条预注册 ENTER/BUY bounded replay；Stage 6B capability 仅授权隔离临时库 admission 实现、只读 HTTPS status validation 与 validation-only confirmation/seal。正式 historical run、策略 evaluator、正式 migration、6C/6D、backtest/paper/shadow/live、真实仓位、账户、订单或券商接入仍未授权`
 
@@ -24,6 +24,7 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
 1. [需求文档 v0.3](01_需求/产业卡点及事件驱动系统_PRD_v0.3.md)
    - 状态：`approved / 2026-07-31`；批准需求和边界，不代表规则或策略已经实现。
    - 历史基线：[需求文档 v0.2](01_需求/产业卡点及事件驱动系统_PRD_v0.2.md)、[需求文档 v0.1](01_需求/产业卡点及事件驱动系统_PRD_v0.1.md)
+   - 待批准补充：[PRD v0.4 边界修订补充](01_需求/产业卡点及事件驱动系统_PRD_v0.4边界修订补充.md)，只更正 provider/consumer 所有权，不回写 v0.3。
 2. [框架审计与研究结论 v0.1](02_研究/框架审计与研究结论_v0.1.md)
 3. [来源登记表 v0.1](02_研究/来源登记表_v0.1.md)
 4. [Alpha 竞争假设补充研究 v0.1](02_研究/Alpha竞争假设补充研究_v0.1.md)
@@ -112,6 +113,8 @@ PRD/需求基线日期：`2026-07-31`；工程状态更新：`2026-08-20`
     - 状态：`owner_approved_governance / zero_runtime_authority`；保留 v0.2/S6DATA 谱系，把 KB 通用 Release/事实/benchmark/factor/closure 与 IS Adapter、H00985/ADV/Beta 选择、holdout、candidate/coverage、authority 分离。[草案形成验收](../docs/validation/stage6-consumer-boundary-draft-acceptance.md)、[批准记录](../docs/validation/stage6-provider-consumer-boundary-approval-v0.1.md)和[治理批准验收](../docs/validation/stage6-consumer-boundary-governance-acceptance.md)已形成，`S6BOUND-01—10` 原子批准；实现权限仍为零。
 48. Stage 6 通用 KB 契约离线 Adapter v0.1
     - 状态：`completed_with_scope_limits / synthetic_contract_only`；固定 KB `4352c10` 的 19 文件通用 draft snapshot，实现 ReleaseReference、可变 dependency closure、data profile、H00985 和 factor 投影及纯重算内核。[正式验收](../docs/validation/stage6-generic-kb-offline-adapter-acceptance.md)确认 H00985 许可和 fixture raw records 缺失继续 `BLOCKED`，不授权真实数据或运行。
+49. [产业 PRD v0.4 边界修订补充草案](01_需求/产业卡点及事件驱动系统_PRD_v0.4边界修订补充.md)
+    - 状态：`draft_for_owner_confirmation / zero_runtime_authority`；保持 v0.3 字节不变，修正 `StrategyInputRef` 所有权、Manifest 校验/投影顺序、对象表和 C1a/C1b 双门。[草案形成验收](../docs/validation/industrial-event-prd-v0.4-boundary-addendum-draft-acceptance.md)通过，八项 `PRD04-BND` 全部 pending。
 
 Stage 2A 已完成固定公共契约的离线验收：`codex/stage2` 从 KB 提交 `58ed9c5cb5302e3e719f1696bed83a03c5d6313b` 固定 20 个官方文件，并验收 provider canonical、catalog、Receipt/Observation、reference fixture 验证/窄投影、显式 Release 留存闭包，以及 SQLite v3 的持久化、run-scoped 当前状态确认、receipt-derived atomic pin 和 legacy v2 quarantine。真实 authority 仍为空；固定 fixture 的状态摘要不能冒充完整 status-event 正文或当前授权。真实只读 acquisition/transport 已由 Stage 3 关闭，原始响应持久化和 run admission 移交 Stage 6/7，策略语义属于 Stage 2B 以后。
 
